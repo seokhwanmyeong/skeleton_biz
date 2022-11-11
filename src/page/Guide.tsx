@@ -1,0 +1,184 @@
+//  Lib
+import { Heading, Flex, Stack, Text, Divider } from "@chakra-ui/react";
+//  Components
+import {
+  Input,
+  InputAddon,
+  InputBtn,
+  InputPwd,
+} from "../components/common/Input";
+import Select from "../components/common/Select";
+import TextArea from "../components/common/TextArea";
+import Btn from "../components/common/Btn";
+import { ChakraTag, TagGroup } from "../components/common/Tag";
+
+const Guide = () => {
+  const selectOptions = [
+    { id: 0, text: "test" },
+    { id: 1, text: "test1" },
+    { id: 2, text: "test2" },
+    { id: 3, text: "test3" },
+  ];
+
+  return (
+    <Flex flexDirection="column">
+      <Heading>Components</Heading>
+      <Stack spacing={20} m={30} divider={<Divider />}>
+        <Flex justifyContent="space-between">
+          <Stack spacing={4}>
+            <Heading size="md">Components : Input</Heading>
+            <Text>Input : base (default)</Text>
+            <Input
+              placeholder="placeHolder"
+              _placeholder={{ color: "gray.500" }}
+              focusBorderColor="black.100"
+              errorBorderColor="red.300"
+              isDisabled={false}
+              isInvalid={false}
+              isReadOnly={false}
+              isRequired={true}
+            />
+            <Divider />
+            <Text>Input : BTN</Text>
+            <InputBtn
+              groupProps={{}}
+              addonProps={{}}
+              btnProps={{ fontSize: "sm", fontWeight: "bold" }}
+              btnText="BTN"
+              event={() => alert("Click")}
+              inputProps
+              placeholder="placeHolder"
+              _placeholder={{ color: "gray.500" }}
+              focusBorderColor="black.100"
+              errorBorderColor="red.300"
+              isDisabled={false}
+              isInvalid={false}
+              isReadOnly={false}
+              isRequired={true}
+            />
+            <Divider />
+            <Text>Input : PWD</Text>
+            <InputPwd
+              groupProps={{ size: "md" }}
+              addonProps={{ width: "4.5rem" }}
+              btnProps={{ h: "1.75rem", size: "sm" }}
+              placeholder="placeHolder"
+              _placeholder={{ color: "gray.500" }}
+              focusBorderColor="black.100"
+              errorBorderColor="red.300"
+              isDisabled={false}
+              isInvalid={false}
+              isReadOnly={false}
+              isRequired={true}
+            />
+            <Divider />
+            <Text>Input : Base with Title</Text>
+            <InputAddon
+              groupProps={{ size: "sm" }}
+              addonProps={{ fontSize: "sm" }}
+              addonType="left"
+              addonText="TEXT"
+              inputProps={{}}
+              placeholder="placeHolder"
+              _placeholder={{ color: "gray.500" }}
+              focusBorderColor="black.100"
+              errorBorderColor="red.300"
+              isDisabled={false}
+              isInvalid={false}
+              isReadOnly={false}
+              isRequired={true}
+            />
+          </Stack>
+          <Stack spacing={4}>
+            <Heading size="md">Components : Select</Heading>
+            <Text>Select : Base</Text>
+            <Select
+              selectProps={{
+                focusBorderColor: "black.100",
+                errorBorderColor: "red.300",
+              }}
+              defaultText="select option"
+              data={selectOptions}
+              opBaseTxt="text"
+              opBaseId="id"
+              opBaseKey="id"
+              isDisabled={false}
+              isInvalid={false}
+              isReadOnly={false}
+              isRequired={true}
+            />
+          </Stack>
+          <Stack spacing={4}>
+            <Heading size="md">Components : TextArea</Heading>
+            <Text>TextArea : Base</Text>
+            <TextArea />
+          </Stack>
+        </Flex>
+        <Flex justifyContent="space-between">
+          <Stack spacing={4}>
+            <Heading size="md">Components : Button</Heading>
+            <Text>Button : Base</Text>
+            <Btn text="BTN" />
+            <Divider />
+            <Text>Button : Base</Text>
+            <Btn text="BTN" />
+            <Divider />
+            <Text>Button : Base</Text>
+            <Btn text="BTN" />
+            <Divider />
+          </Stack>
+          <Stack spacing={4}>
+            <Heading size="md">Components : Bedge</Heading>
+            <Text>Bedge : Base</Text>
+            <ChakraTag text="Base" />
+            <Divider />
+            <Text>Bedge : Group</Text>
+            <TagGroup />
+          </Stack>
+          <Stack spacing={4}>
+            <Heading size="md">Components : Tag</Heading>
+            <Text>Tag : Base</Text>
+            <ChakraTag text="Base" />
+            <Divider />
+            <Text>Tag : Group</Text>
+            <TagGroup />
+          </Stack>
+        </Flex>
+        <Flex justifyContent="space-between">
+          <Stack spacing={4}>
+            <Heading size="md">Components : CheckBox</Heading>
+          </Stack>
+          <Stack spacing={4}>
+            <Heading size="md">Components : RadioBox</Heading>
+          </Stack>
+        </Flex>
+        <Stack spacing={4}>
+          <Heading size="md">Components : Table</Heading>
+        </Stack>
+        <Stack spacing={4}>
+          <Heading size="md">Components : Modal</Heading>
+        </Stack>
+        <Stack spacing={4}>
+          <Heading size="md">Components : Msg & Feedback</Heading>
+        </Stack>
+        <Stack spacing={4}>
+          <Heading size="md">Components : Spinner</Heading>
+        </Stack>
+        <Stack spacing={4}>
+          <Heading size="md">Components : Tab</Heading>
+        </Stack>
+        <Stack spacing={4}>
+          <Heading size="md">Components : Side Bar</Heading>
+        </Stack>
+        <Stack spacing={4}>
+          <Heading size="md">Components : Search Bar</Heading>
+        </Stack>
+        <Stack spacing={4}>
+          <Heading size="md">Components : Menu</Heading>
+        </Stack>
+      </Stack>
+    </Flex>
+  );
+};
+
+export default Guide;
