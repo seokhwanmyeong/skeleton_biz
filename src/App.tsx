@@ -1,7 +1,7 @@
 // Lib
 import { BrowserRouter } from "react-router-dom";
 // Router
-import RouterOutlet from "./router/RouterOutlet";
+import RouterOutlet from "@router/RouterOutlet";
 
 const App = () => {
   return (

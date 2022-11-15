@@ -1,8 +1,16 @@
-import { Heading } from "@chakra-ui/react";
-import React from "react";
+//  Lib
+import { Fragment } from "react";
+import { Heading, Flex } from "@chakra-ui/react";
+//  Components
+import SideMenu from "@components/menu/SideMenu";
 
 const Erp = () => {
-  return <Heading>Components : ERP</Heading>;
+  return (
+    <Fragment>
+      <SideMenu />
+      <Heading>Components : ERP</Heading>
+    </Fragment>
+  );
 };
 
 export default Erp;

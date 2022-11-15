@@ -6,11 +6,11 @@ import {
   InputAddon,
   InputBtn,
   InputPwd,
-} from "../components/common/Input";
-import Select from "../components/common/Select";
-import TextArea from "../components/common/TextArea";
-import Btn from "../components/common/Btn";
-import { ChakraTag, TagGroup } from "../components/common/Tag";
+} from "@components/common/Input";
+import Select from "@components/common/Select";
+import TextArea from "@components/common/TextArea";
+import Btn from "@components/common/Btn";
+import { ChakraTag, TagGroup } from "@components/common/Tag";
 
 const Guide = () => {
   const selectOptions = [

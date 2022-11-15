@@ -12,7 +12,7 @@ const Footer = (props: Props) => {
         p="2rem"
         justifyContent="center"
         alignItems="center"
-        borderTop="1px solid #ffffff"
+        borderTop="1px solid"
       >
         <Heading>FOOTER AREA</Heading>
       </Flex>

@@ -1,4 +1,6 @@
+//  Lib
 import { Fragment } from "react";
+import { Link } from "react-router-dom";
 import {
   Accordion,
   AccordionItem,
@@ -7,16 +9,50 @@ import {
   AccordionIcon,
   Box,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
 
-type Props = {};
+type Menu = {
+  title: string;
+  hasChild: boolean;
+  path: string;
+  children: DepthMenu[];
+};
 
-const SideMenu = (props: any) => {
-  const { menuList } = props;
+type DepthMenu = {
+  title: string;
+  path: string;
+};
+
+const SideMenu = () => {
+  const menu: Menu[] = [
+    {
+      title: "erp01",
+      hasChild: true,
+      path: "",
+      children: [
+        { title: "erp01-Sub01", path: "/erp/erp01" },
+        { title: "erp01-Sub02", path: "/erp/erp01" },
+        { title: "erp01-Sub03", path: "/erp/erp01" },
+      ],
+    },
+    {
+      title: "erp02",
+      hasChild: true,
+      path: "",
+      children: [
+        { title: "erp02-Sub01", path: "/erp/erp02" },
+        { title: "erp02-Sub02", path: "/erp/erp02" },
+        { title: "erp02-Sub03", path: "/erp/erp02" },
+      ],
+    },
+  ];
+
   return (
     <Fragment>
-      <Accordion allowMultiple>
-        {menuList.map((menuLi: any) => {
+      <Accordion
+        allowMultiple
+        style={{ borderRight: "1px solid", width: "180px" }}
+      >
+        {menu.map((menuLi: Menu) => {
           return (
             <AccordionItem key={menuLi.title}>
               <AccordionButton>
@@ -36,7 +72,7 @@ const SideMenu = (props: any) => {
               {menuLi.hasChild && (
                 <AccordionPanel>
                   <Accordion allowMultiple>
-                    {menuLi.children.map((depthLi: any) => {
+                    {menuLi.children.map((depthLi: DepthMenu) => {
                       return (
                         <AccordionItem key={depthLi.title}>
                           <AccordionButton>

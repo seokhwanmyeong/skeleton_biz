@@ -5,8 +5,9 @@ import { SystemStyleObject } from "@chakra-ui/system";
 
 // Styles
 import globalTheme from "./globalTheme";
-import inputTheme from "./components/inputTheme";
-import btnTheme from "./components/btnTheme";
+import inputTheme from "./components/common/inputTheme";
+import btnTheme from "./components/common/btnTheme";
+import headerTheme from "./components/header/headerTheme";
 
 const config: ThemeConfig = {
   initialColorMode: "light",
@@ -18,17 +19,11 @@ const theme = extendTheme({
   styles: {
     global: (props: GlobalStyleProps): SystemStyleObject => ({
       "html, body": {
-        // color: mode('black.100', 'white.100')(props),
-        // bg: mode('black.100', 'white.100')(props),
-      },
-      "h1, h2, h3, h4, p, a, span, div": {
-        // color: mode('white.100', 'black.100')(props),
+        color: mode("black.100", "white.100")(props),
+        bg: mode("black.100", "white.100")(props),
       },
       textarea: {
         resize: "none",
-      },
-      input: {
-        color: "#ffffff",
       },
     }),
   },
@@ -37,6 +32,7 @@ const theme = extendTheme({
     themeColor: "#ffffff",
   },
   components: {
+    headerTheme,
     Input: inputTheme,
     Button: btnTheme,
     ChakraTag: {

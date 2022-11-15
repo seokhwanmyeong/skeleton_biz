@@ -1,13 +1,37 @@
 // Lib
-import React from "react";
 import { Link } from "react-router-dom";
 // Style & Lib
 import { Flex, Button, useColorMode } from "@chakra-ui/react";
 
-type Props = {};
+type Props = {
+  rootState: string;
+};
 
 const Header = (props: Props) => {
+  const { rootState } = props;
   const { colorMode, toggleColorMode } = useColorMode();
+  const headerMenu = [
+    {
+      to: "/",
+      title: "Home",
+      root: "",
+    },
+    {
+      to: "/maps",
+      title: "Map",
+      root: "maps",
+    },
+    {
+      to: "/erp",
+      title: "ERP",
+      root: "erp",
+    },
+    {
+      to: "/guide",
+      title: "Guide",
+      root: "guide",
+    },
+  ];
 
   return (
     <Flex w="100%" h="5rem">
@@ -19,12 +43,20 @@ const Header = (props: Props) => {
         h="inherit"
         justifyContent="center"
         alignItems="center"
-        borderBottom="1px solid #ffffff"
+        borderBottom="1px solid"
       >
-        <Link to="/">Home</Link>
-        <Link to="/maps">Map</Link>
-        <Link to="/erp">ERP</Link>
-        <Link to="/guide">Guide</Link>
+        {headerMenu.map((menu) => {
+          return (
+            <Link
+              to={menu.to}
+              className={rootState === menu.root ? "active" : ""}
+              key={`head-${menu.title}`}
+              style={rootState === menu.root ? { fontWeight: "bolder" } : {}}
+            >
+              {menu.title}
+            </Link>
+          );
+        })}
         <Button onClick={toggleColorMode}>
           {colorMode === "light" ? "Dark" : "Light"}
         </Button>
