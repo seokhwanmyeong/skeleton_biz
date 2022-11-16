@@ -7,7 +7,7 @@ import Erp from "@page/Erp";
 import ErrorPage from "@page/ErrorPage";
 import Guide from "@page/Guide";
 // Components
-import Main from "@components/common/Main";
+import Main from "@src/components/common/MainFrame";
 
 const RouterOutlet = () => {
   return (

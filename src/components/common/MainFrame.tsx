@@ -8,7 +8,7 @@ import { Flex } from "@chakra-ui/react";
 import Header from "@components/header/Header";
 import Footer from "@components/footer/Footer";
 
-const Main = () => {
+const MainFrame = () => {
   const location = useLocation();
   const [rootState, setRootState] = useState("/");
 
@@ -27,4 +27,4 @@ const Main = () => {
   );
 };
 
-export default Main;
+export default MainFrame;
