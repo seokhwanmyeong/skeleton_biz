@@ -143,7 +143,7 @@ const ChartGraph = (props: any) => {
         const yData: any = d.population;
         return yScale(yData);
       })
-      .curve(d3.curveBasis);
+      .curve(d3.curveLinear);
 
     //  Make Path
     const path = svg

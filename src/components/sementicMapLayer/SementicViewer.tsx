@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Flex, Button, Heading } from "@chakra-ui/react";
+import { Flex, Button, Heading, useColorMode } from "@chakra-ui/react";
 //  Components
 import ChartCircle from "@components/charts/ChartCircle";
 import ChartGraph from "@components/charts/ChartGraph";
@@ -8,6 +8,7 @@ type Props = {};
 
 const SementicViewer = (props: Props) => {
   const [isOpen, setOpen] = useState(true);
+  const mode = useColorMode();
   const [data] = useState({
     data1: [
       { date: "2022-01", population: 5000 },
@@ -39,16 +40,25 @@ const SementicViewer = (props: Props) => {
 
   return (
     <Flex position="absolute" right="0" top="0" zIndex="100" h="100%">
-      <Button bgColor="#555555" onClick={onToggle}>
-        Toggle
+      <Button
+        borderRadius="0px 0px 0px 5px"
+        bgColor="#646464"
+        onClick={onToggle}
+        transition="0.5s"
+        color="#ffffff"
+        _hover={{
+          bgColor: "#000000",
+        }}
+      >
+        Viewer
       </Button>
       <Flex
         w={isOpen ? "400px" : "0"}
         alignItems="center"
         justifyContent="center"
         flexDirection="column"
-        borderLeft="1px solid"
-        bgColor="#555555"
+        borderLeft={isOpen ? "1px solid #ededed" : ""}
+        bgColor={mode.colorMode === "dark" ? "#646464" : "#ffffff"}
         overflow="hidden"
         transition="0.3s"
       >
@@ -57,8 +67,8 @@ const SementicViewer = (props: Props) => {
         <ChartCircle
           Data={data.data2}
           title=""
-          xKey="age"
-          yKey="count"
+          keyName="age"
+          valName="count"
           zKey=""
           Group={false}
           width={360}

@@ -7,16 +7,10 @@ type Props = {
   rootState: string;
 };
 
-type Menu = {
-  to: string;
-  title: string;
-  root: string;
-}[];
-
-const Header = (props: Props) => {
+const Header = (props: any) => {
   const { rootState } = props;
   const { colorMode, toggleColorMode } = useColorMode();
-  const headerMenu: Menu = [
+  const headerMenu = [
     {
       to: "/",
       title: "Home",

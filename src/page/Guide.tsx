@@ -10,7 +10,7 @@ import {
 import Select from "@components/common/Select";
 import TextArea from "@components/common/TextArea";
 import Btn from "@components/common/Btn";
-import { ChakraTag, TagGroup } from "@components/common/Tag";
+import Tag from "@components/common/Tag";
 
 const Guide = () => {
   const selectOptions = [
@@ -125,23 +125,34 @@ const Guide = () => {
             <Divider />
             <Text>Button : Base</Text>
             <Btn text="BTN" />
-            <Divider />
           </Stack>
           <Stack spacing={4}>
             <Heading size="md">Components : Bedge</Heading>
             <Text>Bedge : Base</Text>
-            <ChakraTag text="Base" />
-            <Divider />
-            <Text>Bedge : Group</Text>
-            <TagGroup />
           </Stack>
           <Stack spacing={4}>
             <Heading size="md">Components : Tag</Heading>
             <Text>Tag : Base</Text>
-            <ChakraTag text="Base" />
-            <Divider />
-            <Text>Tag : Group</Text>
-            <TagGroup />
+            <Tag
+              key={"sm"}
+              variant="subtle"
+              text="Base: sm"
+              onClick={() => alert("Click")}
+            />
+            <Tag
+              key={"md"}
+              variant="subtle"
+              text="Base: md"
+              hasBtn={true}
+              onClick={() => alert("Click")}
+            />
+            <Tag
+              key={"lg"}
+              variant={"filterOption"}
+              text="Base: lg"
+              hasBtn={true}
+              onClick={() => alert("Click")}
+            />
           </Stack>
         </Flex>
         <Flex justifyContent="space-between">

@@ -1,16 +1,25 @@
 //  Lib
 import { Fragment, useEffect } from "react";
 import { Flex, Grid, GridItem } from "@chakra-ui/react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 //  Components
-import SementicFilter from "@components/sementicMapLayer/SementicFilter";
-import SementicSearchEngine from "@components/sementicMapLayer/SementicSearchEngine";
+import SementicFilter from "@src/components/sementicMapLayer/filter/SementicFilter";
+import SementicSearchEngine from "@src/components/sementicMapLayer/filter/SementicSearchEngine";
 import SementicMap from "@components/sementicMapLayer/SementicMap";
 import SementicViewer from "@components/sementicMapLayer/SementicViewer";
+//  State
+import {
+  atomSearchOption,
+  selectorSearchOption,
+} from "@src/states/searchState/stateSearch";
 
 const Maps = () => {
+  const searchOption = useRecoilValue(atomSearchOption);
+  const setOption = useSetRecoilState(selectorSearchOption);
+
   return (
     <Flex w="100%" h="inherit" flexDirection="column">
-      <Flex h="5rem">
+      <Flex flex="0">
         <SementicFilter />
       </Flex>
       <Flex flex="1" flexDirection="row" position="relative">

@@ -4,10 +4,12 @@ import { mode, GlobalStyleProps } from "@chakra-ui/theme-tools";
 import { SystemStyleObject } from "@chakra-ui/system";
 
 // Styles
-import globalTheme from "./globalTheme";
-import inputTheme from "./components/common/inputTheme";
-import btnTheme from "./components/common/btnTheme";
-import headerTheme from "./components/header/headerTheme";
+import globalTheme from "@styles/theme/globalTheme";
+import inputTheme from "@styles/theme/components/common/inputTheme";
+import btnTheme from "@styles/theme/components/common/btnTheme";
+import headerTheme from "@styles/theme/components/header/headerTheme";
+import tagTheme from "@styles/theme/components/common/tagTheme";
+import accordionTheme from "@styles/theme/components/common/accordionTheme";
 
 const config: ThemeConfig = {
   initialColorMode: "light",
@@ -18,10 +20,6 @@ const theme = extendTheme({
   config,
   styles: {
     global: (props: GlobalStyleProps): SystemStyleObject => ({
-      "html, body": {
-        color: mode("black.100", "white.100")(props),
-        bg: mode("black.100", "white.100")(props),
-      },
       textarea: {
         resize: "none",
       },
@@ -29,30 +27,27 @@ const theme = extendTheme({
   },
   // globalTheme,
   color: {
-    themeColor: "#ffffff",
+    custom1: "#dddddd",
+    custom2: "#1a202c",
+    custom3: "#fffefee6",
+  },
+  size: {
+    tag: {
+      option: "1.25rem",
+    },
+  },
+  radii: {
+    basic: "5px",
+  },
+  transition: {
+    basic: "0.5s",
   },
   components: {
     headerTheme,
     Input: inputTheme,
     Button: btnTheme,
-    ChakraTag: {
-      baseStyle: {
-        fontWeight: "bold",
-        textTransform: "uppercase",
-        borderRadius: "base",
-      },
-      variants: {
-        base: { p: "0.5rem" },
-        s: { w: "0.2rem" },
-        sm: { w: "0.4rem" },
-        m: { w: "0.6rem" },
-        wm: { w: "0.8rem" },
-        w: { w: "1rem" },
-      },
-      defaultProps: {
-        variant: "base",
-      },
-    },
+    Tag: tagTheme,
+    Accordion: accordionTheme,
   },
 });
 

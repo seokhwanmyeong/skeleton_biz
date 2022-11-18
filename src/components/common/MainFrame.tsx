@@ -1,12 +1,12 @@
 // Lib
 import { useLayoutEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 // Style
 import { Flex } from "@chakra-ui/react";
 // Components
 import Header from "@components/header/Header";
 import Footer from "@components/footer/Footer";
+import SideMenu from "@components/menu/SideMenu";
 
 const MainFrame = () => {
   const location = useLocation();
