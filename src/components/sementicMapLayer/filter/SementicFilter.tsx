@@ -5,10 +5,11 @@ import { Flex, Text, Stack, Button, useColorMode } from "@chakra-ui/react";
 import Tag from "@components/common/Tag";
 //  States
 import {
-  selectorSearchOption,
-  atomSearchOption,
+  atomSementicOption,
+  atomInfoCom,
+  selectorInfoCom,
 } from "@states/searchState/stateSearch";
-import { useRecoilState, useResetRecoilState } from "recoil";
+import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
 
 type Props = {};
 type FilterGroup = {
@@ -18,25 +19,13 @@ type FilterGroup = {
 };
 
 const SementicFilter = (props: any) => {
-  const [option, setOption] = useRecoilState(selectorSearchOption);
-  const resetOption = useResetRecoilState(atomSearchOption);
+  const infoComs = useRecoilValue(atomInfoCom);
+  const resetOption = useResetRecoilState(atomSementicOption);
+  const setInfoCom = useSetRecoilState(selectorInfoCom);
   const mode = useColorMode();
 
   const FilterGroup = (props: FilterGroup) => {
-    const { title = "항목", data = {}, dataKey = "" } = props;
-
-    const optionHandler = (
-      eventType: "add" | "remove",
-      optionCate: string,
-      optionName: string
-    ) => {
-      setOption({
-        eventType: eventType,
-        optionCate: optionCate,
-        optionVal: optionName,
-      });
-      return;
-    };
+    const { title = "항목", data = {} } = props;
 
     return (
       <Flex
@@ -47,24 +36,23 @@ const SementicFilter = (props: any) => {
       >
         <Text mr="1rem">{title}</Text>
         <Flex>
-          {data[dataKey] !== undefined &&
-            data[dataKey].list.length > 0 &&
-            data[dataKey].list.map((option: string) => (
-              <Tag
-                key={`tag-${option}`}
-                text={option}
-                hasBtn={true}
-                onClick={() => optionHandler("remove", dataKey, option)}
-              />
-            ))}
+          {data.map((infoCom: string) => (
+            <Tag
+              key={`tag-${infoCom}`}
+              text={infoCom}
+              hasBtn={true}
+              onClick={() =>
+                setInfoCom({
+                  method: "remove",
+                  infoCom: infoCom,
+                })
+              }
+            />
+          ))}
         </Flex>
       </Flex>
     );
   };
-
-  useEffect(() => {
-    console.log(option);
-  }, []);
 
   return (
     <Flex
@@ -77,8 +65,8 @@ const SementicFilter = (props: any) => {
       borderColor={mode.colorMode === "dark" ? "#ffffff29" : "#ededed"}
       transition="0.5s"
     >
-      <FilterGroup title="OPTION" data={option} dataKey="map" />
-      <FilterGroup title="test STATE" data={option} dataKey="test" />
+      <FilterGroup title="InfoCom" data={infoComs} />
+      {/* <FilterGroup title="업종" data={sementiceOptions} dataKey="sector" /> */}
       <Button onClick={resetOption}>Reset Option</Button>
     </Flex>
   );

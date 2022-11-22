@@ -50,7 +50,7 @@ const SementicViewer = (props: Props) => {
           bgColor: "#000000",
         }}
       >
-        Viewer
+        SementicView
       </Button>
       <Flex
         w={isOpen ? "400px" : "0"}

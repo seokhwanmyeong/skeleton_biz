@@ -1,64 +1,66 @@
 //  Lib
-import React, { Fragment, ReactNode, useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Flex,
   Button,
-  Text,
-  Stack,
   Accordion,
   AccordionItem,
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
-  Box,
-  useColorMode,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
+  Text,
 } from "@chakra-ui/react";
 //  Components
-import Tag from "@components/common/Tag";
+import { CheckBox } from "@components/common/CheckBox";
 //  States
 import {
-  selectorSearchOption,
-  atomOptionList,
+  atomSearchBaseOption,
+  atomInfoCom,
+  selectorInfoCom,
 } from "@states/searchState/stateSearch";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useSetRecoilState, useRecoilValue } from "recoil";
 
 type Props = {};
 
 const SementicSearchEngine = (props: Props) => {
-  const optionList = useRecoilValue(atomOptionList);
-  const [options, setOption] = useRecoilState(selectorSearchOption);
+  //  Option Handler
+  const optionBase = useRecoilValue(atomSearchBaseOption);
+  const infocomList = useRecoilValue(atomInfoCom);
+  const setInfoCom = useSetRecoilState(selectorInfoCom);
+  const [mapBlock, setMapBlock] = useState({
+    blockCode: "",
+    isCheck: true,
+  });
+  const [area, setArea] = useState({
+    polygon: "",
+    isCheck: true,
+  });
+  const [sector, setSector] = useState({
+    mainSector: {
+      key: "",
+      isCheck: false,
+    },
+    midSector: {
+      key: "",
+      isCheck: false,
+    },
+    subSector: {
+      key: "",
+      isCheck: false,
+    },
+  });
+
+  //  Toggle Event
   const [isOpen, setOpen] = useState(true);
-  const mode = useColorMode();
 
   const onToggle = () => {
     setOpen(!isOpen);
   };
-
-  const optionAddHandler = (optionType: string, layerName: string) => {
-    console.log(optionType, layerName);
-    setOption({
-      optionCate: optionType,
-      eventType: "add",
-      optionVal: layerName,
-    });
-  };
-
-  const optionHandler = (
-    eventType: "add" | "remove",
-    optionCate: string,
-    optionName: string
-  ) => {
-    setOption({
-      eventType: eventType,
-      optionCate: optionCate,
-      optionVal: optionName,
-    });
-    return;
-  };
-
-  useEffect(() => {
-    console.log("searchEngin Option State\n", options);
-  }, [options]);
 
   return (
     <Flex
@@ -80,7 +82,7 @@ const SementicSearchEngine = (props: Props) => {
           bgColor: "#000000",
         }}
       >
-        Filter
+        SementicSearchEngine
       </Button>
       <Flex
         w={isOpen ? "auto" : "0"}
@@ -90,38 +92,78 @@ const SementicSearchEngine = (props: Props) => {
         overflow="hidden"
         transition="0.5s"
       >
-        <Accordion variant={"searchEngine"} allowMultiple>
-          {optionList.optionKey.map((key: string) => {
-            const optionData = optionList[key];
+        <Accordion defaultIndex={[0]} variant={"searchEngine"} allowMultiple>
+          <AccordionItem key={`Item-Map-Select`}>
+            <AccordionButton>
+              Set Base State
+              <AccordionIcon />
+            </AccordionButton>
+            <AccordionPanel
+              display="flex"
+              flexDirection="column"
+              backgroundColor="#ededed"
+              color="#555555"
+              fontSize="0.8rem"
+              fontWeight="bold"
+            >
+              <Tabs>
+                <TabList>
+                  <Tab flexDirection="column">
+                    <Text>POINTER</Text>
+                    <Text>주소 데이터</Text>
+                  </Tab>
+                  <Tab flexDirection="column">
+                    <Text>SECTOR</Text>
+                    <Text>대/중/소분류</Text>
+                  </Tab>
+                  <Tab flexDirection="column">
+                    <Text>AREA</Text>
+                    <Text>설정 Boolean</Text>
+                  </Tab>
+                </TabList>
+                <TabPanels>
+                  <TabPanel>
+                    <Text>지도화면에서 원하시는 지역을 클릭해주세요</Text>
+                  </TabPanel>
+                  <TabPanel>test</TabPanel>
+                  <TabPanel>test</TabPanel>
+                </TabPanels>
+              </Tabs>
+            </AccordionPanel>
+          </AccordionItem>
+          <AccordionItem key={`Item-Option-Select`} isDisabled={false}>
+            <AccordionButton>
+              {optionBase.infoCom.title}
+              <AccordionIcon />
+            </AccordionButton>
+            <AccordionPanel
+              display="flex"
+              flexDirection="column"
+              backgroundColor="#ededed"
+              color="#555555"
+            >
+              {optionBase.infoCom.list.map(
+                (option: { [key: string]: string }) => {
+                  const { title, key } = option;
 
-            return (
-              <AccordionItem key={`Item-${key}`}>
-                <AccordionButton>
-                  {optionData.title}
-                  <AccordionIcon />
-                </AccordionButton>
-                {optionData.list.length > 0 && (
-                  <AccordionPanel>
-                    <Accordion variant={"searchEngineSub"} allowMultiple>
-                      {optionData.list.map((option: string) => {
-                        return (
-                          <AccordionItem key={`option-${option}`}>
-                            <Tag
-                              key={`search-tag-${option}`}
-                              text={option}
-                              variant="filterOption"
-                              hasBtn={true}
-                              onClick={() => optionHandler("add", key, option)}
-                            />
-                          </AccordionItem>
-                        );
-                      })}
-                    </Accordion>
-                  </AccordionPanel>
-                )}
-              </AccordionItem>
-            );
-          })}
+                  return (
+                    <CheckBox
+                      isChecked={infocomList.includes(key)}
+                      key={key}
+                      value={key}
+                      title={title}
+                      onChange={(e: any) => {
+                        setInfoCom({
+                          method: infocomList.includes(key) ? "remove" : "add",
+                          infoCom: key,
+                        });
+                      }}
+                    />
+                  );
+                }
+              )}
+            </AccordionPanel>
+          </AccordionItem>
         </Accordion>
       </Flex>
     </Flex>

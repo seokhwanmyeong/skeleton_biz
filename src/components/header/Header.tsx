@@ -1,44 +1,15 @@
-// Lib
+//  Lib
 import { Link } from "react-router-dom";
-// Style & Lib
+import { useRecoilValue } from "recoil";
 import { Flex, Button, useColorMode } from "@chakra-ui/react";
+//  State
+import { mainMenu } from "@src/states/menu/stateMenu";
+//  Type
+import { MainMenuType } from "@util/type/menuType";
 
-type Props = {
-  rootState: string;
-};
-
-type Menu = {
-  to: string;
-  title: string;
-  root: string;
-}[];
-
-const Header = (props: Props) => {
-  const { rootState } = props;
+const Header = ({ rootState }: { rootState: string }) => {
+  const headerMenu = useRecoilValue(mainMenu);
   const { colorMode, toggleColorMode } = useColorMode();
-  const headerMenu: Menu = [
-    {
-      to: "/",
-      title: "Home",
-      root: "",
-    },
-    {
-      to: "/maps",
-      title: "Map",
-      root: "maps",
-    },
-    {
-      to: "/erp",
-      title: "ERP",
-      root: "erp",
-    },
-    {
-      to: "/guide",
-      title: "Guide",
-      root: "guide",
-    },
-  ];
-
   return (
     <Flex w="100%" h="5rem">
       <Flex
@@ -51,10 +22,10 @@ const Header = (props: Props) => {
         alignItems="center"
         borderBottom="1px solid"
       >
-        {headerMenu.map((menu) => {
+        {headerMenu.map((menu: MainMenuType) => {
           return (
             <Link
-              to={menu.to}
+              to={menu.path}
               className={rootState === menu.root ? "active" : ""}
               key={`head-${menu.title}`}
               style={rootState === menu.root ? { fontWeight: "bolder" } : {}}

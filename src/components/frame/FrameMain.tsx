@@ -8,7 +8,7 @@ import Header from "@components/header/Header";
 import Footer from "@components/footer/Footer";
 import SideMenu from "@components/menu/SideMenu";
 
-const MainFrame = () => {
+const FrameMain = () => {
   const location = useLocation();
   const [rootState, setRootState] = useState("/");
 
@@ -27,4 +27,4 @@ const MainFrame = () => {
   );
 };
 
-export default MainFrame;
+export default FrameMain;

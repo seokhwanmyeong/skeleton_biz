@@ -9,7 +9,7 @@ import inputTheme from "@styles/theme/components/common/inputTheme";
 import btnTheme from "@styles/theme/components/common/btnTheme";
 import headerTheme from "@styles/theme/components/header/headerTheme";
 import tagTheme from "@styles/theme/components/common/tagTheme";
-import accordionTheme from "@styles/theme/components/common/accordionTheme";
+import accordionTheme from "@src/styles/theme/components/menu/accordionTheme";
 
 const config: ThemeConfig = {
   initialColorMode: "light",

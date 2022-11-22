@@ -17,7 +17,6 @@ const accordionTheme = {
     sideMenu: {},
     searchEngine: (props: GlobalStyleProps) => {
       const { colorScheme: c, theme } = props;
-      console.log(theme);
       return {
         root: {
           p: "0.5rem",

@@ -7,21 +7,13 @@ import SementicFilter from "@src/components/sementicMapLayer/filter/SementicFilt
 import SementicSearchEngine from "@src/components/sementicMapLayer/filter/SementicSearchEngine";
 import SementicMap from "@components/sementicMapLayer/SementicMap";
 import SementicViewer from "@components/sementicMapLayer/SementicViewer";
-//  State
-import {
-  atomSearchOption,
-  selectorSearchOption,
-} from "@src/states/searchState/stateSearch";
 
 const Maps = () => {
-  const searchOption = useRecoilValue(atomSearchOption);
-  const setOption = useSetRecoilState(selectorSearchOption);
-
   return (
     <Flex w="100%" h="inherit" flexDirection="column">
-      <Flex flex="0">
+      {/* <Flex flex="0">
         <SementicFilter />
-      </Flex>
+      </Flex> */}
       <Flex flex="1" flexDirection="row" position="relative">
         <SementicSearchEngine />
         <SementicMap />

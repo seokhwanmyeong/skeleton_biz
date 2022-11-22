@@ -1,6 +1,6 @@
 //  Lib
 import { Fragment, useCallback, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   Accordion,
   AccordionItem,
@@ -8,83 +8,43 @@ import {
   AccordionPanel,
   AccordionIcon,
 } from "@chakra-ui/react";
+import { useRecoilValue } from "recoil";
+//  State
+import { subMenuSelector } from "@states/menu/stateMenu";
+//  Type
+import { SubMenuType, DepthMenuType } from "@util/type/menuType";
 
-type Props = {
-  rootState: string;
-};
-
-type Menu = {
-  title: string;
-  hasChild: boolean;
-  path: string;
-  children: DepthMenu[];
-};
-
-type DepthMenu = {
-  title: string;
-  path: string;
-};
-
-const SideMenu = (props: Props) => {
-  const { rootState } = props;
+const SideMenu = () => {
+  const location = useLocation();
+  const menu = useRecoilValue(subMenuSelector("erp"));
+  const [rootState, setRootState] = useState("/");
   const navigate = useNavigate();
-  const menu: Menu[] = [
-    {
-      title: "Dash-Board",
-      hasChild: false,
-      path: "/erp",
-      children: [],
-    },
-    {
-      title: "erp01",
-      hasChild: true,
-      path: "",
-      children: [
-        { title: "erp01-Sub01", path: "/erp/erp01-Sub01" },
-        { title: "erp01-Sub02", path: "/erp/erp01-Sub02" },
-        { title: "erp01-Sub03", path: "/erp/erp01-Sub03" },
-      ],
-    },
-    {
-      title: "erp02",
-      hasChild: true,
-      path: "",
-      children: [
-        { title: "erp02-Sub01", path: "/erp/erp02-Sub01" },
-        { title: "erp02-Sub02", path: "/erp/erp02-Sub02" },
-        { title: "erp02-Sub03", path: "/erp/erp02-Sub03" },
-      ],
-    },
-    {
-      title: "erp03",
-      hasChild: false,
-      path: "/erp/erp03",
-      children: [],
-    },
-    {
-      title: "erp04",
-      hasChild: false,
-      path: "/erp/erp04",
-      children: [],
-    },
-  ];
 
   const navigator = useCallback((path: string) => {
     const naviOption = {};
     navigate(path, naviOption);
   }, []);
 
+  useEffect(() => {
+    setRootState(location.pathname);
+  }, [location]);
+
   return (
     <Fragment>
       <Accordion
         allowMultiple
-        style={{ borderRight: "1px solid", width: "180px" }}
+        style={{ borderRight: "1px solid", minWidth: "200px" }}
       >
-        {menu.map((menuLi: Menu, idx: number) => {
+        {menu.map((menuLi: SubMenuType, idx: number) => {
           return (
             <AccordionItem key={menuLi.title}>
               {menuLi.hasChild ? (
-                <AccordionButton>
+                <AccordionButton
+                  style={{
+                    fontWeight: menuLi.path === rootState ? "bold" : "",
+                    justifyContent: "space-between",
+                  }}
+                >
                   {menuLi.title}
                   <AccordionIcon />
                 </AccordionButton>
@@ -101,17 +61,17 @@ const SideMenu = (props: Props) => {
               {menuLi.hasChild && (
                 <AccordionPanel>
                   <Accordion allowMultiple>
-                    {menuLi.children.map((depthLi: DepthMenu) => {
+                    {menuLi.children.map((depthLi: DepthMenuType) => {
                       return (
                         <AccordionItem key={depthLi.title}>
                           <AccordionButton
                             onClick={() => navigator(depthLi.path)}
                             style={{
                               fontWeight:
-                                menuLi.path === rootState ? "bold" : "",
+                                depthLi.path === rootState ? "bold" : "",
                             }}
                           >
-                            {menuLi.title}
+                            {depthLi.title}
                           </AccordionButton>
                         </AccordionItem>
                       );
