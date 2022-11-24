@@ -15,9 +15,24 @@ const tagTheme = {
       const { colorScheme: c, theme } = props;
       return {
         container: {
-          w: "100%",
+          w: "auto",
           bg: mode(theme.color.custom2, theme.color.custom1)(props),
-          alignSelf: "auto",
+          alignSelf: "baseline",
+          justifyContent: "space-between",
+        },
+        label: {
+          color: mode(theme.color.custom1, theme.color.custom2)(props),
+        },
+      };
+    },
+    checkbox: (props: GlobalStyleProps) => {
+      const { colorScheme: c, theme } = props;
+
+      return {
+        container: {
+          w: "auto",
+          bg: mode(theme.color.custom2, theme.color.custom1)(props),
+          alignSelf: "baseline",
           justifyContent: "space-between",
         },
         label: {

@@ -5,7 +5,7 @@ import { Flex, Text, Stack, Button, useColorMode } from "@chakra-ui/react";
 import Tag from "@components/common/Tag";
 //  States
 import {
-  atomSementicOption,
+  atomSementicState,
   atomInfoCom,
   selectorInfoCom,
 } from "@states/searchState/stateSearch";
@@ -20,7 +20,7 @@ type FilterGroup = {
 
 const SementicFilter = (props: any) => {
   const infoComs = useRecoilValue(atomInfoCom);
-  const resetOption = useResetRecoilState(atomSementicOption);
+  const resetOption = useResetRecoilState(atomSementicState);
   const setInfoCom = useSetRecoilState(selectorInfoCom);
   const mode = useColorMode();
 

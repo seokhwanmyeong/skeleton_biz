@@ -7,7 +7,7 @@ import ChartGraph from "@components/charts/ChartGraph";
 type Props = {};
 
 const SementicViewer = (props: Props) => {
-  const [isOpen, setOpen] = useState(true);
+  const [isOpen, setOpen] = useState(false);
   const mode = useColorMode();
   const [data] = useState({
     data1: [

@@ -4,7 +4,7 @@ import { Flex, Grid, GridItem } from "@chakra-ui/react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 //  Components
 import SementicFilter from "@src/components/sementicMapLayer/filter/SementicFilter";
-import SementicSearchEngine from "@src/components/sementicMapLayer/filter/SementicSearchEngine";
+import SementicSearchEngine from "@src/components/sementicMapLayer/SementicSearchEngine";
 import SementicMap from "@components/sementicMapLayer/SementicMap";
 import SementicViewer from "@components/sementicMapLayer/SementicViewer";
 
