@@ -5,47 +5,30 @@ import { Flex, Button } from "@chakra-ui/react";
 
 type Props = {};
 
-const PointerInfobox = (props: any) => {
-  const { text, event } = props;
-  return (
-    <div style={{ display: "flex" }}>
-      <button
-        style={{
-          padding: "5px 10px",
-          color: "#777777",
-          borderRadius: "10px",
-          backgroundColor: "#ededed",
-        }}
-        type="button"
-        onClick={event}
-      >
-        {text}
-      </button>
-    </div>
-  );
-};
+const infoBoxMaker = (map: any, position: any) => {
+  const testStyle = `
+    padding: 5px 10px;
+    color: #777777;
+    border-radius: 10px;
+    background-color: #ededed;
+  `;
 
-const infoBoxMaker = () => {
-  const event = () => {
-    console.log("click");
-  };
+  const testInfo = [
+    `<div class="iw_inner">`,
+    `   <button style="${testStyle}">설정완료</button>`,
+    `</div>`,
+  ].join(``);
 
-  const render = renderToStaticMarkup(
-    <PointerInfobox text="설정완료" event={event} />
-  );
+  class Test extends naver.maps.OverlayView {
+    private content: string;
 
-  const infowBox = new naver.maps.InfoWindow({
-    content: render,
-    maxWidth: 140,
-    backgroundColor: "none",
-    borderWidth: 0,
-    anchorSize: new naver.maps.Size(5, 5),
-    anchorSkew: true,
-    anchorColor: "#eee",
-    pixelOffset: new naver.maps.Point(5, -5),
-  });
+    constructor(options: any) {
+      super();
+      this.content = testInfo;
+    }
+  }
 
-  return infowBox;
+  return Test;
 };
 
 export default infoBoxMaker;

@@ -1,5 +1,5 @@
 //  Lib
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
   Flex,
   Button,
@@ -16,25 +16,25 @@ import FilterBaseState from "@src/components/sementicMapLayer/sementicSearchFilt
 import {
   atomSementicBaseList,
   atomSementicState,
-  atomMapControllState,
+  checkBaseState,
   resetSementicAtom,
 } from "@states/searchState/stateSearch";
-import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
+import { useSetRecoilState, useRecoilValue } from "recoil";
 
 type Props = {};
 
 const SementicSearchEngine = (props: Props) => {
   //  Option Handler
   const baseList = useRecoilValue(atomSementicBaseList);
-  const { baseCheck } = useRecoilValue(atomSementicState);
+  const isCheckbaseOption = useRecoilValue(checkBaseState);
   const resetState = useSetRecoilState(resetSementicAtom);
-  const [controllState, setControllState] =
-    useRecoilState(atomMapControllState);
   console.log("render engine");
   //  Toggle Event
   const [isOpen, setOpen] = useState(true);
+  const ref = useRef();
 
-  const onToggle = () => {
+  const onToggle = (e: any) => {
+    console.log(e);
     setOpen(!isOpen);
   };
 
@@ -46,13 +46,17 @@ const SementicSearchEngine = (props: Props) => {
       zIndex="100"
       flexDirection="row-reverse"
       gap={isOpen ? "10px" : "0"}
-      transition="0.3s"
+      transition="0.5s"
     >
       <Button
+        position="absolute"
+        right="-200px"
+        top="0"
+        w="200px"
         borderRadius={isOpen ? "0px 0px 5px 5px" : "0px 0px 5px 0px"}
         bgColor="#646464"
-        onClick={onToggle}
-        transition="0.5s"
+        onClick={(e) => onToggle(e)}
+        transition="0.2s"
         color="#ffffff"
         _hover={{
           bgColor: "#000000",
@@ -68,12 +72,7 @@ const SementicSearchEngine = (props: Props) => {
         overflow="hidden"
         transition="0.5s"
       >
-        <Accordion
-          defaultIndex={[0]}
-          variant={"searchEngine"}
-          allowMultiple
-          onChange={(e) => {}}
-        >
+        <Accordion defaultIndex={[0]} variant={"searchEngine"} allowMultiple>
           <AccordionItem key={`Item-Map-Select`}>
             <AccordionButton>
               Set Base State
@@ -81,17 +80,20 @@ const SementicSearchEngine = (props: Props) => {
             </AccordionButton>
             <AccordionPanel
               display="flex"
-              w="30rem"
               flexDirection="column"
               backgroundColor="#ededed"
               color="#555555"
               fontSize="0.8rem"
               fontWeight="bold"
+              w="480px"
             >
               <FilterBaseState />
             </AccordionPanel>
           </AccordionItem>
-          <AccordionItem key={`Item-Option-Select`} isDisabled={!baseCheck}>
+          <AccordionItem
+            key={`Item-Option-Select`}
+            isDisabled={!isCheckbaseOption}
+          >
             <AccordionButton>
               {baseList.infoCom.title}
               <AccordionIcon />
@@ -102,7 +104,7 @@ const SementicSearchEngine = (props: Props) => {
               backgroundColor="#ededed"
               color="#555555"
             >
-              <FilterInfoCom isDisabled={!baseCheck} />
+              <FilterInfoCom isDisabled={!isCheckbaseOption} />
             </AccordionPanel>
           </AccordionItem>
         </Accordion>

@@ -41,6 +41,10 @@ const SementicViewer = (props: Props) => {
   return (
     <Flex position="absolute" right="0" top="0" zIndex="100" h="100%">
       <Button
+        position="absolute"
+        left="-200px"
+        top="0"
+        w="200px"
         borderRadius="0px 0px 0px 5px"
         bgColor="#646464"
         onClick={onToggle}

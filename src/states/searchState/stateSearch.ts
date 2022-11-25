@@ -264,9 +264,10 @@ export const collectSementicState = selector({
 export const checkBaseState = selector({
   key: "checkBaseState",
   get: ({ get }) => {
-    const sementicState = get(atomSementicState);
+    const map = get(atomSementicMapState);
+    const upjong = get(atomSementicUpjong);
 
-    return sementicState.baseCheck;
+    return map.allCheck && upjong.allCheck ? true : false;
   },
   set: ({ get, set }) => {},
 });
@@ -284,88 +285,65 @@ export const resetSementicAtom = selector({
 });
 
 //  State & Controll: Map(pointer, area) _ atom, selector
+type ControllState = {
+  [key: string]: any;
+};
+
 export const atomSementicMapState = atom<{ [key: string]: any }>({
   key: "sementicMapState",
   default: {
     pointer: {
       coord: {},
       address: "",
+      isCheck: false,
     },
     area: {
       polygon: {},
+      isCheck: true,
     },
+    allCheck: false,
   },
 });
 
 export const selectorSementicMapState = selector({
   key: "selectorsementicMapState",
   get: ({ get }) => {},
-  set: ({ get, set }, { key, val }: any) => {
-    const sementicMapState = get(atomSementicMapState);
+  set: ({ get, set }, newVal: any) => {
+    const { pointer, area } = newVal;
 
-    if (key === "pointer") {
-      const { coord, address, isCheck } = val;
-      const newPointer = {
-        coord: coord,
-        address: address,
-      };
-      set(atomSementicMapState, { ...sementicMapState, pointer: newPointer });
-    } else if (key === "area") {
-      const { polygon, isCheck } = val;
-      const newPolygon = {
-        polygon: polygon,
-      };
-
-      set(atomSementicMapState, { ...sementicMapState, polygon: newPolygon });
-    } else {
-      console.log('Check Props: property = "key"');
-    }
+    set(atomSementicMapState, {
+      ...newVal,
+      allCheck: pointer.isCheck && area.isCheck ? true : false,
+    });
   },
 });
-
-type ControllState = {
-  [key: string]: string | number | boolean;
-};
 
 export const atomMapControllState = atom<ControllState>({
   key: "mapControllState",
   default: {
     zoomLevel: 0,
-    activePoint: false,
-    activePolygon: false,
+    event: "",
   },
 });
 
 export const mapControllHandler = selector({
   key: "mapControllHandler",
-  get: () => {},
-  set: ({ get, set }, key: any) => {
+  get: ({ get }) => {
+    const mapControllState = get(atomMapControllState);
+
+    return mapControllState.event;
+  },
+  set: ({ get, set }, val: any) => {
     const currentState = get(atomMapControllState);
 
-    set(atomMapControllState, { ...currentState, [key]: !currentState[key] });
+    set(atomMapControllState, {
+      ...currentState,
+      event: val,
+    });
   },
 });
 
 //  State: Upjong _ atom, selector
-export const atomSementicUpjong = atom<Upjong>({
-  key: "sementicUpjong",
-  default: {
-    mainUpjong: {
-      title: "Total",
-      code: "total",
-    },
-    midUpjong: {
-      title: "",
-      code: "",
-    },
-    subUpjong: {
-      title: "",
-      code: "",
-    },
-    currentCode: "",
-  },
-});
-
 type Upjong = {
   mainUpjong: {
     title: string;
@@ -380,7 +358,28 @@ type Upjong = {
     code: string;
   };
   currentCode: string;
+  allCheck: boolean;
 };
+
+export const atomSementicUpjong = atom<Upjong>({
+  key: "sementicUpjong",
+  default: {
+    mainUpjong: {
+      title: "",
+      code: "",
+    },
+    midUpjong: {
+      title: "",
+      code: "",
+    },
+    subUpjong: {
+      title: "",
+      code: "",
+    },
+    currentCode: "",
+    allCheck: false,
+  },
+});
 
 export const selectorSementicUpjong = selector({
   key: "selectorSementicSector",
@@ -388,7 +387,7 @@ export const selectorSementicUpjong = selector({
   set: ({ set, get }, newVal: any) => {
     const sementicSector = get(atomSementicUpjong);
 
-    set(atomSementicUpjong, newVal);
+    set(atomSementicUpjong, { ...newVal, allCheck: true });
   },
 });
 
@@ -401,22 +400,12 @@ export const atomInfoCom = atom<string[]>({
 export const selectorInfoCom = selector({
   key: "selectorInfoCom",
   get: ({ get }) => {},
-  set: ({ set, get }, { method, infoCom }: any) => {
+  set: ({ set, get }, key: any) => {
     const infoComs = get(atomInfoCom);
-    let newVal: string[] = [];
+    let newVal: string[] = infoComs.includes(key)
+      ? infoComs.filter((li: string) => li !== key)
+      : [...infoComs, key];
 
-    if (!method) {
-      console.log('Check Props: property = "method"');
-      return;
-    } else if (method === "add") {
-      newVal = infoComs.includes(infoCom) ? infoComs : [...infoComs, infoCom];
-    } else if (method === "remove") {
-      newVal =
-        infoComs.length > 0
-          ? infoComs.filter((li: string) => li !== infoCom)
-          : [];
-    }
-
-    set(atomInfoCom, newVal);
+    newVal.length > 4 ? alert("선택제한 : 4") : set(atomInfoCom, newVal);
   },
 });

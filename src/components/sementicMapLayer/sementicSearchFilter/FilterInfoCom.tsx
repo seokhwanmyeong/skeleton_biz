@@ -54,21 +54,7 @@ const FilterInfoCom = (props: any) => {
                           key={key}
                           value={key}
                           title={title}
-                          onChange={(e: any) => {
-                            if (
-                              infocomList.length > 3 &&
-                              !infocomList.includes(key)
-                            ) {
-                              alert("선택제한 : 4");
-                            } else {
-                              setInfoCom({
-                                method: infocomList.includes(key)
-                                  ? "remove"
-                                  : "add",
-                                infoCom: key,
-                              });
-                            }
-                          }}
+                          onChange={() => setInfoCom(key)}
                         />
                       );
                     })}

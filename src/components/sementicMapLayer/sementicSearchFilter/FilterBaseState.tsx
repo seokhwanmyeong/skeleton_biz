@@ -1,6 +1,6 @@
 //  Lib
 import { useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
 import {
   Flex,
   Button,
@@ -17,8 +17,6 @@ import Tag from "@components/common/Tag";
 //  State
 import {
   atomSementicBaseList,
-  atomSementicState,
-  collectSementicState,
   atomSementicMapState,
   mapControllHandler,
   atomSementicUpjong,
@@ -27,31 +25,30 @@ import {
 
 const FilterBaseState = () => {
   const baseList = useRecoilValue(atomSementicBaseList);
-  // const { pointer, area, sector } = useRecoilValue(atomSementicState);
-  // const determineState = useSetRecoilState(collectSementicState);
   const mapState = useRecoilValue(atomSementicMapState);
-  const setMapControll = useSetRecoilState(mapControllHandler);
+  const [currentEvent, setMapControll] = useRecoilState(mapControllHandler);
   const upjongState = useRecoilValue(atomSementicUpjong);
   const updateUpjong = useSetRecoilState(selectorSementicUpjong);
-  const [selectUpjong, setSelectUpjong] = useState(upjongState);
+  const [selectUpjong, setSelectUpjong] = useState({
+    mainUpjong: {
+      title: "Total",
+      code: "total",
+    },
+    midUpjong: {
+      title: "",
+      code: "",
+    },
+    subUpjong: {
+      title: "",
+      code: "",
+    },
+    currentCode: "",
+    allCheck: false,
+  });
   console.log("render FilterBaseState");
 
   const selectUpjongHandler = (step: "main" | "mid", main: any, mid?: any) => {
-    let upjongData: {
-      mainUpjong: {
-        title: string;
-        code: string;
-      };
-      midUpjong: {
-        title: string;
-        code: string;
-      };
-      subUpjong: {
-        title: string;
-        code: string;
-      };
-      currentCode: string;
-    };
+    let upjongData;
 
     if (step === "main") {
       upjongData = {
@@ -101,7 +98,7 @@ const FilterBaseState = () => {
               width: "100%",
             }}
           >
-            {/* {pointer.address} */}
+            {mapState.pointer.address}
           </Text>
         </Tab>
         <Tab key="tab-sector" flexDirection="column" w="30%">
@@ -123,14 +120,14 @@ const FilterBaseState = () => {
             <Text>선택 위치: {mapState.pointer.address}</Text>
             <Button
               onClick={() => {
-                setMapControll("activePoint");
+                currentEvent !== "activePoint" && setMapControll("activePoint");
               }}
             >
               위치설정
             </Button>
           </Stack>
         </TabPanel>
-        <TabPanel key="panel-sector">
+        <TabPanel key="panel-upjong">
           <Stack>
             <Tabs>
               <TabList flexWrap="wrap">
@@ -189,7 +186,14 @@ const FilterBaseState = () => {
           </Stack>
         </TabPanel>
         <TabPanel key="panel-area">
-          <Button onClick={() => {}}>설정완료</Button>
+          <Button
+            onClick={() => {
+              currentEvent !== "activePolygon" &&
+                setMapControll("activePolygon");
+            }}
+          >
+            영역설정
+          </Button>
         </TabPanel>
       </TabPanels>
     </Tabs>
