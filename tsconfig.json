@@ -23,7 +23,8 @@
       "@page/*": ["src/page/*"],
       "@router/*": ["src/router/*"],
       "@states/*": ["src/states/*"],
-      "@util/*": ["src/util/*"]
+      "@util/*": ["src/util/*"],
+      "@hook/*": ["src/hook/*"]
     }
   },
   "include": ["src"],

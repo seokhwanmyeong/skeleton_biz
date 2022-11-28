@@ -7,17 +7,19 @@ import {
   selectorSementicMapState,
   atomMapControllState,
   mapControllHandler,
+  resetSementicAtom,
 } from "@states/searchState/stateSearch";
 
 const SementicMap = () => {
   const { event } = useRecoilValue(atomMapControllState);
-  const setSementicMapState = useSetRecoilState(selectorSementicMapState);
+  const [mapState, setSementicMapState] = useRecoilState(
+    selectorSementicMapState
+  );
   const setMapControll = useSetRecoilState(mapControllHandler);
   const mapRef = useRef<any>();
   const markerRef = useRef<any>();
   const [activeEvent, setActiveEvent] = useState<any>();
   const [offset, setOffset] = useState({ left: 0, top: 0 });
-  const [markerTest, setMarker] = useState<any>();
   const [basePointer, setPointer] = useState<any>({
     pointer: {
       coord: {},
@@ -138,24 +140,17 @@ const SementicMap = () => {
 
   const mapBasePointHandler = (e: any, baseMap: any) => {
     const point = e.coord;
-
+    console.log(markerRef.current);
     if (markerRef.current === undefined) {
       const marker = new naver.maps.Marker({
         position: point,
         map: baseMap,
       });
+
+      markerRef.current = marker;
     } else {
       markerRef.current.setPosition(point);
     }
-    // if (!markerTest) {
-    //   const marker = new naver.maps.Marker({
-    //     position: point,
-    //     map: baseMap,
-    //   });
-    //   setMarker(marker);
-    // } else {
-    //   markerTest.setPosition(point);
-    // }
 
     const position: { x: number; y: number } = mapRef.current
       .getProjection()
@@ -222,6 +217,18 @@ const SementicMap = () => {
       setActiveEvent(pointer);
     } else if (event === "activePolygon") {
       console.log("Event activePolygon Start");
+
+      if (!markerRef.current) {
+        alert("지점을 먼저 설정해주세요");
+        return;
+      }
+
+      const coord = markerRef.current.getPosition();
+
+      mapRef.current.setZoom(15, true);
+      mapRef.current.panTo(coord);
+      // mapRef.current.updateBy(coord, 15);
+
       let polygon = naver.maps.Event.addListener(
         mapRef.current,
         "click",
@@ -231,6 +238,9 @@ const SementicMap = () => {
       );
 
       setActiveEvent(polygon);
+    } else if (event === "" && markerRef.current) {
+      // markerRef.current.setMap(null);
+      // markerRef.current = undefined;
     }
 
     return naver.maps.Event.removeListener(activeEvent);

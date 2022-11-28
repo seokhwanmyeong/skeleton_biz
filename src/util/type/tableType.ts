@@ -1,6 +1,6 @@
 type TableCell = {
-  title: string;
-  cellKey: string;
+  Header: string;
+  accessor: string;
   isCustom?: boolean;
   styles?: any;
 };

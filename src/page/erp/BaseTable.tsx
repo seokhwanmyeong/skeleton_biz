@@ -1,5 +1,5 @@
 //  Lib
-import { useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@chakra-ui/react";
 //  Components
 import Table from "@src/components/table/Table";
@@ -9,6 +9,7 @@ import { BaseTableSet } from "@util/data/erpTableData";
 type Props = {};
 
 const ErpBase = (props: Props) => {
+  const [page, setPage] = useState(1);
   const testData = [
     {
       date: "2022-11-21",
@@ -38,6 +39,55 @@ const ErpBase = (props: Props) => {
       address: "testsetsetsetsetsetsetsetstsetset",
       info: "man",
     },
+    {
+      date: "2022-11-24",
+      name: "test",
+      age: 123,
+      address: "testsetsetsetsetsetsetsetstsetset",
+      info: "man",
+    },
+    {
+      date: "2022-11-24",
+      name: "test",
+      age: 123,
+      address: "testsetsetsetsetsetsetsetstsetset",
+      info: "man",
+    },
+    {
+      date: "2022-11-24",
+      name: "test",
+      age: 123,
+      address: "testsetsetsetsetsetsetsetstsetset",
+      info: "man",
+    },
+    {
+      date: "2022-11-24",
+      name: "test",
+      age: 123,
+      address: "testsetsetsetsetsetsetsetstsetset",
+      info: "man",
+    },
+    {
+      date: "2022-11-24",
+      name: "test",
+      age: 123,
+      address: "testsetsetsetsetsetsetsetstsetset",
+      info: "man",
+    },
+    {
+      date: "2022-11-24",
+      name: "test",
+      age: 123,
+      address: "testsetsetsetsetsetsetsetstsetset",
+      info: "man",
+    },
+    {
+      date: "2022-11-24",
+      name: "test",
+      age: 123,
+      address: "testsetsetsetsetsetsetsetstsetset",
+      info: "man",
+    },
   ];
 
   const TestCustom = (props: any) => {
@@ -54,13 +104,15 @@ const ErpBase = (props: Props) => {
 
   return (
     <Table
-      tableType="base"
-      tableSet={BaseTableSet}
-      caption="ERP Base Table"
+      isDirectApi={false}
+      variant="striped"
+      caption="Test TABLE"
+      totalRegisters={testData.length}
+      page={page}
+      columns={BaseTableSet}
       data={testData}
-      customCell={{
-        detail: <TestCustom />,
-      }}
+      onPageChange={(page) => setPage(page)}
+      emptyData={{ text: "No Contents" }}
     />
   );
 };

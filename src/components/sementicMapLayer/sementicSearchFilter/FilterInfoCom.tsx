@@ -37,28 +37,28 @@ const FilterInfoCom = (props: any) => {
               </AccordionButton>
               <AccordionPanel
                 display="flex"
-                flexDirection="column"
+                flexDirection="row"
+                flexWrap="wrap"
                 backgroundColor="#ededed"
                 color="#555555"
                 fontSize="0.8rem"
                 fontWeight="bold"
+                gap="10px"
               >
-                <Stack spacing="10px">
-                  {list &&
-                    list.map((item: { title: string; key: string }) => {
-                      const { title, key } = item;
-                      return (
-                        <CheckBoxTag
-                          isChecked={infocomList.includes(key)}
-                          isDisabled={isDisabled}
-                          key={key}
-                          value={key}
-                          title={title}
-                          onChange={() => setInfoCom(key)}
-                        />
-                      );
-                    })}
-                </Stack>
+                {list &&
+                  list.map((item: { title: string; key: string }) => {
+                    const { title, key } = item;
+                    return (
+                      <CheckBoxTag
+                        isChecked={infocomList.includes(key)}
+                        isDisabled={isDisabled}
+                        key={key}
+                        value={key}
+                        title={title}
+                        onChange={() => setInfoCom(key)}
+                      />
+                    );
+                  })}
               </AccordionPanel>
             </AccordionItem>
           );

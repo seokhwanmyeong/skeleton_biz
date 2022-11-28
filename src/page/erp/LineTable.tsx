@@ -1,5 +1,5 @@
 //  Lib
-import { useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@chakra-ui/react";
 //  Components
 import Table from "@src/components/table/Table";
@@ -9,6 +9,7 @@ import { LineTableSet } from "@util/data/erpTableData";
 type Props = {};
 
 const ErpLine = (props: Props) => {
+  const [page, setPage] = useState(1);
   const testData = [
     {
       date: "2022-11-22",
@@ -46,14 +47,15 @@ const ErpLine = (props: Props) => {
 
   return (
     <Table
+      isDirectApi={false}
       variant="striped"
-      tableType="base"
-      tableSet={LineTableSet}
-      caption="ERP Line Table"
+      caption="Test TABLE"
+      totalRegisters={testData.length}
+      page={page}
+      columns={LineTableSet}
       data={testData}
-      customCell={{
-        detail: <TestCustom />,
-      }}
+      onPageChange={(page) => setPage(page)}
+      emptyData={{ text: "No Contents" }}
     />
   );
 };

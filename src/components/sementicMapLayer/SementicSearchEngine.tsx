@@ -1,5 +1,5 @@
 //  Lib
-import { useState, useRef } from "react";
+import { useState } from "react";
 import {
   Flex,
   Button,
@@ -15,26 +15,22 @@ import FilterBaseState from "@src/components/sementicMapLayer/sementicSearchFilt
 //  States
 import {
   atomSementicBaseList,
-  atomSementicState,
   checkBaseState,
   resetSementicAtom,
 } from "@states/searchState/stateSearch";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 
-type Props = {};
-
-const SementicSearchEngine = (props: Props) => {
+const SementicSearchEngine = () => {
   //  Option Handler
   const baseList = useRecoilValue(atomSementicBaseList);
   const isCheckbaseOption = useRecoilValue(checkBaseState);
   const resetState = useSetRecoilState(resetSementicAtom);
   console.log("render engine");
+
   //  Toggle Event
   const [isOpen, setOpen] = useState(true);
-  const ref = useRef();
 
   const onToggle = (e: any) => {
-    console.log(e);
     setOpen(!isOpen);
   };
 
