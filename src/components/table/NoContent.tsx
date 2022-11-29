@@ -1,14 +1,11 @@
+//  LIB
 import React from "react";
 import { Flex, Icon, Text } from "@chakra-ui/react";
 import { ReactNode } from "react";
+//  TYPE
+import { NoContentProps } from "@util/type/tableType";
 
-export type NoContentProps = {
-  text: string;
-  children?: ReactNode;
-  noShadow?: boolean;
-};
-
-export function NoContent({ text, noShadow }: NoContentProps) {
+const NoContent = ({ text, noShadow }: NoContentProps) => {
   return (
     <Flex
       mt="8"
@@ -24,4 +21,6 @@ export function NoContent({ text, noShadow }: NoContentProps) {
       <Text mt="4">{text}</Text>
     </Flex>
   );
-}
+};
+
+export default NoContent;

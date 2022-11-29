@@ -32,6 +32,7 @@ const SideMenu = () => {
   return (
     <Fragment>
       <Accordion
+        variant="sideMenu"
         allowMultiple
         style={{ borderRight: "1px solid", minWidth: "200px" }}
       >

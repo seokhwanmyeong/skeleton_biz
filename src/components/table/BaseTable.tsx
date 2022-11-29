@@ -1,5 +1,5 @@
 //  LIB
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import {
   TableCaption,
   Table as ChakraTable,
@@ -9,50 +9,31 @@ import {
   Th,
   Td,
   Box,
-  ThemeTypings,
+  Flex,
 } from "@chakra-ui/react";
-import { Column, useTable } from "react-table";
+import { useTable } from "react-table";
 //  Components
-import { NoContentProps, NoContent } from "@components/table/NoContent";
-import { Pagination } from "@components/table/Pagination";
+import NoContent from "@components/table/NoContent";
+import Pagination from "@components/table/Pagination";
 //  Custom Hook
 import { usePagination } from "@hook/usePagination";
+//  Type
+import { TableProps } from "@util/type/tableType";
 
-type DataType = {
-  [key: string]: JSX.Element | string | number;
-};
-
-type EmptyMessage = Partial<NoContentProps>;
-
-interface TableProps {
-  isDirectApi: boolean;
-  caption?: string;
-  totalRegisters: number;
-  page: number;
-  registersPerPage?: number;
-  columns: Column<DataType>[];
-  data: DataType[];
-  onPageChange: (page: number) => void;
-  emptyData?: EmptyMessage;
-  variant?: string;
-  colorScheme?: ThemeTypings["colorSchemes"];
-}
-
-const Table = ({
-  isDirectApi = false,
+const BaseTable = ({
+  actviePage = true,
   caption,
   totalRegisters,
-  page,
-  registersPerPage,
+  registersPerPage = 5,
   columns,
   data,
-  onPageChange,
   emptyData,
   variant = "simple",
   colorScheme = "teal",
 }: TableProps) => {
+  const [page, setPage] = useState(1);
   const pagination = usePagination({
-    isDirectApi,
+    isDirectApi: false,
     totalRegisters,
     page,
     items: data,
@@ -104,14 +85,17 @@ const Table = ({
           })}
         </Tbody>
       </ChakraTable>
-
-      <Pagination
-        {...pagination}
-        colorScheme={colorScheme}
-        onPageChange={onPageChange}
-      />
+      {actviePage && (
+        <Flex w="100%" justifyContent="center">
+          <Pagination
+            {...pagination}
+            colorScheme={colorScheme}
+            onPageChange={setPage}
+          />
+        </Flex>
+      )}
     </Box>
   );
 };
 
-export default Table;
+export default BaseTable;

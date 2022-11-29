@@ -19,7 +19,7 @@ type Props = {
     isReadOnly?: boolean;
     isRequired?: boolean;
     [x: string]: any;
-  },
+  };
   transType: {
     placeholder?: string;
     _placeholder?: Object;
@@ -30,7 +30,7 @@ type Props = {
     isReadOnly?: boolean;
     isRequired?: boolean;
     [x: string]: any;
-  },
+  };
   addon: {
     placeholder?: string;
     _placeholder?: Object;
@@ -43,7 +43,7 @@ type Props = {
     addonType?: string;
     addonProps?: Object;
     [x: string]: any;
-  }
+  };
 };
 
 const Input = (props: Props["base"]) => {
@@ -106,10 +106,7 @@ const InputBtn = (props: any) => {
         isRequired={isRequired}
       />
       <InputRightElement {...addonProps}>
-        <Button 
-          {...btnProps}
-          onClick={event}
-        >
+        <Button {...btnProps} onClick={event}>
           {btnText}
         </Button>
       </InputRightElement>
@@ -162,7 +159,7 @@ const InputAddon = (props: Props["addon"]) => {
   const {
     groupProps,
     addonProps,
-    addonType = 'left', // left, right
+    addonType = "left", // left, right
     addonText,
     inputProps,
     placeholder,
@@ -177,11 +174,8 @@ const InputAddon = (props: Props["addon"]) => {
 
   return (
     <InputGroup {...groupProps}>
-      {(addonType === 'left') && (
-        <InputLeftAddon 
-          children={addonText}
-          {...addonProps}
-        />
+      {addonType === "left" && (
+        <InputLeftAddon children={addonText} {...addonProps} />
       )}
       <Input
         placeholder={placeholder}
@@ -194,19 +188,11 @@ const InputAddon = (props: Props["addon"]) => {
         isRequired={isRequired}
         {...inputProps}
       />
-      {(addonType === 'right') && (
-        <InputRightAddon 
-          children={addonText}
-          {...addonProps}
-        />
+      {addonType === "right" && (
+        <InputRightAddon children={addonText} {...addonProps} />
       )}
     </InputGroup>
   );
 };
 
-export {
-  Input,
-  InputBtn,
-  InputAddon,
-  InputPwd
-};
+export { Input, InputBtn, InputAddon, InputPwd };

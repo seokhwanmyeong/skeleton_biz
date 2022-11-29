@@ -1,6 +1,11 @@
 // Lib
 import { extendTheme, type ThemeConfig } from "@chakra-ui/react";
-import { mode, GlobalStyleProps } from "@chakra-ui/theme-tools";
+import {
+  mode,
+  GlobalStyleProps,
+  StyleFunctionProps,
+  StyleConfig,
+} from "@chakra-ui/theme-tools";
 import { SystemStyleObject } from "@chakra-ui/system";
 
 // Styles
@@ -10,7 +15,8 @@ import btnTheme from "@styles/theme/components/common/btnTheme";
 import headerTheme from "@styles/theme/components/header/headerTheme";
 import tagTheme from "@styles/theme/components/common/tagTheme";
 import checkboxTheme from "@styles/theme/components/common/checkBoxTheme";
-import accordionTheme from "@src/styles/theme/components/menu/accordionTheme";
+import accordionTheme from "@styles/theme/components/menu/accordionTheme";
+import { selectColorScheme } from "@styles/theme/color";
 
 const config: ThemeConfig = {
   initialColorMode: "light",
@@ -27,7 +33,8 @@ const theme = extendTheme({
     }),
   },
   // globalTheme,
-  color: {
+  colors: {
+    ...selectColorScheme("light"),
     custom1: "#dddddd",
     custom2: "#1a202c",
     custom3: "#fffefee6",

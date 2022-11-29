@@ -1,8 +1,7 @@
 //  Lib
-import { Fragment, useState, useEffect } from "react";
+import { Fragment } from "react";
 import { Heading, Flex } from "@chakra-ui/react";
 //  Components
-import Table from "@src/components/table/TableTest";
 import SideMenu from "@src/components/menu/SideMenu";
 import { Outlet } from "react-router-dom";
 

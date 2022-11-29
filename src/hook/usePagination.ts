@@ -3,7 +3,7 @@ type Options<I = any> = {
   totalRegisters: number;
   page: number;
   items: I[];
-  registersPerPage?: number;
+  registersPerPage: number;
   siblingsCount?: number;
 };
 
@@ -25,11 +25,10 @@ const generatePagesArray = (from: number, to: number): number[] => {
 };
 
 const usePagination = <I = any>({
-  isDirectApi,
   totalRegisters,
   page,
   items,
-  registersPerPage = 5,
+  registersPerPage,
   siblingsCount = 1,
 }: Options<I>): Pagination<I> => {
   const currentPage = page;
@@ -50,11 +49,7 @@ const usePagination = <I = any>({
 
   const pageStart = (page - 1) * registersPerPage;
   const pageEnd = pageStart + registersPerPage;
-
-  const pageItems =
-    !isDirectApi && Array.isArray(items)
-      ? items.slice(pageStart, pageEnd)
-      : items;
+  const pageItems = items.slice(pageStart, pageEnd);
 
   return {
     pageItems,

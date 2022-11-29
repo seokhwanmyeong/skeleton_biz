@@ -14,7 +14,6 @@ const accordionTheme = {
     };
   },
   variants: {
-    sideMenu: {},
     searchEngine: (props: GlobalStyleProps) => {
       const { colorScheme: c, theme } = props;
       return {
@@ -41,18 +40,15 @@ const accordionTheme = {
         icon: {},
       };
     },
-    searchEngineSub: (props: GlobalStyleProps) => {
+    sideMenu: (props: GlobalStyleProps) => {
       const { colorScheme: c, theme } = props;
+      console.log(props);
 
       return {
-        root: {
-          display: "flex",
-          flexDirection: "column",
-          gap: "0.5rem",
-        },
-        container: {
-          border: "none",
-        },
+        root: {},
+        container: {},
+        button: {},
+        panel: {},
         icon: {},
       };
     },

@@ -8,12 +8,12 @@ type PaginationItemProps = {
   colorScheme?: ThemeTypings["colorSchemes"];
 };
 
-export function PaginationItem({
+const PaginationItem = ({
   isCurrent = false,
   page,
   onPageChange,
   colorScheme,
-}: PaginationItemProps) {
+}: PaginationItemProps) => {
   if (isCurrent) {
     return (
       <Button
@@ -46,4 +46,6 @@ export function PaginationItem({
       {page}
     </Button>
   );
-}
+};
+
+export default PaginationItem;
