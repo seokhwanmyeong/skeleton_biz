@@ -10,6 +10,7 @@ const Footer = () => {
       justifyContent="center"
       alignItems="center"
       borderTop="1px solid"
+      borderColor="primary.main.bdColor"
     >
       <Heading>FOOTER AREA</Heading>
     </Flex>

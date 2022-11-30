@@ -2,19 +2,37 @@ export const selectColorScheme = (type: string) => {
   const colorTheme: { [key: string]: {} } = {
     light: {
       primary: {
-        main: "#ffffff",
-        overlay: "#000000",
-        hover: "#dddddd",
-        font: "#ffffff14",
+        main: {
+          color: "#ffffff",
+          bg: "#ffffff",
+          hover: "#dddddd",
+          font: "#1a202c",
+          bdColor: "ededed",
+        },
+        reverse: {
+          color: "#1a202c",
+          bg: "#1a202c",
+          hover: "#555555",
+          font: "#1a202c",
+          bdColor: "ededed",
+        },
       },
       secondary: {
-        main: "#ffffff14",
-        overlay: "#ffffff",
-        hover: "#51515114",
-        font: "#ffffff",
+        main: {
+          color: "#ffffff",
+          hover: "#dddddd",
+          font: "#1a202c",
+          bdColor: "ededed",
+        },
+        reverse: {
+          color: "#1a202c",
+          hover: "#555555",
+          font: "#ffffff",
+          bdColor: "ededed",
+        },
       },
       confirm: {
-        main: "#4372ff",
+        main: "#00B050",
         hover: "#1751ff",
         disabled: "#96b0ff",
         font: "#ffffff",
@@ -26,21 +44,39 @@ export const selectColorScheme = (type: string) => {
         font: "#ffffff",
       },
     },
-    black: {
+    dark: {
       primary: {
-        main: "#ffffff14",
-        overlay: "#ffffff",
-        hover: "#51515114",
-        font: "#ffffff",
+        main: {
+          color: "#1a202c",
+          bg: "#1a202c",
+          hover: "#555555",
+          font: "#ffffff",
+          bdColor: "ededed",
+        },
+        reverse: {
+          color: "#ffffff",
+          bg: "#ffffff",
+          hover: "#dddddd",
+          font: "#ffffff",
+          bdColor: "ededed",
+        },
       },
       secondary: {
-        main: "#ffffff",
-        overlay: "#000000",
-        hover: "#dddddd",
-        font: "#ffffff14",
+        main: {
+          color: "#1a202c",
+          hover: "#555555",
+          font: "#ffffff",
+          bdColor: "ededed",
+        },
+        reverse: {
+          color: "#ffffff",
+          hover: "#dddddd",
+          font: "#1a202c",
+          bdColor: "ededed",
+        },
       },
       confirm: {
-        main: "#4372ff",
+        main: "#00B050",
         hover: "#1751ff",
         disabled: "#96b0ff",
         font: "#ffffff",
@@ -52,9 +88,94 @@ export const selectColorScheme = (type: string) => {
         font: "#ffffff",
       },
     },
-    test1: {},
-    test2: {},
-    bbq: {},
+    biz: {
+      primary: {
+        main: {
+          color: "#FFC000",
+          bg: "#ffffff",
+          hover: "#dddddd",
+          font: "#1a202c",
+          bdColor: "#FFC000",
+        },
+        reverse: {
+          color: "#ffffff",
+          bg: "#ffffff",
+          hover: "#dddddd",
+          font: "#ffffff",
+          bdColor: "#ffffff",
+        },
+      },
+      secondary: {
+        main: {
+          color: "#1a202c",
+          hover: "#555555",
+          font: "#ffffff",
+          bdColor: "ededed",
+        },
+        reverse: {
+          color: "#ffffff",
+          hover: "#dddddd",
+          font: "#1a202c",
+          bdColor: "ededed",
+        },
+      },
+      confirm: {
+        main: "#00B050",
+        hover: "#1751ff",
+        disabled: "#96b0ff",
+        font: "#ffffff",
+      },
+      cancel: {
+        main: "#ff6161",
+        hover: "#ff2929",
+        disabled: "#ffb4b4",
+        font: "#ffffff",
+      },
+    },
+    bbq: {
+      primary: {
+        main: {
+          color: "#c70a2f",
+          bg: "#ffffff",
+          hover: "#dddddd",
+          font: "#1a202c",
+          bdColor: "#c70a2f",
+        },
+        reverse: {
+          color: "#c70a2f",
+          bg: "#ffffff",
+          hover: "#555555",
+          font: "#ffffff",
+          bdColor: "#c70a2f",
+        },
+      },
+      secondary: {
+        main: {
+          color: "#ffffff",
+          hover: "#dddddd",
+          font: "#1a202c",
+          bdColor: "ededed",
+        },
+        reverse: {
+          color: "#1a202c",
+          hover: "#555555",
+          font: "#ffffff",
+          bdColor: "ededed",
+        },
+      },
+      confirm: {
+        main: "#00B050",
+        hover: "#1751ff",
+        disabled: "#96b0ff",
+        font: "#ffffff",
+      },
+      cancel: {
+        main: "#ff6161",
+        hover: "#ff2929",
+        disabled: "#ffb4b4",
+        font: "#ffffff",
+      },
+    },
   };
 
   return colorTheme[type];

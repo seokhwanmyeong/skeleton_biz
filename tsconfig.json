@@ -24,7 +24,8 @@
       "@router/*": ["src/router/*"],
       "@states/*": ["src/states/*"],
       "@util/*": ["src/util/*"],
-      "@hook/*": ["src/hook/*"]
+      "@hook/*": ["src/hook/*"],
+      "@api/*": ["src/api/*"]
     }
   },
   "include": ["src"],

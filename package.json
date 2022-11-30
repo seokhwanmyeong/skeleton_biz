@@ -20,6 +20,7 @@
     "@types/styled-components": "^5.1.26",
     "@typescript-eslint/eslint-plugin": "^5.42.1",
     "@typescript-eslint/parser": "^5.42.1",
+    "axios": "^1.2.0",
     "d3": "^7.6.1",
     "deck.gl": "^8.8.15",
     "eslint": "^8.27.0",

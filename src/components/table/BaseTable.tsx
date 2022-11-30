@@ -72,7 +72,6 @@ const BaseTable = ({
         <Tbody {...getTableBodyProps()}>
           {rows.map((row) => {
             prepareRow(row);
-            console.log(row);
             return (
               <Tr {...row.getRowProps()} key={row.id}>
                 {row.cells.map((cell, index) => (

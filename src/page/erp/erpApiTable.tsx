@@ -8,7 +8,7 @@ const ErpApiTable = () => {
     <>
       <SearchTable
         actviePage={true}
-        url=""
+        url="/rate"
         reqBody={{}}
         reqType={{}}
         resType={{}}

@@ -43,6 +43,7 @@ const SementicSearchEngine = () => {
       flexDirection="row-reverse"
       gap={isOpen ? "10px" : "0"}
       transition="0.5s"
+      backgroundColor="transparent"
     >
       <Button
         position="absolute"
@@ -67,6 +68,7 @@ const SementicSearchEngine = () => {
         justifyContent="center"
         overflow="hidden"
         transition="0.5s"
+        backgroundColor="transparent"
       >
         <Accordion defaultIndex={[0]} variant={"searchEngine"} allowMultiple>
           <AccordionItem key={`Item-Map-Select`}>
@@ -74,15 +76,7 @@ const SementicSearchEngine = () => {
               Set Base State
               <AccordionIcon />
             </AccordionButton>
-            <AccordionPanel
-              display="flex"
-              flexDirection="column"
-              backgroundColor="#ededed"
-              color="#555555"
-              fontSize="0.8rem"
-              fontWeight="bold"
-              w="480px"
-            >
+            <AccordionPanel>
               <FilterBaseState />
             </AccordionPanel>
           </AccordionItem>
@@ -94,12 +88,7 @@ const SementicSearchEngine = () => {
               {baseList.infoCom.title}
               <AccordionIcon />
             </AccordionButton>
-            <AccordionPanel
-              display="flex"
-              flexDirection="column"
-              backgroundColor="#ededed"
-              color="#555555"
-            >
+            <AccordionPanel>
               <FilterInfoCom isDisabled={!isCheckbaseOption} />
             </AccordionPanel>
           </AccordionItem>

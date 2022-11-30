@@ -10,53 +10,11 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { Formik, Field } from "formik";
+//  Api
+import { getTestTable } from "@src/api/postApi";
 
 const SearchBox = (props: any) => {
-  const { reqBody, dataSet, refSet } = props;
-  const testData = [
-    {
-      date: "2022-11-21",
-      name: "test",
-      age: 123,
-      address: "testsetsetsetsetsetsetsetstsetset",
-      gender: "man",
-    },
-    {
-      date: "2022-11-22",
-      name: "test",
-      age: 123,
-      address: "testsetsetsetsetsetsetsetstsetset",
-      gender: "man",
-    },
-    {
-      date: "2022-11-23",
-      name: "test",
-      age: 123,
-      address: "testsetsetsetsetsetsetsetstsetset",
-      gender: "man",
-    },
-    {
-      date: "2022-11-24",
-      name: "test",
-      age: 123,
-      address: "testsetsetsetsetsetsetsetstsetset",
-      gender: "man",
-    },
-    {
-      date: "2022-11-24",
-      name: "test",
-      age: 123,
-      address: "testsetsetsetsetsetsetsetstsetset",
-      gender: "man",
-    },
-    {
-      date: "2022-11-24",
-      name: "test",
-      age: 123,
-      address: "testsetsetsetsetsetsetsetstsetset",
-      gender: "man",
-    },
-  ];
+  const { url, reqBody, dataSet, refSet } = props;
 
   return (
     <Formik
@@ -75,11 +33,7 @@ const SearchBox = (props: any) => {
         };
         console.log("set req", req);
         console.log("\napi Start");
-        const totalReg = testData.length;
-        const data = testData;
-        dataSet(data);
-        refSet(totalReg);
-        console.log("api End");
+        getTestTable(url, dataSet, refSet);
       }}
     >
       {({ handleSubmit, errors, touched, getFieldProps, setFieldValue }) => {

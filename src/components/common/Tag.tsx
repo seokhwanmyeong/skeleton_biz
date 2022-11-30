@@ -30,7 +30,7 @@ const Tag = (props: Props) => {
   return (
     <ChakraTag
       variant={variant}
-      onClick={tagBtn && onClick}
+      onClick={tagBtn ? onClick : undefined}
       style={{
         cursor: tagBtn ? "pointer" : "default",
         backgroundColor: isChecked ? "#000000" : "#999999",

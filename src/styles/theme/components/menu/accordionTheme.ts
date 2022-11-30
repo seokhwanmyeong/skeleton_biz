@@ -16,6 +16,7 @@ const accordionTheme = {
   variants: {
     searchEngine: (props: GlobalStyleProps) => {
       const { colorScheme: c, theme } = props;
+      console.log(props);
       return {
         root: {
           p: "0.5rem",
@@ -24,26 +25,40 @@ const accordionTheme = {
           gap: "5px",
           minW: "180px",
           transition: theme.transition.easing["ease-in"],
+          backgroundColor: "transparent",
         },
         container: {
           border: "none",
+          bg: "transparent",
         },
         button: {
           justifyContent: "space-between",
-          bg: mode(theme.color.custom3, theme.color.custom2)(props),
+          bg: theme.colors.primary.main.color,
+          color: theme.colors.primary.main.font,
           borderRadius: theme.radii.basic,
           _hover: {
-            bg: mode(theme.color.custom2, theme.color.custom3)(props),
-            color: mode(theme.color.custom3, theme.color.custom2)(props),
+            bg: theme.colors.primary.reverse.hover,
+            color: theme.colors.primary.reverse.font,
           },
+          _expanded: {
+            mb: "5px",
+          },
+        },
+        panel: {
+          display: "flex",
+          flexDirection: "column",
+          w: "480px",
+          bg: "transparent",
+          borderRadius: theme.radii.basic,
+          fontSize: "0.8rem",
+          fontWeight: "bold",
+          color: theme.colors.primary.reverse.font,
         },
         icon: {},
       };
     },
     sideMenu: (props: GlobalStyleProps) => {
       const { colorScheme: c, theme } = props;
-      console.log(props);
-
       return {
         root: {},
         container: {},

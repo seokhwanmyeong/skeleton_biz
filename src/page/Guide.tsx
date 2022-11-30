@@ -150,7 +150,7 @@ const Guide = () => {
               key={"lg"}
               variant={"filterOption"}
               text="Base: lg"
-              hasBtn={true}
+              tagBtn={true}
               onClick={() => alert("Click")}
             />
           </Stack>

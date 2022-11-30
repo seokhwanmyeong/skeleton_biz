@@ -16,12 +16,12 @@ const tagTheme = {
       return {
         container: {
           w: "auto",
-          bg: mode(theme.color.custom2, theme.color.custom1)(props),
+          bg: mode(theme.colors.custom2, theme.colors.custom1)(props),
           alignSelf: "baseline",
           justifyContent: "space-between",
         },
         label: {
-          color: mode(theme.color.custom1, theme.color.custom2)(props),
+          color: mode(theme.colors.custom1, theme.colors.custom2)(props),
         },
       };
     },
@@ -31,12 +31,12 @@ const tagTheme = {
       return {
         container: {
           w: "auto",
-          bg: mode(theme.color.custom2, theme.color.custom1)(props),
+          bg: mode(theme.colors.custom2, theme.colors.custom1)(props),
           alignSelf: "baseline",
           justifyContent: "space-between",
         },
         label: {
-          color: mode(theme.color.custom1, theme.color.custom2)(props),
+          color: mode(theme.colors.custom1, theme.colors.custom2)(props),
         },
       };
     },

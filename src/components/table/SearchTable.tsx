@@ -24,7 +24,7 @@ import { useEffect } from "react";
 
 const SearchTable = ({
   isDirectApi = false,
-  url = "",
+  url,
   reqBody = {},
   reqType = {},
   resType = {},
@@ -65,7 +65,12 @@ const SearchTable = ({
 
   return (
     <Box py="6" px="8" borderRadius="8" w="full" h="100%">
-      <SearchBox reqBody={req.body} dataSet={setData} refSet={setTotalReg} />
+      <SearchBox
+        url={url}
+        reqBody={req.body}
+        dataSet={setData}
+        refSet={setTotalReg}
+      />
       <ChakraTable {...getTableProps()} variant={variant}>
         {caption && <TableCaption placement="top">{caption}</TableCaption>}
         <Thead>

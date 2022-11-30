@@ -34,7 +34,9 @@ const SideMenu = () => {
       <Accordion
         variant="sideMenu"
         allowMultiple
-        style={{ borderRight: "1px solid", minWidth: "200px" }}
+        minWidth="200px"
+        borderRight="1px solid"
+        borderColor="primary.main.bdColor"
       >
         {menu.map((menuLi: SubMenuType, idx: number) => {
           return (
