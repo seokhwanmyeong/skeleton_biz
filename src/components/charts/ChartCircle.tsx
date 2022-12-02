@@ -8,8 +8,8 @@ type ChartCircleProps = {
   valName: string;
   zKey?: string;
   Group?: boolean;
-  width: number;
-  height: number;
+  width?: number | string;
+  height?: number;
   innerRadius?: number;
   outerRadius: number;
   labelRadius?: number;
@@ -75,7 +75,8 @@ const ChartCircle = (props: ChartCircleProps) => {
       .select(svgRef.current)
       .classed("chart-circle", true)
       .attr("viewBox", [-width / 2, -height / 2, width, height])
-      .attr("style", svgStyle);
+      .attr("width", width)
+      .attr("height", height);
 
     //  SET: Arcs.
     const arcs = d3

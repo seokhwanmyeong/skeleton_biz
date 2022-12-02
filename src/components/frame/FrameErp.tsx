@@ -9,7 +9,7 @@ const FrameErp = () => {
   return (
     <Fragment>
       <SideMenu />
-      <Flex flexDirection="column" w="100%" p="3rem 4rem">
+      <Flex flexDirection="column" w="calc(100vw - 200px)" p="3rem 4rem">
         <Heading>FrameErp</Heading>
         <Outlet />
       </Flex>

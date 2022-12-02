@@ -2,13 +2,7 @@ import { ReactNode } from "react";
 import { ThemeTypings } from "@chakra-ui/react";
 import { Column } from "react-table";
 
-type TableCell = {
-  Header: string;
-  accessor: string;
-  Cell?: any;
-};
-
-type BaseTable = TableCell[];
+type BaseColumns = Column<DataType>[];
 
 type NoContentProps = {
   text: string;
@@ -28,7 +22,7 @@ interface TableProps {
   caption?: string;
   totalRegisters: number;
   registersPerPage?: number;
-  columns: Column<DataType>[];
+  columns: BaseColumns;
   data: DataType[];
   emptyData?: EmptyMessage;
   variant?: string;
@@ -44,10 +38,22 @@ interface ApiTableProps {
   actviePage?: boolean;
   caption?: string;
   registersPerPage?: number;
-  columns: Column<DataType>[];
+  columns: BaseColumns;
   emptyData?: EmptyMessage;
   variant?: string;
   colorScheme?: ThemeTypings["colorSchemes"];
 }
 
-export type { BaseTable, TableCell, NoContentProps, TableProps, ApiTableProps };
+type Sample = {
+  date: string;
+  name: string;
+  age: number;
+  gender: "man" | "woman";
+  benefit: number;
+  average: {
+    man: number;
+    woman: number;
+  };
+};
+
+export type { BaseColumns, NoContentProps, TableProps, ApiTableProps, Sample };

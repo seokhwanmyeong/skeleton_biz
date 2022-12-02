@@ -4,7 +4,7 @@ import axios from "axios";
 import { NiceApiInstance } from "@src/util/type/apiType";
 
 const postApi: NiceApiInstance = axios.create({
-  baseURL: "https://37e5ccbb-b1d0-477a-870d-6629384c0cd5.mock.pstmn.io",
+  baseURL: import.meta.env.VITE_API_POSTMAN,
   responseType: "json",
   responseEncoding: "utf8",
   timeout: 2000,
@@ -14,17 +14,20 @@ const postApi: NiceApiInstance = axios.create({
 });
 
 postApi.interceptors.request.use((req: any) => {
+  console.log("intercept Req", req);
+  console.log("Req Data", req.data);
   return req;
 });
 
 postApi.interceptors.response.use((res: any) => {
-  console.log(res);
+  console.log("res", res);
   return res.data;
 });
 
-const getTestTable = (url: string, dataSet: any, refSet: any) => {
+const getTestTable = (url: string, reqBody: any, dataSet: any, refSet: any) => {
+  console.log("Incom reqBody", reqBody);
   postApi
-    .post<any, { success: boolean; data: any[] }>(url)
+    .post<any, { success: boolean; data: any[] }>(url, reqBody)
     .then((res) => {
       if (res.success) {
         const data = res.data;

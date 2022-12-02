@@ -10,11 +10,9 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { Formik, Field } from "formik";
-//  Api
-import { getTestTable } from "@src/api/postApi";
 
 const SearchBox = (props: any) => {
-  const { url, reqBody, dataSet, refSet } = props;
+  const { req, setReq } = props;
 
   return (
     <Formik
@@ -27,13 +25,10 @@ const SearchBox = (props: any) => {
       }}
       onSubmit={(val) => {
         console.log("search val", val);
-        const req = {
-          ...reqBody,
+        setReq({
+          ...req,
           ...val,
-        };
-        console.log("set req", req);
-        console.log("\napi Start");
-        getTestTable(url, dataSet, refSet);
+        });
       }}
     >
       {({ handleSubmit, errors, touched, getFieldProps, setFieldValue }) => {

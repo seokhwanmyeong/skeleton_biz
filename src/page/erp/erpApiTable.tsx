@@ -1,7 +1,7 @@
 //  Components
 import SearchTable from "@components/table/SearchTable";
 //  Data
-import { BaseTableSet } from "@util/data/erpTableData";
+import { BaseTableSet, LineTableSet } from "@util/data/erpTableData";
 
 const ErpApiTable = () => {
   return (
@@ -14,6 +14,17 @@ const ErpApiTable = () => {
         resType={{}}
         caption="BaseApiTable"
         columns={BaseTableSet}
+        emptyData={{ text: "No Contents" }}
+        variant="striped"
+      />
+      <SearchTable
+        actviePage={true}
+        url="/benefit"
+        reqBody={{}}
+        reqType={{}}
+        resType={{}}
+        caption="BaseApiTable"
+        columns={LineTableSet}
         emptyData={{ text: "No Contents" }}
         variant="striped"
       />

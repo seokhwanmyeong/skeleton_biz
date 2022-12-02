@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+//  LIB
+import { useState } from "react";
 import { Flex, Button, Heading, useColorMode } from "@chakra-ui/react";
 //  Components
 import ChartCircle from "@components/charts/ChartCircle";
