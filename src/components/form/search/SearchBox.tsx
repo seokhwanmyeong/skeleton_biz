@@ -12,17 +12,11 @@ import {
 import { Formik, Field } from "formik";
 
 const SearchBox = (props: any) => {
-  const { req, setReq } = props;
+  const { req, setReq, initialReq } = props;
 
   return (
     <Formik
-      initialValues={{
-        date: "",
-        name: "",
-        age: 0,
-        address: "",
-        gender: "woman",
-      }}
+      initialValues={initialReq}
       onSubmit={(val) => {
         console.log("search val", val);
         setReq({

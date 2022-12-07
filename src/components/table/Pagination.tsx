@@ -1,91 +1,102 @@
 //  LIB
 import React from "react";
-import { Stack, Text, ThemeTypings } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 //  Components
 import PaginationItem from "@components/table/PaginationItem";
 
 type PaginationProps = {
-  onPageChange: (page: number) => void;
+  dividePages: number[];
   currentPage: number;
   lastPage: number;
-  nextPages: number[];
-  prevPages: number[];
+  next: {
+    exist: boolean;
+    nextPage: number;
+  };
+  prev: {
+    exist: boolean;
+    prevPage: number;
+  };
   siblingsCount: number;
-  colorScheme?: ThemeTypings["colorSchemes"];
+  onPageChange: (page: number) => void;
+  variant?: string;
 };
 
 const Pagination = ({
+  dividePages,
   currentPage,
   lastPage,
-  prevPages,
-  nextPages,
+  next,
+  prev,
   siblingsCount,
   onPageChange,
-  colorScheme,
+  variant,
 }: PaginationProps) => {
+  // console.log(next, prev);
   return (
-    <Stack direction="row" mt="8" justify="flex-end" align="center" spacing="6">
-      <Stack direction="row" spacing="4">
-        {currentPage > 1 + siblingsCount ? (
-          <>
+    <Flex w="100%" justifyContent="center" flexDirection="row" align="center">
+      <Flex flexDirection="row" gap="2" position="relative">
+        {prev.exist && (
+          <Flex
+            position="absolute"
+            left="-8rem"
+            top="50%"
+            transform="translateY(-50%)"
+          >
             <PaginationItem
-              colorScheme={colorScheme}
+              isPageEvent={true}
               onPageChange={onPageChange}
               page={1}
+              key="first"
+              customChild={"<<"}
+              variant={variant}
             />
-            {currentPage > 2 + siblingsCount ? (
-              <Text color="gray.300" w="8" textAlign="center">
-                ...
-              </Text>
-            ) : null}
-          </>
-        ) : null}
-
-        {prevPages.length > 0
-          ? prevPages.map((page) => (
-              <PaginationItem
-                colorScheme={colorScheme}
-                onPageChange={onPageChange}
-                page={page}
-                key={page}
-              />
-            ))
-          : null}
-
-        <PaginationItem
-          colorScheme={colorScheme}
-          onPageChange={onPageChange}
-          page={currentPage}
-          isCurrent
-        />
-
-        {nextPages.length > 0
-          ? nextPages.map((page) => (
-              <PaginationItem
-                colorScheme={colorScheme}
-                onPageChange={onPageChange}
-                page={page}
-                key={page}
-              />
-            ))
-          : null}
-
-        {currentPage + siblingsCount < lastPage ? (
-          <>
-            {currentPage + 1 + siblingsCount < lastPage ? (
-              <Text color="gray.300" w="8" textAlign="center">
-                ...
-              </Text>
-            ) : null}
             <PaginationItem
-              colorScheme={colorScheme}
+              isPageEvent={true}
+              onPageChange={onPageChange}
+              page={prev.prevPage}
+              key={prev.prevPage}
+              customChild={"<"}
+              variant={variant}
+            />
+          </Flex>
+        )}
+        {dividePages &&
+          dividePages.map((page) => (
+            <PaginationItem
+              onPageChange={onPageChange}
+              page={page}
+              key={page}
+              isCurrent={currentPage === page}
+              variant={variant}
+            />
+          ))}
+        {next.exist && (
+          <Flex
+            position="absolute"
+            right="-8rem"
+            top="50%"
+            transform="translateY(-50%)"
+          >
+            <PaginationItem
+              isPageEvent={true}
+              onPageChange={onPageChange}
+              page={next.nextPage}
+              key={next.nextPage}
+              customChild={">"}
+              variant={variant}
+            />
+            <PaginationItem
+              isPageEvent={true}
               onPageChange={onPageChange}
               page={lastPage}
+              key="last"
+              customChild={">>"}
+              variant={variant}
             />
-          </>
-        ) : null}
-      </Stack>
-    </Stack>
+          </Flex>
+        )}
+      </Flex>
+    </Flex>
   );
 };
 

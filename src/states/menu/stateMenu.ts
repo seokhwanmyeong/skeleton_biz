@@ -40,12 +40,12 @@ export const subMenu = atom<SubMenuInteface>({
         children: [],
       },
       {
-        title: "erp01",
+        title: "ERP 테이블",
         hasChild: true,
         path: "",
         children: [
-          { title: "erp01-Sub01", path: "/erp/erp01-Sub01" },
-          { title: "erp01-Sub02", path: "/erp/erp01-Sub02" },
+          { title: "기본 테이블", path: "/erp/erp01-Sub01" },
+          { title: "API 통신테이블", path: "/erp/erp01-Sub02" },
         ],
       },
       {
@@ -58,7 +58,7 @@ export const subMenu = atom<SubMenuInteface>({
         ],
       },
       {
-        title: "erp03",
+        title: "ERP 팝업",
         hasChild: false,
         path: "/erp/erp03",
         children: [],

@@ -1,70 +1,119 @@
 //  LIB
-import { useState } from "react";
-import { Flex, Heading } from "@chakra-ui/react";
+import { useState, useMemo } from "react";
+import { Flex, Heading, Button } from "@chakra-ui/react";
 //  Components
 import ChartCircle from "@components/charts/ChartCircle";
 import ChartGraph from "@components/charts/ChartGraph";
+import ChartBar from "@src/components/charts/ChartBar";
+//  Util
+import { transMarginData } from "@src/util/data/testData";
 
 const DashBoard = () => {
-  const [data] = useState({
-    data1: [
-      { date: "2022-01", population: 5000 },
-      { date: "2022-02", population: 100 },
-      { date: "2022-03", population: 3500 },
-      { date: "2022-04", population: 1000 },
-      { date: "2022-05", population: 9000 },
-      { date: "2022-05", population: 1000 },
-      { date: "2022-08", population: 8000 },
-      { date: "2022-10", population: 677 },
-      { date: "2022-11", population: 800 },
-      { date: "2022-12", population: 3000 },
-      { date: "2022-12", population: 3000 },
-      { date: "2022-12", population: 3000 },
-      { date: "2022-12", population: 8000 },
-    ],
-    data2: [
-      { age: "10th", count: 2000 },
-      { age: "20th", count: 5000 },
-      { age: "30th", count: 12359 },
-      { age: "40th", count: 4560 },
-      { age: "50th", count: 1500 },
-      { age: "60th", count: 1290 },
-    ],
-  });
+  const [divide, setDivide] = useState(false);
+  const testMargin = useMemo(() => {
+    const testData = transMarginData(1000).filter((li) => {
+      return li.cty_nm === "영등포구";
+    });
+    const accessKey = "upjong2_nm";
+    const totalAmt = 1;
+    const legend = {
+      key: ["mTotal", "wTotal"],
+      mTotal: {
+        key: "mTotal",
+        title: "남자",
+        check: true,
+      },
+      wTotal: {
+        key: "wTotal",
+        title: "여자",
+        check: true,
+      },
+    };
+
+    return {
+      data: testData,
+      accessKey: accessKey,
+      totalAmt: totalAmt,
+      legend: legend,
+    };
+  }, []);
+
+  const testMargin2 = useMemo(() => {
+    const testData = transMarginData(10000).filter((li) => {
+      return li.cty_nm === "영등포구";
+    });
+    // const keys = [
+    //   "sale_mon",
+    //   "sale_tue",
+    //   "sale_wed",
+    //   "sale_thu",
+    //   "sale_fri",
+    //   "sale_sat",
+    //   "sale_sun",
+    // ];
+    const accessKey = "upjong2_nm";
+    const legend = {
+      key: ["sale_amt"],
+      sale_amt: {
+        key: "sale_amt",
+        title: "매출",
+        check: true,
+      },
+    };
+    // const title = {
+    //   sale_mon: "월요일",
+    //   sale_tue: "화요일",
+    //   sale_wed: "수요일",
+    //   sale_thu: "목요일",
+    //   sale_fri: "금요일",
+    //   sale_sat: "토요일",
+    //   sale_sun: "일요일",
+    // };
+    // const totalAmt = 1;
+    // const totalAmt = testData.reduce(
+    //   (acc, cur): any => acc + cur["sale_amt"],
+    //   0
+    // );
+    const totalAmt = Math.max(
+      ...testData.map((li: any) => {
+        return li.sale_amt;
+      })
+    );
+
+    return {
+      data: testData,
+      accessKey: accessKey,
+      totalAmt: totalAmt,
+      legend: legend,
+    };
+  }, []);
 
   return (
     <Flex flexDirection="column">
       <Heading>DashBoard</Heading>
-      <Flex>
-        <ChartGraph Data={data.data1} />
-        <ChartCircle
-          Data={data.data2}
-          title=""
-          keyName="age"
-          valName="count"
-          zKey=""
-          Group={false}
-          // width="100%"
-          // height={300}
-          innerRadius={0}
-          outerRadius={148}
-          labelRadius={110}
-          arcColor={[
-            "#98abc5",
-            "#8a89a6",
-            "#7b6888",
-            "#6b486b",
-            "#a05d56",
-            "#555555",
-          ]}
-          stroke="none"
-          strokeWidth={1}
-          strokeLinejoin="round"
-          padAngle={0}
-          svgStyle={{
-            width: "10px",
-            height: "auto",
-          }}
+      <Button
+        onClick={() => {
+          setDivide(!divide);
+        }}
+      >
+        Divide
+      </Button>
+      <Flex w="100%" h="600px">
+        <ChartBar
+          data={testMargin.data}
+          accessKey={testMargin.accessKey}
+          total={testMargin.totalAmt}
+          isDivide={divide}
+          legend={testMargin.legend}
+        />
+      </Flex>
+      <Flex w="100%" h="600px">
+        <ChartBar
+          data={testMargin2.data}
+          accessKey={testMargin2.accessKey}
+          total={testMargin2.totalAmt}
+          isDivide={false}
+          legend={testMargin2.legend}
         />
       </Flex>
     </Flex>

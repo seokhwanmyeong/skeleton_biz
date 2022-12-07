@@ -25,14 +25,15 @@ postApi.interceptors.response.use((res: any) => {
 });
 
 const getTestTable = (url: string, reqBody: any, dataSet: any, refSet: any) => {
-  console.log("Incom reqBody", reqBody);
   postApi
-    .post<any, { success: boolean; data: any[] }>(url, reqBody)
+    .post<any, { success: boolean; data: any[]; totalLen: number }>(
+      url,
+      reqBody
+    )
     .then((res) => {
       if (res.success) {
         const data = res.data;
-        const totalReg = data.length;
-
+        const totalReg = res.totalLen;
         dataSet(data);
         refSet(totalReg);
       } else {
@@ -45,4 +46,4 @@ const getTestTable = (url: string, reqBody: any, dataSet: any, refSet: any) => {
     });
 };
 
-export { getTestTable };
+export { getTestTable, postApi };

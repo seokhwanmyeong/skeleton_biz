@@ -2,21 +2,17 @@
 import { useState, useMemo } from "react";
 import { Flex, Heading } from "@chakra-ui/react";
 //  Components
-import TestTable from "@src/components/table/TestTable";
-import { CheckBoxTag } from "@src/components/common/CheckBox";
+import BaseTable from "@src/components/table/BaseTable";
 //  Util
 import { baseTableSetting } from "@util/data/erpTableData";
 //  Type
 import { Sample } from "@util/type/tableType";
 
 const ErpBaseTable = () => {
-  const [option, setOption] = useState("");
-
-  const tableSetting = useMemo(() => {
-    const { tableOption, baseColumn } = baseTableSetting();
-
-    return { tableOption, baseColumn };
-  }, []);
+  const { tableOption, baseColumn, initialSort } = useMemo(
+    () => baseTableSetting(),
+    []
+  );
 
   const sampleData: Sample[] = useMemo(
     () => [
@@ -38,7 +34,7 @@ const ErpBaseTable = () => {
         gender: "man",
         benefit: 3000000,
         average: {
-          man: 2500000,
+          man: 2200000,
           woman: 2400000,
         },
       },
@@ -49,8 +45,85 @@ const ErpBaseTable = () => {
         gender: "man",
         benefit: 5000000,
         average: {
-          man: 2500000,
-          woman: 2400000,
+          man: 2100000,
+          woman: 2200000,
+        },
+      },
+      {
+        date: "2022.12.02",
+        name: "d",
+        age: 25,
+        gender: "woman",
+        benefit: 400000,
+        average: {
+          man: 2200000,
+          woman: 2000000,
+        },
+      },
+      {
+        date: "2022.12.02",
+        name: "d",
+        age: 25,
+        gender: "woman",
+        benefit: 400000,
+        average: {
+          man: 2200000,
+          woman: 2000000,
+        },
+      },
+      {
+        date: "2022.12.02",
+        name: "d",
+        age: 25,
+        gender: "woman",
+        benefit: 400000,
+        average: {
+          man: 2200000,
+          woman: 2000000,
+        },
+      },
+      {
+        date: "2022.12.02",
+        name: "d",
+        age: 25,
+        gender: "woman",
+        benefit: 400000,
+        average: {
+          man: 2200000,
+          woman: 2000000,
+        },
+      },
+      {
+        date: "2022.12.02",
+        name: "d",
+        age: 25,
+        gender: "woman",
+        benefit: 400000,
+        average: {
+          man: 2200000,
+          woman: 2000000,
+        },
+      },
+      {
+        date: "2022.12.02",
+        name: "d",
+        age: 25,
+        gender: "woman",
+        benefit: 400000,
+        average: {
+          man: 2200000,
+          woman: 2000000,
+        },
+      },
+      {
+        date: "2022.12.02",
+        name: "d",
+        age: 25,
+        gender: "woman",
+        benefit: 400000,
+        average: {
+          man: 2200000,
+          woman: 2000000,
         },
       },
       {
@@ -71,20 +144,14 @@ const ErpBaseTable = () => {
   return (
     <Flex flexDirection="column">
       <Heading>DashBoard</Heading>
-      {tableSetting.tableOption.map((item: { title: string; key: string }) => {
-        const { title, key } = item;
-
-        return (
-          <CheckBoxTag
-            isChecked={option === key}
-            key={key}
-            value={key}
-            title={title}
-            onChange={() => setOption(key)}
-          />
-        );
-      })}
-      <TestTable columns={tableSetting.baseColumn} data={sampleData} />
+      <BaseTable
+        actviePage={true}
+        registersPerPage={10}
+        columns={baseColumn}
+        data={sampleData}
+        tableOption={tableOption}
+        initialSort={initialSort}
+      />
     </Flex>
   );
 };

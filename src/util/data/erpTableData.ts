@@ -5,16 +5,36 @@ import CustomModalCell from "@src/components/table/cutomCell/CustomModalCell";
 //  Type
 import { BaseColumns, Sample } from "@util/type/tableType";
 
-const BaseTableSet: BaseColumns = [
-  { Header: "날짜", accessor: "date" as const },
-  { Header: "이름", accessor: "name" as const },
-  { Header: "나이", accessor: "age" as const },
-  { Header: "주소", accessor: "address" as const },
-  { Header: "성별", accessor: "gender" as const },
+const BaseTableSet: ColumnDef<any>[] = [
   {
-    Header: "상세보기",
-    accessor: "detail" as const,
-    Cell: (props: any) => CustomModalCell({ ...props }),
+    accessorKey: "date",
+    header: "날짜",
+    cell: (info) => info.getValue(),
+  },
+  {
+    accessorKey: "name",
+    header: "이름",
+    cell: (info) => info.getValue(),
+  },
+  {
+    accessorKey: "age",
+    header: "나이",
+    cell: (info) => info.renderValue(),
+    enableSorting: true,
+  },
+  {
+    accessorKey: "address",
+    header: "주소",
+    cell: (info) => info.getValue(),
+  },
+  {
+    accessorKey: "gender",
+    header: "성별",
+    cell: (info) => info.getValue(),
+  },
+  {
+    header: "상세보기",
+    cell: (info) => CustomModalCell({ ...info }),
   },
 ];
 
@@ -47,6 +67,69 @@ const LineTableSet = [
   },
 ];
 
+const erp01TableSetting = () => {
+  const tableOption = [
+    {
+      title: "날짜",
+      key: "date",
+    },
+    {
+      title: "이름",
+      key: "name",
+    },
+    {
+      title: "나이",
+      key: "age",
+    },
+  ];
+
+  const sortState = [
+    {
+      id: "date",
+      desc: true,
+    },
+  ];
+
+  const columns: ColumnDef<any>[] = [
+    {
+      accessorKey: "date",
+      header: "날짜",
+      cell: (info) => info.getValue(),
+    },
+    {
+      accessorKey: "name",
+      header: "이름",
+      cell: (info) => info.getValue(),
+    },
+    {
+      accessorKey: "age",
+      header: "나이",
+      cell: (info) => info.renderValue(),
+      enableSorting: true,
+    },
+    {
+      accessorKey: "address",
+      header: "주소",
+      cell: (info) => info.getValue(),
+    },
+    {
+      accessorKey: "gender",
+      header: "성별",
+      cell: (info) => info.getValue(),
+    },
+    {
+      header: "상세보기",
+      cell: (info) => CustomModalCell({ ...info }),
+    },
+  ];
+
+  return {
+    tableOption: tableOption,
+    baseColumn: columns,
+    initialSort: sortState,
+  };
+};
+
 const baseTableSetting = () => {
   const columnHelper = createColumnHelper<Sample>();
 
@@ -57,15 +140,22 @@ const baseTableSetting = () => {
     },
     {
       title: "남성 매출 순위",
-      key: "average.man",
+      key: "avgMan",
     },
     {
       title: "여성 매출 순위",
-      key: "average.woman",
+      key: "avgWoman",
     },
   ];
 
-  const columns = [
+  const sortState = [
+    {
+      id: "benefit",
+      desc: true,
+    },
+  ];
+
+  const columntest = [
     columnHelper.accessor("date", {
       header: "날짜",
       cell: (info) => info.getValue(),
@@ -87,14 +177,15 @@ const baseTableSetting = () => {
       cell: (info) => info.renderValue(),
     }),
     columnHelper.group({
-      id: "averageGender",
       header: "성별평균",
       columns: [
         columnHelper.accessor("average.man", {
+          id: "avgMan",
           header: "남자",
           cell: (info) => info.getValue(),
         }),
         columnHelper.accessor("average.woman", {
+          id: "avgWoman",
           header: "여자",
           cell: (info) => info.getValue(),
         }),
@@ -102,7 +193,7 @@ const baseTableSetting = () => {
     }),
   ];
 
-  const columntest: ColumnDef<any>[] = [
+  const columns: ColumnDef<any>[] = [
     {
       accessorKey: "date",
       header: "날짜",
@@ -134,11 +225,13 @@ const baseTableSetting = () => {
       header: "성별평균",
       columns: [
         {
+          id: "avgMan",
           accessorKey: "average.man",
           header: "남자",
           cell: (info) => info.renderValue(),
         },
         {
+          id: "avgWoman",
           accessorKey: "average.woman",
           header: "여자",
           cell: (info) => info.renderValue(),
@@ -149,8 +242,9 @@ const baseTableSetting = () => {
 
   return {
     tableOption: tableOption,
-    baseColumn: columntest,
+    baseColumn: columns,
+    initialSort: sortState,
   };
 };
 
-export { BaseTableSet, LineTableSet, baseTableSetting };
+export { BaseTableSet, LineTableSet, erp01TableSetting, baseTableSetting };

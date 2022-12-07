@@ -1,5 +1,6 @@
 type Options<I = any> = {
-  isDirectApi: boolean;
+  isDirectApi?: boolean;
+  divide?: number;
   totalRegisters: number;
   page: number;
   items: I[];
@@ -9,23 +10,24 @@ type Options<I = any> = {
 
 type Pagination<I = any> = {
   pageItems: I[];
-  totalPages: number;
-  registersPerPage: number;
+  dividePages: number[];
   currentPage: number;
   lastPage: number;
-  nextPages: number[];
-  prevPages: number[];
+  next: {
+    exist: boolean;
+    nextPage: number;
+  };
+  prev: {
+    exist: boolean;
+    prevPage: number;
+  };
   siblingsCount: number;
 };
 
-const generatePagesArray = (from: number, to: number): number[] => {
-  return [...new Array(to - from)]
-    .map((_, index) => from + index + 1)
-    .filter((page) => page > 0);
-};
-
 const usePagination = <I = any>({
+  isDirectApi = false,
   totalRegisters,
+  divide = 5,
   page,
   items,
   registersPerPage,
@@ -34,32 +36,38 @@ const usePagination = <I = any>({
   const currentPage = page;
   const lastPage = Math.ceil(totalRegisters / registersPerPage);
   const totalPages = lastPage === 0 ? 1 : lastPage;
-
-  const prevPages =
-    currentPage > 1
-      ? generatePagesArray(currentPage - 1 - siblingsCount, currentPage - 1)
-      : [];
-  const nextPages =
-    currentPage < lastPage
-      ? generatePagesArray(
-          currentPage,
-          Math.min(currentPage + siblingsCount, lastPage)
-        )
-      : [];
-
+  const calcDivide =
+    currentPage % divide === 0
+      ? Math.trunc(currentPage / divide) - 1
+      : Math.trunc(currentPage / divide);
+  const dividePages = Array(divide)
+    .fill(calcDivide * divide + 1)
+    .map((num, idx) => num + idx)
+    .filter((num) => totalPages >= num);
+  const fisrt = dividePages[0];
+  const last = dividePages[divide - 1];
+  const prev = {
+    exist: fisrt > divide,
+    prevPage: fisrt > divide ? fisrt - 1 : fisrt,
+  };
+  const next = {
+    exist: totalPages > last,
+    nextPage: totalPages > last ? last + 1 : last,
+  };
   const pageStart = (page - 1) * registersPerPage;
   const pageEnd = pageStart + registersPerPage;
-  const pageItems = items.slice(pageStart, pageEnd);
+  const pageItems = isDirectApi
+    ? items.slice(0, registersPerPage)
+    : items.slice(pageStart, pageEnd);
 
   return {
-    pageItems,
+    dividePages,
     currentPage,
-    totalPages,
     lastPage,
-    nextPages,
-    prevPages,
-    registersPerPage,
+    next,
+    prev,
     siblingsCount,
+    pageItems,
   };
 };
 

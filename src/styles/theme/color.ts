@@ -57,7 +57,7 @@ export const selectColorScheme = (type: string) => {
           color: "#ffffff",
           bg: "#ffffff",
           hover: "#dddddd",
-          font: "#ffffff",
+          font: "#1a202c",
           bdColor: "ededed",
         },
       },

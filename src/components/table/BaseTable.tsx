@@ -1,97 +1,186 @@
 //  LIB
-import { Fragment, useState } from "react";
+import { useEffect, useState, useMemo, Fragment } from "react";
 import {
+  useReactTable,
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
+  SortingState,
+} from "@tanstack/react-table";
+import {
+  Box,
   TableCaption,
   Table as ChakraTable,
   Thead,
   Tbody,
+  Tfoot,
   Tr,
   Th,
   Td,
-  Box,
-  Flex,
 } from "@chakra-ui/react";
-import { useTable } from "react-table";
-//  Components
-import NoContent from "@components/table/NoContent";
+//  Component
+import { CheckBoxTag } from "@src/components/common/CheckBox";
 import Pagination from "@components/table/Pagination";
+import NoContent from "@components/table/NoContent";
 //  Custom Hook
 import { usePagination } from "@hook/usePagination";
-//  Type
-import { TableProps } from "@util/type/tableType";
 
 const BaseTable = ({
   actviePage = true,
   caption,
-  totalRegisters,
-  registersPerPage = 5,
+  registersPerPage = 4,
+  divide,
   columns,
-  data,
+  data = [],
+  tableOption,
+  initialSort,
   emptyData,
   variant = "simple",
-  colorScheme = "teal",
-}: TableProps) => {
+  pageVariant,
+}: any) => {
+  const [tableData, setTableData] = useState<any>(data || []);
   const [page, setPage] = useState(1);
-  const pagination = usePagination({
-    isDirectApi: false,
-    totalRegisters,
-    page,
-    items: data,
-    registersPerPage,
-  });
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns, data: pagination.pageItems });
+  const [sorting, setSorting] = useState<SortingState>(initialSort || []);
 
-  if (data.length === 0) {
-    return <NoContent {...emptyData} text={emptyData?.text ?? "No Contents"} />;
-  }
+  const pagenation = useMemo(() => {
+    return usePagination({
+      isDirectApi: false,
+      totalRegisters: data.length,
+      divide: divide,
+      page: page,
+      items: data,
+      registersPerPage,
+    });
+  }, [page]);
+
+  const table = useReactTable({
+    data: tableData,
+    columns,
+    state: { sorting },
+    onSortingChange: setSorting,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    debugAll: false,
+    debugHeaders: false,
+    debugTable: false,
+  });
+
+  useEffect(() => {
+    setTableData(pagenation.pageItems);
+  }, [pagenation.pageItems]);
 
   return (
-    <Box py="6" px="8" borderRadius="8" w="full" h="100%">
-      <ChakraTable {...getTableProps()} variant={variant}>
+    <Box w="100%" h="100%" overflow="auto">
+      {!tableOption
+        ? null
+        : tableOption.map((item: { title: string; key: string }) => {
+            const { title, key } = item;
+
+            return (
+              <CheckBoxTag
+                isChecked={sorting.length > 0 && sorting[0].id === key}
+                key={key}
+                value={key}
+                title={title}
+                onChange={() =>
+                  setSorting(
+                    sorting[0]?.id === key ? [] : [{ id: key, desc: true }]
+                  )
+                }
+              />
+            );
+          })}
+      <ChakraTable variant={variant}>
         {caption && <TableCaption placement="top">{caption}</TableCaption>}
         <Thead>
-          {headerGroups.map((headerGroup, idx) => {
-            return (
-              <Tr
-                {...headerGroup.getHeaderGroupProps()}
-                key={`thead-tr-${idx}`}
-              >
-                {headerGroup.headers.map((column: any) => (
-                  <Fragment key={column.id}>
-                    <Th {...column.getHeaderProps()}>
-                      {column.render("Header")}
-                    </Th>
-                  </Fragment>
-                ))}
-              </Tr>
-            );
-          })}
-        </Thead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <Tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => {
+                let children;
+                let rowSpan = 1;
 
-        <Tbody {...getTableBodyProps()}>
-          {rows.map((row) => {
-            prepareRow(row);
+                if (header.depth > 1 && header.column.parent === undefined) {
+                  return null;
+                } else if (header.isPlaceholder) {
+                  if (header.subHeaders) {
+                    const newHead = header.subHeaders[0];
+
+                    children = flexRender(
+                      newHead.column.columnDef.header,
+                      newHead.getContext()
+                    );
+
+                    rowSpan = 2;
+                  } else {
+                    children = null;
+                  }
+                } else {
+                  children = flexRender(
+                    header.column.columnDef.header,
+                    header.getContext()
+                  );
+                }
+
+                return (
+                  <Th
+                    key={header.id}
+                    rowSpan={rowSpan}
+                    colSpan={header.subHeaders.length || 1}
+                  >
+                    {children}
+                  </Th>
+                );
+              })}
+            </Tr>
+          ))}
+        </Thead>
+        <Tbody>
+          {data.length === 0 ? (
+            <Tr>
+              <Td colSpan={table.getHeaderGroups().at(-1)?.headers.length || 1}>
+                <NoContent
+                  {...emptyData}
+                  text={emptyData?.text ?? "No Contents"}
+                />
+              </Td>
+            </Tr>
+          ) : (
+            table.getRowModel().rows.map((row) => (
+              <Tr key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <Td key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </Td>
+                ))}
+              </Tr>
+            ))
+          )}
+        </Tbody>
+        <Tfoot>
+          {table.getFooterGroups().map((footerGroup) => {
             return (
-              <Tr {...row.getRowProps()} key={row.id}>
-                {row.cells.map((cell, index) => (
-                  <Fragment key={cell.column.id + index}>
-                    <Td {...cell.getCellProps()}>{cell.render("Cell")}</Td>
-                  </Fragment>
+              <Tr key={footerGroup.id}>
+                {footerGroup.headers.map((header) => (
+                  <Th key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.footer,
+                          header.getContext()
+                        )}
+                  </Th>
                 ))}
               </Tr>
             );
           })}
-        </Tbody>
+        </Tfoot>
       </ChakraTable>
       {actviePage && (
-        <Flex w="100%" justifyContent="center">
-          <Pagination
-            {...pagination}
-            colorScheme={colorScheme}
-            onPageChange={setPage}
-          />
-        </Flex>
+        <Pagination
+          {...pagenation}
+          onPageChange={setPage}
+          variant={pageVariant}
+        />
       )}
     </Box>
   );

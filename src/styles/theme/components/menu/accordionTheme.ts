@@ -16,7 +16,6 @@ const accordionTheme = {
   variants: {
     searchEngine: (props: GlobalStyleProps) => {
       const { colorScheme: c, theme } = props;
-      console.log(props);
       return {
         root: {
           p: "0.5rem",

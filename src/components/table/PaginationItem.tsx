@@ -2,48 +2,32 @@ import React from "react";
 import { Button, ThemeTypings } from "@chakra-ui/react";
 
 type PaginationItemProps = {
+  isPageEvent?: boolean;
   isCurrent?: boolean;
   page: number;
   onPageChange: (page: number) => void;
-  colorScheme?: ThemeTypings["colorSchemes"];
+  customChild?: any;
+  variant?: string;
 };
 
 const PaginationItem = ({
+  isPageEvent = false,
   isCurrent = false,
   page,
   onPageChange,
-  colorScheme,
+  customChild,
+  variant = "pagenation",
 }: PaginationItemProps) => {
-  if (isCurrent) {
-    return (
-      <Button
-        size="sm"
-        fontSize="xs"
-        width="4"
-        colorScheme={colorScheme}
-        disabled
-        _disabled={{
-          bg: `${colorScheme}.500`,
-          cursor: "pointer",
-        }}
-      >
-        {page}
-      </Button>
-    );
-  }
-
   return (
     <Button
-      size="sm"
-      fontSize="xs"
-      width="4"
-      bg="gray.100"
-      _hover={{
-        bg: "gray.300",
+      variant={variant}
+      isActive={isCurrent}
+      onClick={() => {
+        console.log("click");
+        !isCurrent && onPageChange(page);
       }}
-      onClick={() => onPageChange(page)}
     >
-      {page}
+      {isPageEvent ? customChild : page}
     </Button>
   );
 };
