@@ -5,8 +5,6 @@ import { RecoilRoot } from "recoil";
 import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
 // Components
 import App from "@src/App";
-// Style
-import { theme } from "@styles/theme/index";
 //  Util
 import DebugObserver from "@util/debug/DebugObserver";
 

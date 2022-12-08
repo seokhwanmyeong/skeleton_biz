@@ -28,6 +28,6 @@
       "@api/*": ["src/api/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "public/electron.cjs"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

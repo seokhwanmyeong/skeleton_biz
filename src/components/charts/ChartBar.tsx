@@ -12,6 +12,7 @@ import { withTooltip, Tooltip, defaultStyles } from "@visx/tooltip";
 import { WithTooltipProvidedProps } from "@visx/tooltip/lib/enhancers/withTooltip";
 import { LegendOrdinal, LegendItem, LegendLabel } from "@visx/legend";
 import { localPoint } from "@visx/event";
+import { motion } from "framer-motion";
 
 //  Type
 interface Data {
@@ -93,7 +94,7 @@ const ChartBar = ({
   // title: any;
   total: number;
   isDivide?: boolean;
-  legend: {};
+  legend: any;
 }) => {
   return (
     <ParentSize>
@@ -151,8 +152,8 @@ const Chart = withTooltip<ChartProps, TooltipData>(
     const { amountScale, accessScale, colorScale } = useMemo(() => {
       const amountScale: any = {
         over: scaleLinear<number>({
-          domain: [total, 0],
-          range: [0, yMax],
+          domain: [0, total],
+          range: [yMax, 0],
           nice: true,
         }),
       };
@@ -161,6 +162,8 @@ const Chart = withTooltip<ChartProps, TooltipData>(
         amountScale.under = scaleLinear<number>({
           domain: [0, total],
           range: [0, yMax],
+          // domain: [total, 0],
+          // range: [yMax, 0],
           nice: true,
         });
       }
@@ -169,7 +172,8 @@ const Chart = withTooltip<ChartProps, TooltipData>(
         accessScale: scaleBand<number>({
           domain: data.map(getAccess),
           range: [0, xMax],
-          padding: 0.5,
+          padding: 0.4,
+          round: true,
         }),
         colorScale: scaleOrdinal({
           domain: keyOfLe,
@@ -189,6 +193,14 @@ const Chart = withTooltip<ChartProps, TooltipData>(
       };
 
       setLegendProps(baseState);
+      console.log(baseState);
+      console.log(
+        Object.values(baseState)
+          .filter((li: any) => li.check)
+          .map((li: any) => {
+            return li.key;
+          })
+      );
       setKetState(
         Object.values(baseState)
           .filter((li: any) => li.check)
@@ -207,8 +219,8 @@ const Chart = withTooltip<ChartProps, TooltipData>(
               data={data}
               keys={
                 isDivide
-                  ? Object.keys(legend)[1] === keyState[0]
-                    ? [keyState[0]]
+                  ? keyState.includes(keyOfLe[0])
+                    ? [keyOfLe[0]]
                     : []
                   : keyState
               }
@@ -219,16 +231,33 @@ const Chart = withTooltip<ChartProps, TooltipData>(
               color={colorScale}
             >
               {(barStacks) =>
-                barStacks.map((barStack) => {
+                barStacks.map((barStack, idx) => {
                   return barStack.bars.map((bar) => {
                     return (
-                      <rect
+                      <motion.rect
+                        layout
                         key={`barstack-horizontal-${barStack.index}-${bar.index}`}
                         x={bar.x}
                         y={bar.y}
                         width={bar.width}
                         height={bar.height}
-                        fill={bar.color}
+                        transition={{
+                          default: {
+                            duration: 0.5,
+                            delay: idx === 1 ? 0.1 : 0,
+                          },
+                        }}
+                        transform={`rotate(180, ${bar.x + bar.width / 2}, ${
+                          bar.y + bar.height / 2
+                        })`}
+                        initial={{
+                          fill: `${bar.color}00`,
+                          height: 0,
+                        }}
+                        animate={{
+                          fill: bar.color,
+                          height: bar.height,
+                        }}
                         onClick={() => {
                           if (events) alert(`clicked: ${JSON.stringify(bar)}`);
                         }}
@@ -237,7 +266,8 @@ const Chart = withTooltip<ChartProps, TooltipData>(
                             hideTooltip();
                           }, 300);
                         }}
-                        onMouseMove={() => {
+                        onMouseMove={(e) => {
+                          console.log(e.target);
                           if (tooltipTimeout) clearTimeout(tooltipTimeout);
                           const top = bar.y + margin.top;
                           const left = bar.x + bar.width + margin.left;
@@ -283,9 +313,7 @@ const Chart = withTooltip<ChartProps, TooltipData>(
             <Group top={margin.top + yMax + 30} left={margin.left}>
               <BarStack
                 data={data}
-                keys={
-                  Object.keys(legend)[2] === keyState[1] ? [keyState[1]] : []
-                }
+                keys={keyState.includes(keyOfLe[1]) ? [keyOfLe[1]] : []}
                 height={yMax}
                 x={getAccess}
                 xScale={accessScale}
@@ -293,16 +321,29 @@ const Chart = withTooltip<ChartProps, TooltipData>(
                 color={colorScale}
               >
                 {(barStacks) =>
-                  barStacks.map((barStack) => {
-                    console.log(barStack);
+                  barStacks.map((barStack, idx) => {
                     return barStack.bars.map((bar) => {
                       return (
-                        <rect
+                        <motion.rect
                           key={`barstack-horizontal-${barStack.index}-${bar.index}`}
                           x={bar.x}
                           width={bar.width}
                           height={-bar.height}
                           fill={bar.color}
+                          transition={{
+                            default: {
+                              duration: 0.5,
+                              delay: idx === 1 ? 0.4 : 0,
+                            },
+                          }}
+                          initial={{
+                            fill: `${bar.color}00`,
+                            height: 0,
+                          }}
+                          animate={{
+                            fill: bar.color,
+                            height: -bar.height,
+                          }}
                           onClick={() => {
                             if (events)
                               alert(`clicked: ${JSON.stringify(bar)}`);

@@ -5,7 +5,7 @@ import { GlobalStyleProps } from "@chakra-ui/theme-tools";
 //  Styles
 import globalTheme from "@styles/theme/globalTheme";
 import inputTheme from "@styles/theme/components/common/inputTheme";
-import btnTheme from "@styles/theme/components/common/btnTheme";
+import { btnTheme } from "@styles/theme/components/common/btnTheme";
 import headerTheme from "@styles/theme/components/header/headerTheme";
 import tagTheme from "@styles/theme/components/common/tagTheme";
 import checkboxTheme from "@styles/theme/components/common/checkBoxTheme";
@@ -22,16 +22,13 @@ const createTheme = (name: string) => {
   const theme = extendTheme({
     config,
     styles: {
-      global: (props: GlobalStyleProps): SystemStyleObject => ({
-        div: {
-          backgroundColor: "primary.main.bg",
-          color: "primary.main.font",
-          borderColor: "primary.main.bdColor",
-        },
-        textarea: {
-          resize: "none",
-        },
-      }),
+      div: {
+        color: "primary.main.font",
+        borderColor: "primary.main.bdColor",
+      },
+      textarea: {
+        resize: "none",
+      },
     },
     // globalTheme,
     colors: {
@@ -55,6 +52,11 @@ const createTheme = (name: string) => {
       Tag: tagTheme,
       Accordion: accordionTheme,
       Checkbox: checkboxTheme,
+      Flex: {
+        baseStyle: {
+          bgColor: "#000000",
+        },
+      },
     },
   });
 

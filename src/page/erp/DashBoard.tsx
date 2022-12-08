@@ -2,19 +2,17 @@
 import { useState, useMemo } from "react";
 import { Flex, Heading, Button } from "@chakra-ui/react";
 //  Components
-import ChartCircle from "@components/charts/ChartCircle";
 import ChartGraph from "@components/charts/ChartGraph";
 import ChartBar from "@src/components/charts/ChartBar";
+import ChartDonut from "@components/charts/ChartDonut";
 //  Util
 import { transMarginData } from "@src/util/data/testData";
 
 const DashBoard = () => {
   const [divide, setDivide] = useState(false);
   const testMargin = useMemo(() => {
-    const testData = transMarginData(1000).filter((li) => {
-      return li.cty_nm === "영등포구";
-    });
-    const accessKey = "upjong2_nm";
+    const testData = transMarginData(20);
+    const accessKey = "cty_nm";
     const totalAmt = 1;
     const legend = {
       key: ["mTotal", "wTotal"],
@@ -39,9 +37,10 @@ const DashBoard = () => {
   }, []);
 
   const testMargin2 = useMemo(() => {
-    const testData = transMarginData(10000).filter((li) => {
-      return li.cty_nm === "영등포구";
-    });
+    const testData = transMarginData(20);
+    // const testData = transMarginData(20).filter((li) => {
+    //   return li.cty_nm === "영등포구";
+    // });
     // const keys = [
     //   "sale_mon",
     //   "sale_tue",
@@ -51,7 +50,7 @@ const DashBoard = () => {
     //   "sale_sat",
     //   "sale_sun",
     // ];
-    const accessKey = "upjong2_nm";
+    const accessKey = "admi_nm";
     const legend = {
       key: ["sale_amt"],
       sale_amt: {
@@ -89,16 +88,21 @@ const DashBoard = () => {
   }, []);
 
   return (
-    <Flex flexDirection="column">
+    <Flex flexDirection="column" gap={20}>
       <Heading>DashBoard</Heading>
-      <Button
-        onClick={() => {
-          setDivide(!divide);
-        }}
-      >
-        Divide
-      </Button>
-      <Flex w="100%" h="600px">
+      <Flex gap={10} h="300px">
+        <Flex w="100%">
+          <ChartDonut />
+        </Flex>
+      </Flex>
+      <Flex w="100%" h="500px">
+        <Button
+          onClick={() => {
+            setDivide(!divide);
+          }}
+        >
+          Divide
+        </Button>
         <ChartBar
           data={testMargin.data}
           accessKey={testMargin.accessKey}
@@ -107,7 +111,7 @@ const DashBoard = () => {
           legend={testMargin.legend}
         />
       </Flex>
-      <Flex w="100%" h="600px">
+      <Flex w="100%" h="500px">
         <ChartBar
           data={testMargin2.data}
           accessKey={testMargin2.accessKey}
