@@ -2,17 +2,24 @@
 import React, { useContext, useCallback, useMemo, useState } from "react";
 import { Flex } from "@chakra-ui/react";
 import ParentSize from "@visx/responsive/lib/components/ParentSize";
-import { BarStack } from "@visx/shape";
+import { BarStack, LinePath } from "@visx/shape";
 import { SeriesPoint } from "@visx/shape/lib/types";
 import { Group } from "@visx/group";
 import { AxisBottom, AxisLeft } from "@visx/axis";
-import { scaleBand, scaleLinear, scaleOrdinal } from "@visx/scale";
+import {
+  scaleBand,
+  scaleLinear,
+  scaleOrdinal,
+  scalePoint,
+  scaleTime,
+} from "@visx/scale";
 import { timeParse, timeFormat } from "d3-time-format";
 import { withTooltip, Tooltip, defaultStyles } from "@visx/tooltip";
 import { WithTooltipProvidedProps } from "@visx/tooltip/lib/enhancers/withTooltip";
 import { LegendOrdinal, LegendItem, LegendLabel } from "@visx/legend";
 import { localPoint } from "@visx/event";
 import { motion } from "framer-motion";
+import { extent, max } from "d3";
 
 //  Type
 interface Data {
@@ -32,16 +39,17 @@ interface Data {
   [key: string]: string | number;
 }
 
-type TooltipData = {
-  bar: SeriesPoint<Data>;
-  key: string;
-  index: number;
-  height: number;
-  width: number;
-  x: number;
-  y: number;
-  color: string;
-};
+// type TooltipData = {
+//   bar: SeriesPoint<Data> | undefined;
+//   key: string;
+//   index: number;
+//   height: number;
+//   width: number;
+//   x: number;
+//   y: number;
+//   color: string;
+// };
+type TooltipData = any;
 
 interface ChartProps {
   width: number;
@@ -76,6 +84,7 @@ const tooltipStyles = {
   backgroundColor: "rgba(0,0,0,0.9)",
   color: "white",
 };
+const greens = ["#ecf4f3", "#68b0ab", "#006a71"];
 const purple1 = "#6c5efb";
 const purple2 = "#c998ff";
 const purple3 = "#ffffff";
@@ -138,6 +147,8 @@ const Chart = withTooltip<ChartProps, TooltipData>(
 
     //  accessors
     const getAccess = useCallback((d: any) => d[accessKey], [accessKey]);
+    const getXArray = (d: any) => d[accessKey];
+    const getYArray = (d: any) => d.sale_amt;
     const { xMax, yMax } = useMemo(() => {
       const _xMax = width - margin.left - margin.right;
       let _yMax = height - margin.top - margin.bottom;
@@ -149,38 +160,52 @@ const Chart = withTooltip<ChartProps, TooltipData>(
     }, [width, height, isDivide]);
 
     //  scales
-    const { amountScale, accessScale, colorScale } = useMemo(() => {
-      const amountScale: any = {
-        over: scaleLinear<number>({
-          domain: [0, total],
-          range: [yMax, 0],
-          nice: true,
-        }),
-      };
+    const { amountScale, lineScaleX, lineScaleY, accessScale, colorScale } =
+      useMemo(() => {
+        const amountScale: any = {
+          over: scaleLinear<number>({
+            domain: [0, total],
+            range: [yMax, 0],
+            nice: true,
+          }),
+        };
 
-      if (isDivide) {
-        amountScale.under = scaleLinear<number>({
-          domain: [0, total],
-          range: [0, yMax],
-          // domain: [total, 0],
-          // range: [yMax, 0],
-          nice: true,
-        });
-      }
-      return {
-        amountScale: amountScale,
-        accessScale: scaleBand<number>({
-          domain: data.map(getAccess),
-          range: [0, xMax],
-          padding: 0.4,
-          round: true,
-        }),
-        colorScale: scaleOrdinal({
-          domain: keyOfLe,
-          range: [purple1, purple2, purple3],
-        }),
-      };
-    }, [xMax, yMax, isDivide]);
+        if (isDivide) {
+          amountScale.under = scaleLinear<number>({
+            domain: [0, total],
+            range: [0, yMax],
+            // domain: [total, 0],
+            // range: [yMax, 0],
+            nice: true,
+          });
+        }
+
+        return {
+          amountScale: amountScale,
+          lineScaleX: scaleLinear({
+            domain: [0, 1, 2, 3, 4, 5, 6, 7],
+            range: [0, xMax],
+            nice: true,
+          }),
+          lineScaleY: scaleLinear({
+            domain: [0, max(data, getYArray)],
+            range: [yMax, 0],
+            nice: true,
+          }),
+          accessScale: scaleBand<number>({
+            domain: data.map(getAccess),
+            range: [0, xMax],
+            padding: 0.4,
+            round: true,
+          }),
+          colorScale: scaleOrdinal({
+            domain: keyOfLe,
+            range: [purple1, purple2, purple3],
+          }),
+        };
+      }, [xMax, yMax, isDivide]);
+
+    const bandW = useMemo(() => accessScale.bandwidth(), []);
 
     //  Handler
     const keyHandler = (key: string) => {
@@ -193,14 +218,6 @@ const Chart = withTooltip<ChartProps, TooltipData>(
       };
 
       setLegendProps(baseState);
-      console.log(baseState);
-      console.log(
-        Object.values(baseState)
-          .filter((li: any) => li.check)
-          .map((li: any) => {
-            return li.key;
-          })
-      );
       setKetState(
         Object.values(baseState)
           .filter((li: any) => li.check)
@@ -215,6 +232,13 @@ const Chart = withTooltip<ChartProps, TooltipData>(
         <svg width={width} height={height}>
           <rect width={width} height={height} fill={background} rx={14} />
           <Group top={margin.top} left={margin.left}>
+            <LinePath
+              stroke={greens[2]}
+              strokeWidth={2}
+              data={data}
+              x={(d) => (accessScale(getAccess(d)) ?? 0) + bandW / 2}
+              y={(d) => lineScaleY(getYArray(d)) ?? 0}
+            />
             <BarStack
               data={data}
               keys={
@@ -267,7 +291,6 @@ const Chart = withTooltip<ChartProps, TooltipData>(
                           }, 300);
                         }}
                         onMouseMove={(e) => {
-                          console.log(e.target);
                           if (tooltipTimeout) clearTimeout(tooltipTimeout);
                           const top = bar.y + margin.top;
                           const left = bar.x + bar.width + margin.left;

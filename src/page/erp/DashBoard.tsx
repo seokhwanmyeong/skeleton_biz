@@ -1,5 +1,5 @@
 //  LIB
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Flex, Heading, Button } from "@chakra-ui/react";
 //  Components
 import ChartGraph from "@components/charts/ChartGraph";
@@ -37,7 +37,7 @@ const DashBoard = () => {
   }, []);
 
   const testMargin2 = useMemo(() => {
-    const testData = transMarginData(20);
+    const testData = transMarginData(10);
     // const testData = transMarginData(20).filter((li) => {
     //   return li.cty_nm === "영등포구";
     // });
@@ -87,37 +87,75 @@ const DashBoard = () => {
     };
   }, []);
 
+  const testMargin3 = useMemo(() => {
+    const testData = [
+      { date: "2022-01", population: 5000 },
+      { date: "2022-02", population: 100 },
+      { date: "2022-03", population: 3500 },
+      { date: "2022-04", population: 1000 },
+      { date: "2022-05", population: 9000 },
+      { date: "2022-08", population: 8000 },
+      { date: "2022-10", population: 677 },
+      { date: "2022-11", population: 800 },
+      { date: "2022-12", population: 8000 },
+    ];
+    const accessKey = "population";
+    const legend = {
+      key: ["population"],
+      date: {
+        key: "인구수",
+        title: "날짜",
+        check: true,
+      },
+    };
+    const totalAmt = Math.max(
+      ...testData.map((li: any) => {
+        return li.population;
+      })
+    );
+
+    return {
+      data: testData,
+      accessKey: accessKey,
+      totalAmt: totalAmt,
+      legend: legend,
+    };
+  }, []);
+
   return (
     <Flex flexDirection="column" gap={20}>
       <Heading>DashBoard</Heading>
-      <Flex gap={10} h="300px">
-        <Flex w="100%">
-          <ChartDonut />
+      <Flex gap={10} w="100%" h="500px">
+        <Flex w="50%">
+          <ChartDonut
+            data={testMargin3.data}
+            accessKey={testMargin3.accessKey}
+          />
+        </Flex>
+        <Flex w="50%">
+          <ChartBar
+            data={testMargin2.data}
+            accessKey={testMargin2.accessKey}
+            total={testMargin2.totalAmt}
+            isDivide={false}
+            legend={testMargin2.legend}
+          />
         </Flex>
       </Flex>
+      <Button
+        onClick={() => {
+          setDivide(!divide);
+        }}
+      >
+        Divide
+      </Button>
       <Flex w="100%" h="500px">
-        <Button
-          onClick={() => {
-            setDivide(!divide);
-          }}
-        >
-          Divide
-        </Button>
         <ChartBar
           data={testMargin.data}
           accessKey={testMargin.accessKey}
           total={testMargin.totalAmt}
           isDivide={divide}
           legend={testMargin.legend}
-        />
-      </Flex>
-      <Flex w="100%" h="500px">
-        <ChartBar
-          data={testMargin2.data}
-          accessKey={testMargin2.accessKey}
-          total={testMargin2.totalAmt}
-          isDivide={false}
-          legend={testMargin2.legend}
         />
       </Flex>
     </Flex>
