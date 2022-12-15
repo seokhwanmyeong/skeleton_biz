@@ -64,7 +64,7 @@ export const subMenu = atom<SubMenuInteface>({
         children: [],
       },
       {
-        title: "erp04",
+        title: "Form Sample",
         hasChild: false,
         path: "/erp/erp04",
         children: [],

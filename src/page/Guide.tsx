@@ -29,6 +29,9 @@ const Guide = () => {
             <Heading size="md">Components : Input</Heading>
             <Text>Input : base (default)</Text>
             <Input
+              setFieldVal={(props: any) => {
+                console.log(props);
+              }}
               placeholder="placeHolder"
               _placeholder={{ color: "gray.500" }}
               focusBorderColor="black.100"
@@ -59,6 +62,9 @@ const Guide = () => {
             <Divider />
             <Text>Input : PWD</Text>
             <InputPwd
+              setFieldVal={(props: any) => {
+                console.log(props);
+              }}
               groupProps={{ size: "md" }}
               addonProps={{ width: "4.5rem" }}
               btnProps={{ h: "1.75rem", size: "sm" }}
@@ -74,6 +80,9 @@ const Guide = () => {
             <Divider />
             <Text>Input : Base with Title</Text>
             <InputAddon
+              setFieldVal={(props: any) => {
+                console.log(props);
+              }}
               groupProps={{ size: "sm" }}
               addonProps={{ fontSize: "sm" }}
               addonType="left"

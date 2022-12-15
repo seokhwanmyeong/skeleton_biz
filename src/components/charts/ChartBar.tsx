@@ -65,6 +65,7 @@ interface ChartProps {
   accessKey: string;
   total: number;
   isDivide?: boolean;
+  activeLine?: boolean;
   legend: {
     [key: string]:
       | {
@@ -96,6 +97,7 @@ const ChartBar = ({
   total,
   isDivide,
   legend,
+  activeLine = false,
 }: {
   data: any;
   // keys: string[];
@@ -104,6 +106,7 @@ const ChartBar = ({
   total: number;
   isDivide?: boolean;
   legend: any;
+  activeLine?: boolean;
 }) => {
   return (
     <ParentSize>
@@ -116,6 +119,7 @@ const ChartBar = ({
           width={width}
           height={height}
           legend={legend}
+          activeLine={activeLine}
         />
       )}
     </ParentSize>
@@ -128,6 +132,7 @@ const Chart = withTooltip<ChartProps, TooltipData>(
     accessKey,
     total,
     isDivide = false,
+    activeLine = false,
     legend,
     width,
     height,
@@ -148,7 +153,7 @@ const Chart = withTooltip<ChartProps, TooltipData>(
     //  accessors
     const getAccess = useCallback((d: any) => d[accessKey], [accessKey]);
     const getXArray = (d: any) => d[accessKey];
-    const getYArray = (d: any) => d.sale_amt;
+    const getYArray = (d: any, idx: number) => d[keyOfLe[idx]];
     const { xMax, yMax } = useMemo(() => {
       const _xMax = width - margin.left - margin.right;
       let _yMax = height - margin.top - margin.bottom;
@@ -187,11 +192,18 @@ const Chart = withTooltip<ChartProps, TooltipData>(
             range: [0, xMax],
             nice: true,
           }),
-          lineScaleY: scaleLinear({
-            domain: [0, max(data, getYArray)],
-            range: [yMax, 0],
-            nice: true,
-          }),
+          lineScaleY: {
+            over: scaleLinear({
+              domain: [0, max(data, getYArray)],
+              range: [yMax, 0],
+              nice: true,
+            }),
+            under: scaleLinear({
+              domain: [0, max(data, getYArray)],
+              range: [yMax, 0],
+              nice: true,
+            }),
+          },
           accessScale: scaleBand<number>({
             domain: data.map(getAccess),
             range: [0, xMax],
@@ -205,7 +217,7 @@ const Chart = withTooltip<ChartProps, TooltipData>(
         };
       }, [xMax, yMax, isDivide]);
 
-    const bandW = useMemo(() => accessScale.bandwidth(), []);
+    const bandW = useMemo(() => accessScale.bandwidth(), [accessScale]);
 
     //  Handler
     const keyHandler = (key: string) => {
@@ -232,13 +244,6 @@ const Chart = withTooltip<ChartProps, TooltipData>(
         <svg width={width} height={height}>
           <rect width={width} height={height} fill={background} rx={14} />
           <Group top={margin.top} left={margin.left}>
-            <LinePath
-              stroke={greens[2]}
-              strokeWidth={2}
-              data={data}
-              x={(d) => (accessScale(getAccess(d)) ?? 0) + bandW / 2}
-              y={(d) => lineScaleY(getYArray(d)) ?? 0}
-            />
             <BarStack
               data={data}
               keys={
@@ -306,6 +311,15 @@ const Chart = withTooltip<ChartProps, TooltipData>(
                 })
               }
             </BarStack>
+            {activeLine && (
+              <LinePath
+                stroke={greens[2]}
+                strokeWidth={2}
+                data={data}
+                x={(d) => (accessScale(getAccess(d)) ?? 0) + bandW / 2}
+                y={(d) => amountScale.over(getYArray(d, 0)) ?? 0}
+              />
+            )}
             <AxisLeft
               hideAxisLine
               hideTicks
@@ -398,6 +412,15 @@ const Chart = withTooltip<ChartProps, TooltipData>(
                   })
                 }
               </BarStack>
+              {activeLine && (
+                <LinePath
+                  stroke={greens[1]}
+                  strokeWidth={2}
+                  data={data}
+                  x={(d) => (accessScale(getAccess(d)) ?? 0) + bandW / 2}
+                  y={(d) => amountScale.under(getYArray(d, 1)) ?? 0}
+                />
+              )}
               <AxisBottom
                 hideTicks
                 top={0}

@@ -7,6 +7,7 @@ import DashBoard from "@src/page/erp/DashBoard";
 import ErpBaseTable from "@src/page/erp/ErpBaseTable";
 import ErpBaseApi from "@src/page/erp/ErpBaseApi";
 import ErpPop from "@src/page/erp/ErpPop";
+import ErpForm from "@src/page/erp/ErpForm";
 import ErrorPage from "@page/ErrorPage";
 import Guide from "@page/Guide";
 //  Components
@@ -27,7 +28,7 @@ const RouterOutlet = () => {
             <Route path="erp02-Sub01" element={<ErpBaseTable />} />
             <Route path="erp02-Sub02" element={<ErpBaseApi />} />
             <Route path="erp03" element={<ErpPop />} />
-            <Route path="erp04" element={<ErpBaseTable />} />
+            <Route path="erp04" element={<ErpForm />} />
           </Route>
           <Route path="guide" element={<Guide />} />
           <Route path="*" element={<ErrorPage />} />

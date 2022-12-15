@@ -12,7 +12,7 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "start": "electron .",
-    "electron:build": "vite build && electron-packager --out=release ."
+    "electron:build": "vite build && electron-packager --overwrite --out=release ."
   },
   "dependencies": {
     "@chakra-ui/react": "^2.3.7",

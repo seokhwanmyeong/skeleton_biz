@@ -89,17 +89,99 @@ const DashBoard = () => {
 
   const testMargin3 = useMemo(() => {
     const testData = [
-      { date: "2022-01", population: 5000 },
-      { date: "2022-02", population: 100 },
-      { date: "2022-03", population: 3500 },
-      { date: "2022-04", population: 1000 },
-      { date: "2022-05", population: 9000 },
-      { date: "2022-08", population: 8000 },
-      { date: "2022-10", population: 677 },
-      { date: "2022-11", population: 800 },
-      { date: "2022-12", population: 8000 },
+      {
+        date: "2022-01",
+        population: 5000,
+        age_10: 0.2,
+        age_20: 0.2,
+        age_30: 0.2,
+        age_40: 0.2,
+        age_50: 0.1,
+        age_60: 0.1,
+      },
+      {
+        date: "2022-02",
+        population: 100,
+        age_10: 0.2,
+        age_20: 0.2,
+        age_30: 0.2,
+        age_40: 0.2,
+        age_50: 0.1,
+        age_60: 0.1,
+      },
+      {
+        date: "2022-03",
+        population: 3500,
+        age_10: 0.2,
+        age_20: 0.2,
+        age_30: 0.2,
+        age_40: 0.2,
+        age_50: 0.1,
+        age_60: 0.1,
+      },
+      {
+        date: "2022-04",
+        population: 1000,
+        age_10: 0.2,
+        age_20: 0.2,
+        age_30: 0.2,
+        age_40: 0.2,
+        age_50: 0.1,
+        age_60: 0.1,
+      },
+      {
+        date: "2022-05",
+        population: 9000,
+        age_10: 0.2,
+        age_20: 0.2,
+        age_30: 0.2,
+        age_40: 0.2,
+        age_50: 0.1,
+        age_60: 0.1,
+      },
+      {
+        date: "2022-08",
+        population: 8000,
+        age_10: 0.1,
+        age_20: 0.4,
+        age_30: 0.3,
+        age_40: 0.1,
+        age_50: 0.05,
+        age_60: 0.05,
+      },
+      {
+        date: "2022-10",
+        population: 677,
+        age_10: 0.2,
+        age_20: 0.2,
+        age_30: 0.2,
+        age_40: 0.2,
+        age_50: 0.1,
+        age_60: 0.1,
+      },
+      {
+        date: "2022-11",
+        population: 800,
+        age_10: 0.2,
+        age_20: 0.2,
+        age_30: 0.2,
+        age_40: 0.2,
+        age_50: 0.1,
+        age_60: 0.1,
+      },
+      {
+        date: "2022-12",
+        population: 8000,
+        age_10: 0.2,
+        age_20: 0.2,
+        age_30: 0.2,
+        age_40: 0.2,
+        age_50: 0.1,
+        age_60: 0.1,
+      },
     ];
     const accessKey = "population";
+    const subKey = "age_";
     const legend = {
       key: ["population"],
       date: {
@@ -117,6 +199,7 @@ const DashBoard = () => {
     return {
       data: testData,
       accessKey: accessKey,
+      subKey: subKey,
       totalAmt: totalAmt,
       legend: legend,
     };
@@ -130,6 +213,7 @@ const DashBoard = () => {
           <ChartDonut
             data={testMargin3.data}
             accessKey={testMargin3.accessKey}
+            subKey={testMargin3.subKey}
           />
         </Flex>
         <Flex w="50%">
@@ -139,6 +223,7 @@ const DashBoard = () => {
             total={testMargin2.totalAmt}
             isDivide={false}
             legend={testMargin2.legend}
+            // activeLine={true}
           />
         </Flex>
       </Flex>
