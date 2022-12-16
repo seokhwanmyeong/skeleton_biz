@@ -64,8 +64,10 @@ const BaseTable = ({
     debugHeaders: false,
     debugTable: false,
   });
+  console.log(tableData);
 
   useEffect(() => {
+    console.log(pagenation.pageItems);
     setTableData(pagenation.pageItems);
   }, [pagenation.pageItems]);
 

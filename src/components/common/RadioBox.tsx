@@ -1,7 +1,7 @@
 import { Radio, RadioGroup, Stack } from "@chakra-ui/react";
 
 type RadioProps = {
-  setFieldValue: (key: string, value: string) => {};
+  _onChange: any;
   value: any;
   fieldKey: string;
   values?: { text: string; value: string | number }[];
@@ -9,7 +9,7 @@ type RadioProps = {
 };
 
 const RadioBox = ({
-  setFieldValue,
+  _onChange,
   value,
   fieldKey,
   values,
@@ -19,7 +19,7 @@ const RadioBox = ({
     <RadioGroup
       key={`radioG=${fieldKey}`}
       name={fieldKey}
-      onChange={(value: any) => setFieldValue(fieldKey, value)}
+      onChange={(value: any) => _onChange(value)}
       value={value}
       variant={variant}
     >

@@ -13,4 +13,6 @@ niceApi.interceptors.response.use((res: any) => {
   return res;
 });
 
+const errCode = {};
+
 export default niceApi;

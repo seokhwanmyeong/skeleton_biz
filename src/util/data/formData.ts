@@ -17,7 +17,11 @@ const FormMember = {};
 /* 4. Erp */
 const formTest = {
   initialValues: {
-    date: "2022-12-15",
+    date: "2022-12-14",
+    dateDbl: {
+      start: "2022-12-14",
+      end: "2022-12-16",
+    },
     name: "",
     nickname: "",
     age: 0,
@@ -85,6 +89,12 @@ const formTest = {
           variant: "filled",
         },
         {
+          labelText: "DateDBL",
+          type: "dateDbl",
+          key: "dateDbl",
+          variant: "filled",
+        },
+        {
           labelText: "E-Mail",
           type: "email",
           key: "email",
@@ -105,21 +115,15 @@ const formTest = {
           variant: "filled",
         },
         {
-          labelText: "File",
-          type: "file",
-          key: "file",
+          labelText: "File-Xlsx",
+          type: "fileXlsx",
+          key: "fileXlsx",
           variant: "filled",
         },
         {
-          labelText: "File-CSV",
-          type: "fileCsv",
-          key: "csv",
-          variant: "filled",
-        },
-        {
-          labelText: "IMG",
+          labelText: "File-IMG",
           type: "fileImg",
-          key: "img",
+          key: "fileImg",
           variant: "filled",
         },
         {
