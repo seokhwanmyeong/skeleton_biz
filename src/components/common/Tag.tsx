@@ -1,3 +1,4 @@
+//  Components
 import {
   Tag as ChakraTag,
   TagLabel,
@@ -6,7 +7,7 @@ import {
   TagCloseButton,
 } from "@chakra-ui/react";
 
-type Props = {
+type TagProps = {
   text: string;
   variant?: string;
   onClick?: any;
@@ -16,7 +17,7 @@ type Props = {
   isChecked?: boolean;
 };
 
-const Tag = (props: Props) => {
+const Tag = (props: TagProps) => {
   const {
     text,
     variant = "subtle",

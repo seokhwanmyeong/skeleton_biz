@@ -1,6 +1,3 @@
-// Lib
-import { mode, GlobalStyleProps } from "@chakra-ui/theme-tools";
-
 const checkboxTheme = {
   baseStyle: {
     control: {},
@@ -9,15 +6,11 @@ const checkboxTheme = {
     icon: {},
   },
   variants: {
-    withTag: (props: GlobalStyleProps) => {
-      const { colorScheme: c, theme } = props;
-
-      return {
-        control: { display: "none" },
-        container: {},
-        label: {},
-        icon: { display: "none" },
-      };
+    withTag: {
+      control: { display: "none" },
+      container: {},
+      label: {},
+      icon: { display: "none" },
     },
   },
   defaultProps: {},

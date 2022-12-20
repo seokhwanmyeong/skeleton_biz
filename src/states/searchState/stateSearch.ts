@@ -1,8 +1,8 @@
 import { atom, atomFamily, selector, selectorFamily } from "recoil";
 
-interface SearchOption {
+type SearchOption = {
   [key: string]: any;
-}
+};
 
 //  Base Option Data
 export const atomSementicBaseList = atom<{ [key: string]: any }>({

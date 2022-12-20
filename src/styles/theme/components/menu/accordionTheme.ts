@@ -1,17 +1,13 @@
 // Lib
-import { mode, GlobalStyleProps } from "@chakra-ui/theme-tools";
+import { GlobalStyleProps } from "@chakra-ui/theme-tools";
 
 const accordionTheme = {
-  baseStyle: (props: GlobalStyleProps) => {
-    const { colorScheme: c, theme } = props;
-
-    return {
-      root: {},
-      container: {},
-      button: {},
-      panel: {},
-      icon: {},
-    };
+  baseStyle: {
+    root: {},
+    container: {},
+    button: {},
+    panel: {},
+    icon: {},
   },
   variants: {
     searchEngine: (props: GlobalStyleProps) => {
@@ -56,15 +52,17 @@ const accordionTheme = {
         icon: {},
       };
     },
-    sideMenu: (props: GlobalStyleProps) => {
-      const { colorScheme: c, theme } = props;
-      return {
-        root: {},
-        container: {},
-        button: {},
-        panel: {},
-        icon: {},
-      };
+    sideMenu: {
+      root: {
+        minWidth: "200px",
+        borderRight: "1px solid",
+        borderColor: "primary.main.bdColor",
+        color: "primary.main.font",
+      },
+      container: {},
+      button: {},
+      panel: {},
+      icon: {},
     },
   },
   defaultProps: { variant: "" },

@@ -1,4 +1,5 @@
-import { AxiosInstance } from "axios";
+//  LIB
+import axios, { AxiosInstance } from "axios";
 
 type Req = {};
 type Res = {};
@@ -23,4 +24,16 @@ interface NiceApiInstance extends AxiosInstance {
   patch<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T>;
 }
 
-export { type NiceApiInstance };
+const niceApi: NiceApiInstance = axios.create({ baseURL: "" });
+
+niceApi.interceptors.request.use((req: any) => {
+  return req;
+});
+
+niceApi.interceptors.response.use((res: any) => {
+  return res;
+});
+
+const errCode = {};
+
+export default niceApi;

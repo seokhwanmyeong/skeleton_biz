@@ -6,7 +6,6 @@ import { Flex } from "@chakra-ui/react";
 // Components
 import Header from "@components/header/Header";
 import Footer from "@components/footer/Footer";
-import SideMenu from "@components/menu/SideMenu";
 
 const FrameMain = () => {
   const location = useLocation();
@@ -17,7 +16,7 @@ const FrameMain = () => {
   }, [location]);
 
   return (
-    <Flex flexDirection="column" minH="100vh">
+    <Flex flexDirection="column" minH="100vh" bgColor="primary.main.bg">
       <Header rootState={rootState} />
       <Flex w="100%" flex="auto">
         <Outlet />

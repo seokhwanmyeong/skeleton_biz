@@ -2,7 +2,7 @@
 import { useMemo } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
 //  Router
 import RouterOutlet from "@router/RouterOutlet";
 //  Style
@@ -18,7 +18,6 @@ const App = () => {
 
   return (
     <ChakraProvider theme={theme} resetCSS={true}>
-      {/* <ColorModeScript initialColorMode={theme.config.initialColorMode} /> */}
       <BrowserRouter>
         <RouterOutlet />
       </BrowserRouter>

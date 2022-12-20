@@ -1,36 +1,68 @@
 //  Lib
+import { useRecoilValue } from "recoil";
 import { Route, Routes } from "react-router-dom";
 //  Pages
-import Home from "@page/Home";
-import Maps from "@page/Maps";
-import DashBoard from "@src/page/erp/DashBoard";
-import ErpBaseTable from "@src/page/erp/ErpBaseTable";
-import ErpBaseApi from "@src/page/erp/ErpBaseApi";
-import ErpPop from "@src/page/erp/ErpPop";
-import ErpForm from "@src/page/erp/ErpForm";
 import ErrorPage from "@page/ErrorPage";
-import Guide from "@page/Guide";
-//  Components
-import FrameMain from "@src/components/frame/FrameMain";
-import FrameErp from "@src/components/frame/FrameErp";
+//  Pages: Frame
+import FrameMain from "@page/frame/FrameMain";
+import FrameSub from "@page/frame/FrameSub";
+//  State & Pages
+import {
+  routerSelector,
+  subRoute as _subRoute,
+  indexChecker,
+  MainRouteType,
+  SubRouteType,
+  DepthRouteType,
+} from "@states/route/stateRoute";
 
 const RouterOutlet = () => {
+  const mainRoute = useRecoilValue(routerSelector);
+  const subRoute = useRecoilValue(_subRoute);
+
   return (
     <Routes>
       <Route path="/" element={<FrameMain />} errorElement={<ErrorPage />}>
         <Route errorElement={<ErrorPage />}>
-          <Route index element={<Home />} />
-          <Route path="maps" element={<Maps />} />
-          <Route path="erp" element={<FrameErp />}>
-            <Route index element={<DashBoard />} />
-            <Route path="erp01-Sub01" element={<ErpBaseTable />} />
-            <Route path="erp01-Sub02" element={<ErpBaseApi />} />
-            <Route path="erp02-Sub01" element={<ErpBaseTable />} />
-            <Route path="erp02-Sub02" element={<ErpBaseApi />} />
-            <Route path="erp03" element={<ErpPop />} />
-            <Route path="erp04" element={<ErpForm />} />
-          </Route>
-          <Route path="guide" element={<Guide />} />
+          {mainRoute.map((main: MainRouteType) => {
+            return main.hasSub ? (
+              <Route
+                key={`route-main-${main.root}`}
+                path={main.root}
+                element={<FrameSub />}
+              >
+                {subRoute[main.root].map((sub: SubRouteType) => {
+                  return sub.hasChild
+                    ? sub.children &&
+                        sub.children.map((depth: DepthRouteType) => (
+                          <Route
+                            index={indexChecker(depth.path)}
+                            key={`route-${depth.path}`}
+                            path={indexChecker(depth.path) ? "" : depth.path}
+                            element={<depth.page />}
+                          />
+                        ))
+                    : sub.page && (
+                        <Route
+                          index={indexChecker(sub.path)}
+                          key={`route-${sub.path}`}
+                          path={indexChecker(sub.path) ? "" : sub.path}
+                          element={<sub.page />}
+                        />
+                      );
+                })}
+              </Route>
+            ) : (
+              main.page && (
+                <Route
+                  key={`route-main-${main.root}`}
+                  index={indexChecker(main.path)}
+                  path={indexChecker(main.path) ? "" : main.root}
+                  element={<main.page />}
+                />
+              )
+            );
+          })}
           <Route path="*" element={<ErrorPage />} />
         </Route>
       </Route>

@@ -4,26 +4,23 @@ import {
   Checkbox as ChakraCheckbox,
   CheckboxGroup as ChakraCheckboxGroup,
 } from "@chakra-ui/react";
+//  Components
 import Tag from "@components/common/Tag";
 
-type PropsChekbox = {
+type ChekboxProps = {
   title: string;
   isChecked?: boolean;
   onChange?: any;
   value?: any;
 };
 
-type PropsChekboxTag = {
-  title: string;
-  isChecked?: boolean;
+interface ChekboxTagProps extends ChekboxProps {
   isDisabled?: boolean;
   isCustom?: boolean;
-  onChange?: any;
-  value?: any;
   children?: any;
-};
+}
 
-const CheckBox = (props: PropsChekbox) => {
+const CheckBox = (props: ChekboxProps) => {
   const { title, isChecked, onChange, value } = props;
   return (
     <ChakraCheckbox isChecked={isChecked} onChange={onChange} value={value}>
@@ -32,7 +29,7 @@ const CheckBox = (props: PropsChekbox) => {
   );
 };
 
-const CheckBoxTag = (props: PropsChekboxTag) => {
+const CheckBoxTag = (props: ChekboxTagProps) => {
   const { title, isChecked, isDisabled = false, onChange, value } = props;
   return (
     <ChakraCheckbox

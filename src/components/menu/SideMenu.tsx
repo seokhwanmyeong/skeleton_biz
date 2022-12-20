@@ -1,6 +1,6 @@
 //  Lib
-import { Fragment, useCallback, useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 import {
   Accordion,
   AccordionItem,
@@ -8,85 +8,82 @@ import {
   AccordionPanel,
   AccordionIcon,
 } from "@chakra-ui/react";
-import { useRecoilValue } from "recoil";
 //  State
-import { subMenuSelector } from "@states/menu/stateMenu";
-//  Type
-import { SubMenuType, DepthMenuType } from "@util/type/menuType";
+import {
+  subMenuSelector,
+  indexChecker,
+  SubRouteType,
+  DepthRouteType,
+} from "@states/route/stateRoute";
 
 const SideMenu = () => {
   const location = useLocation();
-  const menu = useRecoilValue(subMenuSelector("erp"));
-  const [rootState, setRootState] = useState("/");
   const navigate = useNavigate();
+  const pathState = location.pathname;
+  const root = pathState.split("/")[1];
+  const menu = useRecoilValue(subMenuSelector(root) || undefined);
 
-  const navigator = useCallback((path: string) => {
-    const naviOption = {};
-    navigate(path, naviOption);
-  }, []);
+  const navigator = (path: string): void => {
+    if (path) {
+      const naviOption = {};
 
-  useEffect(() => {
-    setRootState(location.pathname);
-  }, [location]);
+      navigate(
+        indexChecker(path) ? `/${root}` : `/${root}/${path}`,
+        naviOption
+      );
+    } else {
+      alert("path missing");
+    }
+  };
+
+  const pathChecker = (path: string): boolean => {
+    if (path) {
+      return indexChecker(path)
+        ? pathState === `/${root}`
+        : pathState.includes(path);
+    } else {
+      return false;
+    }
+  };
 
   return (
-    <Fragment>
-      <Accordion
-        variant="sideMenu"
-        allowMultiple
-        minWidth="200px"
-        borderRight="1px solid"
-        borderColor="primary.main.bdColor"
-      >
-        {menu.map((menuLi: SubMenuType, idx: number) => {
-          return (
-            <AccordionItem key={menuLi.title}>
-              {menuLi.hasChild ? (
-                <AccordionButton
-                  style={{
-                    fontWeight: menuLi.path === rootState ? "bold" : "",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  {menuLi.title}
-                  <AccordionIcon />
-                </AccordionButton>
-              ) : (
-                <AccordionButton
-                  onClick={() => navigator(menuLi.path)}
-                  style={{
-                    fontWeight: menuLi.path === rootState ? "bold" : "",
-                  }}
-                >
-                  {menuLi.title}
-                </AccordionButton>
-              )}
-              {menuLi.hasChild && (
-                <AccordionPanel>
-                  <Accordion allowMultiple>
-                    {menuLi.children.map((depthLi: DepthMenuType) => {
-                      return (
-                        <AccordionItem key={depthLi.title}>
-                          <AccordionButton
-                            onClick={() => navigator(depthLi.path)}
-                            style={{
-                              fontWeight:
-                                depthLi.path === rootState ? "bold" : "",
-                            }}
-                          >
-                            {depthLi.title}
-                          </AccordionButton>
-                        </AccordionItem>
-                      );
-                    })}
-                  </Accordion>
-                </AccordionPanel>
-              )}
-            </AccordionItem>
-          );
-        })}
-      </Accordion>
-    </Fragment>
+    <Accordion variant="sideMenu" allowMultiple>
+      {menu &&
+        menu.map((menuLi: SubRouteType) => (
+          <AccordionItem key={menuLi.title}>
+            <AccordionButton
+              onClick={() => {
+                menuLi.hasChild ? null : navigator(menuLi.path);
+              }}
+              style={{
+                fontWeight: pathChecker(menuLi.path) ? "bold" : "",
+              }}
+            >
+              {menuLi.title}
+              {menuLi.hasChild && <AccordionIcon />}
+            </AccordionButton>
+            {menuLi.hasChild && (
+              <AccordionPanel>
+                <Accordion allowMultiple>
+                  {menuLi.children &&
+                    menuLi.children.map((depthLi: DepthRouteType) => (
+                      <AccordionItem key={depthLi.title}>
+                        <AccordionButton
+                          onClick={() => navigator(depthLi.path)}
+                          style={{
+                            fontWeight: pathChecker(depthLi.path) ? "bold" : "",
+                          }}
+                        >
+                          {depthLi.title}
+                        </AccordionButton>
+                      </AccordionItem>
+                    ))}
+                </Accordion>
+              </AccordionPanel>
+            )}
+          </AccordionItem>
+        ))}
+    </Accordion>
   );
 };
 

@@ -2,6 +2,7 @@
 import { Fragment, useState } from "react";
 import { Flex, Button, FormControl, FormLabel } from "@chakra-ui/react";
 import { Formik, Field, Form } from "formik";
+//  Components
 import {
   Input,
   InputPwd,
@@ -10,9 +11,9 @@ import {
   InputFile,
   InputDate,
 } from "@components/common/Input";
-import { RadioBox, RadioProps } from "@src/components/common/RadioBox";
+import { RadioBox, RadioProps } from "@components/common/RadioBox";
 
-interface FieldProps {
+type FieldProps = {
   type:
     | "text"
     | "number"
@@ -39,7 +40,7 @@ interface FieldProps {
     value: string | number;
   }[];
   component?: any;
-}
+};
 
 const FormSample = ({
   form,
@@ -249,6 +250,7 @@ const FormField = ({
               type="file"
               fieldKey={_fieldKey}
               value={_value}
+              addonProps={{ width: "auto" }}
               _onChange={(val: any) => setFieldValue(_fieldKey, val)}
               variant="filled"
               placeholder="placeHolder"

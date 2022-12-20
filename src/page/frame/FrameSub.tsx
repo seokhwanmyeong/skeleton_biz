@@ -1,20 +1,20 @@
 //  Lib
 import { Fragment } from "react";
 import { Heading, Flex } from "@chakra-ui/react";
+import { Outlet } from "react-router-dom";
 //  Components
 import SideMenu from "@src/components/menu/SideMenu";
-import { Outlet } from "react-router-dom";
 
-const FrameErp = () => {
+const FrameSub = () => {
   return (
     <Fragment>
       <SideMenu />
       <Flex flexDirection="column" w="calc(100vw - 200px)" p="3rem 4rem">
-        <Heading>FrameErp</Heading>
+        <Heading>FrameSub</Heading>
         <Outlet />
       </Flex>
     </Fragment>
   );
 };
 
-export default FrameErp;
+export default FrameSub;

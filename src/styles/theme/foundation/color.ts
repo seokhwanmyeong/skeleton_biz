@@ -7,14 +7,14 @@ export const selectColorScheme = (type: string) => {
           bg: "#ffffff",
           hover: "#dddddd",
           font: "#1a202c",
-          bdColor: "ededed",
+          bdColor: "#ededed",
         },
         reverse: {
           color: "#1a202c",
           bg: "#1a202c",
           hover: "#555555",
-          font: "#1a202c",
-          bdColor: "ededed",
+          font: "#ffffff",
+          bdColor: "#ededed",
         },
       },
       secondary: {
@@ -51,14 +51,14 @@ export const selectColorScheme = (type: string) => {
           bg: "#1a202c",
           hover: "#555555",
           font: "#ffffff",
-          bdColor: "ededed",
+          bdColor: "#ededed",
         },
         reverse: {
           color: "#ffffff",
           bg: "#ffffff",
           hover: "#dddddd",
           font: "#1a202c",
-          bdColor: "ededed",
+          bdColor: "#ededed",
         },
       },
       secondary: {
@@ -66,13 +66,13 @@ export const selectColorScheme = (type: string) => {
           color: "#1a202c",
           hover: "#555555",
           font: "#ffffff",
-          bdColor: "ededed",
+          bdColor: "#ededed",
         },
         reverse: {
           color: "#ffffff",
           hover: "#dddddd",
           font: "#1a202c",
-          bdColor: "ededed",
+          bdColor: "#ededed",
         },
       },
       confirm: {
@@ -110,13 +110,13 @@ export const selectColorScheme = (type: string) => {
           color: "#1a202c",
           hover: "#555555",
           font: "#ffffff",
-          bdColor: "ededed",
+          bdColor: "#ededed",
         },
         reverse: {
           color: "#ffffff",
           hover: "#dddddd",
           font: "#1a202c",
-          bdColor: "ededed",
+          bdColor: "#ededed",
         },
       },
       confirm: {
@@ -154,13 +154,13 @@ export const selectColorScheme = (type: string) => {
           color: "#ffffff",
           hover: "#dddddd",
           font: "#1a202c",
-          bdColor: "ededed",
+          bdColor: "#ededed",
         },
         reverse: {
           color: "#1a202c",
           hover: "#555555",
           font: "#ffffff",
-          bdColor: "ededed",
+          bdColor: "#ededed",
         },
       },
       confirm: {
@@ -178,5 +178,5 @@ export const selectColorScheme = (type: string) => {
     },
   };
 
-  return colorTheme[type];
+  return colorTheme[type] ?? colorTheme["dark"];
 };

@@ -1,7 +1,6 @@
 //  Lib
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import {
-  Stack,
   Accordion,
   AccordionItem,
   AccordionButton,
@@ -9,7 +8,7 @@ import {
   AccordionIcon,
 } from "@chakra-ui/react";
 //  Components
-import { CheckBoxTag } from "@src/components/common/CheckBox";
+import { CheckBoxTag } from "@components/common/CheckBox";
 //  State
 import {
   atomSementicBaseList,

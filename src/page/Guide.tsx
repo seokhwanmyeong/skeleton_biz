@@ -29,7 +29,7 @@ const Guide = () => {
             <Heading size="md">Components : Input</Heading>
             <Text>Input : base (default)</Text>
             <Input
-              setFieldVal={(props: any) => {
+              _onChange={(props: any) => {
                 console.log(props);
               }}
               placeholder="placeHolder"
@@ -62,7 +62,7 @@ const Guide = () => {
             <Divider />
             <Text>Input : PWD</Text>
             <InputPwd
-              setFieldVal={(props: any) => {
+              _onChange={(props: any) => {
                 console.log(props);
               }}
               groupProps={{ size: "md" }}
@@ -80,7 +80,7 @@ const Guide = () => {
             <Divider />
             <Text>Input : Base with Title</Text>
             <InputAddon
-              setFieldVal={(props: any) => {
+              _onChange={(props: any) => {
                 console.log(props);
               }}
               groupProps={{ size: "sm" }}

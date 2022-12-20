@@ -3,7 +3,44 @@ import { createColumnHelper, ColumnDef } from "@tanstack/react-table";
 //  Components
 import CustomModalCell from "@src/components/table/cutomCell/CustomModalCell";
 //  Type
-import { BaseColumns, Sample } from "@util/type/tableType";
+import { ThemeTypings } from "@chakra-ui/react";
+import { Column } from "react-table";
+import { NoContentProps } from "@components/table/NoContent";
+
+type Sample = {
+  date: string;
+  name: string;
+  age: number;
+  gender: "man" | "woman";
+  benefit: number;
+  average: {
+    man: number;
+    woman: number;
+  };
+};
+
+type BaseColumns = Column<DataType>[];
+
+type DataType = {
+  [key: string]: JSX.Element | string | number;
+};
+
+type EmptyMessage = Partial<NoContentProps>;
+
+interface ApiTableProps {
+  isDirectApi?: boolean;
+  url: string;
+  reqBody: any;
+  reqType: any;
+  resType: any;
+  actviePage?: boolean;
+  caption?: string;
+  registersPerPage?: number;
+  columns: BaseColumns;
+  emptyData?: EmptyMessage;
+  variant?: string;
+  colorScheme?: ThemeTypings["colorSchemes"];
+}
 
 const BaseTableSet: ColumnDef<any>[] = [
   {
@@ -248,3 +285,4 @@ const baseTableSetting = () => {
 };
 
 export { BaseTableSet, LineTableSet, erp01TableSetting, baseTableSetting };
+export type { ApiTableProps, Sample };

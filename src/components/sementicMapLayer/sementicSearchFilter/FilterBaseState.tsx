@@ -21,7 +21,7 @@ import {
   mapControllHandler,
   atomSementicUpjong,
   selectorSementicUpjong,
-} from "@src/states/searchState/stateSearch";
+} from "@states/searchState/stateSearch";
 
 const FilterBaseState = () => {
   const baseList = useRecoilValue(atomSementicBaseList);

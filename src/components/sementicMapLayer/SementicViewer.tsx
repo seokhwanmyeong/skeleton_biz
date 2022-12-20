@@ -1,6 +1,6 @@
 //  LIB
 import { useState } from "react";
-import { Flex, Button, Heading, useColorMode } from "@chakra-ui/react";
+import { Flex, Button, Heading } from "@chakra-ui/react";
 //  Components
 import ChartCircle from "@components/charts/ChartCircle";
 import ChartGraph from "@components/charts/ChartGraph";
@@ -9,7 +9,6 @@ type Props = {};
 
 const SementicViewer = (props: Props) => {
   const [isOpen, setOpen] = useState(false);
-  const mode = useColorMode();
   const [data] = useState({
     data1: [
       { date: "2022-01", population: 5000 },
@@ -63,7 +62,7 @@ const SementicViewer = (props: Props) => {
         justifyContent="center"
         flexDirection="column"
         borderLeft={isOpen ? "1px solid #ededed" : ""}
-        bgColor={mode.colorMode === "dark" ? "#646464" : "#ffffff"}
+        bgColor="primary.main.bg"
         overflow="hidden"
         transition="0.3s"
       >

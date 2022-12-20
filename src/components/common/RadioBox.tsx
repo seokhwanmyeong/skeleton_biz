@@ -1,4 +1,5 @@
-import { Radio, RadioGroup, Stack } from "@chakra-ui/react";
+//  Components
+import { Radio, RadioGroup } from "@chakra-ui/react";
 
 type RadioProps = {
   _onChange: any;

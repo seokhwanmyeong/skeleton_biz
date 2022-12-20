@@ -4,9 +4,7 @@ import { Flex, Heading } from "@chakra-ui/react";
 //  Components
 import BaseTable from "@src/components/table/BaseTable";
 //  Util
-import { baseTableSetting } from "@util/data/erpTableData";
-//  Type
-import { Sample } from "@util/type/tableType";
+import { baseTableSetting, Sample } from "@util/data/erpTableData";
 
 const ErpBaseTable = () => {
   const { tableOption, baseColumn, initialSort } = useMemo(

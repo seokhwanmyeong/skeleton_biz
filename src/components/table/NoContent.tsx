@@ -1,9 +1,12 @@
 //  LIB
-import React from "react";
-import { Flex, Icon, Text } from "@chakra-ui/react";
 import { ReactNode } from "react";
-//  TYPE
-import { NoContentProps } from "@util/type/tableType";
+import { Flex, Icon, Text } from "@chakra-ui/react";
+
+type NoContentProps = {
+  text: string;
+  children?: ReactNode;
+  noShadow?: boolean;
+};
 
 const NoContent = ({ text, noShadow }: NoContentProps) => {
   return (
@@ -24,3 +27,4 @@ const NoContent = ({ text, noShadow }: NoContentProps) => {
 };
 
 export default NoContent;
+export { type NoContentProps };

@@ -26,7 +26,7 @@ import { CheckBoxTag } from "@src/components/common/CheckBox";
 //  Custom Hook
 import { usePagination } from "@hook/usePagination";
 //  Api
-import { getTestTable, postApi } from "@src/api/postApi";
+import { getTestTable, postApi } from "@src/api/bizApi/instance";
 
 const ApiTable = ({
   url,

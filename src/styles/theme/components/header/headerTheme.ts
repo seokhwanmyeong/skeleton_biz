@@ -1,11 +1,6 @@
 // Lib
 import { defineStyleConfig } from "@chakra-ui/react";
-import {
-  mode,
-  StyleFunctionProps,
-  GlobalStyleProps,
-  StyleConfig,
-} from "@chakra-ui/theme-tools";
+import { StyleFunctionProps, StyleConfig } from "@chakra-ui/theme-tools";
 import { SystemStyleObject } from "@chakra-ui/system";
 
 const headerTheme: Record<string, StyleConfig> = {

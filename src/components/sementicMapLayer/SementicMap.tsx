@@ -1,5 +1,5 @@
 //  Lib
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { Button, Flex, keyframes } from "@chakra-ui/react";
 //  State
@@ -7,7 +7,6 @@ import {
   selectorSementicMapState,
   atomMapControllState,
   mapControllHandler,
-  resetSementicAtom,
 } from "@states/searchState/stateSearch";
 
 const SementicMap = () => {
