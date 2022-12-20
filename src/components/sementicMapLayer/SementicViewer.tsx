@@ -1,14 +1,19 @@
 //  LIB
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useRecoilValue } from "recoil";
 import { Flex, Button, Heading } from "@chakra-ui/react";
 //  Components
 import ChartCircle from "@components/charts/ChartCircle";
 import ChartGraph from "@components/charts/ChartGraph";
+//  States
+import { checkBaseState } from "@states/searchState/stateSearch";
 
 type Props = {};
 
 const SementicViewer = (props: Props) => {
-  const [isOpen, setOpen] = useState(false);
+  const isCheckbaseOption = useRecoilValue(checkBaseState);
+  const [offsetW, setOffsetW] = useState(0);
+  const ref = useRef<any>();
   const [data] = useState({
     data1: [
       { date: "2022-01", population: 5000 },
@@ -34,37 +39,51 @@ const SementicViewer = (props: Props) => {
       { age: "60th", count: 1290 },
     ],
   });
+
   const onToggle = () => {
-    setOpen(!isOpen);
+    setOffsetW(offsetW === 0 ? -ref.current.clientWidth : 0);
   };
 
+  useEffect(() => {
+    if (!isCheckbaseOption) setOffsetW(0);
+  }, [isCheckbaseOption]);
+
+  if (!isCheckbaseOption) {
+    return null;
+  }
+
   return (
-    <Flex position="absolute" right="0" top="0" zIndex="100" h="100%">
+    <Flex
+      position="absolute"
+      right={`${offsetW}px`}
+      top="0"
+      zIndex="100"
+      h="100%"
+      transition="0.3s"
+    >
       <Button
-        position="absolute"
-        left="-200px"
-        top="0"
-        w="200px"
+        w="auto"
         borderRadius="0px 0px 0px 5px"
-        bgColor="#646464"
+        bgColor="primary.main.bg"
         onClick={onToggle}
-        transition="0.5s"
-        color="#ffffff"
+        transition="0.3s"
+        color="primary.main.font"
         _hover={{
-          bgColor: "#000000",
+          bgColor: "primary.main.hover",
         }}
       >
         SementicView
       </Button>
       <Flex
-        w={isOpen ? "400px" : "0"}
+        w="400px"
         alignItems="center"
         justifyContent="center"
         flexDirection="column"
-        borderLeft={isOpen ? "1px solid #ededed" : ""}
+        borderLeft="1px solid #ededed"
         bgColor="primary.main.bg"
         overflow="hidden"
         transition="0.3s"
+        ref={ref}
       >
         <Heading>SementicViewer</Heading>
         <ChartGraph Data={data.data1} />

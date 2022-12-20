@@ -1,5 +1,5 @@
 //  Lib
-import { useState } from "react";
+import { useState, memo } from "react";
 import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
 import {
   Flex,
@@ -23,7 +23,7 @@ import {
   selectorSementicUpjong,
 } from "@states/searchState/stateSearch";
 
-const FilterBaseState = () => {
+const FilterBaseState = memo(() => {
   const baseList = useRecoilValue(atomSementicBaseList);
   const mapState = useRecoilValue(atomSementicMapState);
   const [currentEvent, setMapControll] = useRecoilState(mapControllHandler);
@@ -198,6 +198,6 @@ const FilterBaseState = () => {
       </TabPanels>
     </Tabs>
   );
-};
+});
 
 export default FilterBaseState;

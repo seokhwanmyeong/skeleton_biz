@@ -15,15 +15,15 @@ const linkTheme = {
   sizes: {},
   variants: {
     linkBtn: {
-      display: "inline-flex",
+      display: "flex",
       flexDirection: "column",
       justifyContent: "center",
       alignItems: "center",
       h: "100%",
       p: "0 1rem",
       _after: {
-        // content: "attr(data-text)",
-        content: 'attr(data-text) / ""',
+        content: "attr(data-text)",
+        // content: 'attr(data-text) / ""',
         h: "0",
         visibility: "hidden",
         overflow: "hidden",

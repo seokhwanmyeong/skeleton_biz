@@ -1,5 +1,5 @@
 //  Lib
-import { useState } from "react";
+import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import {
   Flex,
@@ -25,50 +25,45 @@ const SementicSearchEngine = () => {
   const baseList = useRecoilValue(atomSementicBaseList);
   const isCheckbaseOption = useRecoilValue(checkBaseState);
   const resetState = useSetRecoilState(resetSementicAtom);
-  console.log("render engine");
-
-  //  Toggle Event
-  const [isOpen, setOpen] = useState(true);
+  const [offsetW, setOffsetW] = useState(0);
+  const ref = useRef<any>();
 
   const onToggle = (e: any) => {
-    setOpen(!isOpen);
+    setOffsetW(offsetW === 0 ? -ref.current.clientWidth : 0);
   };
 
   return (
     <Flex
       position="absolute"
-      left="0"
+      left={`${offsetW}px`}
       top="0"
       zIndex="100"
       flexDirection="row-reverse"
-      gap={isOpen ? "10px" : "0"}
-      transition="0.5s"
+      transition="0.3s"
       backgroundColor="transparent"
     >
       <Button
-        position="absolute"
-        right="-200px"
-        top="0"
-        w="200px"
-        borderRadius={isOpen ? "0px 0px 5px 5px" : "0px 0px 5px 0px"}
-        bgColor="#646464"
+        w="auto"
+        borderRadius={offsetW === 0 ? "0px 0px 5px 5px" : "0px 0px 5px 0px"}
+        bgColor="primary.main.bg"
         onClick={(e) => onToggle(e)}
-        transition="0.2s"
-        color="#ffffff"
+        transition="0.3s"
+        color="primary.main.font"
         _hover={{
-          bgColor: "#000000",
+          bgColor: "primary.main.hover",
         }}
       >
         SementicSearchEngine
       </Button>
       <Flex
-        w={isOpen ? "auto" : "0"}
+        w={"auto"}
         flexDirection="column"
         alignItems="center"
         justifyContent="center"
         overflow="hidden"
         transition="0.5s"
         backgroundColor="transparent"
+        ref={ref}
       >
         <Accordion defaultIndex={[0]} variant={"searchEngine"} allowMultiple>
           <AccordionItem key={`Item-Map-Select`}>
@@ -95,8 +90,12 @@ const SementicSearchEngine = () => {
         </Accordion>
         <Button
           w="auto"
-          bgColor="#555555"
-          color="#eeeeee"
+          bgColor="primary.main.bg"
+          color="primary.main.font"
+          transition="0.3s"
+          _hover={{
+            bgColor: "primary.main.hover",
+          }}
           onClick={() => resetState()}
         >
           RESET

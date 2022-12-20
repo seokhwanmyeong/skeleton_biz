@@ -10,47 +10,44 @@ const accordionTheme = {
     icon: {},
   },
   variants: {
-    searchEngine: (props: GlobalStyleProps) => {
-      const { colorScheme: c, theme } = props;
-      return {
-        root: {
-          p: "0.5rem",
-          display: "flex",
-          flexDirection: "column",
-          gap: "5px",
-          minW: "180px",
-          transition: theme.transition.easing["ease-in"],
-          backgroundColor: "transparent",
+    searchEngine: {
+      root: {
+        p: "0.5rem",
+        display: "flex",
+        flexDirection: "column",
+        gap: "5px",
+        minW: "180px",
+        transition: "0.3s",
+        backgroundColor: "transparent",
+      },
+      container: {
+        border: "none",
+        bg: "transparent",
+      },
+      button: {
+        justifyContent: "space-between",
+        bg: "primary.main.color",
+        color: "primary.main.font",
+        borderRadius: "radii.basic",
+        _hover: {
+          bg: "primary.reverse.hover",
+          color: "primary.reverse.font",
         },
-        container: {
-          border: "none",
-          bg: "transparent",
+        _expanded: {
+          mb: "5px",
         },
-        button: {
-          justifyContent: "space-between",
-          bg: theme.colors.primary.main.color,
-          color: theme.colors.primary.main.font,
-          borderRadius: theme.radii.basic,
-          _hover: {
-            bg: theme.colors.primary.reverse.hover,
-            color: theme.colors.primary.reverse.font,
-          },
-          _expanded: {
-            mb: "5px",
-          },
-        },
-        panel: {
-          display: "flex",
-          flexDirection: "column",
-          w: "480px",
-          bg: "transparent",
-          borderRadius: theme.radii.basic,
-          fontSize: "0.8rem",
-          fontWeight: "bold",
-          color: theme.colors.primary.reverse.font,
-        },
-        icon: {},
-      };
+      },
+      panel: {
+        display: "flex",
+        flexDirection: "column",
+        w: "480px",
+        bg: "transparent",
+        borderRadius: "radii.basic",
+        fontSize: "0.8rem",
+        fontWeight: "bold",
+        color: "primary.reverse.font",
+      },
+      icon: {},
     },
     sideMenu: {
       root: {
