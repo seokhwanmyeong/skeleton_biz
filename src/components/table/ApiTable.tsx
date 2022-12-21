@@ -10,23 +10,25 @@ import {
 import {
   Box,
   TableCaption,
-  Table as ChakraTable,
+  Table,
   Thead,
   Tbody,
   Tfoot,
   Tr,
   Th,
   Td,
+  Flex,
 } from "@chakra-ui/react";
 //  Component
-import SearchBox from "@src/components/form/search/SearchBox";
+import SearchBox from "@components/form/search/SearchBox";
 import NoContent from "@components/table/NoContent";
 import Pagination from "@components/table/Pagination";
-import { CheckBoxTag } from "@src/components/common/CheckBox";
+import { CheckBoxTag } from "@components/common/CheckBox";
 //  Custom Hook
 import { usePagination } from "@hook/usePagination";
 //  Api
-import { getTestTable, postApi } from "@src/api/bizApi/instance";
+import { getTestTable, postApi } from "@api/bizApi/instance";
+import { theme } from "@chakra-ui/react";
 
 const ApiTable = ({
   url,
@@ -42,6 +44,7 @@ const ApiTable = ({
   variant = "simple",
   pageVariant,
 }: any) => {
+  console.log(theme);
   const [req, setReq] = useState({
     ...initialReq,
     page: 1,
@@ -74,11 +77,10 @@ const ApiTable = ({
   }, [req]);
 
   return (
-    <Box>
+    <Flex flexDirection="column" gap={10}>
       <SearchBox req={req} initialReq={initialReq} setReq={setReq} />
       <Box w="100%" overflow="auto">
-        <ChakraTable variant={variant}>
-          {caption && <TableCaption placement="top">{caption}</TableCaption>}
+        <Table variant={variant} aria-label={caption}>
           <Thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <Tr key={headerGroup.id}>
@@ -168,7 +170,7 @@ const ApiTable = ({
               );
             })}
           </Tfoot>
-        </ChakraTable>
+        </Table>
       </Box>
       {actviePage && (
         <Pagination
@@ -180,7 +182,7 @@ const ApiTable = ({
           variant={pageVariant}
         />
       )}
-    </Box>
+    </Flex>
   );
 };
 

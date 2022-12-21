@@ -61,17 +61,7 @@ const SementicViewer = (props: Props) => {
       h="100%"
       transition="0.3s"
     >
-      <Button
-        w="auto"
-        borderRadius="0px 0px 0px 5px"
-        bgColor="primary.main.bg"
-        onClick={onToggle}
-        transition="0.3s"
-        color="primary.main.font"
-        _hover={{
-          bgColor: "primary.main.hover",
-        }}
-      >
+      <Button borderRadius="0px 0px 0px 5px" onClick={onToggle}>
         SementicView
       </Button>
       <Flex

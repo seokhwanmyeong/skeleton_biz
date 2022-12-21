@@ -18,7 +18,6 @@ const accordionTheme = {
         gap: "5px",
         minW: "180px",
         transition: "0.3s",
-        backgroundColor: "transparent",
       },
       container: {
         border: "none",
@@ -26,12 +25,12 @@ const accordionTheme = {
       },
       button: {
         justifyContent: "space-between",
-        bg: "primary.main.color",
+        bg: "primary.main.bg",
         color: "primary.main.font",
         borderRadius: "radii.basic",
         _hover: {
-          bg: "primary.reverse.hover",
-          color: "primary.reverse.font",
+          bg: "primary.main.hover",
+          color: "primary.main.font",
         },
         _expanded: {
           mb: "5px",
@@ -41,11 +40,11 @@ const accordionTheme = {
         display: "flex",
         flexDirection: "column",
         w: "480px",
-        bg: "transparent",
+        bg: "primary.main.bg",
         borderRadius: "radii.basic",
         fontSize: "0.8rem",
         fontWeight: "bold",
-        color: "primary.reverse.font",
+        color: "primary.main.font",
       },
       icon: {},
     },

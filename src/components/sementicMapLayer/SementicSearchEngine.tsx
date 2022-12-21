@@ -1,5 +1,5 @@
 //  Lib
-import { useEffect, useState, useRef, useLayoutEffect } from "react";
+import { useState, useRef } from "react";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import {
   Flex,
@@ -43,15 +43,9 @@ const SementicSearchEngine = () => {
       backgroundColor="transparent"
     >
       <Button
-        w="auto"
+        variant="base"
         borderRadius={offsetW === 0 ? "0px 0px 5px 5px" : "0px 0px 5px 0px"}
-        bgColor="primary.main.bg"
         onClick={(e) => onToggle(e)}
-        transition="0.3s"
-        color="primary.main.font"
-        _hover={{
-          bgColor: "primary.main.hover",
-        }}
       >
         SementicSearchEngine
       </Button>

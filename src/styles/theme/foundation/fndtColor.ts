@@ -1,5 +1,5 @@
 export const selectColorScheme = (type: string) => {
-  const colorTheme: { [key: string]: {} } = {
+  const fndtColor: { [key: string]: {} } = {
     light: {
       primary: {
         main: {
@@ -98,11 +98,11 @@ export const selectColorScheme = (type: string) => {
           bdColor: "#FFC000",
         },
         reverse: {
-          color: "#ffffff",
-          bg: "#ffffff",
-          hover: "#dddddd",
+          color: "#1a202c",
+          bg: "#1a202c",
+          hover: "#555555",
           font: "#ffffff",
-          bdColor: "#ffffff",
+          bdColor: "#ededed",
         },
       },
       secondary: {
@@ -143,10 +143,10 @@ export const selectColorScheme = (type: string) => {
         },
         reverse: {
           color: "#c70a2f",
-          bg: "#ffffff",
+          bg: "#1a202c",
           hover: "#555555",
           font: "#ffffff",
-          bdColor: "#c70a2f",
+          bdColor: "#ededed",
         },
       },
       secondary: {
@@ -178,5 +178,5 @@ export const selectColorScheme = (type: string) => {
     },
   };
 
-  return colorTheme[type] ?? colorTheme["dark"];
+  return fndtColor[type] ?? fndtColor["dark"];
 };

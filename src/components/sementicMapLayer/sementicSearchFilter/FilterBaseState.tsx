@@ -119,6 +119,7 @@ const FilterBaseState = memo(() => {
             <Text>지도화면에서 원하시는 지역을 클릭해주세요</Text>
             <Text>선택 위치: {mapState.pointer.address}</Text>
             <Button
+              variant="reverse"
               onClick={() => {
                 currentEvent !== "activePoint" && setMapControll("activePoint");
               }}
@@ -177,6 +178,7 @@ const FilterBaseState = memo(() => {
               {selectUpjong.midUpjong.title}
             </Text>
             <Button
+              variant="reverse"
               onClick={() => {
                 updateUpjong(selectUpjong);
               }}
@@ -187,6 +189,7 @@ const FilterBaseState = memo(() => {
         </TabPanel>
         <TabPanel key="panel-area">
           <Button
+            variant="reverse"
             onClick={() => {
               currentEvent !== "activePolygon" &&
                 setMapControll("activePolygon");

@@ -21,9 +21,9 @@ const PaginationItem = ({
   return (
     <Button
       variant={variant}
+      size="page"
       isActive={isCurrent}
       onClick={() => {
-        console.log("click");
         !isCurrent && onPageChange(page);
       }}
     >

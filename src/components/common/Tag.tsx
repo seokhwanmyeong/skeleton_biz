@@ -32,18 +32,10 @@ const Tag = (props: TagProps) => {
     <ChakraTag
       variant={variant}
       onClick={tagBtn ? onClick : undefined}
-      style={{
-        cursor: tagBtn ? "pointer" : "default",
-        backgroundColor: isChecked ? "#000000" : "#999999",
-      }}
+      bgColor={isChecked ? "primary.main.bg" : "primary.main.hover"}
+      cursor={tagBtn ? "pointer" : "default"}
     >
-      <TagLabel
-        style={{
-          color: isChecked ? "#ffffff" : "#ededed",
-        }}
-      >
-        {text}
-      </TagLabel>
+      <TagLabel color="primary.main.font">{text}</TagLabel>
       {hasBtn && <TagCloseButton onClick={onClick} />}
     </ChakraTag>
   );

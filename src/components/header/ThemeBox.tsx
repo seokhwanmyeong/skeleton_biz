@@ -1,6 +1,6 @@
 //  Lib
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { Flex, Button, Link, useDisclosure, Grid } from "@chakra-ui/react";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { Flex, Button, useDisclosure } from "@chakra-ui/react";
 //  State
 import { themeList, atomThemeColor } from "@src/states/theme/themeState";
 //  Components
@@ -8,24 +8,22 @@ import Tag from "@components/common/Tag";
 
 const ThemeBox = () => {
   const themeArr = useRecoilValue(themeList);
-  const setThemeColor = useSetRecoilState(atomThemeColor);
+  // const setThemeColor = useSetRecoilState(atomThemeColor);
+  const [themeColor, setThemeColor] = useRecoilState(atomThemeColor);
   const { isOpen, onToggle } = useDisclosure();
 
   const themeHandler = (theme: string) => {
-    onToggle();
-    setThemeColor(theme);
+    if (theme === themeColor) {
+      return;
+    } else {
+      onToggle();
+      setThemeColor(theme);
+    }
   };
 
   return (
     <Flex position="relative">
-      <Button
-        color="primary.reverse.font"
-        bgColor="primary.reverse.color"
-        _hover={{
-          backgroundColor: "primary.reverse.hover",
-        }}
-        onClick={onToggle}
-      >
+      <Button variant={"reverse"} onClick={onToggle}>
         Theme
       </Button>
       <Flex
@@ -36,7 +34,7 @@ const ThemeBox = () => {
         opacity={isOpen ? 1 : 0}
         h="auto"
         p="10px"
-        bgColor="primary.main.bg"
+        bgColor="primary.reverse.bg"
         border="1px solid"
         borderColor="primary.main.bdColor"
         borderRadius="5px"
@@ -48,6 +46,8 @@ const ThemeBox = () => {
             key={`tag-theme-${li.key}`}
             tagBtn={true}
             text={li.title}
+            isChecked={li.key === themeColor}
+            variant="themeTag"
             onClick={() => {
               themeHandler(li.key);
             }}

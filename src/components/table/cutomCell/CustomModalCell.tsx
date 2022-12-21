@@ -21,7 +21,9 @@ const CustomModalCell = (props: any) => {
 
   return (
     <Fragment>
-      <Button onClick={onOpen}>Modal</Button>
+      <Button variant="reverse" onClick={onOpen}>
+        Modal
+      </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>

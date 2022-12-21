@@ -1,9 +1,4 @@
 const resetTheme = {
-  // div: {
-  //   bg: "primary.main.color",
-  //   color: "primary.main.font",
-  //   borderColor: "primary.main.bdColor",
-  // },
   textarea: {
     resize: "none",
   },

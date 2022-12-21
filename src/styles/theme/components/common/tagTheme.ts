@@ -11,34 +11,31 @@ const tagTheme = {
     closeButton: {},
   },
   variants: {
-    filterOption: (props: GlobalStyleProps) => {
-      const { colorScheme: c, theme } = props;
-      return {
-        container: {
-          w: "auto",
-          bg: mode(theme.colors.custom2, theme.colors.custom1)(props),
-          alignSelf: "baseline",
-          justifyContent: "space-between",
-        },
-        label: {
-          color: mode(theme.colors.custom1, theme.colors.custom2)(props),
-        },
-      };
+    filterOption: {
+      container: {
+        w: "auto",
+        bg: "primary.main.bg",
+        alignSelf: "baseline",
+        justifyContent: "space-between",
+      },
+      label: {
+        color: "primary.main.font",
+      },
     },
-    checkbox: (props: GlobalStyleProps) => {
-      const { colorScheme: c, theme } = props;
-
-      return {
-        container: {
-          w: "auto",
-          bg: mode(theme.colors.custom2, theme.colors.custom1)(props),
-          alignSelf: "baseline",
-          justifyContent: "space-between",
-        },
-        label: {
-          color: mode(theme.colors.custom1, theme.colors.custom2)(props),
-        },
-      };
+    checkbox: {
+      container: {
+        w: "auto",
+        bg: "primary.main.bg",
+        alignSelf: "baseline",
+        justifyContent: "space-between",
+      },
+      label: {
+        color: "primary.main.font",
+      },
+    },
+    themeTag: {
+      container: {},
+      label: {},
     },
   },
   defaultProps: {},

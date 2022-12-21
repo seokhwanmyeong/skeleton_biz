@@ -28,7 +28,7 @@ const ErpBaseApi = () => {
         registersPerPage={5}
         columns={columnSet}
         emptyData={{ text: "No Contents" }}
-        variant="striped"
+        // variant="striped"
       />
     </Flex>
   );

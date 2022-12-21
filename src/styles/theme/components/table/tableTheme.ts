@@ -1,63 +1,41 @@
-// Lib
-import { extendTheme } from "@chakra-ui/react";
-
-const tableTheme = extendTheme({
-  components: {
-    TableContainer: {
-      baseStyle: {},
-      sizes: {},
-      variants: {},
-      defaultProps: {},
+const themeTable = {
+  baseStyle: {
+    table: {
+      border: "1px solid",
+      borderColor: "primary.main.bdColor",
     },
-    TableCaption: {
-      baseStyle: {},
-      sizes: {},
-      variants: {},
-      defaultProps: {},
+    tr: {},
+    thead: {
+      th: {
+        color: "primary.main.font",
+        bgColor: "primary.main.bg",
+        border: "1px solid",
+        borderColor: "primary.main.bdColor",
+        textAlign: "center",
+      },
     },
-    Table: {
-      baseStyle: {},
-      sizes: {},
-      variants: {},
-      defaultProps: {},
+    tbody: {
+      td: {
+        bgColor: "primary.main.bg",
+        border: "1px solid",
+        borderColor: "primary.main.bdColor",
+        textAlign: "center",
+        color: "primary.main.font",
+      },
     },
-    Thead: {
-      baseStyle: {},
-      sizes: {},
-      variants: {},
-      defaultProps: {},
-    },
-    Tbody: {
-      baseStyle: {},
-      sizes: {},
-      variants: {},
-      defaultProps: {},
-    },
-    Tfoot: {
-      baseStyle: {},
-      sizes: {},
-      variants: {},
-      defaultProps: {},
-    },
-    Tr: {
-      baseStyle: {},
-      sizes: {},
-      variants: {},
-      defaultProps: {},
-    },
-    Th: {
-      baseStyle: {},
-      sizes: {},
-      variants: {},
-      defaultProps: {},
-    },
-    Td: {
-      baseStyle: {},
-      sizes: {},
-      variants: {},
-      defaultProps: {},
+    tfoot: {
+      th: {
+        color: "primary.main.font",
+        bgColor: "primary.main.bg",
+        border: "1px solid",
+        borderColor: "primary.main.bdColor",
+        textAlign: "center",
+      },
     },
   },
-});
+  sizes: {},
+  variants: {},
+  defaultProps: {},
+};
 
-// export default tableTheme;
+export default themeTable;

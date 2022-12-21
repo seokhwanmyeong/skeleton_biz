@@ -10,38 +10,26 @@ import tagTheme from "@styles/theme/components/common/tagTheme";
 import checkboxTheme from "@styles/theme/components/common/checkBoxTheme";
 import accordionTheme from "@styles/theme/components/menu/accordionTheme";
 import linkTheme from "@styles/theme/components/common/Link";
-import { selectColorScheme } from "@src/styles/theme/foundation/color";
-//  Component
-import headerTheme from "@styles/theme/components/header/headerTheme";
+import themeTable from "@styles/theme/components/table/tableTheme";
+//  Foundation
+import { fndtSize } from "@src/styles/theme/foundation/fndtSize";
+import { fndtRadius } from "@src/styles/theme/foundation/fndtRadius";
+import { selectColorScheme } from "@src/styles/theme/foundation/fndtColor";
 
 const createTheme = (name: string) => {
   const config: ThemeConfig = {
     initialColorMode: "dark",
     useSystemColorMode: false,
   };
-
-  const color = selectColorScheme(name);
   const theme = extendTheme({
     config,
     styles: {
-      ...resetTheme,
+      global: resetTheme,
     },
-    colors: {
-      ...color,
-    },
-    size: {
-      tag: {
-        option: "1.25rem",
-      },
-    },
-    radii: {
-      basic: "5px",
-    },
-    transition: {
-      basic: "0.5s",
-    },
+    colors: selectColorScheme(name),
+    size: fndtSize,
+    radii: fndtRadius,
     components: {
-      // headerTheme,
       Input: inputTheme,
       Button: btnTheme,
       Tag: tagTheme,
@@ -49,6 +37,7 @@ const createTheme = (name: string) => {
       Checkbox: checkboxTheme,
       Link: linkTheme,
       Heading: headingTheme,
+      Table: themeTable,
     },
   });
 

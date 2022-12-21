@@ -360,6 +360,7 @@ const InputFile = ({
   return (
     <InputGroup {...groupProps} variant={variant}>
       <ChakraInput
+        variant={"fileHidden"}
         id={fieldKey}
         type="file"
         value={value}
@@ -371,16 +372,6 @@ const InputFile = ({
         aria-hidden="true"
         accept={`${accept}`}
         ref={fileRef}
-        position="absolute"
-        top="50%"
-        left={0}
-        transform={"translateY(-50%)"}
-        p={0}
-        pl="100%"
-        w="100%"
-        opacity={0}
-        zIndex={1}
-        cursor="pointer"
       />
       <ChakraInput
         id={`${fieldKey}-hidden`}
