@@ -48,14 +48,18 @@ const accordionTheme = {
       },
       icon: {},
     },
-    sideMenu: {
+    menuSide: {
       root: {
         minWidth: "200px",
         borderRight: "1px solid",
         borderColor: "primary.main.bdColor",
         color: "primary.main.font",
       },
-      container: {},
+      container: {
+        _first: {
+          border: "none",
+        },
+      },
       button: {},
       panel: {},
       icon: {},

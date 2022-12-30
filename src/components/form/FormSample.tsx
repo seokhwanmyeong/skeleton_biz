@@ -35,6 +35,10 @@ type FieldProps = {
   labelText: string;
   variant?: string;
   validate?: any;
+  isDisabled?: boolean;
+  isInvalid?: boolean;
+  isReadOnly?: boolean;
+  isRequired?: boolean;
   values?: {
     text: string;
     value: string | number;
@@ -43,34 +47,34 @@ type FieldProps = {
 };
 
 const FormSample = ({
+  styleProps,
   form,
   onSubmit,
+  activeBtn = true,
 }: {
+  styleProps?: {};
   form: {
-    initialValues: {};
-    config: {
-      formKey: string;
-      fields: any[];
-    };
+    initVal: {};
+    formKey: string;
+    fields: any[];
   };
   onSubmit: (val: any) => any;
+  activeBtn?: boolean;
 }) => {
-  const { initialValues, config } = form;
-  const paraNum = config.fields.length;
+  const { initVal, formKey, fields } = form;
+  const paraNum = fields.length;
 
   return (
-    <Formik
-      initialValues={initialValues}
-      onSubmit={(val) => {
-        onSubmit(val);
-      }}
-    >
+    <Formik initialValues={initVal} onSubmit={onSubmit}>
       {({ handleSubmit, errors, touched, getFieldProps, setFieldValue }) => {
         return (
-          <Form onSubmit={handleSubmit} style={{ width: "100%" }}>
+          <Form
+            onSubmit={activeBtn ? handleSubmit : onSubmit}
+            style={{ width: "100%", ...styleProps }}
+          >
             <Flex w="100%" flexDirection="row" gap="20px">
-              {config.fields.map((li: any, idx: number) => {
-                const paraKey = `form-${config.formKey}-${idx}`;
+              {fields.map((li: any, idx: number) => {
+                const paraKey = `form-${formKey}-${idx}`;
 
                 return (
                   <Flex
@@ -108,11 +112,13 @@ const FormSample = ({
                 );
               })}
             </Flex>
-            <Flex w="100%" justifyContent="center">
-              <Button type="submit" w="10rem">
-                Complete
-              </Button>
-            </Flex>
+            {activeBtn && (
+              <Flex w="100%" justifyContent="center">
+                <Button type="submit" w="10rem">
+                  Complete
+                </Button>
+              </Flex>
+            )}
           </Form>
         );
       }}
@@ -138,6 +144,10 @@ const FormField = ({
     values: _values,
     component,
     variant: variant,
+    isDisabled = false,
+    isInvalid = false,
+    isReadOnly = false,
+    isRequired = false,
   } = field;
 
   return (
@@ -159,6 +169,10 @@ const FormField = ({
               _placeholder={{ color: "gray.500" }}
               focusBorderColor="black.100"
               errorBorderColor="red.300"
+              isDisabled={isDisabled}
+              isInvalid={isInvalid}
+              isReadOnly={isReadOnly}
+              isRequired={isRequired}
             />
           ),
           number: (
@@ -172,6 +186,10 @@ const FormField = ({
               _placeholder={{ color: "gray.500" }}
               focusBorderColor="black.100"
               errorBorderColor="red.300"
+              isDisabled={isDisabled}
+              isInvalid={isInvalid}
+              isReadOnly={isReadOnly}
+              isRequired={isRequired}
             />
           ),
           date: (
@@ -216,6 +234,10 @@ const FormField = ({
               _placeholder={{ color: "gray.500" }}
               focusBorderColor="black.100"
               errorBorderColor="red.300"
+              isDisabled={isDisabled}
+              isInvalid={isInvalid}
+              isReadOnly={isReadOnly}
+              isRequired={isRequired}
             />
           ),
           pwdChk: (
@@ -232,6 +254,10 @@ const FormField = ({
               _placeholder={{ color: "gray.500" }}
               focusBorderColor="black.100"
               errorBorderColor="red.300"
+              isDisabled={isDisabled}
+              isInvalid={isInvalid}
+              isReadOnly={isReadOnly}
+              isRequired={isRequired}
             />
           ),
           radio: (
@@ -241,13 +267,16 @@ const FormField = ({
               value={_value}
               values={_values}
               variant="filled"
+              isDisabled={isDisabled}
+              isInvalid={isInvalid}
+              isReadOnly={isReadOnly}
+              isRequired={isRequired}
             />
           ),
           chkbox: <></>,
           fileXlsx: (
             <InputFile
-              accept=".xlsx"
-              type="file"
+              accept=".xlsx, .csv"
               fieldKey={_fieldKey}
               value={_value}
               addonProps={{ width: "auto" }}

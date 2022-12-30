@@ -1,10 +1,138 @@
 //  LIB
 import { useState, useMemo } from "react";
 import { Flex, Heading } from "@chakra-ui/react";
+import { createColumnHelper, ColumnDef } from "@tanstack/react-table";
 //  Components
-import BaseTable from "@src/components/table/BaseTable";
-//  Util
-import { baseTableSetting, Sample } from "@util/data/erpTableData";
+import BaseTable from "@components/table/BaseTable";
+
+type Sample = {
+  date: string;
+  name: string;
+  age: number;
+  gender: "man" | "woman";
+  benefit: number;
+  average: {
+    man: number;
+    woman: number;
+  };
+};
+
+const baseTableSetting = () => {
+  const columnHelper = createColumnHelper<Sample>();
+
+  const tableOption = [
+    {
+      title: "매출순위",
+      key: "benefit",
+    },
+    {
+      title: "남성 매출 순위",
+      key: "avgMan",
+    },
+    {
+      title: "여성 매출 순위",
+      key: "avgWoman",
+    },
+  ];
+
+  const sortState = [
+    {
+      id: "benefit",
+      desc: true,
+    },
+  ];
+
+  const columntest = [
+    columnHelper.accessor("date", {
+      header: "날짜",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("name", {
+      header: "이름",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("age", {
+      header: "나이",
+      cell: (info) => info.renderValue(),
+    }),
+    columnHelper.accessor("gender", {
+      header: "성별",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("benefit", {
+      header: "매출액",
+      cell: (info) => info.renderValue(),
+    }),
+    columnHelper.group({
+      header: "성별평균",
+      columns: [
+        columnHelper.accessor("average.man", {
+          id: "avgMan",
+          header: "남자",
+          cell: (info) => info.getValue(),
+        }),
+        columnHelper.accessor("average.woman", {
+          id: "avgWoman",
+          header: "여자",
+          cell: (info) => info.getValue(),
+        }),
+      ],
+    }),
+  ];
+
+  const columns: ColumnDef<any>[] = [
+    {
+      accessorKey: "date",
+      header: "날짜",
+      cell: (info) => info.getValue(),
+    },
+    {
+      accessorKey: "name",
+      header: "이름",
+      cell: (info) => info.getValue(),
+    },
+    {
+      accessorKey: "age",
+      header: "나이",
+      cell: (info) => info.renderValue(),
+    },
+    {
+      accessorKey: "gender",
+      header: "성별",
+      cell: (info) => info.getValue(),
+    },
+    {
+      accessorKey: "benefit",
+      header: "매출액",
+      cell: (info) => info.renderValue(),
+      enableSorting: true,
+    },
+    {
+      id: "averageGender",
+      header: "성별평균",
+      columns: [
+        {
+          id: "avgMan",
+          accessorKey: "average.man",
+          header: "남자",
+          cell: (info) => info.renderValue(),
+        },
+        {
+          id: "avgWoman",
+          accessorKey: "average.woman",
+          header: "여자",
+          cell: (info) => info.renderValue(),
+        },
+      ],
+    },
+  ];
+
+  return {
+    tableOption: tableOption,
+    baseColumn: columns,
+    initialSort: sortState,
+  };
+};
 
 const ErpBaseTable = () => {
   const { tableOption, baseColumn, initialSort } = useMemo(

@@ -1,15 +1,13 @@
 //  LIB
-import { useEffect, useState, useMemo, Fragment } from "react";
+import { useEffect, useState, useMemo } from "react";
 import {
   useReactTable,
   flexRender,
   getCoreRowModel,
-  getSortedRowModel,
-  SortingState,
+  ColumnDef,
 } from "@tanstack/react-table";
 import {
   Box,
-  TableCaption,
   Table,
   Thead,
   Tbody,
@@ -20,34 +18,48 @@ import {
   Flex,
 } from "@chakra-ui/react";
 //  Component
-import SearchBox from "@components/form/search/SearchBox";
+import SearchBox from "@components/search/SearchBox";
 import NoContent from "@components/table/NoContent";
 import Pagination from "@components/table/Pagination";
-import { CheckBoxTag } from "@components/common/CheckBox";
 //  Custom Hook
 import { usePagination } from "@hook/usePagination";
-//  Api
-import { getTestTable, postApi } from "@api/bizApi/instance";
-import { theme } from "@chakra-ui/react";
+
+type PropsApiTable = {
+  api: any;
+  initReq: {};
+  form: { initVal: {}; formKey: string; fields: any[] };
+  caption?: string;
+  actviePage?: boolean;
+  page?: number;
+  registersPerPage?: number;
+  divide?: number;
+  columns: ColumnDef<any>[];
+  emptyData?: { text: string };
+  variant?: string;
+  pageVariant?: string;
+  children?: any;
+  getTableData?: any;
+};
 
 const ApiTable = ({
-  url,
-  initialReq = {},
-  reqType = {},
-  resType = {},
+  api,
+  initReq,
+  form,
+  caption = "table",
   actviePage = true,
-  caption,
-  registersPerPage = 5,
+  page = 1,
+  registersPerPage = 10,
   divide = 5,
   columns,
-  emptyData,
+  emptyData = { text: "No Contents" },
   variant = "simple",
   pageVariant,
-}: any) => {
-  console.log(theme);
+  children,
+  getTableData,
+}: PropsApiTable) => {
   const [req, setReq] = useState({
-    ...initialReq,
-    page: 1,
+    ...initReq,
+    page: page,
     registersPerPage: registersPerPage,
   });
   const [data, setData] = useState<any[]>([]);
@@ -73,12 +85,24 @@ const ApiTable = ({
   });
 
   useEffect(() => {
-    getTestTable(url, req, setData, setTotalReg);
+    api(req)
+      .then((res: any) => {
+        const { pageNo, pageSize, records, totalCount } = res;
+
+        setData(records);
+        setTotalReg(totalCount);
+
+        getTableData(records);
+      })
+      .catch((e: any) => {
+        console.log(e);
+      });
   }, [req]);
 
   return (
     <Flex flexDirection="column" gap={10}>
-      <SearchBox req={req} initialReq={initialReq} setReq={setReq} />
+      <SearchBox req={req} setReq={setReq} form={form} />
+      {children}
       <Box w="100%" overflow="auto">
         <Table variant={variant} aria-label={caption}>
           <Thead>

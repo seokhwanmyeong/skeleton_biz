@@ -3,12 +3,12 @@ import { useState, useMemo, useEffect } from "react";
 import { Flex, Heading, Button } from "@chakra-ui/react";
 //  Components
 import ChartGraph from "@components/charts/ChartGraph";
-import ChartBar from "@src/components/charts/ChartBar";
+import ChartBar from "@components/charts/ChartBar";
 import ChartDonut from "@components/charts/ChartDonut";
 //  Util
-import { transMarginData } from "@src/util/data/testData";
+import { transMarginData } from "@util/data/testData";
 
-const DashBoard = () => {
+const ErpDashBoard = () => {
   const [divide, setDivide] = useState(false);
   const testMargin = useMemo(() => {
     const testData = transMarginData(20);
@@ -247,4 +247,4 @@ const DashBoard = () => {
   );
 };
 
-export default DashBoard;
+export default ErpDashBoard;

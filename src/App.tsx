@@ -17,11 +17,11 @@ const App = () => {
   }, [currentTheme]);
 
   return (
-    <ChakraProvider theme={theme} resetCSS={true}>
-      <BrowserRouter>
+    <BrowserRouter>
+      <ChakraProvider theme={theme} resetCSS={true}>
         <RouterOutlet />
-      </BrowserRouter>
-    </ChakraProvider>
+      </ChakraProvider>
+    </BrowserRouter>
   );
 };
 

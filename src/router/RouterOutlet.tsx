@@ -8,7 +8,7 @@ import FrameMain from "@page/frame/FrameMain";
 import FrameSub from "@page/frame/FrameSub";
 //  State & Pages
 import {
-  routerSelector,
+  mainRouteSelector,
   subRoute as _subRoute,
   indexChecker,
   MainRouteType,
@@ -17,7 +17,7 @@ import {
 } from "@states/route/stateRoute";
 
 const RouterOutlet = () => {
-  const mainRoute = useRecoilValue(routerSelector);
+  const mainRoute = useRecoilValue(mainRouteSelector);
   const subRoute = useRecoilValue(_subRoute);
 
   return (
@@ -31,7 +31,7 @@ const RouterOutlet = () => {
                 path={main.root}
                 element={<FrameSub />}
               >
-                {subRoute[main.root].map((sub: SubRouteType) => {
+                {subRoute[main.root]?.map((sub: SubRouteType) => {
                   return sub.hasChild
                     ? sub.children &&
                         sub.children.map((depth: DepthRouteType) => (

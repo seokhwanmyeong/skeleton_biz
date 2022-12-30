@@ -2,12 +2,13 @@ import { atom, selector } from "recoil";
 
 //  Type
 export interface User {
-  name: string;
-  pwd: string;
-  auth: {
-    [key: string]: number;
-  };
-  company: string;
+  id: number | undefined;
+  username: string;
+  password: string;
+  // auth: {
+  //   [key: string]: number;
+  // };
+  // company: string;
 }
 
 export interface Auth {
@@ -18,10 +19,11 @@ export interface Auth {
 export const atomUser = atom<User>({
   key: "userProfile",
   default: {
-    name: "",
-    pwd: "",
-    auth: {},
-    company: "",
+    id: undefined,
+    username: "",
+    password: "",
+    // auth: {},
+    // company: "",
   },
 });
 

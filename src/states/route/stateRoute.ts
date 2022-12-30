@@ -1,25 +1,23 @@
 //  Lib
 import { atom, selector, selectorFamily } from "recoil";
 //  Pages: Common
-import Home from "@page/Home";
-import Login from "@page/Login";
+import Login from "@page/login/Login";
 import Guide from "@page/Guide";
 import Join from "@page/Join";
 //  Pages: Map
 import Maps from "@page/Maps";
 //  Pages: Erp
-import DashBoard from "@page/erp/DashBoard";
+import ErpDashBoard from "@page/erp/ErpDashBoard";
+import ErpStore from "@src/page/erp/store/ErpStore";
+import ErpSale from "@page/erp/sale/ErpSale";
+import ErpArea from "@page/erp/area/ErpArea";
+// import ErpForSale from "@page/erp/forSale/ErpForSale";
+// import ErpCustomer from "@page/erp/customer/ErpCustomer";
+// import ErpBrand from "@page/erp/brand/ErpBrand";
+
 import ErpBaseTable from "@page/erp/ErpBaseTable";
-import ErpBaseApi from "@page/erp/ErpBaseApi";
 import ErpPop from "@page/erp/ErpPop";
 import ErpForm from "@page/erp/ErpForm";
-//  Pages: Manage
-import ManageDash from "@page/manage/ManageDash";
-import ManageStore from "@page/manage/ManageStore";
-import ManageSales from "@page/manage/ManageStore";
-import ManageBsnsDis from "@page/manage/ManageStore";
-import ManageSalesOffer from "@page/manage/ManageStore";
-import ManageCustomer from "@page/manage/ManageStore";
 //  Pages: Mypage
 import MyPage from "@page/mypage/MyPage";
 import MyPageAccount from "@page/mypage/MyPageAccount";
@@ -39,9 +37,8 @@ type MainRouteType = {
 
 type SubRouteType = {
   title: string;
-  path: string;
-  index?: boolean;
   hasChild: boolean;
+  path: string;
   children?: DepthRouteType[];
   page?: (props: any) => JSX.Element;
 };
@@ -54,17 +51,22 @@ type DepthRouteType = {
 
 export type { MainRouteType, SubRouteType, DepthRouteType };
 
-export const mainRoute = atom<Array<MainRouteType>>({
-  key: "mainRoute",
+export const loginRoute = atom<Array<MainRouteType>>({
+  key: "loginRoute",
   default: [
     {
       root: "",
-      title: "Home",
+      title: "Login",
       path: "",
       hasSub: false,
-      index: true,
-      page: Home,
+      page: Login,
     },
+  ],
+});
+
+export const mainRoute = atom<Array<MainRouteType>>({
+  key: "mainRoute",
+  default: [
     {
       root: "maps",
       title: "Map",
@@ -76,12 +78,6 @@ export const mainRoute = atom<Array<MainRouteType>>({
       root: "erp",
       title: "ERP",
       path: "/erp",
-      hasSub: true,
-    },
-    {
-      root: "manage",
-      title: "Manage",
-      path: "/manage",
       hasSub: true,
     },
     {
@@ -104,13 +100,6 @@ export const commonRoute = atom<Array<MainRouteType>>({
   key: "commonRoute",
   default: [
     {
-      root: "login",
-      title: "Login",
-      path: "/login",
-      hasSub: false,
-      page: Login,
-    },
-    {
       root: "join",
       title: "Join",
       path: "/join",
@@ -130,94 +119,70 @@ export const subRoute = atom<{
     //  value = subRoute List
     erp: [
       {
-        title: "Dash-Board",
+        title: "DashBoard",
         hasChild: false,
         path: "index",
-        page: DashBoard,
-      },
-      {
-        title: "ERP 테이블",
-        hasChild: true,
-        path: "erp01",
-        children: [
-          {
-            title: "기본 테이블",
-            path: "erp01-Sub01",
-            page: ErpBaseTable,
-          },
-          {
-            title: "API 통신테이블",
-            path: "erp01-Sub02",
-            page: ErpBaseApi,
-          },
-        ],
-      },
-      {
-        title: "erp02",
-        hasChild: true,
-        path: "erp02",
-        children: [
-          {
-            title: "erp02-Sub01",
-            path: "erp02-Sub01",
-            page: ErpBaseTable,
-          },
-          {
-            title: "erp02-Sub02",
-            path: "erp02-Sub02",
-            page: ErpBaseApi,
-          },
-        ],
-      },
-      {
-        title: "ERP 팝업",
-        hasChild: false,
-        path: "erp03",
-        page: ErpPop,
-      },
-      {
-        title: "Form Sample",
-        hasChild: false,
-        path: "erp04",
-        page: ErpForm,
-      },
-    ],
-    manage: [
-      {
-        title: "Dash-Board",
-        hasChild: false,
-        path: "index",
-        page: ManageDash,
+        page: ErpDashBoard,
       },
       {
         title: "매장",
         hasChild: false,
         path: "store",
-        page: ManageStore,
+        page: ErpStore,
       },
       {
         title: "매출",
         hasChild: false,
-        path: "sales",
-        page: ManageSales,
+        path: "sale",
+        page: ErpSale,
       },
       {
         title: "상권",
         hasChild: false,
-        path: "bsnsDis",
-        page: ManageBsnsDis,
+        path: "area",
+        page: ErpArea,
       },
       {
         title: "매물",
         hasChild: false,
-        path: "salesOffer",
-        page: ManageSalesOffer,
+        path: "forSale",
+        page: ErpBaseTable,
       },
       {
         title: "고객",
         hasChild: false,
         path: "customer",
-        page: ManageCustomer,
+        page: ErpBaseTable,
+      },
+      {
+        title: "브랜드 DB",
+        hasChild: false,
+        path: "brand",
+        page: ErpBaseTable,
+      },
+      {
+        title: "Sample Table",
+        hasChild: true,
+        path: "erp02",
+        children: [
+          {
+            title: "BaseTable",
+            path: "erpBaseTable",
+            page: ErpBaseTable,
+          },
+        ],
+      },
+      {
+        title: "Sample Modal",
+        hasChild: false,
+        path: "erpModal",
+        page: ErpPop,
+      },
+      {
+        title: "Sample Form",
+        hasChild: false,
+        path: "erpForm",
+        page: ErpForm,
       },
     ],
     mypage: [
@@ -261,10 +226,10 @@ export const subRoute = atom<{
   },
 });
 
-export const routerSelector = selector({
-  key: "routerSelector",
+export const mainRouteSelector = selector({
+  key: "mainRouteSelector",
   get: ({ get }) => {
-    return [...get(mainRoute), ...get(commonRoute)];
+    return [...get(loginRoute), ...get(mainRoute), ...get(commonRoute)];
   },
 });
 

@@ -1,5 +1,8 @@
+//  Lib
 import React from "react";
 import { Flex, Heading } from "@chakra-ui/react";
+//  CustomHook
+import useLocationState from "@hook/useLocationState";
 
 const Footer = () => {
   return (

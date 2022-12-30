@@ -1,35 +1,48 @@
 const themeTable = {
   baseStyle: {
     table: {
-      border: "1px solid",
+      // border: "1px solid",
       borderColor: "primary.main.bdColor",
     },
-    tr: {},
     thead: {
-      th: {
-        color: "primary.main.font",
-        bgColor: "primary.main.bg",
-        border: "1px solid",
-        borderColor: "primary.main.bdColor",
-        textAlign: "center",
+      tr: {
+        bgColor: "#000000",
+        th: {
+          color: "primary.main.font",
+          bgColor: "primary.main.bg",
+          // border: "1px solid",
+          // borderColor: "primary.main.bdColor",
+          textAlign: "center",
+        },
+        _even: {
+          th: {
+            bgColor: "primary.main.bg",
+            // border: "1px solid",
+            // borderColor: "primary.main.bdColor",
+          },
+        },
       },
     },
     tbody: {
-      td: {
-        bgColor: "primary.main.bg",
-        border: "1px solid",
-        borderColor: "primary.main.bdColor",
-        textAlign: "center",
-        color: "primary.main.font",
+      tr: {
+        td: {
+          bgColor: "primary.main.bg",
+          // border: "1px solid",
+          // borderColor: "primary.main.bdColor",
+          textAlign: "center",
+          color: "primary.main.font",
+        },
       },
     },
     tfoot: {
-      th: {
-        color: "primary.main.font",
-        bgColor: "primary.main.bg",
-        border: "1px solid",
-        borderColor: "primary.main.bdColor",
-        textAlign: "center",
+      tr: {
+        th: {
+          color: "primary.main.font",
+          bgColor: "primary.main.bg",
+          // border: "1px solid",
+          // borderColor: "primary.main.bdColor",
+          textAlign: "center",
+        },
       },
     },
   },

@@ -15,20 +15,20 @@ import {
   SubRouteType,
   DepthRouteType,
 } from "@states/route/stateRoute";
+//  CustomHook
+import useLocationState from "@src/hook/useLocationState";
 
-const SideMenu = () => {
-  const location = useLocation();
+const MenuSide = () => {
+  const { rootState, pathState } = useLocationState();
+  const subMenu = useRecoilValue(subMenuSelector(rootState) || undefined);
   const navigate = useNavigate();
-  const pathState = location.pathname;
-  const root = pathState.split("/")[1];
-  const menu = useRecoilValue(subMenuSelector(root) || undefined);
 
   const navigator = (path: string): void => {
     if (path) {
       const naviOption = {};
 
       navigate(
-        indexChecker(path) ? `/${root}` : `/${root}/${path}`,
+        indexChecker(path) ? `/${rootState}` : `/${rootState}/${path}`,
         naviOption
       );
     } else {
@@ -39,7 +39,7 @@ const SideMenu = () => {
   const pathChecker = (path: string): boolean => {
     if (path) {
       return indexChecker(path)
-        ? pathState === `/${root}`
+        ? pathState === `/${rootState}`
         : pathState.includes(path);
     } else {
       return false;
@@ -47,9 +47,9 @@ const SideMenu = () => {
   };
 
   return (
-    <Accordion variant="sideMenu" allowMultiple>
-      {menu &&
-        menu.map((menuLi: SubRouteType) => (
+    <Accordion variant="menuSide" allowMultiple>
+      {subMenu &&
+        subMenu.map((menuLi: SubRouteType) => (
           <AccordionItem key={menuLi.title}>
             <AccordionButton
               onClick={() => {
@@ -87,4 +87,4 @@ const SideMenu = () => {
   );
 };
 
-export default SideMenu;
+export default MenuSide;

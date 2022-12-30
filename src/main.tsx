@@ -1,7 +1,7 @@
 // Lib
 import { StrictMode } from "react";
-import ReactDOM from "react-dom/client";
 import { RecoilRoot } from "recoil";
+import ReactDOM from "react-dom/client";
 // Components
 import App from "@src/App";
 //  Util

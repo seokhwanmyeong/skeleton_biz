@@ -10,7 +10,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 //  Util
-import { fileXlsxHandler } from "@util/file/manageFile";
+import { importFileXlsx } from "@util/file/manageFile";
 import { importDateConverter, exportDateConverter } from "@src/util/time/date";
 
 interface InpProps {
@@ -54,8 +54,7 @@ interface InpDateProps extends InpProps {
 }
 
 interface InpFileProps extends InpProps {
-  accept: ".xlsx";
-  type: "file";
+  accept: ".xlsx, .csv" | ".xlsx";
   groupProps?: {};
   addonProps?: {};
   btnProps?: {};
@@ -192,6 +191,10 @@ const InputDate = ({
     new Date(startD).getTime() > new Date(endD).getTime();
 
   const dateHandler = (dateVal: string, both: "start" | "end") => {
+    console.log(typeof dateVal);
+    console.log(dateVal);
+    console.log(typeof date);
+    console.log(date);
     if (typeof date === ("string" || undefined) && type === "single") {
       _onChange(dateVal);
     } else if (typeof date === "object") {
@@ -352,6 +355,7 @@ const InputFile = ({
   ...rest
 }: InpFileProps) => {
   const fileRef = useRef<HTMLInputElement>(null);
+  const [fileName, setFileName] = useState("");
 
   const uploadBtnHandler = (e: any) => {
     fileRef.current?.click();
@@ -364,19 +368,30 @@ const InputFile = ({
         id={fieldKey}
         type="file"
         value={value}
-        onChange={(e: any) => fileXlsxHandler(e)}
+        onChange={(e: any) => {
+          importFileXlsx(e)
+            .then((res) => {
+              if (res) {
+                const { data, fileName } = res;
+
+                _onChange(data);
+                setFileName(fileName);
+              }
+            })
+            .catch((e) => console.log(e));
+        }}
         isDisabled={isDisabled}
         isInvalid={isInvalid}
         isReadOnly={isReadOnly}
         isRequired={isRequired}
         aria-hidden="true"
-        accept={`${accept}`}
+        accept={accept}
         ref={fileRef}
       />
       <ChakraInput
         id={`${fieldKey}-hidden`}
         type="text"
-        value={value}
+        value={fileName}
         placeholder={placeholder}
         _placeholder={_placeholder}
         focusBorderColor={focusBorderColor}
@@ -389,7 +404,7 @@ const InputFile = ({
         {...inputProps}
       />
       <InputRightElement {...addonProps}>
-        <Button {...btnProps} onClick={uploadBtnHandler}>
+        <Button variant="inputElement" {...btnProps} onClick={uploadBtnHandler}>
           File Upload
         </Button>
       </InputRightElement>

@@ -31,12 +31,22 @@ const btnTheme = {
       },
     },
     reverse: {
-      bgColor: "primary.reverse.color",
+      bgColor: "primary.reverse.bg",
       borderRadius: "base",
       color: "primary.reverse.font",
       transition: "0.3s",
       _hover: {
         bgColor: "primary.reverse.hover",
+      },
+    },
+    inputElement: {
+      bgColor: "primary.main.bg",
+      borderRadius: "base",
+      color: "primary.main.font",
+      lineHeight: 1.5,
+      transition: "0.3s",
+      _hover: {
+        bgColor: "primary.main.hover",
       },
     },
     pagenation: {
