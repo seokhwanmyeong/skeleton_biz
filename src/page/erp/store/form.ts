@@ -28,6 +28,13 @@ const formSearchStore = {
         isRequired: false,
       },
       {
+        labelText: "주소",
+        type: "address",
+        key: "address",
+        variant: "filled",
+        isRequired: false,
+      },
+      {
         labelText: "매장상태",
         type: "radio",
         key: "status",

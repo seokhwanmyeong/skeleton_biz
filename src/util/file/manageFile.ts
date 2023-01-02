@@ -1,6 +1,6 @@
 //  LIB
 import { ColumnDef, AccessorColumnDef } from "@tanstack/react-table";
-import { read, utils, writeFile, WorkSheet } from "xlsx";
+import { read, utils, writeFile, WorkSheet, write } from "xlsx";
 
 const {
   sheet_to_json,
@@ -33,6 +33,8 @@ type CsvColumn = {
   t: "b" | "e" | "n" | "d" | "s" | "z";
   isRequired: boolean;
   v: string | number;
+  w?: string;
+  z?: string;
 };
 
 type FormCsv = {
@@ -42,7 +44,10 @@ type FormCsv = {
   columns: CsvColumn[];
 };
 
-const importFileXlsx = async (e: any): Promise<File | undefined> => {
+const importFileXlsx = async (
+  e: any,
+  form: FormCsv
+): Promise<File | undefined> => {
   const { files } = e.target;
   const fileExtension = files[0]?.name?.split(".").at(-1);
   const fileName: string = files[0]?.name;
@@ -53,10 +58,10 @@ const importFileXlsx = async (e: any): Promise<File | undefined> => {
   } else if (fileExtension === "xlsx" || fileExtension === "csv") {
     return await new Promise<File>((resolve, reject) => {
       const fileReader = new FileReader();
-
       fileReader.readAsBinaryString(files[0]);
       fileReader.onload = (e) => {
         let data: any[] = [];
+        const error: string[] = [];
 
         try {
           if (!e.target) {
@@ -65,26 +70,67 @@ const importFileXlsx = async (e: any): Promise<File | undefined> => {
           }
 
           const { result } = e.target;
-          console.log(result);
           const xlsxFile = read(result, { type: "binary" });
-          console.log(xlsxFile);
-
           for (const sheet in xlsxFile.Sheets) {
             if (xlsxFile.Sheets.hasOwnProperty(sheet)) {
-              console.log(xlsxFile.Sheets);
-              console.log(xlsxFile.Sheets[sheet]);
-              const sheetData = sheet_to_json(xlsxFile.Sheets[sheet], {
-                header: 1,
+              const transHeader: {
+                [key: string]: { key: string; isRequired: boolean };
+              } = {};
+              const formHeader = form.columns.map((column) => {
+                transHeader[column.title] = {
+                  key: column.key,
+                  isRequired: column.isRequired,
+                };
+
+                return column.title;
               });
-              console.log("File Data", sheetData);
-              data = sheetData;
+              const sheetData = sheet_to_json(xlsxFile.Sheets[sheet], {
+                range: 1,
+              });
+              const filterData = sheetData.map((li: any, colIdx: number) => {
+                let tmp: { [key: string]: any } = {};
+
+                //  Header Checker
+                if (colIdx === 0) {
+                  formHeader.map((header: string) => {
+                    const dataKeys = Object.keys(li);
+                    if (
+                      !dataKeys.includes(header) &&
+                      transHeader[header].isRequired
+                    ) {
+                      error.push(`${header} 데이터 열 부재`);
+                    }
+                  });
+                }
+
+                //  isRequired Checker & Trans Header Text
+                formHeader.map((key: string, rowIdx: number) => {
+                  if (li[key]) {
+                    tmp[transHeader[key].key] = li[key];
+                  } else if (transHeader[key].isRequired) {
+                    error.push(
+                      `${rowIdx + 1}열 (${key})-${colIdx + 3}번 행 필수값 오류`
+                    );
+                  }
+                });
+
+                return tmp;
+              });
+
+              console.log("File Data", filterData);
+              console.log("error", error);
+              data = filterData;
             }
           }
 
-          resolve({
-            data: data,
-            fileName: fileName,
-          });
+          if (error.length > 0) {
+            reject(error);
+          } else {
+            resolve({
+              data: data,
+              fileName: fileName,
+            });
+          }
         } catch (e) {
           console.log("error", e);
           reject(e);
@@ -131,6 +177,8 @@ const exportFormCsv = (form: FormCsv) => {
     return {
       t: column.t,
       v: column.v,
+      w: column.w,
+      z: column.z,
     };
   });
   const data = [[desc], [...header], [...sampleColumn]];

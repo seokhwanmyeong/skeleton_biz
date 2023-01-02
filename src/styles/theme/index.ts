@@ -10,6 +10,7 @@ import tagTheme from "@styles/theme/components/common/tagTheme";
 import checkboxTheme from "@styles/theme/components/common/checkBoxTheme";
 import accordionTheme from "@styles/theme/components/menu/accordionTheme";
 import linkTheme from "@styles/theme/components/common/Link";
+import selectTheme from "@styles/theme/components/common/selectTheme";
 import themeTable from "@styles/theme/components/table/tableTheme";
 //  Foundation
 import { fndtSize } from "@src/styles/theme/foundation/fndtSize";
@@ -35,6 +36,7 @@ const createTheme = (name: string) => {
       Tag: tagTheme,
       Accordion: accordionTheme,
       Checkbox: checkboxTheme,
+      Select: selectTheme,
       Link: linkTheme,
       Heading: headingTheme,
       Table: themeTable,

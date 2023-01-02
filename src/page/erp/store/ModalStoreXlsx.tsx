@@ -56,6 +56,7 @@ const ModalStoreXlsx = () => {
                 <Text>파일 업로드</Text>
                 <InputFile
                   accept={".xlsx, .csv"}
+                  form={csvStoreInfo}
                   addonProps={{ width: "auto" }}
                   _onChange={setFileData}
                 />

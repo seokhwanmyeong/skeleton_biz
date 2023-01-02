@@ -1,5 +1,12 @@
 //  LIB
-import { Fragment, useState, useRef, useMemo } from "react";
+import {
+  Fragment,
+  useState,
+  useRef,
+  useMemo,
+  useEffect,
+  useCallback,
+} from "react";
 import {
   chakra,
   Input as ChakraInput,
@@ -9,9 +16,15 @@ import {
   InputRightElement,
   Button,
 } from "@chakra-ui/react";
+//  Components
+import Select from "@components/common/Select";
 //  Util
 import { importFileXlsx } from "@util/file/manageFile";
 import { importDateConverter, exportDateConverter } from "@src/util/time/date";
+//  Services
+import { getAddressList } from "@services/address/autoAddressCreator";
+//  Type
+import { FormCsv } from "@util/file/manageFile";
 
 interface InpProps {
   fieldKey?: string;
@@ -55,6 +68,13 @@ interface InpDateProps extends InpProps {
 
 interface InpFileProps extends InpProps {
   accept: ".xlsx, .csv" | ".xlsx";
+  form: FormCsv;
+  groupProps?: {};
+  addonProps?: {};
+  btnProps?: {};
+}
+
+interface InpAddressProps extends InpProps {
   groupProps?: {};
   addonProps?: {};
   btnProps?: {};
@@ -336,6 +356,7 @@ const InputAddon = ({
 
 const InputFile = ({
   fieldKey,
+  form,
   accept,
   value,
   _onChange,
@@ -369,7 +390,7 @@ const InputFile = ({
         type="file"
         value={value}
         onChange={(e: any) => {
-          importFileXlsx(e)
+          importFileXlsx(e, form)
             .then((res) => {
               if (res) {
                 const { data, fileName } = res;
@@ -378,7 +399,11 @@ const InputFile = ({
                 setFileName(fileName);
               }
             })
-            .catch((e) => console.log(e));
+            .catch((e) => {
+              e.length > 0
+                ? alert(e)
+                : alert("파일에 오류가 있습니다. 행/열/필수값을 확인해주세요");
+            });
         }}
         isDisabled={isDisabled}
         isInvalid={isInvalid}
@@ -412,4 +437,73 @@ const InputFile = ({
   );
 };
 
-export { Input, InputBtn, InputAddon, InputPwd, InputFile, InputDate };
+const InputAddress = ({
+  fieldKey,
+  value,
+  _onChange,
+  variant,
+  inputProps,
+  groupProps,
+  addonProps,
+  btnProps,
+  placeholder,
+  _placeholder,
+  focusBorderColor,
+  errorBorderColor,
+  isDisabled = false,
+  isInvalid = false,
+  isReadOnly = false,
+  isRequired = false,
+  ...rest
+}: InpAddressProps) => {
+  const [address, setAddress] = useState("");
+  const [list, setList] = useState<any[]>([]);
+
+  useEffect(() => {
+    const debounce = setTimeout(() => {
+      getAddressList(address)
+        .then((result: any) => {
+          if (Array.isArray(result) && result.length > 0) {
+            setList(result);
+          }
+        })
+        .catch((e) => console.log(e));
+    }, 500);
+    return () => clearTimeout(debounce);
+  }, [address]);
+
+  return (
+    <InputGroup {...groupProps} variant={variant}>
+      <ChakraInput
+        id={fieldKey}
+        type="text"
+        value={value}
+        onChange={(e) => setAddress(e.target.value)}
+        isDisabled={isDisabled}
+        isInvalid={isInvalid}
+        isReadOnly={isReadOnly}
+        isRequired={isRequired}
+      />
+      {list?.length > 0 && (
+        <Select
+          // selectProps={{ position: "absolute" }}
+          opBaseTxt="addressName"
+          opBaseId="bCode"
+          opBaseKey="bCode"
+          _onChange={(e: any) => console.log(e.target.value)}
+          data={list}
+        />
+      )}
+    </InputGroup>
+  );
+};
+
+export {
+  Input,
+  InputBtn,
+  InputAddon,
+  InputPwd,
+  InputFile,
+  InputDate,
+  InputAddress,
+};

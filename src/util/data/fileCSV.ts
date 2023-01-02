@@ -44,7 +44,7 @@ const csvStoreInfo: FormCsv = {
       title: `개업일 \n(yyyy-mm-dd)`,
       key: "open_date",
       t: "d",
-      isRequired: true,
+      isRequired: false,
       v: "2004-12-29",
     },
     {

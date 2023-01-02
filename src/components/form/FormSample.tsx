@@ -10,6 +10,7 @@ import {
   InputBtn,
   InputFile,
   InputDate,
+  InputAddress,
 } from "@components/common/Input";
 import { RadioBox, RadioProps } from "@components/common/RadioBox";
 
@@ -254,6 +255,18 @@ const FormField = ({
               _placeholder={{ color: "gray.500" }}
               focusBorderColor="black.100"
               errorBorderColor="red.300"
+              isDisabled={isDisabled}
+              isInvalid={isInvalid}
+              isReadOnly={isReadOnly}
+              isRequired={isRequired}
+            />
+          ),
+          address: (
+            <InputAddress
+              _onChange={(val: any) => setFieldValue(_fieldKey, val)}
+              fieldKey={_fieldKey}
+              value={_value}
+              variant="filled"
               isDisabled={isDisabled}
               isInvalid={isInvalid}
               isReadOnly={isReadOnly}

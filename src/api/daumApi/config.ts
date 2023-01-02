@@ -42,9 +42,11 @@ type ResDaumAddress = {
 };
 
 const addressApi = {
-  address: (address: string) =>
+  address: (address: string, exact?: boolean) =>
     instance.get<ResDaumAddress>(
-      `/v2/local/search/address?query=${address}&analyze_type=exact`
+      `/v2/local/search/address?query=${address}&analyze_type=${
+        exact ? "exact" : "similar"
+      }`
     ),
 };
 
