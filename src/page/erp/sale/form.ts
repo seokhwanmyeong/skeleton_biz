@@ -1,66 +1,37 @@
-const formSearchStore = {
+const formSearchSale = {
   initVal: {
-    searchType: "name",
-    text: "",
-    status: "total",
-    rank: "total",
+    address: "total",
+    durType: "saleAvg", // saleAmount
+    date: {
+      start: "",
+      end: "",
+    },
   },
-  formKey: "StoreInfo",
+  formKey: "StoreSale",
   fields: [
     [
       {
-        labelText: "검색타입",
-        type: "radio",
-        key: "searchType",
-        values: [
-          { text: "매장명", value: "name" },
-          { text: "매장코드", value: "code" },
-          { text: "대표자명", value: "owner_name" },
-        ],
-        variant: "filled",
-        isRequired: false,
-      },
-      {
-        labelText: "검색어",
-        type: "text",
-        key: "text",
-        variant: "filled",
-        isRequired: false,
-      },
-      {
-        labelText: "주소",
+        labelText: "지역",
         type: "slctAddr",
         key: "address",
         variant: "filled",
         isRequired: false,
       },
       {
-        labelText: "매장상태",
+        labelText: "기간 타입",
         type: "radio",
-        key: "status",
+        key: "durType",
         values: [
-          { text: "전체", value: "total" },
-          { text: "개점", value: "STATUS_OPEN" },
-          { text: "폐점", value: "STATUS_CLOSE" },
-          { text: "휴점", value: "STATUS_RESET" },
-          { text: "대기", value: "STATUS_READY" },
-          { text: "기타", value: "STATUS_ETC" },
+          { text: "평균매출", value: "saleAvg" },
+          { text: "누적매출", value: "saleAmount" },
         ],
         variant: "filled",
         isRequired: false,
       },
       {
-        labelText: "매장타입",
-        type: "radio",
-        key: "rank",
-        values: [
-          { text: "전체", value: "total" },
-          { text: "A타입", value: "A_RANK" },
-          { text: "B타입", value: "B_RANK" },
-          { text: "C타입", value: "C_RANK" },
-          { text: "D타입", value: "D_RANK" },
-          { text: "E타입", value: "E_RANK" },
-        ],
+        labelText: "기간",
+        type: "dateDbl",
+        key: "date",
         variant: "filled",
         isRequired: false,
       },
@@ -68,7 +39,7 @@ const formSearchStore = {
   ],
 };
 
-const formStoreInfo = {
+const formStoreSale = {
   initVal: {
     name: "",
     code: "",
@@ -173,4 +144,4 @@ const formStoreInfo = {
   ],
 };
 
-export { formSearchStore, formStoreInfo };
+export { formSearchSale, formStoreSale };

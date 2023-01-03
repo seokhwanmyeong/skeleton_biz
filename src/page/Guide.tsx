@@ -7,7 +7,7 @@ import {
   InputBtn,
   InputPwd,
 } from "@components/common/Input";
-import Select from "@components/common/Select";
+import { Select } from "@components/common/Select";
 import TextArea from "@components/common/TextArea";
 import Btn from "@components/common/Btn";
 import Tag from "@components/common/Tag";
@@ -108,6 +108,7 @@ const Guide = () => {
               }}
               defaultText="select option"
               data={selectOptions}
+              _onChange={(val: any) => console.log(val)}
               opBaseTxt="text"
               opBaseId="id"
               opBaseKey="id"

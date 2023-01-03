@@ -17,14 +17,14 @@ import {
   Button,
 } from "@chakra-ui/react";
 //  Components
-import Select from "@components/common/Select";
+import { Select } from "@components/common/Select";
 //  Util
-import { importFileXlsx } from "@util/file/manageFile";
+import { importFileXlsx, importFileSave } from "@util/file/manageFile";
 import { importDateConverter, exportDateConverter } from "@src/util/time/date";
 //  Services
 import { getAddressList } from "@services/address/autoAddressCreator";
 //  Type
-import { FormCsv } from "@util/file/manageFile";
+import { TypeFormCsv } from "@util/data/fileCSV";
 
 interface InpProps {
   fieldKey?: string;
@@ -68,7 +68,7 @@ interface InpDateProps extends InpProps {
 
 interface InpFileProps extends InpProps {
   accept: ".xlsx, .csv" | ".xlsx";
-  form: FormCsv;
+  form?: TypeFormCsv;
   groupProps?: {};
   addonProps?: {};
   btnProps?: {};
@@ -390,20 +390,39 @@ const InputFile = ({
         type="file"
         value={value}
         onChange={(e: any) => {
-          importFileXlsx(e, form)
-            .then((res) => {
-              if (res) {
-                const { data, fileName } = res;
+          form
+            ? importFileXlsx(e, form)
+                .then((res) => {
+                  if (res) {
+                    const { data, fileName } = res;
 
-                _onChange(data);
-                setFileName(fileName);
-              }
-            })
-            .catch((e) => {
-              e.length > 0
-                ? alert(e)
-                : alert("파일에 오류가 있습니다. 행/열/필수값을 확인해주세요");
-            });
+                    _onChange(data);
+                    setFileName(fileName);
+                  }
+                })
+                .catch((e) => {
+                  e.length > 0
+                    ? alert(e)
+                    : alert(
+                        "파일에 오류가 있습니다. 행/열/필수값을 확인해주세요"
+                      );
+                })
+            : importFileSave(e)
+                .then((res) => {
+                  if (res) {
+                    const { data, fileName } = res;
+
+                    _onChange(data);
+                    setFileName(fileName);
+                  }
+                })
+                .catch((e) => {
+                  e.length > 0
+                    ? alert(e)
+                    : alert(
+                        "파일에 오류가 있습니다. 행/열/필수값을 확인해주세요"
+                      );
+                });
         }}
         isDisabled={isDisabled}
         isInvalid={isInvalid}

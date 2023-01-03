@@ -24,7 +24,7 @@ const jwtToken = localStorage.getItem("token");
 
 //  Axios Instance
 const instance: BixApiInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BIZFE,
+  baseURL: import.meta.env.VITE_API_BIZ,
   responseType: "json",
   responseEncoding: "utf8",
   timeout: 2000,
@@ -83,4 +83,4 @@ const erpAreaApi = {
 };
 
 export default instance;
-export { loginApi, erpStoreApi };
+export { loginApi, erpStoreApi, erpSaleApi };

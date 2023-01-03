@@ -4,14 +4,15 @@ import { Button, Flex } from "@chakra-ui/react";
 //  Components
 import ApiTable from "@components/table/ApiTable";
 import ModalStoreHandler from "./ModalStoreHandler";
-import ModalStoreXlsx from "./ModalStoreXlsx";
+import ModalXlsxController from "@components/modal/erp/ModalXlsxController";
 //  Form & Column
 import { formSearchStore } from "@page/erp/store/form";
 import { mainTable } from "@page/erp/store/column";
 //  Api & URL
 import { erpStoreApi } from "@api/bizApi/config";
-//  Util
+//  Util & Data
 import { exportFileCSV } from "@util/file/manageFile";
+import { csvStoreInfo } from "@util/data/fileCSV";
 
 const ErpBranch = () => {
   const [apiData, setApiData] = useState([]);
@@ -38,10 +39,10 @@ const ErpBranch = () => {
       >
         <Flex gap={2}>
           <ModalStoreHandler update={false} />
-          <ModalStoreXlsx />
+          <ModalXlsxController csvInfo={csvStoreInfo} />
           <Button
             variant="reverse"
-            onClick={() => exportFileCSV(apiData, mainTable)}
+            onClick={() => exportFileCSV(apiData, mainTable, "매장리스트")}
             isDisabled={apiData.length > 0 ? false : true}
           >
             DownLoad Data

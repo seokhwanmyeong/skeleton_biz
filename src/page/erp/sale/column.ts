@@ -5,6 +5,13 @@ import CustomModalCell from "@components/table/cutomCell/CustomModalCell";
 
 export const mainTable: ColumnDef<any>[] = [
   {
+    header: "번호",
+    cell: (info) => {
+      console.log(info);
+      return info.getValue();
+    },
+  },
+  {
     accessorKey: "name",
     header: "매장명",
     cell: (info) => info.getValue(),
@@ -15,19 +22,8 @@ export const mainTable: ColumnDef<any>[] = [
     cell: (info) => info.getValue(),
   },
   {
-    accessorKey: "rank",
-    header: "매장타입",
-    cell: (info) => info.renderValue(),
-    enableSorting: true,
-  },
-  {
-    accessorKey: "status",
-    header: "상태",
-    cell: (info) => info.getValue(),
-  },
-  {
-    accessorKey: "owner_name",
-    header: "대표자명",
+    accessorKey: "open_date",
+    header: "개업일",
     cell: (info) => info.getValue(),
   },
   {
@@ -36,21 +32,17 @@ export const mainTable: ColumnDef<any>[] = [
     cell: (info) => info.getValue(),
   },
   {
-    accessorKey: "open_date",
-    header: "개업일",
+    accessorKey: "saleAvg",
+    header: "기간 평균 매출",
     cell: (info) => info.getValue(),
   },
   {
-    accessorKey: "created_at",
-    header: "등록일",
+    accessorKey: "saleSum",
+    header: "기간 누적 매출",
     cell: (info) => info.getValue(),
   },
   {
-    header: "상세보기",
-    cell: (info) => CustomModalCell({ ...info }),
-  },
-  {
-    header: "수정하기",
-    cell: (info) => CustomModalCell({ ...info }),
+    header: "매장상세",
+    cell: (info) => CustomModalCell(info.row.original),
   },
 ];

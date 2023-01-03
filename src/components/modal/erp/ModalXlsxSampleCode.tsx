@@ -15,23 +15,18 @@ import {
 } from "@chakra-ui/react";
 //  Components
 import { InputFile } from "@components/common/Input";
-//  Services
-import { autoAddressCreator } from "@services/address/autoAddressCreator";
 //  Util
 import { exportFormCsv } from "@util/file/manageFile";
 //  Data
 import { csvStoreInfo } from "@util/data/fileCSV";
 
-const ModalStoreXlsx = () => {
+const ModalXlsxSampleCode = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [fileData, setFileData] = useState([]);
 
   const createStore = () => {
-    autoAddressCreator(fileData)
-      .then((res) => {
-        // onClose();
-      })
-      .catch((e) => console.log(e));
+    console.log(`\nimport Api Start`);
+    console.log(fileData);
   };
 
   return (
@@ -77,4 +72,4 @@ const ModalStoreXlsx = () => {
   );
 };
 
-export default ModalStoreXlsx;
+export default ModalXlsxSampleCode;

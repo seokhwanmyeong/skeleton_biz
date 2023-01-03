@@ -13,6 +13,7 @@ import {
   InputAddress,
 } from "@components/common/Input";
 import { RadioBox, RadioProps } from "@components/common/RadioBox";
+import { SelectAddr } from "@components/common/Select";
 
 type FieldProps = {
   type:
@@ -30,7 +31,6 @@ type FieldProps = {
     | "fileXlsx"
     | "fileImg"
     | "slct"
-    | "slctApi"
     | "custom";
   key: string;
   labelText: string;
@@ -262,16 +262,17 @@ const FormField = ({
             />
           ),
           address: (
-            <InputAddress
-              _onChange={(val: any) => setFieldValue(_fieldKey, val)}
-              fieldKey={_fieldKey}
-              value={_value}
-              variant="filled"
-              isDisabled={isDisabled}
-              isInvalid={isInvalid}
-              isReadOnly={isReadOnly}
-              isRequired={isRequired}
-            />
+            <></>
+            // <InputAddress
+            //   _onChange={(val: any) => setFieldValue(_fieldKey, val)}
+            //   fieldKey={_fieldKey}
+            //   value={_value}
+            //   variant="filled"
+            //   isDisabled={isDisabled}
+            //   isInvalid={isInvalid}
+            //   isReadOnly={isReadOnly}
+            //   isRequired={isRequired}
+            // />
           ),
           radio: (
             <RadioBox
@@ -303,7 +304,16 @@ const FormField = ({
           ),
           fileImg: <></>,
           slct: <></>,
-          slctApi: <></>,
+          slctAddr: (
+            <SelectAddr
+              value={_value}
+              _onChange={(val: any) => setFieldValue(_fieldKey, val)}
+              isDisabled={isDisabled}
+              isInvalid={isInvalid}
+              isReadOnly={isReadOnly}
+              isRequired={isRequired}
+            />
+          ),
           custom: <></>,
           // custom: () => {
           //   return component({

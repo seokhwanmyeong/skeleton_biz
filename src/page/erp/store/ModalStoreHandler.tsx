@@ -36,7 +36,7 @@ const ModalStoreHandler = ({
         {update ? "매장수정" : "매장생성"}
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
-        {/* <ModalOverlay /> */}
+        <ModalOverlay />
         <ModalContent>
           <ModalHeader>{update ? "매장수정" : "매장생성"}</ModalHeader>
           <ModalCloseButton />

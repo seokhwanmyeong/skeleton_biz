@@ -1,10 +1,11 @@
 //  LIB
-import { ColumnDef, AccessorColumnDef } from "@tanstack/react-table";
-import { read, utils, writeFile, WorkSheet, write } from "xlsx";
+import { ColumnDef } from "@tanstack/react-table";
+import { read, utils, writeFile } from "xlsx";
+//  Util
+import { TypeFormCsv, TypeCsvColumn } from "@util/data/fileCSV";
 
 const {
   sheet_to_json,
-  sheet_to_csv,
   json_to_sheet,
   aoa_to_sheet,
   book_new,
@@ -22,32 +23,15 @@ const errorCode = {
   "0x2B": "#GETTING_DATA",
 };
 
-type File = {
+type TypeFile = {
   fileName: string;
   data: any;
 };
 
-type CsvColumn = {
-  title: string;
-  key: string;
-  t: "b" | "e" | "n" | "d" | "s" | "z";
-  isRequired: boolean;
-  v: string | number;
-  w?: string;
-  z?: string;
-};
-
-type FormCsv = {
-  fileName: string;
-  sheetName: string;
-  desc: string;
-  columns: CsvColumn[];
-};
-
 const importFileXlsx = async (
   e: any,
-  form: FormCsv
-): Promise<File | undefined> => {
+  form: TypeFormCsv
+): Promise<TypeFile | undefined> => {
   const { files } = e.target;
   const fileExtension = files[0]?.name?.split(".").at(-1);
   const fileName: string = files[0]?.name;
@@ -56,7 +40,7 @@ const importFileXlsx = async (
     console.log("Not Import File");
     return;
   } else if (fileExtension === "xlsx" || fileExtension === "csv") {
-    return await new Promise<File>((resolve, reject) => {
+    return await new Promise<TypeFile>((resolve, reject) => {
       const fileReader = new FileReader();
       fileReader.readAsBinaryString(files[0]);
       fileReader.onload = (e) => {
@@ -74,12 +58,17 @@ const importFileXlsx = async (
           for (const sheet in xlsxFile.Sheets) {
             if (xlsxFile.Sheets.hasOwnProperty(sheet)) {
               const transHeader: {
-                [key: string]: { key: string; isRequired: boolean };
+                [key: string]: {
+                  key: string;
+                  isRequired: boolean;
+                  parse?: { [key: string]: string };
+                };
               } = {};
               const formHeader = form.columns.map((column) => {
                 transHeader[column.title] = {
                   key: column.key,
                   isRequired: column.isRequired,
+                  parse: column.parse ?? undefined,
                 };
 
                 return column.title;
@@ -103,10 +92,24 @@ const importFileXlsx = async (
                   });
                 }
 
-                //  isRequired Checker & Trans Header Text
+                //  isRequired Checker & Trans Header & Value Text
                 formHeader.map((key: string, rowIdx: number) => {
                   if (li[key]) {
-                    tmp[transHeader[key].key] = li[key];
+                    //  parse text format
+                    if (transHeader[key].parse !== undefined) {
+                      Object.keys(transHeader[key].parse || {}).includes(
+                        li[key]
+                      )
+                        ? (tmp[transHeader[key].key] =
+                            transHeader[key].parse?.[li[key]])
+                        : error.push(
+                            `${rowIdx + 1}열 (${key})-${
+                              colIdx + 3
+                            }번 행 데이터 형식 오류`
+                          );
+                    } else {
+                      tmp[transHeader[key].key] = li[key];
+                    }
                   } else if (transHeader[key].isRequired) {
                     error.push(
                       `${rowIdx + 1}열 (${key})-${colIdx + 3}번 행 필수값 오류`
@@ -145,7 +148,59 @@ const importFileXlsx = async (
   return;
 };
 
-const exportFileCSV = async (data: any, columns: ColumnDef<any>[]) => {
+const importFileSave = async (e: any): Promise<TypeFile | undefined> => {
+  const { files } = e.target;
+  const fileExtension = files[0]?.name?.split(".").at(-1);
+  const fileName: string = files[0]?.name;
+
+  if (!files || files.length === 0) {
+    console.log("Not Import File");
+    return;
+  } else {
+    return await new Promise<TypeFile>((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsBinaryString(files[0]);
+      fileReader.onload = (e) => {
+        let data: any[] = [];
+        const error: string[] = [];
+
+        try {
+          if (!e.target) {
+            console.log("Target not found");
+            throw Error;
+          }
+
+          const { result } = e.target;
+          const xlsxFile = read(result, { type: "binary" });
+          for (const sheet in xlsxFile.Sheets) {
+            if (xlsxFile.Sheets.hasOwnProperty(sheet)) {
+              const sheetData = sheet_to_json(xlsxFile.Sheets[sheet]);
+              data = sheetData;
+            }
+          }
+
+          if (error.length > 0) {
+            reject(error);
+          } else {
+            resolve({
+              data: data,
+              fileName: fileName,
+            });
+          }
+        } catch (e) {
+          console.log("error", e);
+          reject(e);
+        }
+      };
+    });
+  }
+};
+
+const exportFileCSV = async (
+  data: any,
+  columns: ColumnDef<any>[],
+  fileName: string
+) => {
   let exportHeader: { [key: string]: string } = {};
   const exportKey = columns
     .filter((column: any) => (column?.accessorKey ? true : false))
@@ -167,13 +222,15 @@ const exportFileCSV = async (data: any, columns: ColumnDef<any>[]) => {
   const workBook = book_new();
 
   book_append_sheet(workBook, sheet, "매장정보");
-  await writeFile(workBook, `매장정보_${Date.now()}.csv`, { bookType: "csv" });
+  await writeFile(workBook, `${fileName}_${Date.now()}.csv`, {
+    bookType: "csv",
+  });
 };
 
-const exportFormCsv = (form: FormCsv) => {
+const exportFormCsv = (form: TypeFormCsv) => {
   const { fileName, sheetName, desc, columns } = form;
-  const header = columns.map((column: CsvColumn) => column.title);
-  const sampleColumn = columns.map((column: CsvColumn) => {
+  const header = columns.map((column: TypeCsvColumn) => column.title);
+  const sampleColumn = columns.map((column: TypeCsvColumn) => {
     return {
       t: column.t,
       v: column.v,
@@ -189,5 +246,4 @@ const exportFormCsv = (form: FormCsv) => {
   writeFile(workBook, `${fileName}.csv`, { bookType: "csv" });
 };
 
-export { importFileXlsx, exportFileCSV, exportFormCsv };
-export type { FormCsv };
+export { importFileXlsx, importFileSave, exportFileCSV, exportFormCsv };

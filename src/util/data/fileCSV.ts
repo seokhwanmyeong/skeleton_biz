@@ -1,6 +1,22 @@
-import { FormCsv } from "@util/file/manageFile";
+type TypeCsvColumn = {
+  title: string;
+  key: string;
+  t: "b" | "e" | "n" | "d" | "s" | "z";
+  isRequired: boolean;
+  v: string | number;
+  w?: string;
+  z?: string;
+  parse?: { [key: string]: string };
+};
 
-const csvStoreInfo: FormCsv = {
+type TypeFormCsv = {
+  fileName: string;
+  sheetName: string;
+  desc: string;
+  columns: TypeCsvColumn[];
+};
+
+const csvStoreInfo: TypeFormCsv = {
   fileName: "비즈레시피 매장정보 양식",
   sheetName: "매장",
   desc: "기본정보 ('*' = 필수입력)",
@@ -32,18 +48,32 @@ const csvStoreInfo: FormCsv = {
       t: "s",
       isRequired: true,
       v: "개점",
+      parse: {
+        개점: "STATUS_OPEN",
+        폐점: "STATUS_CLOSE",
+        휴점: "STATUS_REST",
+        대기: "STATUS_READY",
+        기타: "STATUS_ETC",
+      },
     },
     {
-      title: `*타입\n(A타입/B타입/C타입/D타입/E타입)`,
+      title: `타입\n(A타입/B타입/C타입/D타입/E타입)`,
       key: "rank",
       t: "s",
-      isRequired: true,
+      isRequired: false,
       v: "A타입",
+      parse: {
+        A타입: "A_RANK",
+        B타입: "B_RANK",
+        C타입: "C_RANK",
+        D타입: "D_RANK",
+        E타입: "E_RANK",
+      },
     },
     {
       title: `개업일 \n(yyyy-mm-dd)`,
       key: "open_date",
-      t: "d",
+      t: "s",
       isRequired: false,
       v: "2004-12-29",
     },
@@ -92,20 +122,87 @@ const csvStoreInfo: FormCsv = {
   ],
 };
 
-const storeSale = [
-  {
-    brandName: "string",
-    brandCode: "string",
-    name: "string",
-    code: "string",
-    sales_day: "string",
-    sales_time: "string",
-    menu_name: "string",
-    order_count: "number",
-    total_sales: "number",
-    address: "string",
-    order_type: "string",
-  },
-];
+const csvStoreSale: TypeFormCsv = {
+  fileName: "비즈레시피 매장매출정보 양식",
+  sheetName: "매장매출",
+  desc: "기본정보 ('*' = 필수입력)",
+  columns: [
+    {
+      title: "*브랜드명",
+      key: "brandName",
+      t: "s",
+      isRequired: true,
+      v: "비즈레시피",
+    },
+    {
+      title: "*매장(가맹점)명",
+      key: "name",
+      t: "s",
+      isRequired: true,
+      v: "합정점",
+    },
+    {
+      title: "*매장코드",
+      key: "code",
+      t: "s",
+      isRequired: true,
+      v: "A123",
+    },
+    {
+      title: `판매일자 \n(YYYYMMDD)`,
+      key: "saleDay",
+      t: "s",
+      isRequired: false,
+      v: "2004-12-29",
+    },
+    {
+      title: `판매시간 \n(HH:MM:SS)`,
+      key: "saleTime",
+      t: "s",
+      isRequired: false,
+      v: "12:32:25",
+    },
+    {
+      title: "메뉴명",
+      key: "saleMenu",
+      t: "s",
+      isRequired: false,
+      v: "어린이세트",
+    },
+    {
+      title: "주문수량",
+      key: "saleCount",
+      t: "s",
+      isRequired: false,
+      v: "1",
+    },
+    {
+      title: "매출",
+      key: "saleAmount",
+      t: "s",
+      isRequired: false,
+      v: "15000",
+    },
+    {
+      title: `주소(배달 시)`,
+      key: "address",
+      t: "s",
+      isRequired: false,
+      v: "서울시 마포구 양화로 81 101호",
+    },
+    {
+      title: `주문방식 \n(배달/포장)`,
+      key: "orderType",
+      t: "s",
+      isRequired: false,
+      v: "배달",
+      parse: {
+        배달: "test1",
+        포장: "test2",
+      },
+    },
+  ],
+};
 
-export { csvStoreInfo, storeSale };
+export { csvStoreInfo, csvStoreSale };
+export type { TypeCsvColumn, TypeFormCsv };
