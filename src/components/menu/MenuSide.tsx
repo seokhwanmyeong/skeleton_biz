@@ -16,7 +16,7 @@ import {
   DepthRouteType,
 } from "@states/route/stateRoute";
 //  CustomHook
-import useLocationState from "@src/hook/useLocationState";
+import useLocationState from "@hook/useLocationState";
 
 const MenuSide = () => {
   const { rootState, pathState } = useLocationState();
@@ -49,40 +49,46 @@ const MenuSide = () => {
   return (
     <Accordion variant="menuSide" allowMultiple>
       {subMenu &&
-        subMenu.map((menuLi: SubRouteType) => (
-          <AccordionItem key={menuLi.title}>
-            <AccordionButton
-              onClick={() => {
-                menuLi.hasChild ? null : navigator(menuLi.path);
-              }}
-              style={{
-                fontWeight: pathChecker(menuLi.path) ? "bold" : "",
-              }}
-            >
-              {menuLi.title}
-              {menuLi.hasChild && <AccordionIcon />}
-            </AccordionButton>
-            {menuLi.hasChild && (
-              <AccordionPanel>
-                <Accordion allowMultiple>
-                  {menuLi.children &&
-                    menuLi.children.map((depthLi: DepthRouteType) => (
-                      <AccordionItem key={depthLi.title}>
-                        <AccordionButton
-                          onClick={() => navigator(depthLi.path)}
-                          style={{
-                            fontWeight: pathChecker(depthLi.path) ? "bold" : "",
-                          }}
-                        >
-                          {depthLi.title}
-                        </AccordionButton>
-                      </AccordionItem>
-                    ))}
-                </Accordion>
-              </AccordionPanel>
-            )}
-          </AccordionItem>
-        ))}
+        subMenu.map((menuLi: SubRouteType) =>
+          menuLi.isMenu ? (
+            <AccordionItem key={menuLi.title}>
+              <AccordionButton
+                onClick={() => {
+                  menuLi.hasChild ? null : navigator(menuLi.path);
+                }}
+                style={{
+                  fontWeight: pathChecker(menuLi.path) ? "bold" : "",
+                }}
+              >
+                {menuLi.title}
+                {menuLi.hasChild && <AccordionIcon />}
+              </AccordionButton>
+              {menuLi.hasChild && (
+                <AccordionPanel>
+                  <Accordion allowMultiple>
+                    {menuLi.children &&
+                      menuLi.children.map((depthLi: DepthRouteType) =>
+                        depthLi.isMenu ? (
+                          <AccordionItem key={depthLi.title}>
+                            <AccordionButton
+                              onClick={() => navigator(depthLi.path)}
+                              style={{
+                                fontWeight: pathChecker(depthLi.path)
+                                  ? "bold"
+                                  : "",
+                              }}
+                            >
+                              {depthLi.title}
+                            </AccordionButton>
+                          </AccordionItem>
+                        ) : null
+                      )}
+                  </Accordion>
+                </AccordionPanel>
+              )}
+            </AccordionItem>
+          ) : null
+        )}
     </Accordion>
   );
 };

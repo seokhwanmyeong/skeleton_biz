@@ -10,7 +10,7 @@ const FrameSub = () => {
     <Fragment>
       <MenuSide />
       <Flex flexDirection="column" w="calc(100vw - 200px)" p="3rem 4rem">
-        <Heading>FrameSub : SubPage</Heading>
+        {/* <Heading>FrameSub : SubPage</Heading> */}
         <Outlet />
       </Flex>
     </Fragment>

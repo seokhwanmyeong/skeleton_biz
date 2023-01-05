@@ -1,5 +1,5 @@
 //  LIB
-import { Fragment, useEffect, useState } from "react";
+import { Fragment } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -14,7 +14,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 //  Components
-import ModalStoreHandler from "./ModalStoreHandler";
+import ModalStoreEditor from "@components/modal/erp/ModalStoreEditor";
 
 const ModalStoreDetail = ({ info }: any) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -45,7 +45,7 @@ const ModalStoreDetail = ({ info }: any) => {
             <Button colorScheme="blue" mr={3} onClick={onClose}>
               Close
             </Button>
-            <ModalStoreHandler info={info} update={true} />
+            <ModalStoreEditor info={info} update={true} />
           </ModalFooter>
         </ModalContent>
       </Modal>

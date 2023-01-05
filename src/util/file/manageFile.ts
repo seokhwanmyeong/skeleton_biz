@@ -73,52 +73,56 @@ const importFileXlsx = async (
 
                 return column.title;
               });
-              const sheetData = sheet_to_json(xlsxFile.Sheets[sheet], {
+              const sheetTable = sheet_to_json(xlsxFile.Sheets[sheet], {
                 range: 1,
               });
-              const filterData = sheetData.map((li: any, colIdx: number) => {
-                let tmp: { [key: string]: any } = {};
+              const filterData = sheetTable.map(
+                (sheetRow: any, rowIdx: number) => {
+                  let tmp: { [key: string]: any } = {};
 
-                //  Header Checker
-                if (colIdx === 0) {
-                  formHeader.map((header: string) => {
-                    const dataKeys = Object.keys(li);
-                    if (
-                      !dataKeys.includes(header) &&
-                      transHeader[header].isRequired
-                    ) {
-                      error.push(`${header} 데이터 열 부재`);
+                  //  Header Checker
+                  if (rowIdx === 0) {
+                    formHeader.map((header: string) => {
+                      const dataKeys = Object.keys(sheetRow);
+                      if (
+                        !dataKeys.includes(header) &&
+                        transHeader[header].isRequired
+                      ) {
+                        error.push(`${header} 데이터 열 부재`);
+                      }
+                    });
+                  }
+
+                  //  isRequired Checker & Trans Header & Value Text
+                  formHeader.map((txtKey: string, colIdx: number) => {
+                    if (sheetRow[txtKey]) {
+                      //  parse text format
+                      if (transHeader[txtKey].parse !== undefined) {
+                        Object.keys(transHeader[txtKey].parse || {}).includes(
+                          sheetRow[txtKey]
+                        )
+                          ? (tmp[transHeader[txtKey].key] =
+                              transHeader[txtKey].parse?.[sheetRow[txtKey]])
+                          : error.push(
+                              `${colIdx + 1}열 (${txtKey})-${
+                                rowIdx + 3
+                              }번 행 데이터 형식 오류`
+                            );
+                      } else {
+                        tmp[transHeader[txtKey].key] = sheetRow[txtKey];
+                      }
+                    } else if (transHeader[txtKey].isRequired) {
+                      error.push(
+                        `${colIdx + 1}열 (${txtKey})-${
+                          rowIdx + 3
+                        }번 행 필수값 오류`
+                      );
                     }
                   });
+
+                  return tmp;
                 }
-
-                //  isRequired Checker & Trans Header & Value Text
-                formHeader.map((key: string, rowIdx: number) => {
-                  if (li[key]) {
-                    //  parse text format
-                    if (transHeader[key].parse !== undefined) {
-                      Object.keys(transHeader[key].parse || {}).includes(
-                        li[key]
-                      )
-                        ? (tmp[transHeader[key].key] =
-                            transHeader[key].parse?.[li[key]])
-                        : error.push(
-                            `${rowIdx + 1}열 (${key})-${
-                              colIdx + 3
-                            }번 행 데이터 형식 오류`
-                          );
-                    } else {
-                      tmp[transHeader[key].key] = li[key];
-                    }
-                  } else if (transHeader[key].isRequired) {
-                    error.push(
-                      `${rowIdx + 1}열 (${key})-${colIdx + 3}번 행 필수값 오류`
-                    );
-                  }
-                });
-
-                return tmp;
-              });
+              );
 
               console.log("File Data", filterData);
               console.log("error", error);
@@ -206,13 +210,15 @@ const exportFileCSV = async (
     .filter((column: any) => (column?.accessorKey ? true : false))
     .map((column: any) => {
       exportHeader[column.accessorKey] = column.header;
+
       return column.accessorKey;
     });
 
-  const exportData = data.map((li: any) => {
+  const exportData = data.map((dataRow: any) => {
     let result: { [key: string]: string } = {};
+
     exportKey.map((key: string) => {
-      result[exportHeader[key]] = li[key];
+      result[exportHeader[key]] = dataRow[key];
     });
 
     return result;
@@ -229,15 +235,24 @@ const exportFileCSV = async (
 
 const exportFormCsv = (form: TypeFormCsv) => {
   const { fileName, sheetName, desc, columns } = form;
-  const header = columns.map((column: TypeCsvColumn) => column.title);
-  const sampleColumn = columns.map((column: TypeCsvColumn) => {
-    return {
+  let header: string[] = [];
+  let sampleColumn: {
+    t: string;
+    v: string | number;
+    w?: string;
+    z?: string;
+  }[] = [];
+
+  columns.map((column: TypeCsvColumn) => {
+    header.push(column.title);
+    sampleColumn.push({
       t: column.t,
       v: column.v,
       w: column.w,
       z: column.z,
-    };
+    });
   });
+
   const data = [[desc], [...header], [...sampleColumn]];
   const sheet = aoa_to_sheet(data);
   const workBook = book_new();

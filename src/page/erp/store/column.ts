@@ -6,10 +6,7 @@ import CustomModalCell from "./CustomCell";
 export const mainTable: ColumnDef<any>[] = [
   {
     header: "번호",
-    cell: (info) => {
-      console.log(info);
-      return info.getValue();
-    },
+    cell: (info) => info.row.index,
   },
   {
     accessorKey: "name",

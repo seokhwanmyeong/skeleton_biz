@@ -1,8 +1,7 @@
 //  Lib
-import React from "react";
 import { Link as RoutLink } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { Flex, Link, Grid } from "@chakra-ui/react";
+import { Link, Grid } from "@chakra-ui/react";
 //  State
 import {
   mainRoute,

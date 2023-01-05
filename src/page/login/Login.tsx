@@ -2,14 +2,14 @@
 import { Flex } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 //  Components
-import FormSample from "@components/form/FormSample";
+import Form from "@components/form/Form";
 //  Form & Column
-import { formLogin } from "@src/page/login/form";
+import { formLogin } from "@page/login/form";
 //  Services
-import { loginHandler } from "@src/services/login/loginHandler";
+import { loginHandler } from "@services/login/loginHandler";
 
-import instance from "@src/api/bizApi/config";
-import { BIZ_LOGIN } from "@src/api/bizApi/url";
+import instance from "@api/bizApi/config";
+import { BIZ_LOGIN } from "@api/bizApi/url";
 
 const Login = () => {
   const navigator = useNavigate();
@@ -45,7 +45,7 @@ const Login = () => {
 
   return (
     <Flex w="100%" alignItems="center" justifyContent="center">
-      <FormSample
+      <Form
         form={formLogin}
         onSubmit={requsetLoginBtn}
         styleProps={{ width: "20rem" }}

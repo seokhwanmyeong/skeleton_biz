@@ -8,19 +8,20 @@ import {
   useCallback,
 } from "react";
 import {
-  chakra,
   Input as ChakraInput,
   InputGroup,
   InputLeftAddon,
   InputRightAddon,
   InputRightElement,
   Button,
+  Flex,
+  Text,
 } from "@chakra-ui/react";
 //  Components
 import { Select } from "@components/common/Select";
 //  Util
 import { importFileXlsx, importFileSave } from "@util/file/manageFile";
-import { importDateConverter, exportDateConverter } from "@src/util/time/date";
+import { importDateConverter, exportDateConverter } from "@util/time/date";
 //  Services
 import { getAddressList } from "@services/address/autoAddressCreator";
 //  Type
@@ -95,7 +96,6 @@ const Input = ({
   isInvalid = false,
   isReadOnly = false,
   isRequired = false,
-  ...rest
 }: InpProps) => {
   return (
     <ChakraInput
@@ -112,7 +112,7 @@ const Input = ({
       isInvalid={isInvalid}
       isReadOnly={isReadOnly}
       isRequired={isRequired}
-      {...rest}
+      {...inputProps}
     />
   );
 };
@@ -205,7 +205,6 @@ const InputDate = ({
   isInvalid = false,
   isReadOnly = false,
   isRequired = false,
-  ...rest
 }: InpDateProps) => {
   const validate = (startD: any, endD: any) =>
     new Date(startD).getTime() > new Date(endD).getTime();
@@ -227,7 +226,7 @@ const InputDate = ({
   };
 
   return (
-    <>
+    <Flex gap={2} w="100%">
       <ChakraInput
         id={fieldKey}
         type="date"
@@ -252,27 +251,32 @@ const InputDate = ({
         }
         isReadOnly={isReadOnly}
         isRequired={isRequired}
-        {...rest}
+        {...inputProps}
       />
       {type === "double" && typeof date === "object" && (
-        <ChakraInput
-          id={`${fieldKey}-end`}
-          type="date"
-          value={date.end === undefined ? String(new Date()) : date.end}
-          onChange={(e: any) => dateHandler(e.target.value, "end")}
-          variant={variant}
-          placeholder={placeholder}
-          _placeholder={_placeholder}
-          focusBorderColor={focusBorderColor}
-          errorBorderColor={errorBorderColor}
-          isDisabled={isDisabled}
-          isInvalid={validate(date.start, date.end)}
-          isReadOnly={isReadOnly}
-          isRequired={isRequired}
-          {...rest}
-        />
+        <>
+          <Flex h="100%" alignItems="center">
+            ~
+          </Flex>
+          <ChakraInput
+            id={`${fieldKey}-end`}
+            type="date"
+            value={date.end === undefined ? String(new Date()) : date.end}
+            onChange={(e: any) => dateHandler(e.target.value, "end")}
+            variant={variant}
+            placeholder={placeholder}
+            _placeholder={_placeholder}
+            focusBorderColor={focusBorderColor}
+            errorBorderColor={errorBorderColor}
+            isDisabled={isDisabled}
+            isInvalid={validate(date.start, date.end)}
+            isReadOnly={isReadOnly}
+            isRequired={isRequired}
+            {...inputProps}
+          />
+        </>
       )}
-    </>
+    </Flex>
   );
 };
 

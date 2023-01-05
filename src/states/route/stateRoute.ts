@@ -8,16 +8,16 @@ import Join from "@page/Join";
 import Maps from "@page/Maps";
 //  Pages: Erp
 import ErpDashBoard from "@page/erp/ErpDashBoard";
-import ErpStore from "@src/page/erp/store/ErpStore";
+import ErpStoreDetail from "@page/erp/ErpStoreDetail";
+import ErpStore from "@page/erp/store/ErpStore";
 import ErpSale from "@page/erp/sale/ErpSale";
 import ErpArea from "@page/erp/area/ErpArea";
-// import ErpForSale from "@page/erp/forSale/ErpForSale";
 // import ErpCustomer from "@page/erp/customer/ErpCustomer";
 // import ErpBrand from "@page/erp/brand/ErpBrand";
 
+import ErpDetailSample from "@page/erp/ErpDetailSample";
 import ErpBaseTable from "@page/erp/ErpBaseTable";
 import ErpPop from "@page/erp/ErpPop";
-import ErpForm from "@page/erp/ErpForm";
 //  Pages: Mypage
 import MyPage from "@page/mypage/MyPage";
 import MyPageAccount from "@page/mypage/MyPageAccount";
@@ -41,12 +41,14 @@ type SubRouteType = {
   path: string;
   children?: DepthRouteType[];
   page?: (props: any) => JSX.Element;
+  isMenu: boolean;
 };
 
 type DepthRouteType = {
   title: string;
   path: string;
   page: (props: any) => JSX.Element;
+  isMenu: boolean;
 };
 
 export type { MainRouteType, SubRouteType, DepthRouteType };
@@ -123,52 +125,68 @@ export const subRoute = atom<{
         hasChild: false,
         path: "index",
         page: ErpDashBoard,
+        isMenu: true,
       },
       {
         title: "매장",
         hasChild: false,
         path: "store",
         page: ErpStore,
+        isMenu: true,
+      },
+      {
+        title: "매장상세보기",
+        hasChild: false,
+        path: "store/detail",
+        page: ErpStoreDetail,
+        isMenu: false,
       },
       {
         title: "매출",
         hasChild: false,
         path: "sale",
         page: ErpSale,
+        isMenu: true,
       },
       {
         title: "상권",
         hasChild: false,
         path: "area",
         page: ErpArea,
+        isMenu: true,
       },
       {
         title: "매물",
         hasChild: false,
         path: "forSale",
         page: ErpBaseTable,
+        isMenu: true,
       },
       {
         title: "고객",
         hasChild: false,
         path: "customer",
         page: ErpBaseTable,
+        isMenu: true,
       },
       {
         title: "브랜드 DB",
         hasChild: false,
         path: "brand",
         page: ErpBaseTable,
+        isMenu: true,
       },
       {
         title: "Sample Table",
         hasChild: true,
         path: "erp02",
+        isMenu: true,
         children: [
           {
             title: "BaseTable",
             path: "erpBaseTable",
             page: ErpBaseTable,
+            isMenu: true,
           },
         ],
       },
@@ -177,12 +195,14 @@ export const subRoute = atom<{
         hasChild: false,
         path: "erpModal",
         page: ErpPop,
+        isMenu: true,
       },
       {
-        title: "Sample Form",
+        title: "상세정보 견본: Tab",
         hasChild: false,
-        path: "erpForm",
-        page: ErpForm,
+        path: "erpSample",
+        page: ErpDetailSample,
+        isMenu: true,
       },
     ],
     mypage: [
@@ -191,36 +211,42 @@ export const subRoute = atom<{
         hasChild: false,
         path: "index",
         page: MyPage,
+        isMenu: true,
       },
       {
         title: "계정 관리",
         hasChild: false,
         path: "account",
         page: MyPageAccount,
+        isMenu: true,
       },
       {
         title: "팀 관리",
         hasChild: false,
         path: "team",
         page: MyPageTeam,
+        isMenu: true,
       },
       {
         title: "권한 관리",
         hasChild: false,
         path: "auth",
         page: MyPageAuth,
+        isMenu: true,
       },
       {
         title: "회사 관리",
         hasChild: false,
         path: "company",
         page: MyPageCompany,
+        isMenu: true,
       },
       {
         title: "요금제 관리",
         hasChild: false,
         path: "plan",
         page: MyPagePlan,
+        isMenu: true,
       },
     ],
   },

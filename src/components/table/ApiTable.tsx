@@ -39,6 +39,7 @@ type PropsApiTable = {
   pageVariant?: string;
   children?: any;
   getTableData?: any;
+  selectData?: any;
 };
 
 const ApiTable = ({
@@ -56,6 +57,7 @@ const ApiTable = ({
   pageVariant,
   children,
   getTableData,
+  selectData,
 }: PropsApiTable) => {
   const [req, setReq] = useState({
     ...initReq,
@@ -92,7 +94,7 @@ const ApiTable = ({
         setData(records);
         setTotalReg(totalCount);
 
-        getTableData(records);
+        getTableData && getTableData(records);
       })
       .catch((e: any) => {
         console.log(e);
@@ -165,10 +167,10 @@ const ApiTable = ({
                   <Tr key={row.id}>
                     {row.getVisibleCells().map((cell) => (
                       <Td key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
+                        {flexRender(cell.column.columnDef.cell, {
+                          ...cell.getContext(),
+                          selectData: selectData,
+                        })}
                       </Td>
                     ))}
                   </Tr>

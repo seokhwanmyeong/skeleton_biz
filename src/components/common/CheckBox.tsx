@@ -1,5 +1,5 @@
 //  Lib
-import React from "react";
+import { useState, useCallback } from "react";
 import {
   Checkbox as ChakraCheckbox,
   CheckboxGroup as ChakraCheckboxGroup,
@@ -20,8 +20,7 @@ interface ChekboxTagProps extends ChekboxProps {
   children?: any;
 }
 
-const CheckBox = (props: ChekboxProps) => {
-  const { title, isChecked, onChange, value } = props;
+const CheckBox = ({ title, isChecked, onChange, value }: ChekboxProps) => {
   return (
     <ChakraCheckbox isChecked={isChecked} onChange={onChange} value={value}>
       {title}
@@ -29,8 +28,13 @@ const CheckBox = (props: ChekboxProps) => {
   );
 };
 
-const CheckBoxTag = (props: ChekboxTagProps) => {
-  const { title, isChecked, isDisabled = false, onChange, value } = props;
+const CheckBoxTag = ({
+  title,
+  isChecked,
+  isDisabled = false,
+  onChange,
+  value,
+}: ChekboxTagProps) => {
   return (
     <ChakraCheckbox
       variant="withTag"
@@ -51,14 +55,74 @@ const CheckBoxTag = (props: ChekboxTagProps) => {
   );
 };
 
-const CheckboxGroup = (props: any) => {
-  const { checkboxData } = props;
+const CheckboxGroup = ({
+  chkboxData,
+  chkValue,
+  defaultValue = [],
+  isDisabled = false,
+  onChange,
+  variant,
+  activeTotal = false,
+  parseTotalTxt = "전체",
+}: {
+  chkboxData: { text: string; value: string | number }[];
+  chkValue: (string | number)[];
+  defaultValue?: (string | number)[];
+  isDisabled?: boolean;
+  onChange: (value: (string | number)[]) => void;
+  variant?: string;
+  activeTotal?: boolean;
+  parseTotalTxt?: string;
+}) => {
+  const total = chkboxData.map((data) => data.value);
+  const originLength = chkboxData.length;
+
+  const totalChkHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.target.checked ? onChange(total) : onChange([]);
+  };
+
+  const chkHandler = (val: (string | number)[]) => {
+    const exceptTotal = val.filter((l: string | number) => l !== "total");
+
+    if (
+      activeTotal &&
+      ((val.length === 1 && val[0] === "total") ||
+        exceptTotal.length === originLength)
+    ) {
+      onChange(total);
+    } else {
+      onChange(exceptTotal);
+    }
+  };
+
   return (
-    <ChakraCheckboxGroup>
-      {checkboxData.map((title: string) => {
-        console.log(title);
-        return <ChakraCheckbox key={`check-${title}`}>{title}</ChakraCheckbox>;
-      })}
+    <ChakraCheckboxGroup
+      defaultValue={activeTotal ? ["total"] : defaultValue}
+      value={
+        activeTotal
+          ? chkValue.length === originLength
+            ? ["total"]
+            : chkValue
+          : chkValue
+      }
+      isDisabled={isDisabled}
+      onChange={chkHandler}
+      variant={variant}
+    >
+      {activeTotal && (
+        <ChakraCheckbox
+          onChange={totalChkHandler}
+          key={`check-total`}
+          value={"total"}
+        >
+          {parseTotalTxt}
+        </ChakraCheckbox>
+      )}
+      {chkboxData.map((data: { text: string; value: string | number }) => (
+        <ChakraCheckbox key={`check-${data.value}`} value={data.value}>
+          {data.text}
+        </ChakraCheckbox>
+      ))}
     </ChakraCheckboxGroup>
   );
 };

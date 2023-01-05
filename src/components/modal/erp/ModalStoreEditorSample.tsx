@@ -13,9 +13,9 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 //  Components
-import FormSample from "@components/form/FormSample";
+import Form from "@components/form/Form";
 //  Form
-import { formStoreInfo } from "./form";
+import { formStoreInfo } from "@page/erp/store/form";
 
 const ModalStoreHandler = ({
   info,
@@ -42,7 +42,7 @@ const ModalStoreHandler = ({
           <ModalCloseButton />
           <ModalBody>
             <Flex flexDirection="column">
-              <FormSample
+              <Form
                 form={
                   update ? { ...formStoreInfo, initVal: info } : formStoreInfo
                 }

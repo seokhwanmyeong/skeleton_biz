@@ -13,9 +13,9 @@ import linkTheme from "@styles/theme/components/common/Link";
 import selectTheme from "@styles/theme/components/common/selectTheme";
 import themeTable from "@styles/theme/components/table/tableTheme";
 //  Foundation
-import { fndtSize } from "@src/styles/theme/foundation/fndtSize";
-import { fndtRadius } from "@src/styles/theme/foundation/fndtRadius";
-import { selectColorScheme } from "@src/styles/theme/foundation/fndtColor";
+import { fndtSize } from "@styles/theme/foundation/fndtSize";
+import { fndtRadius } from "@styles/theme/foundation/fndtRadius";
+import { selectColorScheme } from "@styles/theme/foundation/fndtColor";
 
 const createTheme = (name: string) => {
   const config: ThemeConfig = {

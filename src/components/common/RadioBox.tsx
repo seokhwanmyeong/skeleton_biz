@@ -2,6 +2,7 @@
 import { Radio, RadioGroup } from "@chakra-ui/react";
 
 type RadioProps = {
+  radioProps?: {};
   _onChange: any;
   value: any;
   fieldKey: string;
@@ -14,6 +15,7 @@ type RadioProps = {
 };
 
 const RadioBox = ({
+  radioProps,
   _onChange,
   value,
   fieldKey,
@@ -31,7 +33,10 @@ const RadioBox = ({
       onChange={(value: any) => _onChange(value)}
       value={value}
       variant={variant}
-      gap={10}
+      display="flex"
+      alignItems="center"
+      gap={2}
+      {...radioProps}
     >
       {values &&
         values.map((li: { text: string; value: string | number }) => (

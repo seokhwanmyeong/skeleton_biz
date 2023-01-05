@@ -6,10 +6,7 @@ import CustomModalCell from "@components/table/cutomCell/CustomModalCell";
 export const mainTable: ColumnDef<any>[] = [
   {
     header: "번호",
-    cell: (info) => {
-      console.log(info);
-      return info.getValue();
-    },
+    cell: (info) => info.row.index,
   },
   {
     accessorKey: "name",
@@ -41,8 +38,8 @@ export const mainTable: ColumnDef<any>[] = [
     header: "기간 누적 매출",
     cell: (info) => info.getValue(),
   },
-  {
-    header: "매장상세",
-    cell: (info) => CustomModalCell(info.row.original),
-  },
+  // {
+  //   header: "매장상세",
+  //   cell: (info) => CustomModalCell(info.row.original),
+  // },
 ];

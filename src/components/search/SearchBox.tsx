@@ -1,5 +1,5 @@
 //  Components
-import FormSample from "@components/form/FormSample";
+import Form from "@components/form/Form";
 
 const SearchBox = ({ req, setReq, form }: any) => {
   const onSubmitSearch = (val: any) => {
@@ -9,7 +9,7 @@ const SearchBox = ({ req, setReq, form }: any) => {
       ...val,
     });
   };
-  return <FormSample form={form} onSubmit={onSubmitSearch} />;
+  return <Form form={form} onSubmit={onSubmitSearch} />;
 };
 
 export default SearchBox;

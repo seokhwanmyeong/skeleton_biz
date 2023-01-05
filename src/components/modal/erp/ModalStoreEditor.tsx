@@ -2,7 +2,7 @@
 import { Flex, Button } from "@chakra-ui/react";
 //  Components
 import Modal from "../Modal";
-import FormSample from "@components/form/FormSample";
+import Form from "@components/form/Form";
 //  Form
 import { formStoreInfo } from "@page/erp/store/form";
 
@@ -25,7 +25,7 @@ const ModalStoreEditor = ({
       botBtnComponent={bottomBtn(StoreInfoHandler)}
     >
       <Flex flexDirection="column">
-        <FormSample
+        <Form
           form={update ? { ...formStoreInfo, initVal: info } : formStoreInfo}
           onSubmit={StoreInfoHandler}
         />

@@ -9,7 +9,7 @@ import { addrHCode } from "@util/data/address";
 type PropsSlct = {
   selectProps?: {};
   variant?: string;
-  defalutValue?: string;
+  defalutValue?: string | number;
   defaultText?: string;
   data: any[];
   opBaseTxt: string;
@@ -23,6 +23,7 @@ type PropsSlct = {
 };
 
 type PropSlctAddr = {
+  selectProps?: {};
   variant?: string;
   value: string;
   _onChange: any;
@@ -57,7 +58,7 @@ const Select = ({
       isInvalid={isInvalid}
       isReadOnly={isReadOnly}
       isRequired={isRequired}
-      onChange={_onChange}
+      onChange={(e) => _onChange(e.target.value)}
       defaultValue={defaultId}
     >
       {!defalutValue && (
@@ -82,6 +83,7 @@ const Select = ({
 };
 
 const SelectAddr = ({
+  selectProps,
   variant,
   value,
   _onChange,
@@ -101,15 +103,14 @@ const SelectAddr = ({
     bot: [],
   });
 
-  const selectAddrHandler = (e: any, step: "top" | "mid" | "bot") => {
-    const value = e.target.value;
+  const selectAddrHandler = (val: any, step: "top" | "mid" | "bot") => {
     let result: string = "total";
 
     switch (step) {
       case "top":
-        if (value) {
-          addrApiHandler(value).then((res) => {
-            setAddr({ top: value, mid: "", bot: "" });
+        if (val) {
+          addrApiHandler(val).then((res) => {
+            setAddr({ top: val, mid: "", bot: "" });
             setAddrList({
               ...addrList,
               mid: res ? [{ code: "", address: "전체" }, ...res] : [],
@@ -117,40 +118,40 @@ const SelectAddr = ({
             });
           });
         } else {
-          setAddr({ top: value, mid: "", bot: "" });
+          setAddr({ top: val, mid: "", bot: "" });
           setAddrList({
             ...addrList,
             mid: [],
             bot: [],
           });
         }
-        result = value ? value : "total";
+        result = val ? val : "total";
         break;
       case "mid":
-        if (value) {
-          console.log(value);
-          addrApiHandler(value).then((res) => {
-            setAddr({ ...addr, mid: value.slice(2, 5), bot: "" });
+        if (val) {
+          console.log(val);
+          addrApiHandler(val).then((res) => {
+            setAddr({ ...addr, mid: val.slice(2, 5), bot: "" });
             setAddrList({
               ...addrList,
               bot: res ? [{ code: "", address: "전체" }, ...res] : [],
             });
           });
         } else {
-          setAddr({ ...addr, mid: value, bot: "" });
+          setAddr({ ...addr, mid: val, bot: "" });
           setAddrList({
             ...addrList,
             bot: [],
           });
         }
-        result = value ? value : addr.top;
+        result = val ? val : addr.top;
         break;
       case "bot":
-        setAddr({ ...addr, bot: value.slice(5, 8) });
-        result = value ? value : addr.top + addr.mid;
+        setAddr({ ...addr, bot: val.slice(5, 8) });
+        result = val ? val : addr.top + addr.mid;
         break;
       default:
-        result = value;
+        result = val;
         break;
     }
     _onChange(result);
@@ -159,38 +160,35 @@ const SelectAddr = ({
   return (
     <Flex gap={2}>
       <Select
+        selectProps={selectProps}
         variant={variant}
         data={addrList.top}
         opBaseTxt="address"
         opBaseId="code"
         opBaseKey="code"
-        _onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-          selectAddrHandler(e, "top")
-        }
+        _onChange={(val: any) => selectAddrHandler(val, "top")}
         defaultText="전체"
         defalutValue="total"
       />
       <Select
+        selectProps={selectProps}
         variant={variant}
         data={addrList.mid}
         opBaseTxt="address"
         opBaseId="code"
         opBaseKey="code"
-        _onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-          selectAddrHandler(e, "mid")
-        }
+        _onChange={(val: any) => selectAddrHandler(val, "mid")}
         isDisabled={addrList.mid.length > 0 ? false : true}
         defaultText="시/군/구"
       />
       <Select
+        selectProps={selectProps}
         variant={variant}
         data={addrList.bot}
         opBaseTxt="address"
         opBaseId="code"
         opBaseKey="code"
-        _onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-          selectAddrHandler(e, "bot")
-        }
+        _onChange={(val: any) => selectAddrHandler(val, "bot")}
         isDisabled={addrList.bot.length > 0 ? false : true}
         defaultText="읍/면/동"
       />

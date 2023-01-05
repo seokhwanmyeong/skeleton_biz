@@ -19,7 +19,7 @@ import {
   Td,
 } from "@chakra-ui/react";
 //  Component
-import { CheckBoxTag } from "@src/components/common/CheckBox";
+import { CheckBoxTag } from "@components/common/CheckBox";
 import Pagination from "@components/table/Pagination";
 import NoContent from "@components/table/NoContent";
 //  Custom Hook

@@ -1,7 +1,7 @@
 //  Lib
 import { Flex } from "@chakra-ui/react";
 //  Components
-import SementicSearchEngine from "@src/components/sementicMapLayer/SementicSearchEngine";
+import SementicSearchEngine from "@components/sementicMapLayer/SementicSearchEngine";
 import SementicMap from "@components/sementicMapLayer/SementicMap";
 import SementicViewer from "@components/sementicMapLayer/SementicViewer";
 

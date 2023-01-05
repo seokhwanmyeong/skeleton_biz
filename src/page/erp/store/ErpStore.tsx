@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { Button, Flex } from "@chakra-ui/react";
 //  Components
 import ApiTable from "@components/table/ApiTable";
-import ModalStoreHandler from "./ModalStoreHandler";
+import ModalStoreEditor from "@components/modal/erp/ModalStoreEditor";
 import ModalXlsxController from "@components/modal/erp/ModalXlsxController";
 //  Form & Column
 import { formSearchStore } from "@page/erp/store/form";
@@ -38,7 +38,7 @@ const ErpBranch = () => {
         getTableData={setApiData}
       >
         <Flex gap={2}>
-          <ModalStoreHandler update={false} />
+          <ModalStoreEditor update={false} />
           <ModalXlsxController csvInfo={csvStoreInfo} />
           <Button
             variant="reverse"
