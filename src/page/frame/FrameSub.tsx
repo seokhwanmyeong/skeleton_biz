@@ -9,8 +9,7 @@ const FrameSub = () => {
   return (
     <Fragment>
       <MenuSide />
-      <Flex flexDirection="column" w="calc(100vw - 200px)" p="3rem 4rem">
-        {/* <Heading>FrameSub : SubPage</Heading> */}
+      <Flex flexDirection="column" w="calc(100vw - 20rem)" p="3rem 3rem">
         <Outlet />
       </Flex>
     </Fragment>

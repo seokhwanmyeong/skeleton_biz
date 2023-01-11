@@ -12,7 +12,7 @@ import {
   TabPanel,
   Stack,
 } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 //  Components
 import ListTable from "@components/table/ListTable";
 import ErpBaseTable from "./ErpBaseTable";

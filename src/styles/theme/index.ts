@@ -12,6 +12,7 @@ import accordionTheme from "@styles/theme/components/menu/accordionTheme";
 import linkTheme from "@styles/theme/components/common/Link";
 import selectTheme from "@styles/theme/components/common/selectTheme";
 import themeTable from "@styles/theme/components/table/tableTheme";
+import formTheme from "@styles/theme/components/form/formTheme";
 //  Foundation
 import { fndtSize } from "@styles/theme/foundation/fndtSize";
 import { fndtRadius } from "@styles/theme/foundation/fndtRadius";
@@ -30,6 +31,26 @@ const createTheme = (name: string) => {
     colors: selectColorScheme(name),
     size: fndtSize,
     radii: fndtRadius,
+    breakpoints: {
+      mobile: "320px",
+      tablet: "768px",
+      pc: "1280px",
+    },
+    fontSizes: {
+      xs: "1.2rem",
+      sm: "1.4rem",
+      md: "1.6rem",
+      lg: "1.8rem",
+      xl: "2rem",
+      "2xl": "1.5rem",
+      "3xl": "1.875rem",
+      "4xl": "2.25rem",
+      "5xl": "3rem",
+      "6xl": "3.75rem",
+      "7xl": "4.5rem",
+      "8xl": "6rem",
+      "9xl": "8rem",
+    },
     components: {
       Input: inputTheme,
       Button: btnTheme,
@@ -40,6 +61,7 @@ const createTheme = (name: string) => {
       Link: linkTheme,
       Heading: headingTheme,
       Table: themeTable,
+      Form: formTheme,
     },
   });
 

@@ -2,8 +2,8 @@
 import { atom, selector, selectorFamily } from "recoil";
 //  Pages: Common
 import Login from "@page/login/Login";
-import Guide from "@page/Guide";
 import Join from "@page/Join";
+import Guide from "@page/Guide";
 //  Pages: Map
 import Maps from "@page/Maps";
 //  Pages: Erp
@@ -13,18 +13,14 @@ import ErpStore from "@page/erp/store/ErpStore";
 import ErpSale from "@page/erp/sale/ErpSale";
 import ErpArea from "@page/erp/area/ErpArea";
 // import ErpCustomer from "@page/erp/customer/ErpCustomer";
-// import ErpBrand from "@page/erp/brand/ErpBrand";
+import ErpBrand from "@page/erp/brand/ErpBrand";
 
 import ErpDetailSample from "@page/erp/ErpDetailSample";
 import ErpBaseTable from "@page/erp/ErpBaseTable";
 import ErpPop from "@page/erp/ErpPop";
 //  Pages: Mypage
 import MyPage from "@page/mypage/MyPage";
-import MyPageAccount from "@page/mypage/MyPageAccount";
-import MyPageTeam from "@page/mypage/MyPageTeam";
-import MyPageAuth from "@page/mypage/MyPageAuth";
-import MyPageCompany from "@page/mypage/MyPageAuth";
-import MyPagePlan from "@page/mypage/MyPagePlan";
+import MyPageCompany from "@page/mypage/MyPageCompany";
 
 type MainRouteType = {
   title: string;
@@ -88,13 +84,13 @@ export const mainRoute = atom<Array<MainRouteType>>({
       path: "/mypage",
       hasSub: true,
     },
-    {
-      root: "guide",
-      title: "Guide",
-      path: "/guide",
-      hasSub: false,
-      page: Guide,
-    },
+    // {
+    //   root: "guide",
+    //   title: "Guide",
+    //   path: "/guide",
+    //   hasSub: false,
+    //   page: Guide,
+    // },
   ],
 });
 
@@ -170,10 +166,10 @@ export const subRoute = atom<{
         isMenu: true,
       },
       {
-        title: "브랜드 DB",
+        title: "브랜드 기준",
         hasChild: false,
         path: "brand",
-        page: ErpBaseTable,
+        page: ErpBrand,
         isMenu: true,
       },
       {
@@ -207,31 +203,10 @@ export const subRoute = atom<{
     ],
     mypage: [
       {
-        title: "내정보 관리",
+        title: "계정 관리",
         hasChild: false,
         path: "index",
         page: MyPage,
-        isMenu: true,
-      },
-      {
-        title: "계정 관리",
-        hasChild: false,
-        path: "account",
-        page: MyPageAccount,
-        isMenu: true,
-      },
-      {
-        title: "팀 관리",
-        hasChild: false,
-        path: "team",
-        page: MyPageTeam,
-        isMenu: true,
-      },
-      {
-        title: "권한 관리",
-        hasChild: false,
-        path: "auth",
-        page: MyPageAuth,
         isMenu: true,
       },
       {
@@ -239,13 +214,6 @@ export const subRoute = atom<{
         hasChild: false,
         path: "company",
         page: MyPageCompany,
-        isMenu: true,
-      },
-      {
-        title: "요금제 관리",
-        hasChild: false,
-        path: "plan",
-        page: MyPagePlan,
         isMenu: true,
       },
     ],

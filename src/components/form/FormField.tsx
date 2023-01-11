@@ -109,7 +109,7 @@ const FormField = ({
   } = field;
 
   const fieldStyle = {
-    h: "2.6rem",
+    h: "3.6rem",
   };
 
   const fieldElement = {
@@ -118,7 +118,6 @@ const FormField = ({
         fieldKey={_fieldKey}
         value={_value}
         _onChange={(val: string | number) => setFieldValue(_fieldKey, val)}
-        variant="filled"
         placeholder="placeHolder"
         _placeholder={{ color: "gray.500" }}
         focusBorderColor="black.100"
@@ -136,7 +135,6 @@ const FormField = ({
         fieldKey={_fieldKey}
         value={_value}
         _onChange={(val: number) => setFieldValue(_fieldKey, val)}
-        variant="filled"
         placeholder="placeHolder"
         _placeholder={{ color: "gray.500" }}
         focusBorderColor="black.100"
@@ -154,7 +152,6 @@ const FormField = ({
         fieldKey={_fieldKey}
         value={_value}
         _onChange={(val: string) => setFieldValue(_fieldKey, val)}
-        variant="filled"
         placeholder="placeHolder"
         _placeholder={{ color: "gray.500" }}
         focusBorderColor="black.100"
@@ -168,7 +165,6 @@ const FormField = ({
         fieldKey={_fieldKey}
         value={_value}
         _onChange={(val: string) => setFieldValue(_fieldKey, val)}
-        variant="filled"
         placeholder="placeHolder"
         _placeholder={{ color: "gray.500" }}
         focusBorderColor="black.100"
@@ -184,7 +180,6 @@ const FormField = ({
         fieldKey={_fieldKey}
         value={_value}
         _onChange={(val: string) => setFieldValue(_fieldKey, val)}
-        variant="filled"
         groupProps={{ size: "md" }}
         addonProps={{ width: "4.5rem" }}
         btnProps={{ h: "1.75rem", size: "sm" }}
@@ -204,7 +199,6 @@ const FormField = ({
         fieldKey={_fieldKey}
         value={_value}
         _onChange={(e: string) => setFieldValue(_fieldKey, e)}
-        variant="filled"
         groupProps={{ size: "md" }}
         addonProps={{ width: "4.5rem" }}
         btnProps={{ h: "1.75rem", size: "sm" }}
@@ -273,7 +267,6 @@ const FormField = ({
         value={_value}
         addonProps={{ width: "auto" }}
         _onChange={(val: any) => setFieldValue(_fieldKey, val)}
-        variant="filled"
         placeholder="placeHolder"
         _placeholder={{ color: "gray.500" }}
         focusBorderColor="black.100"
@@ -324,7 +317,7 @@ const FormField = ({
     >
       {labelText && (
         <FormLabel
-          minW="5rem"
+          minW="10rem"
           display="flex"
           alignItems="center"
           marginBottom={0}

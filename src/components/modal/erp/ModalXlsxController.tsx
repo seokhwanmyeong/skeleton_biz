@@ -18,8 +18,8 @@ const ModalXlsxController = ({ csvInfo }: { csvInfo: TypeFormCsv }) => {
 
   return (
     <Modal
-      title="엑셀파일"
-      openBtnText="엑셀파일"
+      title="엑셀파일업로드"
+      openBtnText="엑셀파일업로드"
       cancelBtnText={"Cancel"}
       botBtnComponent={bottomBtn(onSubmiFile)}
     >

@@ -49,8 +49,8 @@ export const mainTable: ColumnDef<any>[] = [
     header: "등록일",
     cell: (info) => info.getValue(),
   },
-  {
-    header: "매장상세",
-    cell: (info) => CustomModalCell(info.row.original),
-  },
+  // {
+  //   header: "매장상세",
+  //   cell: (info) => CustomModalCell(info.row.original),
+  // },
 ];

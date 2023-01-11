@@ -1,6 +1,6 @@
 //  LIB
-import { useMemo, useState } from "react";
-import { Flex, Button } from "@chakra-ui/react";
+import { Fragment, useMemo, useState } from "react";
+import { Flex, Heading, Button } from "@chakra-ui/react";
 //  Components
 import ApiTable from "@components/table/ApiTable";
 import ModalStoreEditor from "@components/modal/erp/ModalStoreEditor";
@@ -26,7 +26,8 @@ const ErpSale = () => {
   );
 
   return (
-    <Flex flexDirection="column">
+    <Fragment>
+      <Heading variant="outlet">매출</Heading>
       <ApiTable
         api={erpSaleApi.getData}
         initReq={initReq}
@@ -48,7 +49,7 @@ const ErpSale = () => {
           </Button>
         </Flex>
       </ApiTable>
-    </Flex>
+    </Fragment>
   );
 };
 

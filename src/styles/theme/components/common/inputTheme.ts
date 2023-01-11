@@ -1,11 +1,7 @@
-// Lib
-import { defineStyleConfig } from "@chakra-ui/react";
-
-const inputTheme = defineStyleConfig({
+const inputTheme = {
   baseStyle: {
-    addon: {},
-    field: {},
-    element: {},
+    // addon: {},
+    // element: {},
   },
   sizes: {},
   variants: {
@@ -23,8 +19,9 @@ const inputTheme = defineStyleConfig({
         cursor: "pointer",
       },
     },
+    form: {},
   },
   defaultProps: {},
-});
+};
 
 export default inputTheme;

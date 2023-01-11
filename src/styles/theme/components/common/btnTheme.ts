@@ -13,8 +13,10 @@ const btnTheme = {
       p: "0.5rem 1rem",
       w: "auto",
       h: "fit-content",
+      fontSize: "1.6rem",
     },
     page: {
+      fontSize: "1.2rem",
       p: 0,
       w: "2rem",
       h: "2rem",

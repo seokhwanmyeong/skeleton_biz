@@ -30,28 +30,32 @@ const Form = ({
             onSubmit={activeBtn ? handleSubmit : onSubmit}
             style={{ width: "100%", ...styleProps }}
           >
-            <Flex w="100%" flexDirection="row" gap="20px">
+            <Flex w="100%" flexDirection="row" gap="2rem">
               {fields.map((li: any, idx: number) => {
                 const paraKey = `form-${formKey}-${idx}`;
 
                 return (
                   <Flex
                     key={paraKey}
-                    gap="20px"
+                    gap="2rem"
                     w={`${100 / paraNum}%`}
-                    mb="20px"
+                    mb="2rem"
                     flexDirection="column"
                   >
                     {li.map(
                       (field: TypeField | TypeField[], fieldIdx: number) => (
-                        <Flex w="100%" key={`${paraKey}-${fieldIdx}`} gap={10}>
+                        <Flex
+                          w="100%"
+                          key={`${paraKey}-${fieldIdx}`}
+                          gap="4rem"
+                        >
                           {Array.isArray(field) ? (
                             field.map(
                               (fieldDepth: TypeField, depthIdx: number) =>
                                 fieldDepth.type === "bind" ? (
                                   <Flex
                                     w={`${100 / field.length}%`}
-                                    gap="5px"
+                                    gap="0.5rem"
                                     key={`${paraKey}-${fieldIdx}-${depthIdx}`}
                                   >
                                     {fieldDepth.element &&
@@ -84,7 +88,7 @@ const Form = ({
                                 )
                             )
                           ) : field.type === "bind" ? (
-                            <Flex w="100%" gap="5px">
+                            <Flex w="100%" gap="0.5rem">
                               {field.element &&
                                 field.element.map((ele, idx, arr) => (
                                   <FormField
@@ -117,7 +121,7 @@ const Form = ({
             </Flex>
             {activeBtn && (
               <Flex w="100%" justifyContent="center">
-                <Button type="submit" w="10rem">
+                <Button variant="reverse" type="submit" w="10rem">
                   Complete
                 </Button>
               </Flex>

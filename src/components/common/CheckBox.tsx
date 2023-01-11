@@ -1,6 +1,6 @@
 //  Lib
-import { useState, useCallback } from "react";
 import {
+  Flex,
   Checkbox as ChakraCheckbox,
   CheckboxGroup as ChakraCheckboxGroup,
 } from "@chakra-ui/react";
@@ -109,20 +109,22 @@ const CheckboxGroup = ({
       onChange={chkHandler}
       variant={variant}
     >
-      {activeTotal && (
-        <ChakraCheckbox
-          onChange={totalChkHandler}
-          key={`check-total`}
-          value={"total"}
-        >
-          {parseTotalTxt}
-        </ChakraCheckbox>
-      )}
-      {chkboxData.map((data: { text: string; value: string | number }) => (
-        <ChakraCheckbox key={`check-${data.value}`} value={data.value}>
-          {data.text}
-        </ChakraCheckbox>
-      ))}
+      <Flex gap="1rem">
+        {activeTotal && (
+          <ChakraCheckbox
+            onChange={totalChkHandler}
+            key={`check-total`}
+            value={"total"}
+          >
+            {parseTotalTxt}
+          </ChakraCheckbox>
+        )}
+        {chkboxData.map((data: { text: string; value: string | number }) => (
+          <ChakraCheckbox key={`check-${data.value}`} value={data.value}>
+            {data.text}
+          </ChakraCheckbox>
+        ))}
+      </Flex>
     </ChakraCheckboxGroup>
   );
 };

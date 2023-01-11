@@ -1,6 +1,7 @@
 //  LIB
-import { useMemo, useState } from "react";
-import { Button, Flex } from "@chakra-ui/react";
+import { Fragment, useMemo, useState } from "react";
+import { Flex, Heading, Button } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 //  Components
 import ApiTable from "@components/table/ApiTable";
 import ModalStoreEditor from "@components/modal/erp/ModalStoreEditor";
@@ -15,7 +16,9 @@ import { exportFileCSV } from "@util/file/manageFile";
 import { csvStoreInfo } from "@util/data/fileCSV";
 
 const ErpBranch = () => {
+  const navigate = useNavigate();
   const [apiData, setApiData] = useState([]);
+  const [slctList, setSlctList] = useState([]);
   const { column, initReq, form } = useMemo(
     () => ({
       column: mainTable,
@@ -25,8 +28,17 @@ const ErpBranch = () => {
     []
   );
 
+  const onRowClickHandler = (row: any) => {
+    navigate("/erp/store/detail", { state: { ...row.original } });
+  };
+
+  const removeStoreHandler = (list: any) => {
+    console.log(list);
+  };
+
   return (
-    <Flex flexDirection="column">
+    <Fragment>
+      <Heading variant="outlet">매장</Heading>
       <ApiTable
         api={erpStoreApi.getData}
         initReq={initReq}
@@ -36,6 +48,8 @@ const ErpBranch = () => {
         actviePage={true}
         emptyData={{ text: "No Contents" }}
         getTableData={setApiData}
+        selectData={removeStoreHandler}
+        onDoubleClick={onRowClickHandler}
       >
         <Flex gap={2}>
           <ModalStoreEditor update={false} />
@@ -47,9 +61,16 @@ const ErpBranch = () => {
           >
             DownLoad Data
           </Button>
+          <Button
+            variant="reverse"
+            onClick={() => removeStoreHandler(slctList)}
+            isDisabled={slctList.length > 0 ? false : true}
+          >
+            매장삭제
+          </Button>
         </Flex>
       </ApiTable>
-    </Flex>
+    </Fragment>
   );
 };
 

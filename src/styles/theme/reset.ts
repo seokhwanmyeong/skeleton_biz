@@ -1,4 +1,12 @@
 const resetTheme = {
+  html: {
+    fontSize: "10px",
+  },
+  body: {
+    fontFamily: "Helvetica Neue,Helvetica,Arial,sans-serif",
+    // fontFamily: "sans-serif",
+    // fontFamily: "sans-serif",
+  },
   textarea: {
     resize: "none",
   },

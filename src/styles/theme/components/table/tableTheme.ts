@@ -26,6 +26,7 @@ const themeTable = {
     tbody: {
       tr: {
         td: {
+          fontSize: "1.2rem",
           bgColor: "primary.main.bg",
           // border: "1px solid",
           // borderColor: "primary.main.bdColor",

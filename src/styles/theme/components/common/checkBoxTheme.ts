@@ -1,8 +1,11 @@
 const checkboxTheme = {
   baseStyle: {
-    control: {},
     container: {},
     label: {},
+    control: {
+      w: "1.6rem",
+      h: "1.6rem",
+    },
     icon: {},
   },
   variants: {

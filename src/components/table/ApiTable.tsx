@@ -40,6 +40,7 @@ type PropsApiTable = {
   children?: any;
   getTableData?: any;
   selectData?: any;
+  onDoubleClick?: any;
 };
 
 const ApiTable = ({
@@ -58,6 +59,7 @@ const ApiTable = ({
   children,
   getTableData,
   selectData,
+  onDoubleClick,
 }: PropsApiTable) => {
   const [req, setReq] = useState({
     ...initReq,
@@ -164,7 +166,19 @@ const ApiTable = ({
             ) : (
               table.getRowModel().rows.map((row) => {
                 return (
-                  <Tr key={row.id}>
+                  <Tr
+                    key={row.id}
+                    cursor="pointer"
+                    _hover={{
+                      transition: "0.3s",
+                      opacity: "0.6",
+                    }}
+                    onClick={(e) => {
+                      if (e.detail === 2) {
+                        onDoubleClick(row);
+                      }
+                    }}
+                  >
                     {row.getVisibleCells().map((cell) => (
                       <Td key={cell.id}>
                         {flexRender(cell.column.columnDef.cell, {
