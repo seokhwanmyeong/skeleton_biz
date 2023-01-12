@@ -6,15 +6,16 @@ import ThemeBox from "@components/header/ThemeBox";
 
 const Header = () => {
   return (
-    <Flex w="100%" h="5rem" zIndex={999}>
+    <Flex w="100%" h="6rem" zIndex={999}>
       <Flex
         position="fixed"
         top="0"
+        justifyContent="center"
+        alignItems="center"
         gap="1rem"
         w="100%"
         h="inherit"
-        justifyContent="center"
-        alignItems="center"
+        bgColor="primary.main.bg"
         borderBottom="1px solid"
         borderColor="primary.main.bdColor"
       >

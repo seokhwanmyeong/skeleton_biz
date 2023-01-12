@@ -26,7 +26,7 @@ const MenuHeader = () => {
             as={RoutLink}
             to={indexChecker(menu.path) ? "" : menu.path}
             key={`head-${menu.title}`}
-            style={rootState === menu.root ? { fontWeight: "bolder" } : {}}
+            fontWeight={rootState === menu.root ? "bold" : "normal"}
             variant={"linkBtn"}
             data-text={menu.title}
           >

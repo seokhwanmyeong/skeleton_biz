@@ -1,29 +1,38 @@
 const themeTable = {
   baseStyle: {
     table: {
-      // border: "1px solid",
       borderColor: "primary.main.bdColor",
     },
     thead: {
+      zIndex: "2",
       tr: {
-        bgColor: "#000000",
+        zIndex: "1",
         th: {
-          color: "primary.main.font",
+          position: "sticky",
+          top: 0,
           bgColor: "primary.main.bg",
-          // border: "1px solid",
-          // borderColor: "primary.main.bdColor",
+          color: "primary.main.font",
+          borderBottom: "0",
           textAlign: "center",
+          zIndex: "1",
         },
-        _even: {
+        _last: {
           th: {
-            bgColor: "primary.main.bg",
-            // border: "1px solid",
-            // borderColor: "primary.main.bdColor",
+            _after: {
+              content: '""',
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              width: "100%",
+              borderBottom: "1px solid",
+              borderColor: "primary.main.bdColor",
+            },
           },
         },
       },
     },
     tbody: {
+      zIndex: "1",
       tr: {
         td: {
           fontSize: "1.2rem",

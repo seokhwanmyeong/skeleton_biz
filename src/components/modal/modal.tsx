@@ -38,7 +38,7 @@ const Modal = ({
       </Button>
       <ChakraModal variant={variant} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent w="auto" maxW="">
           <ModalHeader>{title}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>{children}</ModalBody>

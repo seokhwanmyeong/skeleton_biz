@@ -3,7 +3,7 @@ const resetTheme = {
     fontSize: "10px",
   },
   body: {
-    fontFamily: "Helvetica Neue,Helvetica,Arial,sans-serif",
+    // fontFamily: "Noto Sans KR, sans-serif",
     // fontFamily: "sans-serif",
     // fontFamily: "sans-serif",
   },

@@ -12,9 +12,15 @@ const FrameMain = () => {
   const { pathState } = useLocationState();
 
   return (
-    <Flex flexDirection="column" minH="100vh" bgColor="primary.main.bg">
+    <Flex
+      flexWrap="wrap"
+      flexDirection="column"
+      h="100vh"
+      overflow="hidden"
+      bgColor="primary.main.bg"
+    >
       {pathState !== "/" && <Header />}
-      <Flex w="100%" flex="auto">
+      <Flex flex="1" w="100%" overflow="hidden">
         <Outlet />
       </Flex>
       {pathState !== "maps" && pathState !== "/" && <Footer />}

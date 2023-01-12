@@ -61,7 +61,7 @@ const accordionTheme = {
         },
       },
       button: {
-        p: "1.5rem 2rem",
+        p: "1rem 2rem",
         fontSize: "1.6rem",
       },
       panel: {},

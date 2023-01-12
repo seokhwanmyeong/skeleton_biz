@@ -1,4 +1,5 @@
 //  Lib
+import { HTMLProps, useRef, useEffect } from "react";
 import {
   Flex,
   Checkbox as ChakraCheckbox,
@@ -8,7 +9,7 @@ import {
 import Tag from "@components/common/Tag";
 
 type ChekboxProps = {
-  title: string;
+  title?: string;
   isChecked?: boolean;
   onChange?: any;
   value?: any;
@@ -46,12 +47,38 @@ const CheckBoxTag = ({
       <Tag
         variant="checkbox"
         key={`tag-${title}`}
-        text={title}
+        text={title ?? ""}
         hasBtn={false}
         tagBtn={true}
         isChecked={isChecked}
       />
     </ChakraCheckbox>
+  );
+};
+
+const TableCheckBox = ({
+  indeterminate,
+  checked,
+  onChange,
+}: { indeterminate?: boolean } & HTMLProps<HTMLInputElement>) => {
+  const ref = useRef<HTMLInputElement>(null!);
+
+  useEffect(() => {
+    if (typeof indeterminate === "boolean") {
+      ref.current.indeterminate = !checked && indeterminate;
+    }
+  }, [ref, indeterminate]);
+
+  return (
+    <ChakraCheckbox
+      key={`td-chk-total`}
+      ref={ref}
+      isChecked={checked}
+      onChange={(e) => {
+        e.stopPropagation();
+        onChange && onChange(e);
+      }}
+    />
   );
 };
 
@@ -129,4 +156,4 @@ const CheckboxGroup = ({
   );
 };
 
-export { CheckBox, CheckBoxTag, CheckboxGroup };
+export { CheckBox, CheckBoxTag, TableCheckBox, CheckboxGroup };

@@ -9,7 +9,13 @@ const FrameSub = () => {
   return (
     <Fragment>
       <MenuSide />
-      <Flex flexDirection="column" w="calc(100vw - 20rem)" p="3rem 3rem">
+      <Flex
+        flexDirection="column"
+        w="calc(100vw - 20rem)"
+        h="100%"
+        p="3rem 3rem"
+        overflowY="hidden"
+      >
         <Outlet />
       </Flex>
     </Fragment>
