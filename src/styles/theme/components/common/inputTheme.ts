@@ -1,6 +1,7 @@
 const inputTheme = {
   baseStyle: {
     // addon: {},
+    // field: {},
     // element: {},
   },
   sizes: {},

@@ -1,15 +1,13 @@
 //  LIB
+import { memo } from "react";
 import { Flex } from "@chakra-ui/react";
 //  Components
 import Form from "@components/form/Form";
 
-const SearchBox = ({ req, setReq, form }: any) => {
+const SearchBox = ({ setReq, form }: any) => {
   const onSubmitSearch = (val: any) => {
     console.log("search val", val);
-    setReq({
-      ...req,
-      ...val,
-    });
+    setReq(val);
   };
 
   return (
@@ -24,4 +22,4 @@ const SearchBox = ({ req, setReq, form }: any) => {
   );
 };
 
-export default SearchBox;
+export default memo(SearchBox);

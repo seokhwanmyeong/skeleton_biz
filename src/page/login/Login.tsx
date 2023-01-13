@@ -48,7 +48,7 @@ const Login = () => {
       <Form
         form={formLogin}
         onSubmit={requsetLoginBtn}
-        styleProps={{ width: "20rem" }}
+        styleProps={{ width: "40rem" }}
       />
     </Flex>
   );

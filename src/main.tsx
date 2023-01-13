@@ -10,7 +10,7 @@ import DebugObserver from "@util/debug/DebugObserver";
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <StrictMode>
     <RecoilRoot>
-      <DebugObserver />
+      {/* <DebugObserver /> */}
       <App />
     </RecoilRoot>
   </StrictMode>

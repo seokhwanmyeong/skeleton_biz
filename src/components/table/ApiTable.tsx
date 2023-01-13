@@ -4,6 +4,7 @@ import {
   useState,
   useMemo,
   useImperativeHandle,
+  cloneElement,
   forwardRef,
 } from "react";
 import {
@@ -134,8 +135,8 @@ const ApiTable = forwardRef(
 
     return (
       <Flex flexDirection="column" gap={10} overflow="hidden">
-        <SearchBox req={req} setReq={setReq} form={form} />
-        {children}
+        <SearchBox setReq={setReq} form={form} />
+        {children && cloneElement(children, { req: req, setReq: setReq })}
         <Box
           w="100%"
           overflowY="scroll"

@@ -1,4 +1,5 @@
 //  LIB
+import { memo } from "react";
 import { Flex, FormControl, FormLabel } from "@chakra-ui/react";
 //  Components
 import {
@@ -6,6 +7,7 @@ import {
   InputPwd,
   InputFile,
   InputDate,
+  InputTotalDate,
   InputAddress,
   InputAddon,
   InputBtn,
@@ -172,6 +174,17 @@ const FormField = ({
         inputProps={fieldStyle}
       />
     ),
+    dateTotalDbl: (
+      <InputTotalDate
+        fieldKey={_fieldKey}
+        value={_value}
+        _onChange={(val: string) => setFieldValue(_fieldKey, val)}
+        _placeholder={{ color: "gray.500" }}
+        focusBorderColor="black.100"
+        errorBorderColor="red.300"
+        inputProps={fieldStyle}
+      />
+    ),
     email: <></>,
     tel: <></>,
     pwd: (
@@ -180,9 +193,6 @@ const FormField = ({
         fieldKey={_fieldKey}
         value={_value}
         _onChange={(val: string) => setFieldValue(_fieldKey, val)}
-        groupProps={{ size: "md" }}
-        addonProps={{ width: "4.5rem" }}
-        btnProps={{ h: "1.75rem", size: "sm" }}
         placeholder="placeHolder"
         _placeholder={{ color: "gray.500" }}
         focusBorderColor="black.100"
@@ -191,6 +201,7 @@ const FormField = ({
         isInvalid={isInvalid}
         isReadOnly={isReadOnly}
         isRequired={isRequired}
+        inputProps={fieldStyle}
       />
     ),
     pwdChk: (
@@ -331,5 +342,5 @@ const FormField = ({
   );
 };
 
-export default FormField;
+export default memo(FormField);
 export type { TypeField };

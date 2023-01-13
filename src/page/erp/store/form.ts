@@ -2,14 +2,17 @@ const formSearchStore = {
   initVal: {
     searchType: "name",
     text: "",
-    status: [
-      "statusOpen",
-      "statusClose",
-      "statusRest",
-      "statusReady",
-      "statusEtc",
-    ],
-    rank: ["rankA", "rankB", "rankC", "rankD", "rankE"],
+    status: "total",
+    rank: "total",
+    // status: [
+    //   "statusOpen",
+    //   "statusClose",
+    //   "statusRest",
+    //   "statusReady",
+    //   "statusEtc",
+    // ],
+    // rank: ["rankA", "rankB", "rankC", "rankD", "rankE"],
+    openDate: "total",
   },
   formKey: "StoreInfo",
   fields: [
@@ -68,6 +71,12 @@ const formSearchStore = {
           { text: "D타입", value: "rankD" },
           { text: "E타입", value: "rankE" },
         ],
+        isRequired: false,
+      },
+      {
+        labelText: "개업일",
+        type: "dateTotalDbl",
+        key: "openDate",
         isRequired: false,
       },
     ],

@@ -1,12 +1,5 @@
 //  LIB
-import {
-  Fragment,
-  useState,
-  useRef,
-  useMemo,
-  useEffect,
-  useCallback,
-} from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import {
   Input as ChakraInput,
   InputGroup,
@@ -15,7 +8,7 @@ import {
   InputRightElement,
   Button,
   Flex,
-  Text,
+  Radio,
 } from "@chakra-ui/react";
 //  Components
 import { Select } from "@components/common/Select";
@@ -134,7 +127,7 @@ const InputPwd = ({
   isInvalid = false,
   isReadOnly = false,
   isRequired = false,
-  variant = "filled",
+  variant,
   autoComplete = "off",
 }: InpPwdProps) => {
   const [show, setShow] = useState(false);
@@ -146,8 +139,8 @@ const InputPwd = ({
       <InputGroup {...groupProps} variant={variant}>
         <ChakraInput
           id={fieldKey}
-          {...inputProps}
           value={value}
+          variant={variant}
           onChange={(e: any) => _onChange(e.target.value)}
           placeholder={placeholder}
           _placeholder={_placeholder}
@@ -159,9 +152,23 @@ const InputPwd = ({
           isRequired={isRequired}
           type={show ? "text" : "password"}
           autoComplete={autoComplete}
+          {...inputProps}
         />
-        <InputRightElement {...addonProps}>
-          <Button {...btnProps} onClick={handleClick}>
+        <InputRightElement
+          right="-1px"
+          borderRadius="md"
+          w="6rem"
+          h="100%"
+          {...addonProps}
+        >
+          <Button
+            w="100%"
+            h="100%"
+            borderLeftRadius="0"
+            borderRightRadius="md"
+            {...btnProps}
+            onClick={handleClick}
+          >
             {show ? "Hide" : "Show"}
           </Button>
         </InputRightElement>
@@ -210,10 +217,6 @@ const InputDate = ({
     new Date(startD).getTime() > new Date(endD).getTime();
 
   const dateHandler = (dateVal: string, both: "start" | "end") => {
-    console.log(typeof dateVal);
-    console.log(dateVal);
-    console.log(typeof date);
-    console.log(date);
     if (typeof date === ("string" || undefined) && type === "single") {
       _onChange(dateVal);
     } else if (typeof date === "object") {
@@ -276,6 +279,82 @@ const InputDate = ({
           />
         </>
       )}
+    </Flex>
+  );
+};
+
+const InputTotalDate = ({
+  fieldKey,
+  value,
+  _onChange,
+  inputProps,
+  _placeholder,
+  focusBorderColor,
+  errorBorderColor,
+  isDisabled = false,
+  isInvalid = false,
+  isReadOnly = false,
+  isRequired = false,
+}: any) => {
+  const [date, setDate] = useState<any>({
+    start: "",
+    end: "",
+  });
+  console.log(value);
+
+  return (
+    <Flex gap="1rem">
+      <Radio
+        key={`radio-date-total`}
+        value={"total"}
+        isChecked={value === "total"}
+        onChange={() => {
+          _onChange("total");
+        }}
+        isDisabled={isDisabled}
+        isInvalid={isInvalid}
+        isReadOnly={isReadOnly}
+        isRequired={isRequired}
+      >
+        전체기간
+      </Radio>
+      <Radio
+        key={`radio-date-duration`}
+        onChange={() => {
+          _onChange(
+            value !== "total"
+              ? value
+              : {
+                  start: "",
+                  end: "",
+                }
+          );
+        }}
+        isChecked={value !== "total"}
+        isDisabled={isDisabled}
+        isInvalid={isInvalid}
+        isReadOnly={isReadOnly}
+        isRequired={isRequired}
+      >
+        <InputDate
+          type="double"
+          fieldKey={fieldKey}
+          value={
+            value !== "total"
+              ? value
+              : {
+                  start: "",
+                  end: "",
+                }
+          }
+          _onChange={_onChange}
+          placeholder=""
+          _placeholder={_placeholder}
+          inputProps={inputProps}
+          focusBorderColor={focusBorderColor}
+          errorBorderColor={errorBorderColor}
+        />
+      </Radio>
     </Flex>
   );
 };
@@ -528,5 +607,6 @@ export {
   InputPwd,
   InputFile,
   InputDate,
+  InputTotalDate,
   InputAddress,
 };
