@@ -15,6 +15,8 @@ const inputTheme = {
         p: 0,
         pl: "100%",
         w: "100%",
+        h: "100%",
+        borderRadius: "base",
         opacity: 0,
         zIndex: 1,
         cursor: "pointer",

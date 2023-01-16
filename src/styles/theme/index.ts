@@ -41,7 +41,7 @@ const createTheme = (name: string) => {
       sm: "1.4rem",
       md: "1.6rem",
       lg: "1.8rem",
-      xl: "2rem",
+      xl: "2.4rem",
       "2xl": "1.5rem",
       "3xl": "1.875rem",
       "4xl": "2.25rem",
@@ -50,6 +50,22 @@ const createTheme = (name: string) => {
       "7xl": "4.5rem",
       "8xl": "6rem",
       "9xl": "8rem",
+    },
+    textStyles: {
+      base: {
+        fontSize: "md",
+      },
+      list: {
+        title: {
+          fontSize: "lg",
+          color: "primary.main.font",
+          opacity: 0.8,
+        },
+        text: {
+          fontSize: "lg",
+          color: "primary.main.font",
+        },
+      },
     },
     components: {
       Input: inputTheme,
@@ -62,6 +78,47 @@ const createTheme = (name: string) => {
       Heading: headingTheme,
       Table: themeTable,
       Form: formTheme,
+      Tabs: {
+        variants: {
+          detailPage: {
+            root: {
+              w: "100%",
+            },
+            tablist: {
+              w: "100%",
+              justifyContent: "flex-start",
+              borderBottom: "1px solid #DEDEDE",
+            },
+            tab: {
+              p: "0.5rem 3rem",
+              borderTop: "1px solid",
+              borderRight: "1px solid",
+              borderColor: "#DEDEDE",
+              color: "primary.main.font",
+              _first: {
+                borderLeft: "1px solid",
+                borderLeftRadius: "base",
+                borderBottomRadius: "0",
+                borderColor: "#DEDEDE",
+              },
+              _last: {
+                borderRightRadius: "base",
+                borderBottomRadius: "0",
+                borderColor: "#DEDEDE",
+              },
+              _selected: {
+                backgroundColor: "primary.reverse.bg",
+                fontWeight: "bold",
+                color: "primary.reverse.font",
+              },
+            },
+            tabpanels: {},
+            tabpanel: {
+              p: "3rem",
+            },
+          },
+        },
+      },
     },
   });
 

@@ -38,10 +38,24 @@ const Modal = ({
       </Button>
       <ChakraModal variant={variant} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent w="auto" maxW="">
+        <ModalContent w="auto" maxW="auto">
           <ModalHeader>{title}</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>{children}</ModalBody>
+          <ModalBody
+            maxH="75vh"
+            overflowY="auto"
+            __css={{
+              "::-webkit-scrollbar": {
+                w: "3px",
+              },
+              "::-webkit-scrollbar-thumb": {
+                borderRadius: "5",
+                bg: `primary.reverse.bdColor`,
+              },
+            }}
+          >
+            {children}
+          </ModalBody>
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onClose}>
               {cancelBtnText}

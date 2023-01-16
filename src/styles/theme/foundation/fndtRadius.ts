@@ -1,3 +1,3 @@
 export const fndtRadius = {
-  base: "5px",
+  base: "0.5rem",
 };

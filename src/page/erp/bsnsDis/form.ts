@@ -1,11 +1,11 @@
-const formSearchArea = {
+const formSearchBsnsDis = {
   initVal: {
-    searchType: "name",
+    searchType: "bsnsDisName",
     text: "",
     address: "total",
-    status: "statusOpen",
+    bsnsDisStatus: "total",
   },
-  formKey: "StoreSale",
+  formKey: "BsnsDisSearch",
   fields: [
     [
       [
@@ -18,9 +18,9 @@ const formSearchArea = {
               type: "slct",
               key: "searchType",
               values: [
-                { text: "상권명", value: "name" },
-                { text: "상권코드", value: "code" },
-                { text: "연동매장명", value: "owner_name" },
+                { text: "상권명", value: "bsnsDisName" },
+                { text: "상권코드", value: "bsnsDisCode" },
+                { text: "연동매장명", value: "bsnsDisLink" },
               ],
               variant: "filled",
               isRequired: false,
@@ -44,18 +44,17 @@ const formSearchArea = {
       {
         labelText: "상권상태",
         type: "chkTotalbox",
-        key: "status",
+        key: "bsnsDisStatus",
         values: [
-          { text: "영업상권", value: "statusOpen" },
-          { text: "후보상권", value: "statusClose" },
-          { text: "예약상권", value: "statusRest" },
-          { text: "배달상권", value: "statusReady" },
+          { text: "영업상권", value: "disMain" },
+          { text: "후보상권", value: "disSub" },
+          { text: "예약상권", value: "disReserve" },
+          { text: "배달상권", value: "disDlvry" },
         ],
-        variant: "filled",
         isRequired: false,
       },
     ],
   ],
 };
 
-export { formSearchArea };
+export { formSearchBsnsDis };

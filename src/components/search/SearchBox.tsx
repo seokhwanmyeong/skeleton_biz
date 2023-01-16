@@ -17,7 +17,12 @@ const SearchBox = ({ setReq, form }: any) => {
       borderColor="primary.main.bdColor"
       borderRadius="base"
     >
-      <Form form={form} onSubmit={onSubmitSearch} />
+      <Form
+        formType="search"
+        form={form}
+        onSubmit={onSubmitSearch}
+        submitText="조회하기"
+      />
     </Flex>
   );
 };

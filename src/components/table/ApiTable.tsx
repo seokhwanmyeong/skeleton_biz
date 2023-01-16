@@ -23,6 +23,9 @@ import {
   Th,
   Td,
   Flex,
+  Text,
+  List,
+  ListItem,
 } from "@chakra-ui/react";
 //  Component
 import SearchBox from "@components/search/SearchBox";
@@ -38,6 +41,7 @@ type PropsApiTable = {
   form: { initVal: {}; formKey: string; fields: any[] };
   caption?: string;
   actviePage?: boolean;
+  activeSummary?: boolean;
   page?: number;
   registersPerPage?: number;
   divide?: number;
@@ -59,6 +63,7 @@ const ApiTable = forwardRef(
       form,
       caption = "table",
       actviePage = true,
+      activeSummary = false,
       page = 1,
       registersPerPage = 10,
       divide = 5,
@@ -136,7 +141,49 @@ const ApiTable = forwardRef(
     return (
       <Flex flexDirection="column" gap={10} overflow="hidden">
         <SearchBox setReq={setReq} form={form} />
-        {children && cloneElement(children, { req: req, setReq: setReq })}
+        {activeSummary && (
+          <Flex
+            flexDirection="column"
+            gap="2rem"
+            p="2rem 2rem"
+            border="1px solid"
+            borderRadius="base"
+          >
+            <Text textStyle="list.title">검색요약</Text>
+            <List display="flex">
+              <ListItem display="flex" w="100%">
+                <Text w="35%" textStyle="list.title">
+                  매장수
+                </Text>
+                <Text textStyle="list.text">38 건</Text>
+              </ListItem>
+              <ListItem display="flex" w="100%">
+                <Text w="35%" textStyle="list.title">
+                  평균 월매출
+                </Text>
+                <Text textStyle="list.text">1,200 만원</Text>
+              </ListItem>
+              <ListItem display="flex" w="100%">
+                <Text w="35%" textStyle="list.title">
+                  평균 일매출
+                </Text>
+                <Text textStyle="list.text">200 만원</Text>
+              </ListItem>
+              <ListItem display="flex" w="100%">
+                <Text w="35%" textStyle="list.title">
+                  누적매출
+                </Text>
+                <Text textStyle="list.text">31,200 만원</Text>
+              </ListItem>
+            </List>
+          </Flex>
+        )}
+        <Flex justifyContent="space-between" alignItems="center">
+          <Text>검색결과 : {totalReg}건</Text>
+          {ref && children
+            ? cloneElement(children, { refresh: () => setReq(req) }, null)
+            : children}
+        </Flex>
         <Box
           w="100%"
           overflowY="scroll"
@@ -220,10 +267,12 @@ const ApiTable = forwardRef(
                       key={row.id}
                       cursor="pointer"
                       _hover={{
-                        transition: "0.3s",
-                        opacity: "0.6",
+                        transition: onDoubleClick && "0.3s",
+                        opacity: onDoubleClick && "0.6",
                       }}
-                      onClick={(e) => e.detail === 2 && onDoubleClick(row)}
+                      onClick={(e) =>
+                        e.detail === 2 && onDoubleClick && onDoubleClick(row)
+                      }
                     >
                       <Td
                         key={`table-td-chk-${rowIdx + 1}`}

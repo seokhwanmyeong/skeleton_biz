@@ -82,6 +82,7 @@ instance.interceptors.request.use((req: any) => {
 
 instance.interceptors.response.use(
   (res: any) => {
+    console.log(res);
     switch (parseInt(res.data.errCd)) {
       case 0:
         return res.data;
@@ -108,6 +109,8 @@ instance.interceptors.response.use(
             console.log(err);
             return Promise.reject(err);
           });
+
+        console.log(accessReq);
         return accessReq;
       case -100:
         console.log("error -100");

@@ -1,5 +1,5 @@
 //  LIB
-import { useEffect, useRef, useMemo } from "react";
+import { useEffect, useRef } from "react";
 import {
   Button,
   Flex,
@@ -10,20 +10,17 @@ import {
   TabPanels,
   Tab,
   TabPanel,
-  Stack,
+  List,
+  ListItem,
 } from "@chakra-ui/react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 //  Components
+import ErpHistory from "@page/erp/history/ErpHistory";
 import ListTable from "@components/table/ListTable";
-import ErpBaseTable from "./ErpBaseTable";
-import ApiTable from "@src/components/table/ApiTable";
+import ErpBaseTable from "../ErpBaseTable";
+import ModalStoreEditor from "@components/modal/erp/ModalStoreEditor";
 //  Hook
 import useLocationState from "@hook/useLocationState";
-//  Api & URL
-import { erpStoreApi } from "@api/bizApi/config";
-//  Form & Column
-import { formSearchStore } from "@page/erp/store/form";
-import { mainTable } from "@page/erp/store/column";
 
 const ErpStoreDetail = () => {
   const navigate = useNavigate();
@@ -43,15 +40,6 @@ const ErpStoreDetail = () => {
     address_detail: "주소상세",
   };
 
-  const { column, initReq, form } = useMemo(
-    () => ({
-      column: mainTable,
-      initReq: formSearchStore.initVal,
-      form: formSearchStore,
-    }),
-    []
-  );
-
   useEffect(() => {
     if (!mapRef.current) {
       mapRef.current = new naver.maps.Map("map", {
@@ -69,69 +57,66 @@ const ErpStoreDetail = () => {
   return (
     <Flex flexDirection="column">
       <Button
-        mb="1rem"
+        mb="2rem"
         key={`link-prev`}
         w="max-content"
         onClick={() => navigate(-1)}
       >
         {"< 매장리스트"}
       </Button>
-      <Heading mb="2rem">매장상세 : {state.name || "매장이름"}</Heading>
-      <Flex gap={5}>
-        <Flex gap={2}>
-          <Text>매장명 : </Text>
-          <Text>{state.name}</Text>
-        </Flex>
-        <Flex gap={2}>
-          <Text>매장코드 : </Text>
-          <Text>{state.code}</Text>
-        </Flex>
-      </Flex>
-      <hr style={{ margin: "1rem 0" }} />
-      <Tabs>
-        <TabList justifyContent="center">
-          <Tab key="tab-info" flexDirection="column" w="30%">
+      <Heading variant="outlet">매장상세 : {state.name || "매장이름"}</Heading>
+      <List display="flex" gap="10rem" mb="2rem">
+        <ListItem display="flex" gap="3rem">
+          <Text textStyle="list.title">매장명</Text>
+          <Text textStyle="list.text">{state.name}</Text>
+        </ListItem>
+        <ListItem display="flex" gap="3rem">
+          <Text textStyle="list.title">매장코드</Text>
+          <Text textStyle="list.text">{state.code}</Text>
+        </ListItem>
+      </List>
+      <Tabs variant="detailPage">
+        <TabList>
+          <Tab key="tab-info" flexDirection="column">
             <Text>기본정보</Text>
           </Tab>
-          <Tab key="tab-sale" flexDirection="column" w="30%">
+          <Tab key="tab-sale" flexDirection="column">
             <Text>매출정보</Text>
           </Tab>
-          <Tab key="tab-history" flexDirection="column" w="30%">
+          <Tab key="tab-history" flexDirection="column">
             <Text>히스토리</Text>
           </Tab>
-          <Tab key="tab-doc" flexDirection="column" w="30%">
+          <Tab key="tab-doc" flexDirection="column">
             <Text>전자계약서</Text>
           </Tab>
         </TabList>
         <TabPanels>
           <TabPanel key="panel-pointer">
-            <Flex flexDirection="row" w="100%" gap="1rem">
-              <div
-                id="map"
-                style={{
-                  width: "50%",
-                  height: "25rem",
-                }}
-              ></div>
-              <ListTable
-                tableProps={{ w: "50%" }}
-                data={state}
-                listKeys={testKeys}
-              />
+            <Flex flexDirection="column" gap="1rem">
+              <Flex w="100%" justifyContent="flex-end">
+                <ModalStoreEditor update={true} info={state} />
+              </Flex>
+              <Flex flexDirection="row" w="100%" gap="5rem">
+                <div
+                  id="map"
+                  style={{
+                    width: "50%",
+                    height: "50rem",
+                  }}
+                ></div>
+                <ListTable
+                  tableProps={{ w: "50%" }}
+                  data={state}
+                  listKeys={testKeys}
+                />
+              </Flex>
             </Flex>
           </TabPanel>
           <TabPanel key="panel-upjong">
             <ErpBaseTable />
           </TabPanel>
           <TabPanel key="panel-area">
-            <ApiTable
-              api={erpStoreApi.getData}
-              initReq={initReq}
-              form={form}
-              columns={column}
-              actviePage={true}
-              emptyData={{ text: "No Contents" }}
-            />
+            <ErpHistory />
           </TabPanel>
           <TabPanel key="panel-area">전자계약서</TabPanel>
         </TabPanels>

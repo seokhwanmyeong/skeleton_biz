@@ -1,10 +1,9 @@
 //  LIB
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useMemo, useState, useRef } from "react";
 import { Flex, Heading, Button } from "@chakra-ui/react";
 //  Components
 import ApiTable from "@components/table/ApiTable";
-import ModalStoreEditor from "@components/modal/erp/ModalStoreEditor";
-import ModalXlsxController from "@components/modal/erp/ModalXlsxController";
+import ModalSaleEditor from "@components/modal/erp/ModalSaleEditor";
 //  Form & Column
 import { formSearchSale } from "@page/erp/sale/form";
 import { mainTable } from "@page/erp/sale/column";
@@ -12,10 +11,10 @@ import { mainTable } from "@page/erp/sale/column";
 import { erpSaleApi } from "@api/bizApi/config";
 //  Util
 import { exportFileCSV } from "@util/file/manageFile";
-import { csvStoreSale } from "@util/data/fileCSV";
 
 const ErpSale = () => {
-  const [apiData, setApiData] = useState([]);
+  const [selectData, setSelectData] = useState([]);
+  const refreshTable = useRef<any>();
   const { column, initReq, form } = useMemo(
     () => ({
       column: mainTable,
@@ -24,6 +23,34 @@ const ErpSale = () => {
     }),
     []
   );
+
+  const BtnGroup = (props: any) => {
+    const removeStoreHandler = () => {
+      console.log(selectData);
+      setSelectData([]);
+      refreshTable?.current && refreshTable?.current?.focus();
+    };
+
+    return (
+      <Flex gap={2}>
+        <ModalSaleEditor />
+        <Button
+          variant="reverse"
+          onClick={() => exportFileCSV(selectData, mainTable, "매출리스트")}
+          isDisabled={selectData.length > 0 ? false : true}
+        >
+          다운로드
+        </Button>
+        <Button
+          variant="reverse"
+          onClick={removeStoreHandler}
+          isDisabled={selectData.length > 0 ? false : true}
+        >
+          매출삭제
+        </Button>
+      </Flex>
+    );
+  };
 
   return (
     <Fragment>
@@ -35,19 +62,12 @@ const ErpSale = () => {
         columns={column}
         caption="BaseApiTable"
         actviePage={true}
+        activeSummary={true}
         emptyData={{ text: "No Contents" }}
-        getTableData={setApiData}
+        getSelectData={setSelectData}
+        ref={refreshTable}
       >
-        <Flex gap={2}>
-          <ModalXlsxController csvInfo={csvStoreSale} />
-          <Button
-            variant="reverse"
-            onClick={() => exportFileCSV(apiData, mainTable, "매출리스트")}
-            isDisabled={apiData.length > 0 ? false : true}
-          >
-            DownLoad Data
-          </Button>
-        </Flex>
+        <BtnGroup />
       </ApiTable>
     </Fragment>
   );

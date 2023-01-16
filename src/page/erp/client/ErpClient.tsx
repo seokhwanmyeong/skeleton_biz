@@ -1,34 +1,28 @@
 //  LIB
 import { Fragment, useRef, useMemo, useState, memo } from "react";
 import { Flex, Heading, Button } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
 //  Components
 import ApiTable from "@components/table/ApiTable";
-import ModalStoreEditor from "@components/modal/erp/ModalStoreEditor";
+import ModalClientEditor from "@components/modal/erp/ModalClientEditor";
 //  Form & Column
-import { formSearchStore } from "@page/erp/store/form";
-import { mainTable } from "@page/erp/store/column";
+import { formSearchClient } from "@page/erp/client/form";
+import { mainTable } from "@page/erp/client/column";
 //  Api & URL
 import { erpStoreApi } from "@api/bizApi/config";
 //  Util & Data
 import { exportFileCSV } from "@util/file/manageFile";
 
-const ErpBranch = () => {
-  const navigate = useNavigate();
+const ErpClient = () => {
   const refreshTable = useRef<any>();
   const [selectData, setSelectData] = useState([]);
   const { column, initReq, form } = useMemo(
     () => ({
       column: mainTable,
-      initReq: formSearchStore.initVal,
-      form: formSearchStore,
+      initReq: formSearchClient.initVal,
+      form: formSearchClient,
     }),
     []
   );
-
-  const onRowClickHandler = (row: any) => {
-    navigate("/erp/store/detail", { state: { ...row.original } });
-  };
 
   const BtnGroup = (props: any) => {
     const removeStoreHandler = () => {
@@ -38,12 +32,12 @@ const ErpBranch = () => {
     };
 
     const exportFileHandler = () => {
-      exportFileCSV(selectData, mainTable, "매장리스트");
+      exportFileCSV(selectData, mainTable, "고객리스트");
     };
 
     return (
       <Flex gap={2}>
-        <ModalStoreEditor update={false} />
+        <ModalClientEditor update={false} />
         <Button
           variant="reverse"
           onClick={() => exportFileHandler}
@@ -56,7 +50,7 @@ const ErpBranch = () => {
           onClick={removeStoreHandler}
           isDisabled={selectData.length > 0 ? false : true}
         >
-          매장삭제
+          고객삭제
         </Button>
       </Flex>
     );
@@ -64,7 +58,7 @@ const ErpBranch = () => {
 
   return (
     <Fragment>
-      <Heading variant="outlet">매장</Heading>
+      <Heading variant="outlet">고객</Heading>
       <ApiTable
         api={erpStoreApi.getData}
         initReq={initReq}
@@ -74,7 +68,6 @@ const ErpBranch = () => {
         actviePage={true}
         emptyData={{ text: "No Contents" }}
         getSelectData={setSelectData}
-        onDoubleClick={onRowClickHandler}
         ref={refreshTable}
       >
         <BtnGroup />
@@ -83,4 +76,4 @@ const ErpBranch = () => {
   );
 };
 
-export default ErpBranch;
+export default ErpClient;

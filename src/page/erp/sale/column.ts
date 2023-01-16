@@ -1,12 +1,12 @@
 //  LIB
 import { ColumnDef } from "@tanstack/react-table";
 //  Components
-import CustomModalCell from "@components/table/cutomCell/CustomModalCell";
+import CustomModalCell from "@page/erp/store/CustomCell";
 
 export const mainTable: ColumnDef<any>[] = [
   {
     header: "번호",
-    cell: (info) => info.row.index,
+    cell: (info) => info.row.index + 1,
   },
   {
     accessorKey: "name",
@@ -19,7 +19,12 @@ export const mainTable: ColumnDef<any>[] = [
     cell: (info) => info.getValue(),
   },
   {
-    accessorKey: "open_date",
+    accessorKey: "rank",
+    header: "타입",
+    cell: (info) => info.renderValue(),
+  },
+  {
+    accessorKey: "openDate",
     header: "개업일",
     cell: (info) => info.getValue(),
   },
@@ -29,17 +34,22 @@ export const mainTable: ColumnDef<any>[] = [
     cell: (info) => info.getValue(),
   },
   {
-    accessorKey: "saleAvg",
-    header: "기간 평균 매출",
+    accessorKey: "saleAvgM",
+    header: "평균월매출",
+    cell: (info) => info.getValue(),
+  },
+  {
+    accessorKey: "saleAvgD",
+    header: "평균일매출",
     cell: (info) => info.getValue(),
   },
   {
     accessorKey: "saleSum",
-    header: "기간 누적 매출",
+    header: "누적매출",
     cell: (info) => info.getValue(),
   },
-  // {
-  //   header: "매장상세",
-  //   cell: (info) => CustomModalCell(info.row.original),
-  // },
+  {
+    header: "매장상세",
+    cell: (info) => CustomModalCell(info.row.original),
+  },
 ];

@@ -10,7 +10,7 @@ import { ComponentStyleConfig } from "@chakra-ui/react";
 const btnTheme = {
   sizes: {
     auto: {
-      p: "0.5rem 1rem",
+      p: "1rem 1.5rem",
       w: "auto",
       h: "fit-content",
       fontSize: "1.6rem",

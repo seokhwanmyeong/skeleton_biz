@@ -34,9 +34,9 @@ const ModalBrandStandEditor = ({
   );
 };
 
-const bottomBtn = (_onClick: (val: any) => any) => {
+const bottomBtn = (onClick: (val: any) => any) => {
   return (
-    <Button variant="ghost" onClick={_onClick}>
+    <Button variant="ghost" onClick={onClick}>
       Complete
     </Button>
   );

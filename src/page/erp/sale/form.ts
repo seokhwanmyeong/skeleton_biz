@@ -1,49 +1,65 @@
 const formSearchSale = {
   initVal: {
     address: "total",
-    durType: "saleAvg", // saleAmount
-    date: {
-      start: "",
-      end: "",
-    },
+    rank: "total",
+    date: "total",
+    searchType: "storeName",
+    text: "",
   },
   formKey: "StoreSale",
   fields: [
     [
-      {
-        labelText: "지역",
-        type: "slctAddr",
-        key: "address",
-        variant: "filled",
-        isRequired: false,
-      },
+      [
+        {
+          labelText: "지역",
+          type: "slctAddr",
+          key: "address",
+          variant: "filled",
+          isRequired: false,
+        },
+        {
+          labelText: "매장타입",
+          type: "chkTotalbox",
+          key: "rank",
+          values: [
+            { text: "A타입", value: "rankA" },
+            { text: "B타입", value: "rankB" },
+            { text: "C타입", value: "rankC" },
+            { text: "D타입", value: "rankD" },
+            { text: "E타입", value: "rankE" },
+          ],
+          isRequired: false,
+        },
+      ],
       [
         {
           type: "bind",
-          key: "duration",
+          key: "searchTypeText",
           element: [
             {
-              labelText: "기간 타입",
+              labelText: "검색어",
               type: "slct",
-              key: "durType",
+              key: "searchType",
               values: [
-                { text: "평균매출", value: "saleAvg" },
-                { text: "누적매출", value: "saleAmount" },
+                { text: "매장명", value: "storeName" },
+                { text: "매장코드", value: "storeCode" },
+                { text: "대표자명", value: "ownerName" },
               ],
-              variant: "filled",
-              isRequired: false,
-              width: "25%",
+              isRequired: true,
             },
             {
-              type: "dateDbl",
-              key: "date",
-              variant: "filled",
+              type: "text",
+              key: "text",
               isRequired: false,
-              width: "75%",
             },
           ],
         },
-        {},
+        {
+          labelText: "기간",
+          type: "dateTotalDbl",
+          key: "date",
+          isRequired: false,
+        },
       ],
     ],
   ],

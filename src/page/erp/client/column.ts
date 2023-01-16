@@ -9,47 +9,37 @@ export const mainTable: ColumnDef<any>[] = [
     cell: (info) => info.row.index + 1,
   },
   {
-    accessorKey: "name",
-    header: "매장명",
+    accessorKey: "clientName",
+    header: "고객명",
     cell: (info) => info.getValue(),
   },
   {
-    accessorKey: "code",
-    header: "매장코드",
+    accessorKey: "clientPhone",
+    header: "고객연락처",
     cell: (info) => info.getValue(),
   },
   {
-    accessorKey: "status",
-    header: "상태",
+    accessorKey: "clientStep",
+    header: "고객 상태",
     cell: (info) => info.getValue(),
   },
   {
-    accessorKey: "rank",
-    header: "타입",
-    cell: (info) => info.renderValue(),
-  },
-  {
-    accessorKey: "owner_name",
-    header: "대표자명",
+    accessorKey: "path",
+    header: "유입경로",
     cell: (info) => info.getValue(),
   },
   {
-    accessorKey: "address",
-    header: "주소",
-    cell: (info) => info.getValue(),
-  },
-  {
-    accessorKey: "open_date",
-    header: "개업일",
-    cell: (info) => info.getValue(),
-  },
-  {
-    accessorKey: "created_at",
+    accessorKey: "createdAt",
     header: "등록일",
     cell: (info) => info.getValue(),
   },
   {
-    header: "매장상세",
+    accessorKey: "memberName",
+    header: "담당자",
+    cell: (info) => info.getValue(),
+  },
+  {
+    header: "고객상세",
     cell: (info) => CustomModalCell(info.row.original),
   },
 ];

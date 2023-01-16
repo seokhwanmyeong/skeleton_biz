@@ -19,6 +19,7 @@
     "paths": {
       "@src/*": ["src/*"],
       "@api/*": ["src/api/*"],
+      "@assets/*": ["src/assets/*"],
       "@components/*": ["src/components/*"],
       "@hook/*": ["src/hook/*"],
       "@page/*": ["src/page/*"],

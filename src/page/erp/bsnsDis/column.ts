@@ -1,36 +1,38 @@
 //  LIB
 import { ColumnDef } from "@tanstack/react-table";
 //  Components
-import { CustomCellLinkView, CustomCellLinkUpdate } from "./CustomCell";
-import { Link } from "react-router-dom";
+import {
+  CustomCellLinkView,
+  CustomCellLinkUpdate,
+} from "@page/erp/bsnsDis/CustomCell";
 
 export const mainTable: ColumnDef<any>[] = [
   {
     header: "번호",
-    cell: (info) => info.row.index,
+    cell: (info) => info.row.index + 1,
   },
   {
-    accessorKey: "tradeAreaName",
+    accessorKey: "bsnsDisName",
     header: "상권명",
     cell: (info) => info.getValue(),
   },
   {
-    accessorKey: "tradeAreaCode",
+    accessorKey: "bsnsDisCode",
     header: "상권코드",
     cell: (info) => info.getValue(),
   },
   {
-    accessorKey: "tradeAreaState",
+    accessorKey: "bsnsDisStatus",
     header: "상태",
     cell: (info) => info.getValue(),
   },
   {
-    accessorKey: "tradeAreaStore",
+    accessorKey: "bsnsDisLink",
     header: "연동매장명",
     cell: (info) => info.getValue(),
   },
   {
-    accessorKey: "tradeAreaStore",
+    accessorKey: "address",
     header: "주소",
     cell: (info) => info.getValue(),
   },

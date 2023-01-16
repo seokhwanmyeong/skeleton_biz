@@ -64,7 +64,7 @@ const BaseTable = ({
     debugHeaders: false,
     debugTable: false,
   });
-  console.log(tableData);
+  // console.log(tableData);
 
   useEffect(() => {
     console.log(pagenation.pageItems);

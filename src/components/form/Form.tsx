@@ -6,11 +6,14 @@ import FormField, { TypeField } from "@components/form/FormField";
 
 const Form = ({
   styleProps,
+  formType = "submit",
   form,
   onSubmit,
   activeBtn = true,
+  submitText = "완료",
 }: {
   styleProps?: {};
+  formType?: "search" | "submit";
   form: {
     initVal: {};
     formKey: string;
@@ -18,6 +21,7 @@ const Form = ({
   };
   onSubmit: (val: any) => any;
   activeBtn?: boolean;
+  submitText?: string;
 }) => {
   const { initVal, formKey, fields } = form;
   const paraNum = fields.length;
@@ -62,6 +66,7 @@ const Form = ({
                                       fieldDepth.element.map(
                                         (ele, idx, arr) => (
                                           <FormField
+                                            formType={formType}
                                             key={`${paraKey}-${fieldIdx}-${ele.key}`}
                                             field={ele}
                                             setFieldValue={setFieldValue}
@@ -79,6 +84,7 @@ const Form = ({
                                   </Flex>
                                 ) : (
                                   <FormField
+                                    formType={formType}
                                     key={`${paraKey}-${fieldIdx}-${fieldDepth.key}`}
                                     field={fieldDepth}
                                     setFieldValue={setFieldValue}
@@ -92,6 +98,7 @@ const Form = ({
                               {field.element &&
                                 field.element.map((ele, idx, arr) => (
                                   <FormField
+                                    formType={formType}
                                     key={`${paraKey}-${fieldIdx}-${ele.key}`}
                                     field={ele}
                                     setFieldValue={setFieldValue}
@@ -106,6 +113,7 @@ const Form = ({
                             </Flex>
                           ) : (
                             <FormField
+                              formType={formType}
                               key={`${paraKey}-${fieldIdx}-${field.key}`}
                               field={field}
                               setFieldValue={setFieldValue}
@@ -122,7 +130,7 @@ const Form = ({
             {activeBtn && (
               <Flex w="100%" justifyContent="center">
                 <Button variant="reverse" type="submit" w="10rem">
-                  Complete
+                  {submitText}
                 </Button>
               </Flex>
             )}

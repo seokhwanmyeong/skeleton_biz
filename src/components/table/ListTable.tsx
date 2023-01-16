@@ -19,10 +19,12 @@ const ListTable = ({
             m={idx === 0 || idx === arr.length - 1 ? "0" : "1rem 0"}
             display="flex"
           >
-            <Text w="40%" fontWeight="bold">
+            <Text w="40%" textStyle="list.title">
               {listKeys[key]}
             </Text>
-            <Text w="100%">{data[key]}</Text>
+            <Text w="100%" textStyle="list.text">
+              {data[key]}
+            </Text>
           </ListItem>
         );
       })}

@@ -17,7 +17,7 @@ import ListTable from "@components/table/ListTable";
 import ErpBaseTable from "./ErpBaseTable";
 import ApiTable from "@components/table/ApiTable";
 import ModalStoreEditor from "@components/modal/erp/ModalStoreEditor";
-import ModalXlsxController from "@components/modal/erp/ModalXlsxController";
+import ModalXlsxController from "@src/components/modal/erp/ModalSaleEditor";
 //  Form & Column
 import { formSearchStore } from "@page/erp/store/form";
 //  Api & URL

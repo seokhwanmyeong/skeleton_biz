@@ -1,5 +1,5 @@
 //  LIB
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Input as ChakraInput,
   InputGroup,
@@ -9,9 +9,22 @@ import {
   Button,
   Flex,
   Radio,
+  Text,
+  Modal as ChakraModal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
 } from "@chakra-ui/react";
+
+import DaumPostcode from "react-daum-postcode";
 //  Components
 import { Select } from "@components/common/Select";
+//  Icons
+import { IconDownload, IconFileAdd } from "@assets/icons/icon";
 //  Util
 import { importFileXlsx, importFileSave } from "@util/file/manageFile";
 import { importDateConverter, exportDateConverter } from "@util/time/date";
@@ -19,12 +32,13 @@ import { importDateConverter, exportDateConverter } from "@util/time/date";
 import { getAddressList } from "@services/address/autoAddressCreator";
 //  Type
 import { TypeFormCsv } from "@util/data/fileCSV";
+import dayjs from "dayjs";
 
 interface InpProps {
   fieldKey?: string;
   type?: string;
   value?: any;
-  _onChange: any;
+  onChange: any;
   variant?: string;
   inputProps?: {};
   placeholder?: string;
@@ -78,7 +92,7 @@ const Input = ({
   fieldKey,
   type = "text",
   value,
-  _onChange,
+  onChange,
   variant,
   inputProps,
   placeholder,
@@ -95,7 +109,7 @@ const Input = ({
       id={fieldKey}
       type={type}
       value={value}
-      onChange={(e: any) => _onChange(e.target.value)}
+      onChange={(e: any) => onChange(e.target.value)}
       variant={variant}
       placeholder={placeholder}
       _placeholder={_placeholder}
@@ -114,7 +128,7 @@ const InputPwd = ({
   fieldKey,
   type = "single",
   value,
-  _onChange,
+  onChange,
   groupProps,
   addonProps,
   btnProps,
@@ -141,7 +155,7 @@ const InputPwd = ({
           id={fieldKey}
           value={value}
           variant={variant}
-          onChange={(e: any) => _onChange(e.target.value)}
+          onChange={(e: any) => onChange(e.target.value)}
           placeholder={placeholder}
           _placeholder={_placeholder}
           focusBorderColor={focusBorderColor}
@@ -201,7 +215,7 @@ const InputDate = ({
   fieldKey,
   type = "single",
   value: date,
-  _onChange,
+  onChange,
   variant,
   inputProps,
   placeholder,
@@ -218,18 +232,18 @@ const InputDate = ({
 
   const dateHandler = (dateVal: string, both: "start" | "end") => {
     if (typeof date === ("string" || undefined) && type === "single") {
-      _onChange(dateVal);
+      onChange(dateVal);
     } else if (typeof date === "object") {
       if (both === "start") {
-        _onChange({ start: dateVal, end: date.end });
+        onChange({ start: dateVal, end: date.end });
       } else if (both === "end") {
-        _onChange({ start: date.start, end: dateVal });
+        onChange({ start: date.start, end: dateVal });
       }
     }
   };
 
   return (
-    <Flex gap={2} w="100%">
+    <Flex gap={2} w="100%" alignItems="center">
       <ChakraInput
         id={fieldKey}
         type="date"
@@ -258,9 +272,7 @@ const InputDate = ({
       />
       {type === "double" && typeof date === "object" && (
         <>
-          <Flex h="100%" alignItems="center">
-            ~
-          </Flex>
+          <Flex>~</Flex>
           <ChakraInput
             id={`${fieldKey}-end`}
             type="date"
@@ -286,7 +298,7 @@ const InputDate = ({
 const InputTotalDate = ({
   fieldKey,
   value,
-  _onChange,
+  onChange,
   inputProps,
   _placeholder,
   focusBorderColor,
@@ -296,12 +308,6 @@ const InputTotalDate = ({
   isReadOnly = false,
   isRequired = false,
 }: any) => {
-  const [date, setDate] = useState<any>({
-    start: "",
-    end: "",
-  });
-  console.log(value);
-
   return (
     <Flex gap="1rem">
       <Radio
@@ -309,24 +315,25 @@ const InputTotalDate = ({
         value={"total"}
         isChecked={value === "total"}
         onChange={() => {
-          _onChange("total");
+          onChange("total");
         }}
         isDisabled={isDisabled}
         isInvalid={isInvalid}
         isReadOnly={isReadOnly}
         isRequired={isRequired}
+        w="max-content"
       >
         전체기간
       </Radio>
       <Radio
         key={`radio-date-duration`}
         onChange={() => {
-          _onChange(
+          onChange(
             value !== "total"
               ? value
               : {
-                  start: "",
-                  end: "",
+                  start: dayjs().format("YYYY-MM-DD"),
+                  end: dayjs().format("YYYY-MM-DD"),
                 }
           );
         }}
@@ -343,11 +350,11 @@ const InputTotalDate = ({
             value !== "total"
               ? value
               : {
-                  start: "",
-                  end: "",
+                  start: dayjs().format("YYYY-MM-DD"),
+                  end: dayjs().format("YYYY-MM-DD"),
                 }
           }
-          _onChange={_onChange}
+          onChange={onChange}
           placeholder=""
           _placeholder={_placeholder}
           inputProps={inputProps}
@@ -442,12 +449,8 @@ const InputFile = ({
   form,
   accept,
   value,
-  _onChange,
-  variant,
-  inputProps,
+  onChange,
   groupProps,
-  addonProps,
-  btnProps,
   placeholder,
   _placeholder,
   focusBorderColor,
@@ -461,15 +464,24 @@ const InputFile = ({
   const fileRef = useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = useState("");
 
-  const uploadBtnHandler = (e: any) => {
-    fileRef.current?.click();
-  };
-
   return (
-    <InputGroup {...groupProps} variant={variant}>
+    <Flex
+      {...groupProps}
+      position="relative"
+      flexDirection="column"
+      justifyContent="center"
+      alignItems="center"
+      p="0"
+      w="100%"
+      h="30rem"
+      bgColor="primary.main.bg"
+      border="1px dashed"
+      borderColor="primary.main.bdColor"
+      borderRadius="base"
+    >
       <ChakraInput
-        variant={"fileHidden"}
-        id={fieldKey}
+        variant="fileHidden"
+        id={`${fieldKey}-hidden`}
         type="file"
         value={value}
         onChange={(e: any) => {
@@ -479,7 +491,7 @@ const InputFile = ({
                   if (res) {
                     const { data, fileName } = res;
 
-                    _onChange(data);
+                    onChange(data);
                     setFileName(fileName);
                   }
                 })
@@ -495,7 +507,7 @@ const InputFile = ({
                   if (res) {
                     const { data, fileName } = res;
 
-                    _onChange(data);
+                    onChange(data);
                     setFileName(fileName);
                   }
                 })
@@ -515,39 +527,35 @@ const InputFile = ({
         accept={accept}
         ref={fileRef}
       />
-      <ChakraInput
-        id={`${fieldKey}-hidden`}
-        type="text"
-        value={fileName}
-        placeholder={placeholder}
-        _placeholder={_placeholder}
-        focusBorderColor={focusBorderColor}
-        errorBorderColor={errorBorderColor}
-        isDisabled={isDisabled}
-        isInvalid={isInvalid}
-        isReadOnly={true}
-        isRequired={isRequired}
-        aria-hidden="true"
-        {...inputProps}
-      />
-      <InputRightElement {...addonProps}>
-        <Button variant="inputElement" {...btnProps} onClick={uploadBtnHandler}>
-          File Upload
-        </Button>
-      </InputRightElement>
-    </InputGroup>
+      <IconDownload boxSize="4rem" mb="1rem" />
+      {fileName ? (
+        <Text mb="0.5rem">{fileName}</Text>
+      ) : (
+        <Text mb="0.5rem">파일을 드래그 해보세요.</Text>
+      )}
+      <Text mb="2rem">파일 형식 제한없음 (최대 40MB)</Text>
+      <Button
+        variant="reverse"
+        onClick={(e) => {
+          e.stopPropagation();
+          fileRef.current?.click();
+        }}
+        zIndex="2"
+        gap="0.5rem"
+      >
+        <IconFileAdd />
+        파일 등록하기
+      </Button>
+    </Flex>
   );
 };
 
-const InputAddress = ({
+const InputImg = ({
   fieldKey,
+  form,
   value,
-  _onChange,
-  variant,
-  inputProps,
+  onChange,
   groupProps,
-  addonProps,
-  btnProps,
   placeholder,
   _placeholder,
   focusBorderColor,
@@ -557,46 +565,124 @@ const InputAddress = ({
   isReadOnly = false,
   isRequired = false,
   ...rest
-}: InpAddressProps) => {
-  const [address, setAddress] = useState("");
-  const [list, setList] = useState<any[]>([]);
+}: InpFileProps) => {
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [fileName, setFileName] = useState("");
 
-  useEffect(() => {
-    const debounce = setTimeout(() => {
-      getAddressList(address)
-        .then((result: any) => {
-          if (Array.isArray(result) && result.length > 0) {
-            setList(result);
-          }
-        })
-        .catch((e) => console.log(e));
-    }, 500);
-    return () => clearTimeout(debounce);
-  }, [address]);
+  const uploadBtnHandler = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.stopPropagation();
+    fileRef.current?.click();
+  };
 
   return (
-    <InputGroup {...groupProps} variant={variant}>
+    <Flex
+      {...groupProps}
+      position="relative"
+      flexDirection="column"
+      justifyContent="center"
+      alignItems="center"
+      p="0"
+      w="100%"
+      h="30rem"
+      bgColor="primary.main.bg"
+      border="1px dashed"
+      borderColor="primary.main.bdColor"
+      borderRadius="base"
+    >
       <ChakraInput
-        id={fieldKey}
-        type="text"
+        variant="fileHidden"
+        id={`${fieldKey}-hidden`}
+        type="file"
         value={value}
-        onChange={(e) => setAddress(e.target.value)}
+        onChange={(e: any) => {}}
         isDisabled={isDisabled}
         isInvalid={isInvalid}
         isReadOnly={isReadOnly}
         isRequired={isRequired}
+        aria-hidden="true"
+        accept={".jpg, .png"}
+        ref={fileRef}
       />
-      {list?.length > 0 && (
-        <Select
-          // selectProps={{ position: "absolute" }}
-          opBaseTxt="addressName"
-          opBaseId="bCode"
-          opBaseKey="bCode"
-          _onChange={(e: any) => console.log(e.target.value)}
-          data={list}
-        />
+      <IconDownload boxSize="4rem" mb="1rem" />
+      {fileName ? (
+        <Text mb="0.5rem">{fileName}</Text>
+      ) : (
+        <Text mb="0.5rem">이미지를 드래그 해보세요.</Text>
       )}
-    </InputGroup>
+      <Text mb="2rem">이미지 형식: jpg/png (최대 500kb)</Text>
+      <Button
+        variant="reverse"
+        onClick={uploadBtnHandler}
+        zIndex="2"
+        gap="0.5rem"
+      >
+        <IconFileAdd />
+        이미지 등록하기
+      </Button>
+    </Flex>
+  );
+};
+
+const InputAddr = ({
+  fieldKey,
+  value,
+  onChange,
+  variant,
+  inputProps,
+  groupProps,
+  placeholder,
+  _placeholder,
+  focusBorderColor,
+  errorBorderColor,
+  isDisabled = false,
+  isInvalid = false,
+  isReadOnly = false,
+  isRequired = false,
+}: InpAddressProps) => {
+  const [address, setAddress] = useState("");
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const addressHandler = () => {
+    onChange();
+  };
+  const handleComplete = (data: any) => {
+    let fullAddress = data.address;
+    let extraAddress = "";
+    if (data.addressType === "R") {
+      if (data.bname !== "") {
+        extraAddress += data.bname;
+      }
+      if (data.buildingName !== "") {
+        extraAddress +=
+          extraAddress !== "" ? `, ${data.buildingName}` : data.buildingName;
+      }
+      fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
+    }
+
+    onChange(fullAddress);
+    onClose();
+  };
+
+  // const handleSearch = (data) => {
+  //   console.log(data);
+  // };
+
+  return (
+    <Flex w="100%" h="100%">
+      <Button w="100%" h="3.6rem" onClick={onOpen}>
+        {value}
+      </Button>
+      <ChakraModal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent w="auto" maxW="auto">
+          <ModalBody p="0" borderRadius="base" overflow="hidden">
+            <DaumPostcode onComplete={handleComplete} />
+          </ModalBody>
+        </ModalContent>
+      </ChakraModal>
+    </Flex>
   );
 };
 
@@ -605,8 +691,9 @@ export {
   InputBtn,
   InputAddon,
   InputPwd,
-  InputFile,
   InputDate,
   InputTotalDate,
-  InputAddress,
+  InputFile,
+  InputImg,
+  InputAddr,
 };

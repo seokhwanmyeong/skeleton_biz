@@ -96,42 +96,43 @@ const CheckboxGroup = ({
   chkValue: (string | number)[];
   defaultValue?: (string | number)[];
   isDisabled?: boolean;
-  onChange: (value: (string | number)[]) => void;
+  onChange: (value: (string | number)[] | string) => void;
   variant?: string;
   activeTotal?: boolean;
   parseTotalTxt?: string;
 }) => {
-  const total = chkboxData.map((data) => data.value);
   const originLength = chkboxData.length;
-
-  const totalChkHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.target.checked ? onChange(total) : onChange([]);
-  };
 
   const chkHandler = (val: (string | number)[]) => {
     const exceptTotal = val.filter((l: string | number) => l !== "total");
 
-    if (
-      activeTotal &&
-      ((val.length === 1 && val[0] === "total") ||
-        exceptTotal.length === originLength)
-    ) {
-      onChange(total);
+    if (activeTotal) {
+      if (exceptTotal.length === originLength) {
+        onChange("total");
+      } else {
+        onChange(exceptTotal.length === 0 ? "total" : exceptTotal);
+      }
     } else {
       onChange(exceptTotal);
+    }
+  };
+
+  const totalTrans = () => {
+    if (activeTotal) {
+      if (Array.isArray(chkValue)) {
+        return chkValue.length === originLength ? ["total"] : chkValue;
+      } else {
+        return ["total"];
+      }
+    } else {
+      return chkValue;
     }
   };
 
   return (
     <ChakraCheckboxGroup
       defaultValue={activeTotal ? ["total"] : defaultValue}
-      value={
-        activeTotal
-          ? chkValue.length === originLength
-            ? ["total"]
-            : chkValue
-          : chkValue
-      }
+      value={activeTotal ? totalTrans() : chkValue}
       isDisabled={isDisabled}
       onChange={chkHandler}
       variant={variant}
@@ -139,7 +140,7 @@ const CheckboxGroup = ({
       <Flex gap="1rem">
         {activeTotal && (
           <ChakraCheckbox
-            onChange={totalChkHandler}
+            onChange={() => onChange("total")}
             key={`check-total`}
             value={"total"}
           >

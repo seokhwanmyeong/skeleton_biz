@@ -8,16 +8,18 @@ import Guide from "@page/Guide";
 import Maps from "@page/Maps";
 //  Pages: Erp
 import ErpDashBoard from "@page/erp/ErpDashBoard";
-import ErpStoreDetail from "@page/erp/ErpStoreDetail";
 import ErpStore from "@page/erp/store/ErpStore";
+import ErpStoreDetail from "@page/erp/store/ErpStoreDetail";
 import ErpSale from "@page/erp/sale/ErpSale";
-import ErpArea from "@page/erp/area/ErpArea";
-// import ErpCustomer from "@page/erp/customer/ErpCustomer";
-import ErpBrand from "@page/erp/brand/ErpBrand";
+import ErpBsnsDis from "@page/erp/bsnsDis/ErpBsnsDis";
+import ErpRent from "@page/erp/rent/ErpRent";
+import ErpRentDetail from "@page/erp/rent/ErpRentDetail";
+import ErpClient from "@page/erp/client/ErpClient";
+import ErpClientDetail from "@page/erp/client/ErpClientDetail";
+// import ErpBrand from "@page/erp/brand/ErpBrand";
 
-import ErpDetailSample from "@page/erp/ErpDetailSample";
-import ErpBaseTable from "@page/erp/ErpBaseTable";
-import ErpPop from "@page/erp/ErpPop";
+// import ErpDetailSample from "@page/erp/ErpDetailSample";
+// import ErpBaseTable from "@page/erp/ErpBaseTable";
 //  Pages: Mypage
 import MyPage from "@page/mypage/MyPage";
 import MyPageCompany from "@page/mypage/MyPageCompany";
@@ -147,59 +149,66 @@ export const subRoute = atom<{
       {
         title: "상권",
         hasChild: false,
-        path: "area",
-        page: ErpArea,
+        path: "bsnsDis",
+        page: ErpBsnsDis,
         isMenu: true,
       },
       {
         title: "매물",
         hasChild: false,
-        path: "forSale",
-        page: ErpBaseTable,
+        path: "rent",
+        page: ErpRent,
         isMenu: true,
+      },
+      {
+        title: "매장상세보기",
+        hasChild: false,
+        path: "rent/detail",
+        page: ErpRentDetail,
+        isMenu: false,
       },
       {
         title: "고객",
         hasChild: false,
-        path: "customer",
-        page: ErpBaseTable,
+        path: "client",
+        page: ErpClient,
         isMenu: true,
       },
       {
-        title: "브랜드 기준",
+        title: "고객상세보기",
         hasChild: false,
-        path: "brand",
-        page: ErpBrand,
-        isMenu: true,
+        path: "client/detail",
+        page: ErpClientDetail,
+        isMenu: false,
       },
-      {
-        title: "Sample Table",
-        hasChild: true,
-        path: "erp02",
-        isMenu: true,
-        children: [
-          {
-            title: "BaseTable",
-            path: "erpBaseTable",
-            page: ErpBaseTable,
-            isMenu: true,
-          },
-        ],
-      },
-      {
-        title: "Sample Modal",
-        hasChild: false,
-        path: "erpModal",
-        page: ErpPop,
-        isMenu: true,
-      },
-      {
-        title: "상세정보 견본: Tab",
-        hasChild: false,
-        path: "erpSample",
-        page: ErpDetailSample,
-        isMenu: true,
-      },
+      // {
+      //   title: "브랜드 기준",
+      //   hasChild: false,
+      //   path: "brand",
+      //   page: ErpBrand,
+      //   isMenu: true,
+      // },
+      // {
+      //   title: "Sample Table",
+      //   hasChild: true,
+      //   path: "erp02",
+      //   isMenu: true,
+      //   children: [
+      //     {
+      //       title: "BaseTable",
+      //       path: "erpBaseTable",
+      //       page: ErpBaseTable,
+      //       isMenu: true,
+      //     },
+      //   ],
+      // },
+      // {
+      //   title: "상세정보 견본: Tab",
+      //   hasChild: false,
+      //   path: "erpSample",
+      //   page: ErpDetailSample,
+      //   isMenu: true,
+      // },
     ],
     mypage: [
       {

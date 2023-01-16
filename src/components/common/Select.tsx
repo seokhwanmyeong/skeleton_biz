@@ -15,7 +15,7 @@ type PropsSlct = {
   opBaseTxt: string;
   opBaseId: string;
   opBaseKey: string;
-  _onChange: any;
+  onChange: any;
   isDisabled?: boolean;
   isInvalid?: boolean;
   isReadOnly?: boolean;
@@ -26,7 +26,7 @@ type PropSlctAddr = {
   selectProps?: {};
   variant?: string;
   value: string;
-  _onChange: any;
+  onChange: any;
   isDisabled?: boolean;
   isInvalid?: boolean;
   isReadOnly?: boolean;
@@ -42,7 +42,7 @@ const Select = ({
   opBaseTxt,
   opBaseId,
   opBaseKey,
-  _onChange,
+  onChange,
   isDisabled = false,
   isInvalid = false,
   isReadOnly = false,
@@ -58,7 +58,7 @@ const Select = ({
       isInvalid={isInvalid}
       isReadOnly={isReadOnly}
       isRequired={isRequired}
-      onChange={(e) => _onChange(e.target.value)}
+      onChange={(e) => onChange(e.target.value)}
       defaultValue={defaultId}
     >
       {!defalutValue && (
@@ -86,7 +86,7 @@ const SelectAddr = ({
   selectProps,
   variant,
   value,
-  _onChange,
+  onChange,
   isDisabled = false,
   isInvalid = false,
   isReadOnly = false,
@@ -154,11 +154,11 @@ const SelectAddr = ({
         result = val;
         break;
     }
-    _onChange(result);
+    onChange(result);
   };
 
   return (
-    <Flex gap={2}>
+    <Flex gap={2} w="100%">
       <Select
         selectProps={selectProps}
         variant={variant}
@@ -166,7 +166,7 @@ const SelectAddr = ({
         opBaseTxt="address"
         opBaseId="code"
         opBaseKey="code"
-        _onChange={(val: any) => selectAddrHandler(val, "top")}
+        onChange={(val: any) => selectAddrHandler(val, "top")}
         defaultText="전체"
         defalutValue="total"
       />
@@ -177,9 +177,10 @@ const SelectAddr = ({
         opBaseTxt="address"
         opBaseId="code"
         opBaseKey="code"
-        _onChange={(val: any) => selectAddrHandler(val, "mid")}
+        onChange={(val: any) => selectAddrHandler(val, "mid")}
         isDisabled={addrList.mid.length > 0 ? false : true}
-        defaultText="시/군/구"
+        defaultText={addrList.mid.length > 0 ? "전체" : "시/군/구"}
+        defalutValue=""
       />
       <Select
         selectProps={selectProps}
@@ -188,9 +189,10 @@ const SelectAddr = ({
         opBaseTxt="address"
         opBaseId="code"
         opBaseKey="code"
-        _onChange={(val: any) => selectAddrHandler(val, "bot")}
+        onChange={(val: any) => selectAddrHandler(val, "bot")}
         isDisabled={addrList.bot.length > 0 ? false : true}
-        defaultText="읍/면/동"
+        defaultText={addrList.bot.length > 0 ? "전체" : "읍/면/동"}
+        defalutValue=""
       />
     </Flex>
   );

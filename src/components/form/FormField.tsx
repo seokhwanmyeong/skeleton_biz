@@ -1,14 +1,15 @@
 //  LIB
 import { memo } from "react";
-import { Flex, FormControl, FormLabel } from "@chakra-ui/react";
+import { Flex, FormControl, FormLabel, Text } from "@chakra-ui/react";
 //  Components
 import {
   Input,
   InputPwd,
-  InputFile,
   InputDate,
   InputTotalDate,
-  InputAddress,
+  InputFile,
+  InputImg,
+  InputAddr,
   InputAddon,
   InputBtn,
 } from "@components/common/Input";
@@ -16,27 +17,28 @@ import { RadioBox } from "@components/common/RadioBox";
 import { CheckboxGroup } from "@components/common/CheckBox";
 import { Select, SelectAddr } from "@components/common/Select";
 
+type TypeFieldCate =
+  | "text"
+  | "number"
+  | "date"
+  | "dateDbl"
+  | "email"
+  | "tel"
+  | "pwd"
+  | "pwdChk"
+  | "addr"
+  | "chkbox"
+  | "radio"
+  | "chkbox"
+  | "chkTotalbox"
+  | "fileXlsx"
+  | "img"
+  | "slct"
+  | "slctAddr"
+  | "custom";
+
 type TypeField = {
-  type:
-    | "text"
-    | "number"
-    | "date"
-    | "dateDbl"
-    | "email"
-    | "tel"
-    | "pwd"
-    | "pwdChk"
-    | "addr"
-    | "chkbox"
-    | "radio"
-    | "chkbox"
-    | "chkTotalbox"
-    | "fileXlsx"
-    | "fileImg"
-    | "slct"
-    | "slctAddr"
-    | "bind"
-    | "custom";
+  type: TypeFieldCate | "bind";
   key: string;
   labelText?: string;
   variant?: string;
@@ -50,25 +52,9 @@ type TypeField = {
     value: string | number;
   }[];
   component?: any;
+  width?: string;
   element?: {
-    type:
-      | "text"
-      | "number"
-      | "date"
-      | "dateDbl"
-      | "email"
-      | "tel"
-      | "pwd"
-      | "pwdChk"
-      | "addr"
-      | "chkbox"
-      | "radio"
-      | "chkbox"
-      | "fileXlsx"
-      | "fileImg"
-      | "slct"
-      | "slctAddr"
-      | "custom";
+    type: TypeFieldCate;
     key: string;
     variant?: string;
     validate?: any;
@@ -86,11 +72,13 @@ type TypeField = {
 };
 
 const FormField = ({
+  formType = "submit",
   field,
   setFieldValue,
   _value,
   fieldW = `100%`,
 }: {
+  formType: "search" | "submit";
   field: TypeField;
   setFieldValue: any;
   _value: any;
@@ -107,10 +95,12 @@ const FormField = ({
     isInvalid = false,
     isReadOnly = false,
     isRequired = false,
+    width,
     element,
   } = field;
 
   const fieldStyle = {
+    w: width ? width : "100%",
     h: "3.6rem",
   };
 
@@ -119,7 +109,7 @@ const FormField = ({
       <Input
         fieldKey={_fieldKey}
         value={_value}
-        _onChange={(val: string | number) => setFieldValue(_fieldKey, val)}
+        onChange={(val: string | number) => setFieldValue(_fieldKey, val)}
         placeholder="placeHolder"
         _placeholder={{ color: "gray.500" }}
         focusBorderColor="black.100"
@@ -136,7 +126,7 @@ const FormField = ({
         type="number"
         fieldKey={_fieldKey}
         value={_value}
-        _onChange={(val: number) => setFieldValue(_fieldKey, val)}
+        onChange={(val: number) => setFieldValue(_fieldKey, val)}
         placeholder="placeHolder"
         _placeholder={{ color: "gray.500" }}
         focusBorderColor="black.100"
@@ -153,7 +143,7 @@ const FormField = ({
         type="single"
         fieldKey={_fieldKey}
         value={_value}
-        _onChange={(val: string) => setFieldValue(_fieldKey, val)}
+        onChange={(val: string) => setFieldValue(_fieldKey, val)}
         placeholder="placeHolder"
         _placeholder={{ color: "gray.500" }}
         focusBorderColor="black.100"
@@ -166,7 +156,7 @@ const FormField = ({
         type="double"
         fieldKey={_fieldKey}
         value={_value}
-        _onChange={(val: string) => setFieldValue(_fieldKey, val)}
+        onChange={(val: string) => setFieldValue(_fieldKey, val)}
         placeholder="placeHolder"
         _placeholder={{ color: "gray.500" }}
         focusBorderColor="black.100"
@@ -178,7 +168,7 @@ const FormField = ({
       <InputTotalDate
         fieldKey={_fieldKey}
         value={_value}
-        _onChange={(val: string) => setFieldValue(_fieldKey, val)}
+        onChange={(val: string) => setFieldValue(_fieldKey, val)}
         _placeholder={{ color: "gray.500" }}
         focusBorderColor="black.100"
         errorBorderColor="red.300"
@@ -192,7 +182,7 @@ const FormField = ({
         type="single"
         fieldKey={_fieldKey}
         value={_value}
-        _onChange={(val: string) => setFieldValue(_fieldKey, val)}
+        onChange={(val: string) => setFieldValue(_fieldKey, val)}
         placeholder="placeHolder"
         _placeholder={{ color: "gray.500" }}
         focusBorderColor="black.100"
@@ -209,7 +199,7 @@ const FormField = ({
         type="chk"
         fieldKey={_fieldKey}
         value={_value}
-        _onChange={(e: string) => setFieldValue(_fieldKey, e)}
+        onChange={(e: string) => setFieldValue(_fieldKey, e)}
         groupProps={{ size: "md" }}
         addonProps={{ width: "4.5rem" }}
         btnProps={{ h: "1.75rem", size: "sm" }}
@@ -224,21 +214,20 @@ const FormField = ({
       />
     ),
     addr: (
-      <></>
-      // <InputAddress
-      //   _onChange={(val: any) => setFieldValue(_fieldKey, val)}
-      //   fieldKey={_fieldKey}
-      //   value={_value}
-      //   variant="filled"
-      //   isDisabled={isDisabled}
-      //   isInvalid={isInvalid}
-      //   isReadOnly={isReadOnly}
-      //   isRequired={isRequired}
-      // />
+      <InputAddr
+        onChange={(val: any) => setFieldValue(_fieldKey, val)}
+        fieldKey={_fieldKey}
+        value={_value}
+        variant="filled"
+        isDisabled={isDisabled}
+        isInvalid={isInvalid}
+        isReadOnly={isReadOnly}
+        isRequired={isRequired}
+      />
     ),
     radio: _values && (
       <RadioBox
-        _onChange={(val: any) => setFieldValue(_fieldKey, val)}
+        onChange={(val: any) => setFieldValue(_fieldKey, val)}
         fieldKey={_fieldKey}
         value={_value}
         values={_values}
@@ -277,14 +266,26 @@ const FormField = ({
         fieldKey={_fieldKey}
         value={_value}
         addonProps={{ width: "auto" }}
-        _onChange={(val: any) => setFieldValue(_fieldKey, val)}
+        onChange={(val: any) => setFieldValue(_fieldKey, val)}
         placeholder="placeHolder"
         _placeholder={{ color: "gray.500" }}
         focusBorderColor="black.100"
         errorBorderColor="red.300"
       />
     ),
-    fileImg: <></>,
+    img: (
+      <InputImg
+        accept=".xlsx, .csv"
+        fieldKey={_fieldKey}
+        value={_value}
+        addonProps={{ width: "auto" }}
+        onChange={(val: any) => setFieldValue(_fieldKey, val)}
+        placeholder="placeHolder"
+        _placeholder={{ color: "gray.500" }}
+        focusBorderColor="black.100"
+        errorBorderColor="red.300"
+      />
+    ),
     slct: _values && (
       <Select
         selectProps={fieldStyle}
@@ -292,7 +293,7 @@ const FormField = ({
         opBaseTxt="text"
         opBaseId="value"
         opBaseKey="value"
-        _onChange={(val: any) => setFieldValue(_fieldKey, val)}
+        onChange={(val: any) => setFieldValue(_fieldKey, val)}
         defaultText={_values[0].text}
         defalutValue={_values[0].value}
       />
@@ -301,7 +302,7 @@ const FormField = ({
       <SelectAddr
         selectProps={fieldStyle}
         value={_value}
-        _onChange={(val: any) => setFieldValue(_fieldKey, val)}
+        onChange={(val: any) => setFieldValue(_fieldKey, val)}
         isDisabled={isDisabled}
         isInvalid={isInvalid}
         isReadOnly={isReadOnly}
@@ -323,17 +324,21 @@ const FormField = ({
       as={Flex}
       variant={variant}
       w={fieldW}
-      h={fieldStyle.h}
+      h={"auto"}
       flexDirection="row"
     >
       {labelText && (
         <FormLabel
-          minW="10rem"
+          minW={formType === "submit" ? "12.5rem" : "8rem"}
           display="flex"
           alignItems="center"
           marginBottom={0}
           htmlFor={_fieldKey}
+          gap="0.5rem"
         >
+          {formType === "submit" && isRequired && (
+            <Text color="red.500">*</Text>
+          )}
           {labelText}
         </FormLabel>
       )}

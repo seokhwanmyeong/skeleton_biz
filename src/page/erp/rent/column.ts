@@ -9,28 +9,18 @@ export const mainTable: ColumnDef<any>[] = [
     cell: (info) => info.row.index + 1,
   },
   {
-    accessorKey: "name",
-    header: "매장명",
+    accessorKey: "rentName",
+    header: "매물명",
     cell: (info) => info.getValue(),
   },
   {
-    accessorKey: "code",
-    header: "매장코드",
+    accessorKey: "rentCode",
+    header: "매물코드",
     cell: (info) => info.getValue(),
   },
   {
-    accessorKey: "status",
-    header: "상태",
-    cell: (info) => info.getValue(),
-  },
-  {
-    accessorKey: "rank",
+    accessorKey: "rentRank",
     header: "타입",
-    cell: (info) => info.renderValue(),
-  },
-  {
-    accessorKey: "owner_name",
-    header: "대표자명",
     cell: (info) => info.getValue(),
   },
   {
@@ -39,17 +29,27 @@ export const mainTable: ColumnDef<any>[] = [
     cell: (info) => info.getValue(),
   },
   {
-    accessorKey: "open_date",
-    header: "개업일",
-    cell: (info) => info.getValue(),
-  },
-  {
-    accessorKey: "created_at",
+    accessorKey: "createdAt",
     header: "등록일",
     cell: (info) => info.getValue(),
   },
   {
-    header: "매장상세",
+    accessorKey: "rentalFee",
+    header: "임대료",
+    cell: (info) => info.getValue(),
+  },
+  {
+    accessorKey: "deposit",
+    header: "보증금",
+    cell: (info) => info.getValue(),
+  },
+  {
+    accessorKey: "premium",
+    header: "권리금",
+    cell: (info) => info.getValue(),
+  },
+  {
+    header: "매물상세",
     cell: (info) => CustomModalCell(info.row.original),
   },
 ];
