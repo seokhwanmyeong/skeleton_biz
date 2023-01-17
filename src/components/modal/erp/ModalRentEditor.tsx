@@ -1,6 +1,7 @@
 //  LIB
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { Flex, Button } from "@chakra-ui/react";
+import { FormikProps } from "formik";
 //  Components
 import Modal from "../Modal";
 import Form from "@components/form/Form";
@@ -8,15 +9,15 @@ import Form from "@components/form/Form";
 import { formRentInfo } from "@page/erp/rent/form";
 
 const ModalRentEditor = ({ info, update }: { info?: any; update: boolean }) => {
-  const [formData, setFormData] = useState({});
+  const formRef = useRef<any>();
+
+  const RentInfoHandler = useCallback(() => {
+    console.log(formRef.current);
+  }, [formRef]);
 
   const bottomBtn = () => {
-    const RentInfoHandler = (val: any) => {
-      console.log(val);
-    };
-
     return (
-      <Button colorScheme="blue" onClick={() => RentInfoHandler(formData)}>
+      <Button colorScheme="blue" onClick={RentInfoHandler}>
         {update ? "수정하기" : "추가하기"}
       </Button>
     );
@@ -31,8 +32,10 @@ const ModalRentEditor = ({ info, update }: { info?: any; update: boolean }) => {
     >
       <Flex flexDirection="column" w="50rem">
         <Form
+          innerRef={formRef}
           form={update ? { ...formRentInfo, initVal: info } : formRentInfo}
-          onSubmit={setFormData}
+          activeBtn={false}
+          // onSubmit={submitForm}
         />
       </Flex>
     </Modal>

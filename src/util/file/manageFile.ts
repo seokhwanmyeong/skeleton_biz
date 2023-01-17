@@ -3,6 +3,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { read, utils, writeFile } from "xlsx";
 //  Util
 import { TypeFormCsv, TypeCsvColumn } from "@util/data/fileCSV";
+import resizer from "@util/file/resizer";
 
 const {
   sheet_to_json,
@@ -261,4 +262,73 @@ const exportFormCsv = (form: TypeFormCsv) => {
   writeFile(workBook, `${fileName}.csv`, { bookType: "csv" });
 };
 
-export { importFileXlsx, importFileSave, exportFileCSV, exportFormCsv };
+const importFileImg = async (files: any) => {
+  let incodingType: string = "base64";
+
+  return await Promise.all(
+    files.map(
+      (file: any) =>
+        new Promise((resolve) => {
+          return resizer.imageFileResizer(
+            file,
+            600,
+            400,
+            "JPEG",
+            100,
+            0,
+            (uri: any) => {
+              resolve(uri);
+            },
+            incodingType
+          );
+        })
+    )
+  )
+    .then((res) => {
+      res.map((src) => {
+        let base64Length, padding, fileSize;
+
+        switch (incodingType) {
+          case "blob":
+            base64Length = src.length - (src.indexOf(",") + 1);
+            padding =
+              src.charAt(src.length - 2) === "="
+                ? 2
+                : src.charAt(src.length - 1) === "="
+                ? 1
+                : 0;
+            fileSize = base64Length * 0.75 - padding;
+            console.log("FileSize: " + fileSize);
+            break;
+          case "base64":
+            base64Length = src.length - (src.indexOf(",") + 1);
+            padding =
+              src.charAt(src.length - 2) === "="
+                ? 2
+                : src.charAt(src.length - 1) === "="
+                ? 1
+                : 0;
+            fileSize = base64Length * 0.75 - padding;
+            console.log("FileSize: " + fileSize);
+            break;
+          case "file":
+            console.log(src);
+            break;
+          default:
+        }
+      });
+      return res;
+    })
+    .catch((err) => {
+      console.log(err);
+      return [];
+    });
+};
+
+export {
+  importFileXlsx,
+  importFileSave,
+  exportFileCSV,
+  exportFormCsv,
+  importFileImg,
+};

@@ -15,7 +15,6 @@ const Login = () => {
   const navigator = useNavigate();
 
   const requsetLoginBtn = (val: { username: string; password: string }) => {
-    // loginHandler(val);
     instance
       .post<
         { username: string; password: string },
@@ -46,6 +45,7 @@ const Login = () => {
   return (
     <Flex w="100%" alignItems="center" justifyContent="center">
       <Form
+        formType="search"
         form={formLogin}
         onSubmit={requsetLoginBtn}
         styleProps={{ width: "40rem" }}

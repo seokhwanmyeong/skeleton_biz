@@ -1,5 +1,5 @@
 //  LIB
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import {
   Input as ChakraInput,
   InputGroup,
@@ -13,21 +13,24 @@ import {
   Modal as ChakraModal,
   ModalOverlay,
   ModalContent,
-  ModalHeader,
-  ModalFooter,
   ModalBody,
-  ModalCloseButton,
   useDisclosure,
+  List,
+  ListItem,
+  Image,
 } from "@chakra-ui/react";
 
 import DaumPostcode from "react-daum-postcode";
-//  Components
-import { Select } from "@components/common/Select";
 //  Icons
 import { IconDownload, IconFileAdd } from "@assets/icons/icon";
 //  Util
-import { importFileXlsx, importFileSave } from "@util/file/manageFile";
+import {
+  importFileXlsx,
+  importFileSave,
+  importFileImg,
+} from "@util/file/manageFile";
 import { importDateConverter, exportDateConverter } from "@util/time/date";
+import resizer from "@util/file/resizer";
 //  Services
 import { getAddressList } from "@services/address/autoAddressCreator";
 //  Type
@@ -176,6 +179,7 @@ const InputPwd = ({
           {...addonProps}
         >
           <Button
+            variant="reverse"
             w="100%"
             h="100%"
             borderLeftRadius="0"
@@ -567,8 +571,9 @@ const InputImg = ({
   ...rest
 }: InpFileProps) => {
   const fileRef = useRef<HTMLInputElement>(null);
-  const [fileName, setFileName] = useState("");
-
+  const [selectImg, setSelectImg] = useState<number>(0);
+  const [imgList, setImgList] = useState<any[] | never[]>([]);
+  console.log(value);
   const uploadBtnHandler = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
@@ -577,50 +582,121 @@ const InputImg = ({
   };
 
   return (
-    <Flex
-      {...groupProps}
-      position="relative"
-      flexDirection="column"
-      justifyContent="center"
-      alignItems="center"
-      p="0"
-      w="100%"
-      h="30rem"
-      bgColor="primary.main.bg"
-      border="1px dashed"
-      borderColor="primary.main.bdColor"
-      borderRadius="base"
-    >
-      <ChakraInput
-        variant="fileHidden"
-        id={`${fieldKey}-hidden`}
-        type="file"
-        value={value}
-        onChange={(e: any) => {}}
-        isDisabled={isDisabled}
-        isInvalid={isInvalid}
-        isReadOnly={isReadOnly}
-        isRequired={isRequired}
-        aria-hidden="true"
-        accept={".jpg, .png"}
-        ref={fileRef}
-      />
-      <IconDownload boxSize="4rem" mb="1rem" />
-      {fileName ? (
-        <Text mb="0.5rem">{fileName}</Text>
-      ) : (
-        <Text mb="0.5rem">이미지를 드래그 해보세요.</Text>
-      )}
-      <Text mb="2rem">이미지 형식: jpg/png (최대 500kb)</Text>
-      <Button
-        variant="reverse"
-        onClick={uploadBtnHandler}
-        zIndex="2"
-        gap="0.5rem"
+    <Flex flexDirection="column" gap="1rem" w="100%">
+      <Flex
+        {...groupProps}
+        position="relative"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+        p="0"
+        w="100%"
+        h="30rem"
+        borderRadius="base"
+        bgColor="primary.main.bg"
       >
-        <IconFileAdd />
-        이미지 등록하기
-      </Button>
+        {imgList.length > 0 && (
+          <Image
+            src={imgList[selectImg]}
+            alt=""
+            position="absolute"
+            top="50%"
+            left="50%"
+            transform="translate(-50%, -50%)"
+            w="100%"
+            h="100%"
+            opacity={0.8}
+            borderRadius="base"
+            border="none"
+            transition="0.3s"
+          />
+        )}
+        <ChakraInput
+          variant="fileHidden"
+          id={`${fieldKey}-hidden`}
+          type="file"
+          value={value}
+          multiple
+          onChange={async (e: any) => {
+            const fileList = [...e.target.files];
+
+            if (imgList?.length + fileList.length < 4) {
+              const list = await importFileImg([...e.target.files]);
+              setSelectImg(0);
+              setImgList([...imgList, ...list]);
+              // onChange([...imgList, ...list]);
+            } else {
+              alert("이미지는 최대 3개까지 가능합니다");
+            }
+          }}
+          isDisabled={isDisabled}
+          isInvalid={isInvalid}
+          isReadOnly={isReadOnly}
+          isRequired={isRequired}
+          aria-hidden="true"
+          accept={".jpg, .png"}
+          ref={fileRef}
+        />
+        <IconDownload boxSize="4rem" mb="1rem" />
+        <Text mb="0.5rem">이미지를 드래그 해보세요.</Text>
+        <Text mb="2rem">이미지 형식: jpg/png (최대 500kb)</Text>
+        <Button
+          variant="reverse"
+          onClick={uploadBtnHandler}
+          zIndex="2"
+          gap="0.5rem"
+        >
+          <IconFileAdd />
+          이미지 등록하기
+        </Button>
+      </Flex>
+      {imgList.length > 0 && (
+        <List display="flex" w="100%" justifyContent="center" gap="3rem">
+          {imgList.map((img: any, idx: number) => (
+            <ListItem
+              key={`img-${idx}`}
+              onClick={() => setSelectImg(idx)}
+              position="relative"
+              outline={idx === selectImg ? "1px solid" : "none"}
+              p="0.5rem"
+              cursor="pointer"
+              transition="0.3s"
+              _hover={{
+                outline: "1px solid",
+              }}
+            >
+              <Image
+                src={img}
+                w="5rem"
+                h="4rem"
+                transition="0.3s"
+                borderRadius="base"
+              />
+              <Button
+                position="absolute"
+                top={0}
+                right={0}
+                w="2rem"
+                h="2rem"
+                p="0"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const newArr = [...imgList];
+                  newArr.splice(idx, 1);
+                  setSelectImg(0);
+                  setImgList(newArr);
+                  // onChange(newArr);
+                }}
+              >
+                X
+              </Button>
+              {/* <a href={img} download>
+                이미지 {idx}
+              </a> */}
+            </ListItem>
+          ))}
+        </List>
+      )}
     </Flex>
   );
 };

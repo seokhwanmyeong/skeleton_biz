@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "rm -rf build tsc && vite build",
+    "build": "rm -rf build && vite build",
     "test": "rm -rf build && vite build && vite preview",
     "preview": "rm -rf build && tsc && vite build && vite preview",
     "storybook": "start-storybook -p 6006",

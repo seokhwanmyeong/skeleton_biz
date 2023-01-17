@@ -1,10 +1,12 @@
 //  LIB
+import { useRef } from "react";
 import { Flex, Button } from "@chakra-ui/react";
-import { Formik, Form as FormikForm } from "formik";
+import { Formik, Form as FormikForm, FormikProps } from "formik";
 //  Components
 import FormField, { TypeField } from "@components/form/FormField";
 
 const Form = ({
+  innerRef,
   styleProps,
   formType = "submit",
   form,
@@ -12,6 +14,7 @@ const Form = ({
   activeBtn = true,
   submitText = "완료",
 }: {
+  innerRef?: any;
   styleProps?: {};
   formType?: "search" | "submit";
   form: {
@@ -19,7 +22,7 @@ const Form = ({
     formKey: string;
     fields: any[];
   };
-  onSubmit: (val: any) => any;
+  onSubmit?: (val: any) => any;
   activeBtn?: boolean;
   submitText?: string;
 }) => {
@@ -27,7 +30,15 @@ const Form = ({
   const paraNum = fields.length;
 
   return (
-    <Formik initialValues={initVal} onSubmit={onSubmit}>
+    <Formik
+      initialValues={initVal}
+      onSubmit={(values) => {
+        if (values && onSubmit !== undefined) {
+          onSubmit(values);
+        }
+      }}
+      innerRef={innerRef}
+    >
       {({ handleSubmit, errors, touched, getFieldProps, setFieldValue }) => {
         return (
           <FormikForm
@@ -129,7 +140,12 @@ const Form = ({
             </Flex>
             {activeBtn && (
               <Flex w="100%" justifyContent="center">
-                <Button variant="reverse" type="submit" w="10rem">
+                <Button
+                  onClick={onSubmit}
+                  variant="reverse"
+                  type="submit"
+                  w="10rem"
+                >
                   {submitText}
                 </Button>
               </Flex>
