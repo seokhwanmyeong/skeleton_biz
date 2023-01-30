@@ -18,8 +18,9 @@ const ListTable = ({
             w="100%"
             m={idx === 0 || idx === arr.length - 1 ? "0" : "1rem 0"}
             display="flex"
+            gap="1rem"
           >
-            <Text w="40%" textStyle="list.title">
+            <Text w="50%" textStyle="list.title">
               {listKeys[key]}
             </Text>
             <Text w="100%" textStyle="list.text">

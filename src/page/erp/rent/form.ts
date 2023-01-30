@@ -105,7 +105,7 @@ const formRentInfo = {
       },
       {
         labelText: "주소",
-        type: "text",
+        type: "addr",
         key: "address",
         variant: "filled",
         isRequired: true,

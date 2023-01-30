@@ -11,13 +11,13 @@ import { formRentInfo } from "@page/erp/rent/form";
 const ModalRentEditor = ({ info, update }: { info?: any; update: boolean }) => {
   const formRef = useRef<any>();
 
-  const RentInfoHandler = useCallback(() => {
+  const rentInfoHandler = useCallback(() => {
     console.log(formRef.current);
   }, [formRef]);
 
   const bottomBtn = () => {
     return (
-      <Button colorScheme="blue" onClick={RentInfoHandler}>
+      <Button colorScheme="blue" onClick={rentInfoHandler}>
         {update ? "수정하기" : "추가하기"}
       </Button>
     );

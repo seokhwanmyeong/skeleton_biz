@@ -3,7 +3,7 @@ type Options<I = any> = {
   divide?: number;
   totalRegisters: number;
   page: number;
-  items: I[];
+  items?: I[];
   registersPerPage: number;
   siblingsCount?: number;
 };
@@ -57,8 +57,8 @@ const usePagination = <I = any>({
   const pageStart = (page - 1) * registersPerPage;
   const pageEnd = pageStart + registersPerPage;
   const pageItems = isDirectApi
-    ? items.slice(0, registersPerPage)
-    : items.slice(pageStart, pageEnd);
+    ? items?.slice(0, registersPerPage) || []
+    : items?.slice(pageStart, pageEnd) || [];
 
   return {
     dividePages,

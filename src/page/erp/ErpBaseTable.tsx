@@ -269,7 +269,6 @@ const ErpBaseTable = () => {
 
   return (
     <Flex flexDirection="column">
-      <Heading>DashBoard</Heading>
       <BaseTable
         actviePage={true}
         registersPerPage={10}

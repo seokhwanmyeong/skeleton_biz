@@ -1,6 +1,6 @@
 //  LIB
 import { useState, useMemo, useEffect } from "react";
-import { Flex, Heading, Button } from "@chakra-ui/react";
+import { Flex, Heading, Button, Box } from "@chakra-ui/react";
 //  Components
 import ChartGraph from "@components/charts/ChartGraph";
 import ChartBar from "@components/charts/ChartBar";
@@ -206,7 +206,19 @@ const ErpDashBoard = () => {
   }, []);
 
   return (
-    <Flex flexDirection="column" gap={20}>
+    <Box
+      overflowY="scroll"
+      pl="1rem"
+      __css={{
+        "::-webkit-scrollbar": {
+          w: "5px",
+        },
+        "::-webkit-scrollbar-thumb": {
+          borderRadius: "5",
+          bg: `primary.reverse.bdColor`,
+        },
+      }}
+    >
       <Heading>DashBoard</Heading>
       <Flex gap={10} w="100%" h="500px">
         <Flex w="50%">
@@ -228,6 +240,7 @@ const ErpDashBoard = () => {
         </Flex>
       </Flex>
       <Button
+        m="2rem"
         onClick={() => {
           setDivide(!divide);
         }}
@@ -243,7 +256,7 @@ const ErpDashBoard = () => {
           legend={testMargin.legend}
         />
       </Flex>
-    </Flex>
+    </Box>
   );
 };
 

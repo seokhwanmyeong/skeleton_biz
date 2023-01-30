@@ -17,6 +17,8 @@
   },
   "dependencies": {
     "@chakra-ui/react": "^2.3.7",
+    "@cubejs-client/core": "^0.31.46",
+    "@cubejs-client/react": "^0.31.46",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@react-spring/web": "^9.6.0",

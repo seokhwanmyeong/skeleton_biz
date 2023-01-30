@@ -12,6 +12,7 @@ import {
   Tab,
   TabPanel,
   Stack,
+  Box,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 //  Components
@@ -26,6 +27,7 @@ import { erpStoreApi } from "@api/bizApi/config";
 //  Form & Column
 import { formSearchStore } from "@page/erp/store/form";
 import { mainTable } from "@page/erp/store/column";
+import ErpHistory from "../history/ErpHistory";
 
 const ErpStoreDetail = () => {
   const navigate = useNavigate();
@@ -71,7 +73,19 @@ const ErpStoreDetail = () => {
   }, [mapRef]);
 
   return (
-    <Flex flexDirection="column">
+    <Box
+      overflowY="scroll"
+      pl="1rem"
+      __css={{
+        "::-webkit-scrollbar": {
+          w: "5px",
+        },
+        "::-webkit-scrollbar-thumb": {
+          borderRadius: "5",
+          bg: `primary.reverse.bdColor`,
+        },
+      }}
+    >
       <Button
         mb="1rem"
         key={`link-prev`}
@@ -113,7 +127,7 @@ const ErpStoreDetail = () => {
                   id="map"
                   style={{
                     width: "50%",
-                    height: "50rem",
+                    height: "40rem",
                   }}
                 ></div>
                 <ListTable
@@ -125,18 +139,11 @@ const ErpStoreDetail = () => {
             </Flex>
           </TabPanel>
           <TabPanel key="panel-area">
-            <ApiTable
-              api={erpStoreApi.getData}
-              initReq={initReq}
-              form={form}
-              columns={column}
-              actviePage={true}
-              emptyData={{ text: "No Contents" }}
-            />
+            <ErpHistory />
           </TabPanel>
         </TabPanels>
       </Tabs>
-    </Flex>
+    </Box>
   );
 };
 

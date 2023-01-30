@@ -1,10 +1,12 @@
 const checkboxTheme = {
   baseStyle: {
     container: {},
-    label: {},
+    label: {
+      fontSize: "1.2rem",
+    },
     control: {
-      w: "1.6rem",
-      h: "1.6rem",
+      w: "1.2rem",
+      h: "1.2rem",
     },
     icon: {},
   },

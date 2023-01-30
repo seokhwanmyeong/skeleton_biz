@@ -248,51 +248,55 @@ const InputDate = ({
 
   return (
     <Flex gap={2} w="100%" alignItems="center">
-      <ChakraInput
-        id={fieldKey}
-        type="date"
-        value={
-          date === undefined
-            ? String(new Date())
-            : typeof date === "string"
-            ? date
-            : date.start
-        }
-        onChange={(e: any) => dateHandler(e.target.value, "start")}
-        variant={variant}
-        placeholder={placeholder}
-        _placeholder={_placeholder}
-        focusBorderColor={focusBorderColor}
-        errorBorderColor={errorBorderColor}
-        isDisabled={isDisabled}
-        isInvalid={
-          typeof date === "object" && date
-            ? validate(date.start, date.end)
-            : isInvalid
-        }
-        isReadOnly={isReadOnly}
-        isRequired={isRequired}
-        {...inputProps}
-      />
+      <Flex w="100%">
+        <ChakraInput
+          id={fieldKey}
+          type="date"
+          value={
+            date === undefined
+              ? String(new Date())
+              : typeof date === "string"
+              ? date
+              : date.start
+          }
+          onChange={(e: any) => dateHandler(e.target.value, "start")}
+          variant={variant}
+          placeholder={placeholder}
+          _placeholder={_placeholder}
+          focusBorderColor={focusBorderColor}
+          errorBorderColor={errorBorderColor}
+          isDisabled={isDisabled}
+          isInvalid={
+            typeof date === "object" && date
+              ? validate(date.start, date.end)
+              : isInvalid
+          }
+          isReadOnly={isReadOnly}
+          isRequired={isRequired}
+          {...inputProps}
+        />
+      </Flex>
       {type === "double" && typeof date === "object" && (
         <>
           <Flex>~</Flex>
-          <ChakraInput
-            id={`${fieldKey}-end`}
-            type="date"
-            value={date.end === undefined ? String(new Date()) : date.end}
-            onChange={(e: any) => dateHandler(e.target.value, "end")}
-            variant={variant}
-            placeholder={placeholder}
-            _placeholder={_placeholder}
-            focusBorderColor={focusBorderColor}
-            errorBorderColor={errorBorderColor}
-            isDisabled={isDisabled}
-            isInvalid={validate(date.start, date.end)}
-            isReadOnly={isReadOnly}
-            isRequired={isRequired}
-            {...inputProps}
-          />
+          <Flex w="100%">
+            <ChakraInput
+              id={`${fieldKey}-end`}
+              type="date"
+              value={date.end === undefined ? String(new Date()) : date.end}
+              onChange={(e: any) => dateHandler(e.target.value, "end")}
+              variant={variant}
+              placeholder={placeholder}
+              _placeholder={_placeholder}
+              focusBorderColor={focusBorderColor}
+              errorBorderColor={errorBorderColor}
+              isDisabled={isDisabled}
+              isInvalid={validate(date.start, date.end)}
+              isReadOnly={isReadOnly}
+              isRequired={isRequired}
+              {...inputProps}
+            />
+          </Flex>
         </>
       )}
     </Flex>
@@ -326,6 +330,7 @@ const InputTotalDate = ({
         isReadOnly={isReadOnly}
         isRequired={isRequired}
         w="max-content"
+        size="md"
       >
         전체기간
       </Radio>
@@ -753,7 +758,13 @@ const InputAddr = ({
       <ChakraModal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent w="auto" maxW="auto">
-          <ModalBody p="0" borderRadius="base" overflow="hidden">
+          <ModalBody
+            p="0"
+            w="30vw"
+            h="40vh"
+            borderRadius="base"
+            overflow="hidden"
+          >
             <DaumPostcode onComplete={handleComplete} />
           </ModalBody>
         </ModalContent>

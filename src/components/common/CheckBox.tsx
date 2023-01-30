@@ -137,18 +137,25 @@ const CheckboxGroup = ({
       onChange={chkHandler}
       variant={variant}
     >
-      <Flex gap="1rem">
+      <Flex w="100%" justifyContent="space-between">
         {activeTotal && (
           <ChakraCheckbox
             onChange={() => onChange("total")}
             key={`check-total`}
             value={"total"}
+            fontSize="xs"
+            lineHeight="1.2rem"
           >
             {parseTotalTxt}
           </ChakraCheckbox>
         )}
         {chkboxData.map((data: { text: string; value: string | number }) => (
-          <ChakraCheckbox key={`check-${data.value}`} value={data.value}>
+          <ChakraCheckbox
+            key={`check-${data.value}`}
+            value={data.value}
+            fontSize="xs"
+            lineHeight="1.2rem"
+          >
             {data.text}
           </ChakraCheckbox>
         ))}

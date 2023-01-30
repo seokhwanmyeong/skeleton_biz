@@ -14,6 +14,7 @@ const themeTable = {
           color: "primary.main.font",
           borderBottom: "0",
           textAlign: "center",
+          wordBreak: "keep-all",
           zIndex: "1",
         },
         _last: {

@@ -139,44 +139,49 @@ const ApiTable = forwardRef(
     }, [req]);
 
     return (
-      <Flex flexDirection="column" gap={10} overflow="hidden">
+      <Flex flexDirection="column" gap={10}>
         <SearchBox setReq={setReq} form={form} />
         {activeSummary && (
-          <Flex
-            flexDirection="column"
-            gap="2rem"
+          <List
+            display="flex"
+            justifyContent="space-between"
             p="2rem 2rem"
             border="1px solid"
             borderRadius="base"
           >
-            <Text textStyle="list.title">검색요약</Text>
-            <List display="flex">
-              <ListItem display="flex" w="100%">
-                <Text w="35%" textStyle="list.title">
-                  매장수
-                </Text>
-                <Text textStyle="list.text">38 건</Text>
-              </ListItem>
-              <ListItem display="flex" w="100%">
-                <Text w="35%" textStyle="list.title">
-                  평균 월매출
-                </Text>
-                <Text textStyle="list.text">1,200 만원</Text>
-              </ListItem>
-              <ListItem display="flex" w="100%">
-                <Text w="35%" textStyle="list.title">
-                  평균 일매출
-                </Text>
-                <Text textStyle="list.text">200 만원</Text>
-              </ListItem>
-              <ListItem display="flex" w="100%">
-                <Text w="35%" textStyle="list.title">
-                  누적매출
-                </Text>
-                <Text textStyle="list.text">31,200 만원</Text>
-              </ListItem>
-            </List>
-          </Flex>
+            <ListItem display="flex" gap="1rem">
+              <Text textStyle="list.title" fontSize="md">
+                매장수
+              </Text>
+              <Text textStyle="list.text" fontSize="md">
+                38 건
+              </Text>
+            </ListItem>
+            <ListItem display="flex" gap="1rem">
+              <Text textStyle="list.title" fontSize="md">
+                평균 월매출
+              </Text>
+              <Text textStyle="list.text" fontSize="md">
+                1,200 만원
+              </Text>
+            </ListItem>
+            <ListItem display="flex" gap="1rem">
+              <Text textStyle="list.title" fontSize="md">
+                평균 일매출
+              </Text>
+              <Text textStyle="list.text" fontSize="md">
+                200 만원
+              </Text>
+            </ListItem>
+            <ListItem display="flex" gap="1rem">
+              <Text textStyle="list.title" fontSize="md">
+                누적매출
+              </Text>
+              <Text textStyle="list.text" fontSize="md">
+                31,200 만원
+              </Text>
+            </ListItem>
+          </List>
         )}
         <Flex justifyContent="space-between" alignItems="center">
           <Text>검색결과 : {totalReg}건</Text>

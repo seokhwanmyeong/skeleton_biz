@@ -2,41 +2,44 @@
 import { Fragment, useMemo, useState, useRef } from "react";
 import { Flex, Heading, Button } from "@chakra-ui/react";
 //  Components
-import ApiTable from "@components/table/ApiTable";
+import Search from "@components/search/Search";
+import TableCube from "@components/table/TableCube";
 import ModalSaleEditor from "@components/modal/erp/ModalSaleEditor";
 //  Form & Column
-import { formSearchSale } from "@page/erp/sale/form";
-import { mainTable } from "@page/erp/sale/column";
+import { columnSaleInfo } from "@components/table/column/erp";
 //  Api & URL
-import { erpSaleApi } from "@api/bizApi/config";
+import { querySaleList } from "@src/api/cubeApi/query";
 //  Util
 import { exportFileCSV } from "@util/file/manageFile";
 
 const ErpSale = () => {
-  const [selectData, setSelectData] = useState([]);
-  const refreshTable = useRef<any>();
-  const { column, initReq, form } = useMemo(
+  const [tableData, setTableData] = useState<any[]>([]);
+  const [selectData, setSelectData] = useState<any>([]);
+  const [curPage, setCurPage] = useState<number>(1);
+  const { column, initQ } = useMemo(
     () => ({
-      column: mainTable,
-      initReq: formSearchSale.initVal,
-      form: formSearchSale,
+      column: columnSaleInfo,
+      initQ: querySaleList.initQ,
+      // form: formSearchStore,
     }),
     []
   );
+  const removeStoreHandler = () => {
+    setSelectData([]);
+  };
+  console.log(tableData);
 
-  const BtnGroup = (props: any) => {
-    const removeStoreHandler = () => {
-      console.log(selectData);
-      setSelectData([]);
-      refreshTable?.current && refreshTable?.current?.focus();
-    };
-
-    return (
+  return (
+    <Flex flexDirection="column" gap="3rem" overflow="hidden">
+      <Heading variant="outlet">매출</Heading>
+      <Search initQ={initQ} setQueryData={setTableData} />
       <Flex gap={2}>
         <ModalSaleEditor />
         <Button
           variant="reverse"
-          onClick={() => exportFileCSV(selectData, mainTable, "매출리스트")}
+          onClick={() =>
+            exportFileCSV(selectData, columnSaleInfo, "매출리스트")
+          }
           isDisabled={selectData.length > 0 ? false : true}
         >
           다운로드
@@ -49,27 +52,14 @@ const ErpSale = () => {
           매출삭제
         </Button>
       </Flex>
-    );
-  };
-
-  return (
-    <Fragment>
-      <Heading variant="outlet">매출</Heading>
-      <ApiTable
-        api={erpSaleApi.getData}
-        initReq={initReq}
-        form={form}
-        columns={column}
-        caption="BaseApiTable"
+      <TableCube
         actviePage={true}
-        activeSummary={true}
-        emptyData={{ text: "No Contents" }}
+        data={tableData}
+        columns={column}
         getSelectData={setSelectData}
-        ref={refreshTable}
-      >
-        <BtnGroup />
-      </ApiTable>
-    </Fragment>
+        getPage={setCurPage}
+      />
+    </Flex>
   );
 };
 

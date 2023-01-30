@@ -1,52 +1,48 @@
 //  LIB
-import { Fragment, useRef, useMemo, useState, memo } from "react";
+import { useMemo, useState } from "react";
 import { Flex, Heading, Button } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
 //  Components
-import ApiTable from "@components/table/ApiTable";
 import ModalStoreEditor from "@components/modal/erp/ModalStoreEditor";
+import Search from "@components/search/Search";
+import TableCube from "@components/table/TableCube";
 //  Form & Column
 import { formSearchStore } from "@page/erp/store/form";
-import { mainTable } from "@page/erp/store/column";
+import { columnStoreInfo } from "@components/table/column/erp";
 //  Api & URL
-import { erpStoreApi } from "@api/bizApi/config";
+import { queryStoreList } from "@src/api/cubeApi/query";
 //  Util & Data
 import { exportFileCSV } from "@util/file/manageFile";
 
-const ErpBranch = () => {
-  const navigate = useNavigate();
-  const refreshTable = useRef<any>();
-  const [selectData, setSelectData] = useState([]);
-  const { column, initReq, form } = useMemo(
+const ErpStore = () => {
+  const [tableData, setTableData] = useState<any[]>([]);
+  const [selectData, setSelectData] = useState<any>([]);
+  const [curPage, setCurPage] = useState<number>(1);
+  const { column, initQ, form } = useMemo(
     () => ({
-      column: mainTable,
-      initReq: formSearchStore.initVal,
+      column: columnStoreInfo,
+      initQ: queryStoreList.initQ,
       form: formSearchStore,
     }),
     []
   );
 
-  const onRowClickHandler = (row: any) => {
-    navigate("/erp/store/detail", { state: { ...row.original } });
+  const removeStoreHandler = () => {
+    setSelectData([]);
   };
 
-  const BtnGroup = (props: any) => {
-    const removeStoreHandler = () => {
-      console.log(selectData);
-      setSelectData([]);
-      refreshTable?.current && refreshTable?.current?.focus();
-    };
+  console.log(tableData);
 
-    const exportFileHandler = () => {
-      exportFileCSV(selectData, mainTable, "매장리스트");
-    };
-
-    return (
+  return (
+    <Flex flexDirection="column" gap="3rem" overflow="hidden">
+      <Heading variant="outlet">매장</Heading>
+      <Search initQ={initQ} setQueryData={setTableData} />
       <Flex gap={2}>
         <ModalStoreEditor update={false} />
         <Button
           variant="reverse"
-          onClick={() => exportFileHandler}
+          onClick={() =>
+            exportFileCSV(selectData, columnStoreInfo, "매장리스트")
+          }
           isDisabled={selectData.length > 0 ? false : true}
         >
           다운로드
@@ -59,28 +55,15 @@ const ErpBranch = () => {
           매장삭제
         </Button>
       </Flex>
-    );
-  };
-
-  return (
-    <Fragment>
-      <Heading variant="outlet">매장</Heading>
-      <ApiTable
-        api={erpStoreApi.getData}
-        initReq={initReq}
-        form={form}
-        columns={column}
-        caption="BaseApiTable"
+      <TableCube
         actviePage={true}
-        emptyData={{ text: "No Contents" }}
+        data={tableData}
+        columns={column}
         getSelectData={setSelectData}
-        onDoubleClick={onRowClickHandler}
-        ref={refreshTable}
-      >
-        <BtnGroup />
-      </ApiTable>
-    </Fragment>
+        getPage={setCurPage}
+      />
+    </Flex>
   );
 };
 
-export default ErpBranch;
+export default ErpStore;

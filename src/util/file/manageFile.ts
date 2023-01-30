@@ -208,11 +208,11 @@ const exportFileCSV = async (
 ) => {
   let exportHeader: { [key: string]: string } = {};
   const exportKey = columns
-    .filter((column: any) => (column?.accessorKey ? true : false))
+    .filter((column: any) => (column?.id ? true : false))
     .map((column: any) => {
-      exportHeader[column.accessorKey] = column.header;
+      exportHeader[column.id] = column.header;
 
-      return column.accessorKey;
+      return column.id;
     });
 
   const exportData = data.map((dataRow: any) => {

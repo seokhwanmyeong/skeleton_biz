@@ -12,6 +12,7 @@ import {
   TabPanel,
   List,
   ListItem,
+  Box,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 //  Components
@@ -55,7 +56,19 @@ const ErpStoreDetail = () => {
   }, [mapRef]);
 
   return (
-    <Flex flexDirection="column">
+    <Box
+      overflowY="scroll"
+      pl="1rem"
+      __css={{
+        "::-webkit-scrollbar": {
+          w: "5px",
+        },
+        "::-webkit-scrollbar-thumb": {
+          borderRadius: "5",
+          bg: `primary.reverse.bdColor`,
+        },
+      }}
+    >
       <Button
         mb="2rem"
         key={`link-prev`}
@@ -101,7 +114,7 @@ const ErpStoreDetail = () => {
                   id="map"
                   style={{
                     width: "50%",
-                    height: "50rem",
+                    height: "40rem",
                   }}
                 ></div>
                 <ListTable
@@ -121,7 +134,7 @@ const ErpStoreDetail = () => {
           <TabPanel key="panel-area">전자계약서</TabPanel>
         </TabPanels>
       </Tabs>
-    </Flex>
+    </Box>
   );
 };
 

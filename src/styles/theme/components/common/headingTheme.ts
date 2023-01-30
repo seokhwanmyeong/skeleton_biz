@@ -4,7 +4,6 @@ const headingTheme = {
   },
   variants: {
     outlet: {
-      mb: "2rem",
       fontSize: "xl",
     },
   },
