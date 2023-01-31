@@ -1,14 +1,22 @@
 //  LIB
 import { useState, useMemo, useEffect } from "react";
 import { Flex, Heading, Button, Box } from "@chakra-ui/react";
+import { useCubeQuery } from "@cubejs-client/react";
 //  Components
 import ChartGraph from "@components/charts/ChartGraph";
 import ChartBar from "@components/charts/ChartBar";
 import ChartDonut from "@components/charts/ChartDonut";
+//  API & Query
+import { querySaleDashboard } from "@api/cubeApi/query";
 //  Util
+import { cubeChartHandler } from "@services/cube/transformer";
 import { transMarginData } from "@util/data/testData";
 
 const ErpDashBoard = () => {
+  const [chartData, setChartData] = useState<any[]>([]);
+  const { resultSet, error, isLoading } = useCubeQuery(
+    querySaleDashboard.initQ
+  );
   const [divide, setDivide] = useState(false);
   const testMargin = useMemo(() => {
     const testData = transMarginData(20);
@@ -205,6 +213,32 @@ const ErpDashBoard = () => {
     };
   }, []);
 
+  useEffect(() => {
+    console.log(resultSet);
+    if (!resultSet) {
+      return;
+    } else {
+      const pivotConfig = [
+        {
+          x: [`StoreInfo.storeName`],
+          y: [`Sales.sum`],
+        },
+        {
+          x: [`Sales.menuNm`],
+          y: [`Sales.sum`],
+        },
+        {
+          x: [`Sales.dlvType`],
+          y: [`Sales.sum`],
+        },
+      ];
+      const data = cubeChartHandler(resultSet, pivotConfig);
+
+      console.log(data);
+      setChartData(data || []);
+    }
+  }, [resultSet]);
+
   return (
     <Box
       overflowY="scroll"
@@ -223,9 +257,9 @@ const ErpDashBoard = () => {
       <Flex gap={10} w="100%" h="500px">
         <Flex w="50%">
           <ChartDonut
-            data={testMargin3.data}
-            accessKey={testMargin3.accessKey}
-            subKey={testMargin3.subKey}
+            data={chartData[2] || []}
+            accessKey={"Sales.sum"}
+            // subKey={testMargin3.subKey}
           />
         </Flex>
         <Flex w="50%">

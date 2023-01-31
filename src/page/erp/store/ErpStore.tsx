@@ -16,11 +16,13 @@ import { exportFileCSV } from "@util/file/manageFile";
 const ErpStore = () => {
   const [tableData, setTableData] = useState<any[]>([]);
   const [selectData, setSelectData] = useState<any>([]);
+  const [totalPage, setTotalPage] = useState<number>(1);
   const [curPage, setCurPage] = useState<number>(1);
-  const { column, initQ, form } = useMemo(
+  const { column, initQ, totalQ, form } = useMemo(
     () => ({
       column: columnStoreInfo,
       initQ: queryStoreList.initQ,
+      totalQ: queryStoreList.totalQ,
       form: formSearchStore,
     }),
     []
@@ -30,12 +32,16 @@ const ErpStore = () => {
     setSelectData([]);
   };
 
-  console.log(tableData);
-
   return (
     <Flex flexDirection="column" gap="3rem" overflow="hidden">
       <Heading variant="outlet">매장</Heading>
-      <Search initQ={initQ} setQueryData={setTableData} />
+      <Search
+        initQ={initQ}
+        totalQ={totalQ}
+        page={curPage}
+        setTotal={setTotalPage}
+        setQueryData={setTableData}
+      />
       <Flex gap={2}>
         <ModalStoreEditor update={false} />
         <Button
@@ -59,6 +65,8 @@ const ErpStore = () => {
         actviePage={true}
         data={tableData}
         columns={column}
+        totalReg={totalPage}
+        page={curPage}
         getSelectData={setSelectData}
         getPage={setCurPage}
       />

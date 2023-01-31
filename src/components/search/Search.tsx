@@ -1,27 +1,51 @@
 //  LIB
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { QueryBuilder, useCubeQuery } from "@cubejs-client/react";
 import type { Query } from "@cubejs-client/core";
 import { Flex, Button } from "@chakra-ui/react";
 import SearchMember from "./element/SearchMember";
+import { CubeContext } from "@cubejs-client/react";
 
 type PropsSearch = {
   initQ: Query;
+  totalQ?: { measures: string[] };
+  page?: number;
+  setTotal?: React.Dispatch<React.SetStateAction<number>>;
   setQueryData: React.Dispatch<React.SetStateAction<any[]>>;
 };
 
-const Search = ({ initQ, setQueryData }: PropsSearch) => {
-  const [query, setQuery] = useState<Query>(initQ);
+const Search = ({
+  initQ,
+  totalQ,
+  page,
+  setTotal,
+  setQueryData,
+}: PropsSearch) => {
+  const { cubejsApi } = useContext(CubeContext);
+  const [query, setQuery] = useState<Query>({
+    ...initQ,
+    offset: page || initQ.offset || 1,
+  });
   const { resultSet, error, isLoading } = useCubeQuery(query);
 
   useEffect(() => {
-    // console.log(query);
     if (resultSet) {
-      // console.log(resultSet);
-      // console.log(resultSet.tablePivot());
       setQueryData(resultSet.tablePivot());
+      if (totalQ && setTotal) {
+        cubejsApi.load(totalQ).then((res) => {
+          const total = Number(res.rawData()[0][totalQ.measures[0]]) || 1;
+          setTotal(total);
+        });
+      }
     }
-  }, [query, resultSet]);
+  }, [resultSet]);
+
+  useEffect(() => {
+    setQuery({
+      ...query,
+      offset: page || 1,
+    });
+  }, [page]);
 
   return (
     <Flex flexDirection="column" gap="10px">

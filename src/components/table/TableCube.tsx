@@ -54,7 +54,7 @@ const TableCube = ({
       page: page,
       registersPerPage,
     });
-  }, [page, data]);
+  }, [page, data, totalReg]);
 
   const {
     reset,

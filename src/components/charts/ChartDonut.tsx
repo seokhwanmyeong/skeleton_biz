@@ -10,7 +10,6 @@ import { scaleOrdinal } from "@visx/scale";
 import { Group } from "@visx/group";
 import { ScaleSVG } from "@visx/responsive";
 import { motion } from "framer-motion";
-import { animated, to } from "@react-spring/web";
 
 const background = "#555555";
 
@@ -43,27 +42,20 @@ const ChartDonut = ({ data, accessKey, subKey }: any) => {
   const { getDataColor, legendColor } = useMemo(
     () => ({
       getDataColor: scaleOrdinal({
-        domain: data.map((l: any) => l[accessKey]),
-        range: [
-          "rgba(93,30,91,1)",
-          "rgba(93,30,91,0.8)",
-          "rgba(93,30,91,0.6)",
-          "rgba(93,30,91,0.4)",
-        ],
+        domain: data.map((l: any) => l.x),
+        range: data.map((l: any, idx: number, arr: any[]) => {
+          return `rgba(31, 26, 104, ${
+            Math.ceil(((1 * (idx + 1)) / arr.length) * 10) / 10
+          })`;
+        }),
       }),
       legendColor: scaleOrdinal({
-        domain: data.map((l: any) => l["date"]),
-        range: [
-          "rgba(93,30,91,1)",
-          "rgba(93,30,91,0.9)",
-          "rgba(93,30,91,0.8)",
-          "rgba(93,30,91,0.7)",
-          "rgba(93,30,91,0.6)",
-          "rgba(93,30,91,0.5)",
-          "rgba(93,30,91,0.4)",
-          "rgba(93,30,91,0.3)",
-          "rgba(93,30,91,0.2)",
-        ],
+        domain: data.map((l: any) => l.x),
+        range: data.map((l: any, idx: number, arr: any[]) => {
+          return `rgba(31, 26, 104, ${
+            Math.ceil(((1 * (idx + 1)) / arr.length) * 10) / 10
+          })`;
+        }),
       }),
     }),
     [data, accessKey]
@@ -106,7 +98,6 @@ const ChartDonut = ({ data, accessKey, subKey }: any) => {
           centerX: innerWidth / 2,
           centerY: innerHeight / 2,
         };
-        // console.log("render");
 
         return (
           <Flex position="relative" ref={containerRef}>
@@ -206,7 +197,7 @@ const ChartDonut = ({ data, accessKey, subKey }: any) => {
                   }}
                 </Pie>
                 {/* Sub Pie Chart (inner) */}
-                {activeDetailArc >= 0 && (
+                {activeDetailArc >= 0 && subKey && (
                   <Pie
                     data={subData()}
                     pieValue={subArr}
@@ -259,7 +250,6 @@ const ChartDonut = ({ data, accessKey, subKey }: any) => {
                                   }}
                                   onMouseEnter={(e) => {
                                     const eventSvgCoords = localPoint(e);
-
                                     setTooltipTimeout(
                                       window.setTimeout(() => {
                                         showTooltip({
@@ -294,7 +284,7 @@ const ChartDonut = ({ data, accessKey, subKey }: any) => {
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                   >
-                                    {groupeArc.value}
+                                    {groupeArc.title}: {groupeArc.value}
                                   </motion.text>
                                 )}
                               </Group>
@@ -436,6 +426,7 @@ const ChartDonut = ({ data, accessKey, subKey }: any) => {
 // );
 
 const Label = memo(({ centroidX, centroidY, groupeArc, accessKey }: any) => {
+  console.log(groupeArc);
   return (
     <text
       fill="white"
@@ -446,7 +437,8 @@ const Label = memo(({ centroidX, centroidY, groupeArc, accessKey }: any) => {
       textAnchor="middle"
       pointerEvents="none"
     >
-      {groupeArc[accessKey]}
+      <text>{groupeArc.x.split(",")[0]}</text>
+      {groupeArc.x.split(",")[0]}: {groupeArc[accessKey]}
     </text>
   );
 });
