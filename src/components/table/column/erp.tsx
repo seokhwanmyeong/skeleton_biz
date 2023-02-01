@@ -1,8 +1,8 @@
 //  Lib
 import { Text } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
-//  CustomCell
-import { CellStoreDetail } from "../cutomCell/CustomCell";
+import { Button } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 
 const columnHelper = createColumnHelper();
 
@@ -56,7 +56,16 @@ const columnStoreInfo = [
   }),
   columnHelper.display({
     header: "매장상세",
-    cell: (info) => CellStoreDetail(info.row.original),
+    cell: (info: any) => (
+      <Button
+        as={Link}
+        to={"/erp/store/detail"}
+        state={info.row.original}
+        data-text={"상세보기"}
+      >
+        상세보기
+      </Button>
+    ),
     enableResizing: false,
     size: 100,
   }),
@@ -135,8 +144,17 @@ const columnSaleInfo = [
     size: 100,
   }),
   columnHelper.display({
-    header: "매장상세",
-    cell: (info) => CellStoreDetail(info.row.original),
+    header: "매출상세",
+    cell: (info: any) => (
+      <Button
+        as={Link}
+        to={"/erp/store/detail"}
+        state={info.row.original}
+        data-text={"상세보기"}
+      >
+        상세보기
+      </Button>
+    ),
     enableResizing: false,
     size: 100,
   }),

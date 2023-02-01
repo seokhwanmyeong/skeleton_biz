@@ -45,4 +45,21 @@ const cubeChartHandler = (
   }
 };
 
-export { cubeSeriesHandler, cubeChartHandler };
+const transDataKey = <T>(
+  data: {
+    [key: string]: string | number | boolean;
+  }[]
+): T[] => {
+  return data.map((l) => {
+    let tmp: any = {};
+    let keys = Object.keys(l);
+
+    keys.map((key) => {
+      tmp[key.split(".")[1]] = l[key];
+    });
+
+    return tmp;
+  });
+};
+
+export { cubeSeriesHandler, cubeChartHandler, transDataKey };

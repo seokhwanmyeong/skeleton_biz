@@ -1,5 +1,5 @@
 //  LIB
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
   Button,
   Flex,
@@ -18,28 +18,88 @@ import { useNavigate } from "react-router-dom";
 //  Components
 import ErpHistory from "@page/erp/history/ErpHistory";
 import ListTable from "@components/table/ListTable";
-import ErpBaseTable from "../ErpBaseTable";
 import ModalStoreEditor from "@components/modal/erp/ModalStoreEditor";
+import BaseTable from "@components/table/BaseTable";
 //  Hook
 import useLocationState from "@hook/useLocationState";
+import { CubeContext } from "@cubejs-client/react";
+//  Api & Query
+import { queryStoreInfo, queryStoreSale } from "@api/cubeApi/query";
+import { ResultSet } from "@cubejs-client/core";
+import { transDataKey } from "@src/services/cube/transformer";
+
+const testKeys = {
+  storeName: "매장명",
+  storeCode: "매장코드",
+  storeStatus: "매장상태",
+  storeRank: "매장타입",
+  phone: "매장연락처",
+  biz_number: "사업자등록번호",
+  owner_name: "대표자",
+  owner_phone: "대표자 연락처",
+  addr: "주소",
+  addrDetail: "주소상세",
+};
+
+type StoreInfo = {
+  storeName: string;
+  storeCode: string;
+  storeStatus: string;
+  storeRank?: string;
+  phone?: string;
+  biz_number?: string;
+  owner_name?: string;
+  owner_phone?: string;
+  addr: string;
+  addrDetail?: string;
+};
 
 const ErpStoreDetail = () => {
+  const { cubejsApi } = useContext(CubeContext);
+  const [storeInfo, setStoreInfo] = useState<StoreInfo | undefined>(undefined);
   const navigate = useNavigate();
   const { location } = useLocationState();
   const mapRef = useRef<any>();
   const state = location.state;
-  const testKeys = {
-    name: "매장명",
-    code: "매장코드",
-    status: "매장상태",
-    rank: "매장타입",
-    phone: "매장연락처",
-    biz_number: "사업자등록번호",
-    owner_name: "대표자",
-    owner_phone: "대표자 연락처",
-    address: "주소",
-    address_detail: "주소상세",
-  };
+  const storeCode = state[`StoreInfo.storeCode`];
+  console.log(storeCode);
+  useEffect(() => {
+    if (storeCode) {
+      cubejsApi
+        .load({
+          ...queryStoreInfo.initQ,
+          filters: [
+            {
+              member: "StoreInfo.storeCode",
+              operator: "equals",
+              values: [String(storeCode)],
+            },
+          ],
+        })
+        .then((res: ResultSet<any>) => {
+          const data = transDataKey<StoreInfo>(res.tablePivot());
+
+          setStoreInfo(data[0]);
+        });
+      cubejsApi
+        .load(
+          queryStoreSale.initQ.map((query) => ({
+            ...query,
+            filters: [
+              {
+                member: "StoreInfo.storeCode",
+                operator: "equals",
+                values: [String(storeCode)],
+              },
+            ],
+          }))
+        )
+        .then((res) => {
+          console.log(res);
+          console.log(res.decompose().map((l) => console.log(l.rawData())));
+        });
+    }
+  }, [storeCode]);
 
   useEffect(() => {
     if (!mapRef.current) {
@@ -77,15 +137,17 @@ const ErpStoreDetail = () => {
       >
         {"< 매장리스트"}
       </Button>
-      <Heading variant="outlet">매장상세 : {state.name || "매장이름"}</Heading>
+      <Heading variant="outlet">
+        매장상세 : {storeInfo && storeInfo.storeName}
+      </Heading>
       <List display="flex" gap="10rem" mb="2rem">
         <ListItem display="flex" gap="3rem">
           <Text textStyle="list.title">매장명</Text>
-          <Text textStyle="list.text">{state.name}</Text>
+          <Text textStyle="list.text">{storeInfo && storeInfo.storeName}</Text>
         </ListItem>
         <ListItem display="flex" gap="3rem">
           <Text textStyle="list.title">매장코드</Text>
-          <Text textStyle="list.text">{state.code}</Text>
+          <Text textStyle="list.text">{storeInfo && storeInfo.storeCode}</Text>
         </ListItem>
       </List>
       <Tabs variant="detailPage">
@@ -107,7 +169,7 @@ const ErpStoreDetail = () => {
           <TabPanel key="panel-pointer">
             <Flex flexDirection="column" gap="1rem">
               <Flex w="100%" justifyContent="flex-end">
-                <ModalStoreEditor update={true} info={state} />
+                <ModalStoreEditor update={true} info={storeInfo} />
               </Flex>
               <Flex flexDirection="row" w="100%" gap="5rem">
                 <div
@@ -119,14 +181,21 @@ const ErpStoreDetail = () => {
                 ></div>
                 <ListTable
                   tableProps={{ w: "50%" }}
-                  data={state}
+                  data={storeInfo || {}}
                   listKeys={testKeys}
                 />
               </Flex>
             </Flex>
           </TabPanel>
           <TabPanel key="panel-upjong">
-            <ErpBaseTable />
+            {/* <BaseTable
+              actviePage={true}
+              registersPerPage={10}
+              columns={baseColumn}
+              data={sampleData}
+              tableOption={tableOption}
+              initialSort={initialSort}
+            /> */}
           </TabPanel>
           <TabPanel key="panel-area">
             <ErpHistory />

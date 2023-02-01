@@ -15,11 +15,13 @@ import { exportFileCSV } from "@util/file/manageFile";
 const ErpSale = () => {
   const [tableData, setTableData] = useState<any[]>([]);
   const [selectData, setSelectData] = useState<any>([]);
+  const [totalPage, setTotalPage] = useState<number>(1);
   const [curPage, setCurPage] = useState<number>(1);
-  const { column, initQ } = useMemo(
+  const { column, initQ, totalQ } = useMemo(
     () => ({
       column: columnSaleInfo,
       initQ: querySaleList.initQ,
+      totalQ: querySaleList.totalQ,
       // form: formSearchStore,
     }),
     []
@@ -32,7 +34,13 @@ const ErpSale = () => {
   return (
     <Flex flexDirection="column" gap="3rem" overflow="hidden">
       <Heading variant="outlet">매출</Heading>
-      <Search initQ={initQ} setQueryData={setTableData} />
+      <Search
+        initQ={initQ}
+        totalQ={totalQ}
+        page={curPage}
+        setTotal={setTotalPage}
+        setQueryData={setTableData}
+      />
       <Flex gap={2}>
         <ModalSaleEditor />
         <Button
@@ -56,6 +64,8 @@ const ErpSale = () => {
         actviePage={true}
         data={tableData}
         columns={column}
+        totalReg={totalPage}
+        page={curPage}
         getSelectData={setSelectData}
         getPage={setCurPage}
       />

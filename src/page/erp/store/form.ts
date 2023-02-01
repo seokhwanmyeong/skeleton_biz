@@ -120,7 +120,7 @@ const formStoreInfo = {
       {
         labelText: "매장상태",
         type: "slct",
-        key: "status",
+        key: "storeStatus",
         values: [
           { text: "개점", value: "STATUS_OPEN" },
           { text: "폐점", value: "STATUS_CLOSE" },
@@ -134,7 +134,7 @@ const formStoreInfo = {
       {
         labelText: "매장타입",
         type: "slct",
-        key: "rank",
+        key: "storeRank",
         values: [
           { text: "항목선택", value: "" },
           { text: "A타입", value: "A_RANK" },
@@ -149,7 +149,7 @@ const formStoreInfo = {
       {
         labelText: "매장연락처",
         type: "text",
-        key: "storePhone",
+        key: "phone",
         variant: "filled",
         isRequired: false,
       },
@@ -177,14 +177,14 @@ const formStoreInfo = {
       {
         labelText: "주소",
         type: "addr",
-        key: "address",
+        key: "addr",
         variant: "filled",
         isRequired: true,
       },
       {
         labelText: " ",
         type: "text",
-        key: "addressDetail",
+        key: "addrDetail",
         variant: "filled",
         isRequired: false,
         placeholder: "상세주소 입력란",
