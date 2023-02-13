@@ -108,9 +108,9 @@ const CheckboxGroup = ({
 
     if (activeTotal) {
       if (exceptTotal.length === originLength) {
-        onChange("total");
+        onChange(["total"]);
       } else {
-        onChange(exceptTotal.length === 0 ? "total" : exceptTotal);
+        onChange(exceptTotal);
       }
     } else {
       onChange(exceptTotal);
@@ -118,14 +118,10 @@ const CheckboxGroup = ({
   };
 
   const totalTrans = () => {
-    if (activeTotal) {
-      if (Array.isArray(chkValue)) {
-        return chkValue.length === originLength ? ["total"] : chkValue;
-      } else {
-        return ["total"];
-      }
+    if (Array.isArray(chkValue)) {
+      return chkValue.length === originLength ? ["total"] : chkValue;
     } else {
-      return chkValue;
+      return ["total"];
     }
   };
 
@@ -140,7 +136,13 @@ const CheckboxGroup = ({
       <Flex w="100%" justifyContent="space-between">
         {activeTotal && (
           <ChakraCheckbox
-            onChange={() => onChange("total")}
+            onChange={() => {
+              if (chkValue.length === 1 && chkValue[0] === "total") {
+                onChange([]);
+              } else {
+                onChange(["total"]);
+              }
+            }}
             key={`check-total`}
             value={"total"}
             fontSize="xs"

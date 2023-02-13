@@ -1,6 +1,5 @@
 // Lib
 import { Outlet } from "react-router-dom";
-// Style
 import { Flex } from "@chakra-ui/react";
 // Components
 import Header from "@components/header/Header";
@@ -23,7 +22,7 @@ const FrameMain = () => {
       <Flex flex="1" w="100%" overflow="hidden">
         <Outlet />
       </Flex>
-      {pathState !== "maps" && pathState !== "/" && <Footer />}
+      {pathState === "/" && <Footer />}
     </Flex>
   );
 };

@@ -245,8 +245,8 @@ export const collectSementicState = selector({
   set: ({ get, set }, key: any) => {
     const sementicState = get(atomSementicState);
     const atomList: any = {
-      pointer: atomSementicMapState,
-      area: atomSementicMapState,
+      pointer: atomAreaOption,
+      area: atomAreaOption,
       sector: atomSementicUpjong,
       // infoCom: atomInfoCom,
     };
@@ -264,10 +264,9 @@ export const collectSementicState = selector({
 export const checkBaseState = selector({
   key: "checkBaseState",
   get: ({ get }) => {
-    const map = get(atomSementicMapState);
-    const upjong = get(atomSementicUpjong);
+    const map = get(atomAreaOption);
 
-    return map.allCheck && upjong.allCheck ? true : false;
+    return map.allCheck ? true : false;
   },
   set: ({ get, set }) => {},
 });
@@ -277,8 +276,8 @@ export const resetSementicAtom = selector({
   key: "resetSementicAtom",
   get: () => {},
   set: ({ reset }) => {
-    reset(atomSementicMapState);
-    reset(atomMapControllState);
+    reset(atomAreaOption);
+    reset(atomMapControll);
     reset(atomSementicUpjong);
     reset(atomInfoCom);
   },
@@ -289,9 +288,13 @@ type ControllState = {
   [key: string]: any;
 };
 
-export const atomSementicMapState = atom<{ [key: string]: any }>({
+export const atomAreaOption = atom<{ [key: string]: any }>({
   key: "sementicMapState",
   default: {
+    type: "area",
+    activeState: false,
+    address: null,
+    polygon: null,
     pointer: {
       coord: {},
       address: "",
@@ -311,32 +314,31 @@ export const selectorSementicMapState = selector({
   set: ({ get, set }, newVal: any) => {
     const { pointer, area } = newVal;
 
-    set(atomSementicMapState, {
+    set(atomAreaOption, {
       ...newVal,
       allCheck: pointer.isCheck && area.isCheck ? true : false,
     });
   },
 });
 
-export const atomMapControllState = atom<ControllState>({
+export const atomMapControll = atom<ControllState>({
   key: "mapControllState",
   default: {
-    zoomLevel: 0,
     event: "",
   },
 });
 
-export const mapControllHandler = selector({
+export const areaSelectActivator = selector({
   key: "mapControllHandler",
   get: ({ get }) => {
-    const mapControllState = get(atomMapControllState);
+    const mapControllState = get(atomMapControll);
 
     return mapControllState.event;
   },
   set: ({ get, set }, val: any) => {
-    const currentState = get(atomMapControllState);
+    const currentState = get(atomMapControll);
 
-    set(atomMapControllState, {
+    set(atomMapControll, {
       ...currentState,
       event: val,
     });
@@ -407,5 +409,196 @@ export const selectorInfoCom = selector({
       : [...infoComs, key];
 
     newVal.length > 4 ? alert("선택제한 : 4") : set(atomInfoCom, newVal);
+  },
+});
+
+export const infoComFloatPop = atom<any>({
+  key: "infoComFloatPop",
+  default: {
+    type: "externalData",
+    category: "floatPop",
+    title: "유동인구",
+    baseFilter: [
+      {
+        title: "성별",
+        key: "gender",
+        type: "totalChk",
+        value: [
+          { label: "전체", value: "total" },
+          { label: "남", value: "man" },
+          { label: "녀", value: "woman" },
+        ],
+      },
+      {
+        title: "나이대",
+        key: "age",
+        type: "totalChk",
+        value: [
+          { label: "전체", value: "total" },
+          { label: "20대", value: "20th" },
+          { label: "30대", value: "30th" },
+          { label: "40대", value: "40th" },
+          { label: "50대", value: "50th" },
+          { label: "60대", value: "60th" },
+        ],
+      },
+      {
+        title: "구간",
+        key: "range",
+        type: "range",
+        value: { start: null, end: null },
+      },
+    ],
+    req: {},
+    res: [],
+    activeView: false,
+    apiType: "nice",
+    apiEvent: null,
+  },
+});
+
+export const infoComHousehold = atom<any>({
+  key: "infoComHousehold",
+  default: {
+    type: "externalData",
+    category: "household",
+    title: "세대수",
+    baseFilter: [
+      {
+        title: "성별",
+        key: "gender",
+        type: "totalChk",
+        value: [
+          { label: "전체", value: "total" },
+          { label: "남", value: "man" },
+          { label: "녀", value: "woman" },
+        ],
+      },
+    ],
+    req: {},
+    res: [],
+    activeView: false,
+    apiType: "nice",
+    apiEvent: null,
+  },
+});
+
+export const infoComUpjong = atom<any>({
+  key: "infoComUpjong",
+  default: {
+    type: "externalData",
+    category: "upjong",
+    title: "업종 수",
+    baseFilter: {},
+    req: {},
+    res: [],
+    activeView: false,
+    apiType: "nice",
+    apiEvent: null,
+  },
+});
+
+export const infoComSale = atom<any>({
+  key: "infoComSale",
+  default: {
+    type: "externalData",
+    category: "sale",
+    title: "매출",
+    baseFilter: {},
+    req: {},
+    res: [],
+    activeView: false,
+    apiType: "nice",
+    apiEvent: null,
+  },
+});
+
+export const infoComBrandStandard = atom<any>({
+  key: "infoComBrandSet",
+  default: {
+    type: "externalData",
+    category: "brandStandard",
+    title: "브랜드 필터",
+    baseFilter: {},
+    req: {},
+    res: [],
+    activeView: false,
+    apiType: "nice",
+    apiEvent: null,
+  },
+});
+
+export const infoComBrand = atom<any>({
+  key: "infoComBrand",
+  default: {
+    type: "externalData",
+    category: "brand",
+    title: "사업체 조회",
+    baseFilter: {},
+    req: {},
+    res: [],
+    activeView: false,
+    apiType: "nice",
+    apiEvent: null,
+  },
+});
+
+export const infoComBuilding = atom<any>({
+  key: "infoComBuilding",
+  default: {
+    type: "externalData",
+    category: "building",
+    title: "건물조회",
+    baseFilter: {},
+    req: {},
+    res: [],
+    activeView: false,
+    apiType: "nice",
+    apiEvent: null,
+  },
+});
+
+export const infoComMyStore = atom<any>({
+  key: "infoComMyStore",
+  default: {
+    type: "brandData",
+    category: "store",
+    title: "매장조회",
+    baseFilter: {},
+    req: {},
+    res: [],
+    activeView: false,
+    apiType: "nice",
+    apiEvent: null,
+  },
+});
+
+export const infoComMyBsns = atom<any>({
+  key: "infoComMyBsns",
+  default: {
+    type: "brandData",
+    category: "bsns",
+    title: "상권조회",
+    baseFilter: {},
+    req: {},
+    res: [],
+    activeView: false,
+    apiType: "nice",
+    apiEvent: null,
+  },
+});
+
+export const infoComMyRent = atom<any>({
+  key: "infoComMyRent",
+  default: {
+    type: "brandData",
+    category: "rent",
+    title: "매물조회",
+    baseFilter: {},
+    req: {},
+    res: [],
+    activeView: false,
+    apiType: "nice",
+    apiEvent: null,
   },
 });

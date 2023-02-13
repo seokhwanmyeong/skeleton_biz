@@ -1,6 +1,6 @@
 //  Lib
 import { useState, useRef } from "react";
-import { useSetRecoilState, useRecoilValue } from "recoil";
+import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
 import {
   Flex,
   Button,
@@ -18,83 +18,78 @@ import {
   atomSementicBaseList,
   checkBaseState,
   resetSementicAtom,
+  areaSelectActivator,
 } from "@states/searchState/stateSearch";
 
 const SementicSearchEngine = () => {
   //  Option Handler
   const baseList = useRecoilValue(atomSementicBaseList);
   const isCheckbaseOption = useRecoilValue(checkBaseState);
+  const [currentEvent, setMapControll] = useRecoilState(areaSelectActivator);
+  const [openItem, setOpenItem] = useState<number>(0);
   const resetState = useSetRecoilState(resetSementicAtom);
-  const [offsetW, setOffsetW] = useState(0);
-  const ref = useRef<any>();
 
-  const onToggle = (e: any) => {
-    setOffsetW(offsetW === 0 ? -ref.current.clientWidth : 0);
+  const resetHandler = () => {
+    setOpenItem(0);
+    resetState();
   };
 
   return (
     <Flex
       position="absolute"
-      left={`${offsetW}px`}
       top="0"
+      left="0"
       zIndex="100"
-      flexDirection="row-reverse"
-      transition="0.3s"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+      w={"auto"}
       backgroundColor="transparent"
+      transition="0.5s"
     >
-      <Button
-        variant="base"
-        borderRadius={offsetW === 0 ? "0px 0px 5px 5px" : "0px 0px 5px 0px"}
-        onClick={(e) => onToggle(e)}
+      <Accordion
+        index={openItem}
+        variant={"searchEngine"}
+        onChange={(idx: number) => setOpenItem(idx)}
+        allowToggle
       >
-        SementicSearchEngine
-      </Button>
-      <Flex
-        w={"auto"}
-        flexDirection="column"
-        alignItems="center"
-        justifyContent="center"
-        overflow="hidden"
-        transition="0.5s"
-        backgroundColor="transparent"
-        ref={ref}
-      >
-        <Accordion defaultIndex={[0]} variant={"searchEngine"} allowMultiple>
-          <AccordionItem key={`Item-Map-Select`}>
-            <AccordionButton>
-              Set Base State
-              <AccordionIcon />
-            </AccordionButton>
-            <AccordionPanel>
-              <FilterBaseState />
-            </AccordionPanel>
-          </AccordionItem>
-          <AccordionItem
-            key={`Item-Option-Select`}
-            isDisabled={!isCheckbaseOption}
-          >
-            <AccordionButton>
-              {baseList.infoCom.title}
-              <AccordionIcon />
-            </AccordionButton>
-            <AccordionPanel>
-              <FilterInfoCom isDisabled={!isCheckbaseOption} />
-            </AccordionPanel>
-          </AccordionItem>
-        </Accordion>
-        <Button
-          w="auto"
-          bgColor="primary.main.bg"
-          color="primary.main.font"
-          transition="0.3s"
-          _hover={{
-            bgColor: "primary.main.hover",
-          }}
-          onClick={() => resetState()}
+        <AccordionItem key={`Item-Map-Select`}>
+          <AccordionButton>
+            필수선택 옵션
+            <AccordionIcon />
+          </AccordionButton>
+          <AccordionPanel>
+            <FilterBaseState />
+          </AccordionPanel>
+        </AccordionItem>
+        <AccordionItem
+          key={`Item-Option-Select`}
+          isDisabled={!isCheckbaseOption || currentEvent === "activePoint"}
         >
-          RESET
-        </Button>
-      </Flex>
+          <AccordionButton>
+            {baseList.infoCom.title}
+            <AccordionIcon />
+          </AccordionButton>
+          <AccordionPanel>
+            <FilterInfoCom isDisabled={!isCheckbaseOption} />
+          </AccordionPanel>
+        </AccordionItem>
+      </Accordion>
+      <Button
+        position="absolute"
+        bottom="-4rem"
+        left="1rem"
+        w="auto"
+        bgColor="primary.main.bg"
+        color="primary.main.font"
+        transition="0.3s"
+        _hover={{
+          bgColor: "primary.main.hover",
+        }}
+        onClick={resetHandler}
+      >
+        초기화
+      </Button>
     </Flex>
   );
 };

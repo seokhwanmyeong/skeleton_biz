@@ -16,7 +16,7 @@ const accordionTheme = {
         display: "flex",
         flexDirection: "column",
         gap: "0.5rem",
-        minW: "18rem",
+        minW: "30rem",
         transition: "0.3s",
       },
       container: {
@@ -39,7 +39,6 @@ const accordionTheme = {
       panel: {
         display: "flex",
         flexDirection: "column",
-        w: "48rem",
         bg: "primary.main.bg",
         borderRadius: "radii.basic",
         fontSize: "0.8rem",
