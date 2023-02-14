@@ -16,6 +16,7 @@
     "electron:build": "rm -rf build && tsc && vite build && electron-packager --overwrite --out=release ."
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.0.17",
     "@chakra-ui/react": "^2.3.7",
     "@cubejs-client/core": "^0.31.46",
     "@cubejs-client/react": "^0.31.46",

@@ -34,6 +34,7 @@ const Tag = (props: TagProps) => {
       onClick={tagBtn ? onClick : undefined}
       bgColor={isChecked ? "primary.main.bg" : "primary.main.hover"}
       cursor={tagBtn ? "pointer" : "default"}
+      p="0.5rem 1rem"
     >
       <TagLabel color="primary.main.font">{text}</TagLabel>
       {hasBtn && <TagCloseButton onClick={onClick} />}

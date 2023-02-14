@@ -1,20 +1,43 @@
 //  Lib
-import { useEffect, useState, useRef } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useEffect, useState, useRef, useContext } from "react";
+import { CubeContext } from "@cubejs-client/react";
+import type { Query } from "@cubejs-client/core";
+import {
+  useRecoilState,
+  useRecoilValue,
+  useResetRecoilState,
+  useSetRecoilState,
+} from "recoil";
 import { Button, Flex, keyframes } from "@chakra-ui/react";
 //  State
 import {
   selectorSementicMapState,
-  atomMapControllState,
-  mapControllHandler,
+  atomMapControll,
+  areaSelectActivator,
 } from "@states/searchState/stateSearch";
+//  Services
+import { addrAreaApiHandler, dong } from "@services/address/sgisDepthAddr";
+//  Util
+import { addrHCode } from "@util/data/address";
 
 const SementicMap = () => {
-  const { event } = useRecoilValue(atomMapControllState);
+  const [addr, setAddr] = useState(null);
+  const [geoTop, setGeoTop] = useState<any>(null);
+  const [geoMid, setGeoMid] = useState<any>(null);
+  const [test, setTest] = useState<any>(null);
+
+  const { cubejsApi } = useContext(CubeContext);
+  const [areaTopList, setAreaTopList] = useState<any>(null);
+  const [query, setQuery] = useState<Query>({
+    dimensions: ["AreaSido.code", "AreaSido.name", "AreaSido.polygon"],
+  });
+
+  const { event } = useRecoilValue(atomMapControll);
+  const mapEventReset = useResetRecoilState(atomMapControll);
   const [mapState, setSementicMapState] = useRecoilState(
     selectorSementicMapState
   );
-  const setMapControll = useSetRecoilState(mapControllHandler);
+  const setMapControll = useSetRecoilState(areaSelectActivator);
   const mapRef = useRef<any>();
   const markerRef = useRef<any>();
   const [activeEvent, setActiveEvent] = useState<any>();
@@ -101,9 +124,7 @@ const SementicMap = () => {
     );
   };
 
-  const Test = (props: any) => {
-    const { offset } = props;
-
+  const Test = () => {
     return (
       <Button
         style={{
@@ -111,6 +132,7 @@ const SementicMap = () => {
           position: "absolute",
           left: `${offset.left}px`,
           top: `${offset.top - 60}px`,
+          zIndex: "999",
           color: "#ffffff",
           borderRadius: "5px",
           backgroundColor: "#555555",
@@ -139,7 +161,7 @@ const SementicMap = () => {
 
   const mapBasePointHandler = (e: any, baseMap: any) => {
     const point = e.coord;
-    console.log(markerRef.current);
+
     if (markerRef.current === undefined) {
       const marker = new naver.maps.Marker({
         position: point,
@@ -190,14 +212,268 @@ const SementicMap = () => {
     console.log(point);
   };
 
+  const getDongArea = async (setGeo: any, code?: string) => {
+    return await dong(code).then((res) => {
+      console.log(res);
+
+      if (res) {
+        const map = mapRef.current;
+        const { type, features } = res;
+        const transFeatures = features.map((props: any) => {
+          let coordinates;
+          if (props.geometry.type === "MultiPolygon") {
+            const calcLand = props.geometry.coordinates.map(
+              (data: any[]) => data[0].length
+            );
+            let index;
+
+            if (props.properties.adm_cd === "35580") {
+              index = 16;
+            } else if (props.properties.adm_cd === "21120") {
+              index = 11;
+            } else if (props.properties.adm_cd === "31092") {
+              index = 12;
+            } else {
+              index = calcLand.indexOf(Math.max(...calcLand));
+            }
+
+            if (props.properties.adm_cd === "23") {
+              let test: any[] = [];
+              const tmp = props.geometry.coordinates.map(
+                (group: any, idx: number) => {
+                  if (idx === 12 || idx === 6) {
+                    let result = group[0].map(
+                      (coordinate: [number, number]) => {
+                        const trans = naver.maps.TransCoord.fromUTMKToLatLng(
+                          new naver.maps.Point(coordinate[0], coordinate[1])
+                        );
+                        return [trans.x, trans.y];
+                      }
+                    );
+                    test.push(result);
+                  } else if (idx === 7) {
+                    let result = group[0].map(
+                      (coordinate: [number, number]) => {
+                        const trans = naver.maps.TransCoord.fromUTMKToLatLng(
+                          new naver.maps.Point(coordinate[0], coordinate[1])
+                        );
+                        return [trans.x, trans.y];
+                      }
+                    );
+                    test.push(result);
+                  }
+                }
+              );
+              coordinates = test;
+            } else {
+              coordinates = props.geometry.coordinates[index].map(
+                (group: any) => {
+                  return group.map((coordinate: [number, number]) => {
+                    const trans = naver.maps.TransCoord.fromUTMKToLatLng(
+                      new naver.maps.Point(coordinate[0], coordinate[1])
+                    );
+                    return [trans.x, trans.y];
+                  });
+                }
+              );
+            }
+          } else {
+            coordinates = props.geometry.coordinates.map((group: any) => {
+              return group.map((coordinate: [number, number]) => {
+                const trans = naver.maps.TransCoord.fromUTMKToLatLng(
+                  new naver.maps.Point(coordinate[0], coordinate[1])
+                );
+                return [trans.x, trans.y];
+              });
+            });
+          }
+
+          return {
+            ...props,
+            geometry: {
+              // type: props.geometry.type,
+              type: "Polygon",
+              coordinates: coordinates,
+            },
+          };
+        });
+        // console.log(transFeatures);
+        setGeo({ type, features: transFeatures });
+        map.data.addGeoJson({ type, features: transFeatures });
+        map.data.setStyle((feature: any) => {
+          let color = "red";
+
+          if (feature.getProperty("isColorful")) {
+            color = feature.getProperty("color");
+          }
+
+          return {
+            fillColor: color,
+            strokeColor: color,
+            strokeWeight: 1,
+            icon: null,
+          };
+        });
+        map.data.addListener("click", (e: any) => {
+          console.log(e.feature);
+          e.feature.setProperty("isColorful", true);
+          const coord = new naver.maps.Point(
+            e.feature.property_x,
+            e.feature.property_y
+          );
+          const location = naver.maps.TransCoord.fromUTMKToLatLng(coord);
+
+          mapRef.current.setZoom(9, true);
+          mapRef.current.panTo(location);
+          setAddr(e.feature.property_adm_cd);
+        });
+        map.data.addListener("dblclick", (e: any) => {
+          var bounds = e.feature.getBounds();
+
+          if (bounds) {
+            map.panToBounds(bounds);
+          }
+        });
+        map.data.addListener("mouseover", (e: any) => {
+          map.data.overrideStyle(e.feature, {
+            strokeWeight: 3,
+          });
+        });
+        map.data.addListener("mouseout", (e: any) => {
+          map.data.revertStyle();
+        });
+
+        return transFeatures;
+      } else {
+        return null;
+      }
+
+      // res.map((area: any) => {
+      //   const { geometry, properties } = area;
+
+      //   geometry?.coordinates?.map((li: any) => {
+      //     const coord = new naver.maps.Point(properties.x, properties.y);
+      //     const location = naver.maps.TransCoord.fromUTMKToLatLng(coord);
+
+      //     const marker = new naver.maps.Marker({
+      //       position: location,
+      //       map: mapRef.current,
+      //     });
+      //     console.log(li);
+      //     return null;
+      //   });
+      // });
+    });
+  };
+
+  useEffect(() => {
+    console.log("initialize Map Event");
+    if (event) {
+      mapEventReset();
+    }
+  }, []);
+
   useEffect(() => {
     if (!mapRef.current) {
       mapRef.current = new naver.maps.Map("map", {
-        center: new naver.maps.LatLng(37.3614483, 127.1114883),
-        zoom: 13,
+        // center: new naver.maps.LatLng(37.3614483, 127.1114883),
+        center: new naver.maps.LatLng(36.1223291, 126.9101228),
+        zoom: 8,
       });
+
+      // getDongArea(setGeoTop).then((res) => {
+      //   const tr = res.map((li: any) => {
+      //     const { properties, geometry } = li;
+      //     if (properties.adm_nm === "전라남도") {
+      //       console.log(geometry);
+      //     }
+
+      //     return {
+      //       code: properties.adm_cd,
+      //       name: properties.adm_nm,
+      //       nameEn: properties.addr_en,
+      //       polygon:
+      //         properties.adm_cd === "23" || properties.adm_cd === "36"
+      //           ? JSON.stringify({ ...geometry.coordinates })
+      //           : JSON.stringify({ ...geometry.coordinates[0] }),
+      //     };
+      //   });
+
+      //   setTest(tr);
+      // });
     }
   }, [mapRef]);
+
+  useEffect(() => {
+    if (!areaTopList) {
+      cubejsApi.load(query).then((res) => {
+        const areaGroup = res.rawData().map((l: any) => {
+          const polygon = Object.values(JSON.parse(l["AreaSido.polygon"])).map(
+            (li: any) => {
+              if (l["AreaSido.code"] === "23" || l["AreaSido.code"] === "36") {
+                return li.map(
+                  (depth: any) => new naver.maps.LatLng(depth[1], depth[0])
+                );
+              } else {
+                return new naver.maps.LatLng(li[1], li[0]);
+              }
+            }
+          );
+          let color = "red";
+
+          const setPolygon = new naver.maps.Polygon({
+            map: mapRef.current,
+            paths:
+              l["AreaSido.code"] === "23" || l["AreaSido.code"] === "36"
+                ? polygon
+                : [polygon],
+            fillColor: color,
+            fillOpacity: 0.1,
+            strokeColor: color,
+            strokeWeight: 1,
+            strokeOpacity: 0.6,
+            clickable: true,
+          });
+
+          naver.maps.Event.addListener(setPolygon, "click", (e) => {
+            console.log(e);
+
+            // const location = naver.maps.TransCoord.fromUTMKToLatLng(coord);
+            // mapRef.current.setZoom(9, true);
+            // mapRef.current.panTo(location);
+            // setAddr(l["AreaSido.code"]);
+
+            setQuery({
+              dimensions: [
+                "AreaGungu.code",
+                "AreaGungu.name",
+                "AreaGungu.polygon",
+              ],
+            });
+          });
+
+          naver.maps.Event.addListener(setPolygon, "mouseover", function (e) {
+            console.log(e);
+            mapRef.current.setCursor("pointer");
+            setPolygon.setOptions("fillOpacity", 0.4);
+          });
+
+          naver.maps.Event.addListener(setPolygon, "mouseout", (e) => {
+            mapRef.current.setCursor("auto");
+            setPolygon.setOptions("fillOpacity", 0.1);
+          });
+
+          return {
+            code: l["AreaSido.code"],
+            name: l["AreaSido.name"],
+            polygon: setPolygon,
+          };
+        });
+
+        setAreaTopList(areaGroup);
+      });
+    }
+  }, []);
 
   useEffect(() => {
     console.log("Event State Change");
@@ -245,6 +521,30 @@ const SementicMap = () => {
     return naver.maps.Event.removeListener(activeEvent);
   }, [event]);
 
+  useEffect(() => {
+    if (addr) {
+      if (geoTop) {
+        mapRef.current.data.removeGeoJson(geoTop);
+      }
+      if (geoMid) {
+        mapRef.current.data.removeGeoJson(geoMid);
+      }
+      setGeoMid(null);
+      getDongArea(setGeoMid, addr);
+    }
+  }, [addr]);
+
+  const exportData = (data: any) => {
+    const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
+      JSON.stringify(data)
+    )}`;
+    const link = document.createElement("a");
+    link.href = jsonString;
+    link.download = "data.json";
+
+    link.click();
+  };
+
   return (
     <>
       <div
@@ -254,8 +554,17 @@ const SementicMap = () => {
           height: "100%",
         }}
       >
-        {event === "activePoint" && <Test offset={offset} />}
+        {event === "activePoint" && <Test />}
         {event === "activePolygon" && <MapController />}
+        <Button
+          onClick={() => exportData(test)}
+          position="absolute"
+          bottom="0"
+          left="0"
+          zIndex={999}
+        >
+          test
+        </Button>
       </div>
     </>
   );

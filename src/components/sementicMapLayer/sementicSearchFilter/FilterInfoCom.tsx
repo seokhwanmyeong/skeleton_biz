@@ -10,9 +10,12 @@ import {
   Text,
   InputGroup,
   Button,
+  Switch,
+  IconButton,
 } from "@chakra-ui/react";
+import { SpinnerIcon } from "@chakra-ui/icons";
 //  Components
-import { CheckboxGroup, CheckBoxTag } from "@components/common/CheckBox";
+import { CheckboxGroup, CheckboxTagGroup } from "@components/common/CheckBox";
 //  State
 import {
   atomSementicBaseList,
@@ -296,13 +299,30 @@ const FilterFloatPop = () => {
 
   return (
     <Flex flexDirection="column" gap="2rem">
-      <Flex w="100%" flexDirection="row-reverse" gap="1rem">
-        <Button onClick={mapViewHandler}>on/off</Button>
-        <Button onClick={resetFilter}>초기화</Button>
+      <Flex w="100%" alignItems="center" flexDirection="row-reverse" gap="1rem">
+        <Switch
+          size="lg"
+          onChange={(e) => {
+            if (e.target.checked) {
+              mapViewHandler();
+            } else {
+              mapViewHandler();
+            }
+          }}
+        />
+        <IconButton
+          aria-label="reset filter"
+          icon={<SpinnerIcon />}
+          onClick={resetFilter}
+          bgColor="transparent"
+          _hover={{
+            color: "primary.reverse.font",
+          }}
+        />
       </Flex>
-      <Flex flexDirection="row" w="40%">
+      <Flex flexDirection="row" w="35%">
         {/* <Text fontSize="1.6rem">성별</Text> */}
-        <CheckboxGroup
+        <CheckboxTagGroup
           chkValue={filter.gender}
           chkboxData={[
             { text: "남", value: "man" },
@@ -313,9 +333,9 @@ const FilterFloatPop = () => {
           parseTotalTxt="전체"
         />
       </Flex>
-      <Flex flexDirection="row" w="100%">
+      <Flex flexDirection="row" w="90%">
         {/* <Text fontSize="1.6rem">나이</Text> */}
-        <CheckboxGroup
+        <CheckboxTagGroup
           chkValue={filter.age}
           chkboxData={[
             { text: "20대", value: "20th" },

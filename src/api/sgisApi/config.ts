@@ -147,6 +147,29 @@ const addrDepthApi = {
       }[];
       trId: string;
     }>(`/addr/stage.json`, { params: { pg_yn: 0, cd: addrCode } }),
+  area: (addrCode?: string) =>
+    instance.get<{
+      errCd: number;
+      errMsg: string;
+      id: string;
+      result: {
+        addr_name: string;
+        cd: string;
+        full_addr: string;
+        x_coor: string;
+        y_coor: string;
+        ps?: any;
+      }[];
+      trId: string;
+    }>(`/addr/stage.json`, {
+      params: addrCode ? { pg_yn: 0, cd: addrCode } : { pg_yn: 0 },
+    }),
+  dong: (addrCode?: string) =>
+    instance.get(`/boundary/hadmarea.geojson`, {
+      params: addrCode
+        ? { year: 2022, low_search: 1, adm_cd: addrCode }
+        : { year: 2022, low_search: 2 },
+    }),
 };
 
 export { addrDepthApi, getAccessToken };

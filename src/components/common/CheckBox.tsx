@@ -19,6 +19,7 @@ interface ChekboxTagProps extends ChekboxProps {
   isDisabled?: boolean;
   isCustom?: boolean;
   children?: any;
+  checkBoxProps?: any;
 }
 
 const CheckBox = ({ title, isChecked, onChange, value }: ChekboxProps) => {
@@ -35,6 +36,7 @@ const CheckBoxTag = ({
   isDisabled = false,
   onChange,
   value,
+  checkBoxProps,
 }: ChekboxTagProps) => {
   return (
     <ChakraCheckbox
@@ -43,6 +45,7 @@ const CheckBoxTag = ({
       onChange={onChange}
       value={value}
       isDisabled={isDisabled}
+      {...checkBoxProps}
     >
       <Tag
         variant="checkbox"
@@ -166,4 +169,94 @@ const CheckboxGroup = ({
   );
 };
 
-export { CheckBox, CheckBoxTag, TableCheckBox, CheckboxGroup };
+const CheckboxTagGroup = ({
+  chkboxData,
+  chkValue,
+  defaultValue = [],
+  isDisabled = false,
+  onChange,
+  variant,
+  activeTotal = false,
+  parseTotalTxt = "전체",
+}: {
+  chkboxData: { text: string; value: string | number }[];
+  chkValue: (string | number)[];
+  defaultValue?: (string | number)[];
+  isDisabled?: boolean;
+  onChange: (value: (string | number)[] | string) => void;
+  variant?: string;
+  activeTotal?: boolean;
+  parseTotalTxt?: string;
+}) => {
+  const originLength = chkboxData.length;
+
+  const chkHandler = (val: (string | number)[]) => {
+    const exceptTotal = val.filter((l: string | number) => l !== "total");
+
+    if (activeTotal) {
+      if (exceptTotal.length === originLength) {
+        onChange(["total"]);
+      } else {
+        onChange(exceptTotal);
+      }
+    } else {
+      onChange(exceptTotal);
+    }
+  };
+
+  const totalTrans = () => {
+    if (Array.isArray(chkValue)) {
+      return chkValue.length === originLength ? ["total"] : chkValue;
+    } else {
+      return ["total"];
+    }
+  };
+
+  return (
+    <ChakraCheckboxGroup
+      defaultValue={activeTotal ? ["total"] : defaultValue}
+      value={activeTotal ? totalTrans() : chkValue}
+      isDisabled={isDisabled}
+      onChange={chkHandler}
+      variant={variant}
+    >
+      <Flex w="100%" justifyContent="space-between">
+        {activeTotal && (
+          <CheckBoxTag
+            onChange={() => {
+              if (chkValue.length === 1 && chkValue[0] === "total") {
+                onChange([]);
+              } else {
+                onChange(["total"]);
+              }
+            }}
+            key={`check-total`}
+            title={parseTotalTxt}
+            value={"total"}
+            checkBoxProps={{
+              fontSize: "xs",
+            }}
+          />
+        )}
+        {chkboxData.map((data: { text: string; value: string | number }) => (
+          <CheckBoxTag
+            key={`check-${data.value}`}
+            title={data.text}
+            value={data.value}
+            checkBoxProps={{
+              fontSize: "xs",
+            }}
+          />
+        ))}
+      </Flex>
+    </ChakraCheckboxGroup>
+  );
+};
+
+export {
+  CheckBox,
+  CheckBoxTag,
+  TableCheckBox,
+  CheckboxGroup,
+  CheckboxTagGroup,
+};
