@@ -14,7 +14,7 @@ const checkboxTheme = {
     withTag: {
       control: { display: "none" },
       container: {},
-      label: {},
+      label: { m: "0px" },
       icon: { display: "none" },
     },
   },

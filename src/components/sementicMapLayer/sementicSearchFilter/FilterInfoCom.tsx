@@ -13,7 +13,7 @@ import {
   Switch,
   IconButton,
 } from "@chakra-ui/react";
-import { SpinnerIcon } from "@chakra-ui/icons";
+import { SpinnerIcon, ChevronUpIcon, ChevronDownIcon } from "@chakra-ui/icons";
 //  Components
 import { CheckboxGroup, CheckboxTagGroup } from "@components/common/CheckBox";
 //  State
@@ -21,16 +21,19 @@ import {
   atomSementicBaseList,
   atomInfoCom,
   selectorInfoCom,
+  atomArea,
 } from "@states/searchState/stateSearch";
 import { useEffect, useState } from "react";
 import { RadioBox } from "@src/components/common/RadioBox";
 import { Input } from "@src/components/common/Input";
+import { getSigunguPopInfo } from "@src/api/niceApi/config";
 
 const FilterInfoCom = (props: any) => {
   const { isDisabled } = props;
   const baseList = useRecoilValue(atomSementicBaseList);
   const infocomList = useRecoilValue(atomInfoCom);
   const setInfoCom = useSetRecoilState(selectorInfoCom);
+  const { slctAreaCode, slctAreaName } = useRecoilValue(atomArea);
 
   return (
     <Accordion variant={"searchEngine"} allowToggle>
@@ -65,7 +68,7 @@ const FilterInfoCom = (props: any) => {
                 fontWeight="bold"
                 gap="10px"
               >
-                <FilterFloatPop />
+                <FilterFloatPop areaCode={slctAreaCode} />
               </AccordionPanel>
             </AccordionItem>
             <AccordionItem key={`infoCom-household`} isDisabled={isDisabled}>
@@ -119,7 +122,7 @@ const FilterInfoCom = (props: any) => {
                 fontWeight="bold"
                 gap="10px"
               >
-                <FilterFloatPop />
+                <FilterSale />
               </AccordionPanel>
             </AccordionItem>
             <AccordionItem key={`infoCom-brandSet`} isDisabled={isDisabled}>
@@ -137,7 +140,43 @@ const FilterInfoCom = (props: any) => {
                 fontWeight="bold"
                 gap="10px"
               >
-                <FilterFloatPop />
+                <FilterBrandSet />
+              </AccordionPanel>
+            </AccordionItem>
+            <AccordionItem key={`infoCom-brand`} isDisabled={isDisabled}>
+              <AccordionButton color="#ffffff">
+                사업체조회
+                <AccordionIcon />
+              </AccordionButton>
+              <AccordionPanel
+                display="flex"
+                flexDirection="row"
+                flexWrap="wrap"
+                backgroundColor="#ededed"
+                color="#555555"
+                fontSize="0.8rem"
+                fontWeight="bold"
+                gap="10px"
+              >
+                <FilterBrand />
+              </AccordionPanel>
+            </AccordionItem>
+            <AccordionItem key={`infoCom-building`} isDisabled={isDisabled}>
+              <AccordionButton color="#ffffff">
+                건물조회
+                <AccordionIcon />
+              </AccordionButton>
+              <AccordionPanel
+                display="flex"
+                flexDirection="row"
+                flexWrap="wrap"
+                backgroundColor="#ededed"
+                color="#555555"
+                fontSize="0.8rem"
+                fontWeight="bold"
+                gap="10px"
+              >
+                <FilterBuilding />
               </AccordionPanel>
             </AccordionItem>
           </Accordion>
@@ -276,7 +315,65 @@ const FilterInfoCom = (props: any) => {
     </Accordion>
   );
 };
-const FilterFloatPop = () => {
+
+const SwitchOnOff = (props: {
+  size?: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}) => {
+  const { size, onChange } = props;
+  const [chk, setChk] = useState<boolean>(false);
+
+  return (
+    <Flex position="relative">
+      <Text
+        position="absolute"
+        left={"5px"}
+        zIndex={1}
+        visibility={chk ? "visible" : "hidden"}
+        fontWeight={900}
+      >
+        on
+      </Text>
+      <Text
+        position="absolute"
+        right={"5px"}
+        zIndex={1}
+        visibility={chk ? "hidden" : "visible"}
+        fontWeight={900}
+      >
+        off
+      </Text>
+      <Switch
+        spacing="5rem"
+        size={size}
+        onChange={(e) => {
+          setChk(e.target.checked);
+          onChange(e);
+        }}
+      />
+    </Flex>
+  );
+};
+
+const InnerText = ({
+  text,
+  hasUp = false,
+  hasDown = false,
+}: {
+  text: string;
+  hasUp?: boolean;
+  hasDown?: boolean;
+}) => {
+  return (
+    <Text>
+      {text}
+      {hasUp && <ChevronUpIcon />}
+      {hasDown && <ChevronDownIcon />}
+    </Text>
+  );
+};
+
+const FilterFloatPop = ({ areaCode }: { areaCode?: string }) => {
   const [filter, setFilter] = useState<any>({
     gender: null,
     age: null,
@@ -294,13 +391,16 @@ const FilterFloatPop = () => {
   const searchHander = () => {
     console.log(`\nstart search FloatPopulation`);
     console.log(filter);
+    if (areaCode) {
+      getSigunguPopInfo({ upjongCode: "D11002", sigunguCode: areaCode });
+    }
     //apiService(filter).then((res) => {})
   };
 
   return (
     <Flex flexDirection="column" gap="2rem">
       <Flex w="100%" alignItems="center" flexDirection="row-reverse" gap="1rem">
-        <Switch
+        <SwitchOnOff
           size="lg"
           onChange={(e) => {
             if (e.target.checked) {
@@ -421,23 +521,41 @@ const FilterHousehold = () => {
 
   return (
     <Flex flexDirection="column" gap="2rem">
-      <Flex w="100%" flexDirection="row-reverse" gap="1rem">
-        <Button onClick={mapViewHandler}>on/off</Button>
-        <Button onClick={resetFilter}>초기화</Button>
+      <Flex w="100%" alignItems="center" flexDirection="row-reverse" gap="1rem">
+        <Switch
+          size="lg"
+          onChange={(e) => {
+            if (e.target.checked) {
+              mapViewHandler();
+            } else {
+              mapViewHandler();
+            }
+          }}
+        />
+        <IconButton
+          aria-label="reset filter"
+          icon={<SpinnerIcon />}
+          onClick={resetFilter}
+          bgColor="transparent"
+          _hover={{
+            color: "primary.reverse.font",
+          }}
+        />
       </Flex>
-      <Flex flexDirection="row" w="100%">
+      <Flex flexDirection="row" w="90%">
         {/* <Text fontSize="1.6rem">나이</Text> */}
-        <CheckboxGroup
+        <CheckboxTagGroup
           chkValue={filter.age}
           chkboxData={[
-            { text: "1천 ^", value: "1000" },
-            { text: "2천 ^", value: "2000" },
-            { text: "3천 ^", value: "3000" },
-            { text: "4천 ^", value: "4000" },
-            { text: "5천 ^", value: "5000" },
-            { text: "1만 ^", value: "10000" },
+            { text: <InnerText text="1천" hasUp={true} />, value: 1000 },
+            { text: <InnerText text="2천" hasUp={true} />, value: 2000 },
+            { text: <InnerText text="3천" hasUp={true} />, value: 3000 },
+            { text: <InnerText text="4천" hasUp={true} />, value: 4000 },
+            { text: <InnerText text="5천" hasUp={true} />, value: 5000 },
+            { text: <InnerText text="1만" hasUp={true} />, value: 10000 },
           ]}
-          onChange={(val) => setFilter({ household: val })}
+          onChange={(val) => setFilter({ ...filter, age: val })}
+          activeTotal={false}
         />
       </Flex>
       <Button onClick={searchHander}>조회</Button>
@@ -463,23 +581,44 @@ const FilterUpjong = () => {
 
   return (
     <Flex flexDirection="column" gap="2rem">
-      <Flex w="100%" flexDirection="row-reverse" gap="1rem">
-        <Button onClick={mapViewHandler}>on/off</Button>
-        <Button onClick={resetFilter}>초기화</Button>
+      <Flex w="100%" alignItems="center" flexDirection="row-reverse" gap="1rem">
+        <Switch
+          size="lg"
+          onChange={(e) => {
+            if (e.target.checked) {
+              mapViewHandler();
+            } else {
+              mapViewHandler();
+            }
+          }}
+        />
+        <IconButton
+          aria-label="reset filter"
+          icon={<SpinnerIcon />}
+          onClick={resetFilter}
+          bgColor="transparent"
+          _hover={{
+            color: "primary.reverse.font",
+          }}
+        />
       </Flex>
       <Flex flexDirection="row" w="100%">
         {/* <Text fontSize="1.6rem">나이</Text> */}
-        <CheckboxGroup
+        <CheckboxTagGroup
           chkValue={filter.age}
           chkboxData={[
-            { text: "5이하", value: "0" },
-            { text: "6 ~ 10", value: "1" },
-            { text: "11 ~ 15", value: "2" },
-            { text: "16 ~ 20", value: "3" },
-            { text: "20이상", value: "4" },
-            { text: "50이상", value: "5" },
+            {
+              text: <InnerText text="5" hasDown={true} />,
+              value: "5down",
+            },
+            { text: <InnerText text="6 ~ 10" />, value: "6to10" },
+            { text: <InnerText text="11 ~ 15" />, value: "11to15" },
+            { text: <InnerText text="16 ~ 20" />, value: "16to20" },
+            { text: <InnerText text="20" hasUp={true} />, value: "20up" },
+            { text: <InnerText text="50" hasUp={true} />, value: "50up" },
           ]}
-          onChange={(val) => setFilter({ minUpjong: val })}
+          onChange={(val) => setFilter({ ...filter, age: val })}
+          activeTotal={false}
         />
       </Flex>
       <Button onClick={searchHander}>조회</Button>
@@ -488,10 +627,70 @@ const FilterUpjong = () => {
 };
 
 const FilterSale = () => {
-  return <Flex>test</Flex>;
+  const [filter, setFilter] = useState<any>({
+    minUpjong: null,
+  });
+  const mapViewHandler = () => {
+    console.log(`\non/off view enter`);
+  };
+  const resetFilter = () => {
+    console.log(`\nreset FloatPopulation`);
+  };
+  const searchHander = () => {
+    console.log(`\nstart search FloatPopulation`);
+    console.log(filter);
+    //apiService(filter).then((res) => {})
+  };
+
+  return (
+    <Flex flexDirection="column" gap="2rem">
+      <Flex w="100%" alignItems="center" flexDirection="row-reverse" gap="1rem">
+        <Switch
+          size="lg"
+          onChange={(e) => {
+            if (e.target.checked) {
+              mapViewHandler();
+            } else {
+              mapViewHandler();
+            }
+          }}
+        />
+        <IconButton
+          aria-label="reset filter"
+          icon={<SpinnerIcon />}
+          onClick={resetFilter}
+          bgColor="transparent"
+          _hover={{
+            color: "primary.reverse.font",
+          }}
+        />
+      </Flex>
+      <Flex flexDirection="row" w="100%">
+        {/* <Text fontSize="1.6rem">나이</Text> */}
+        <CheckboxTagGroup
+          chkValue={filter.age}
+          chkboxData={[
+            { text: <InnerText text="1000만" hasUp={true} />, value: 1000 },
+            { text: <InnerText text="2000만" hasUp={true} />, value: 2000 },
+            { text: <InnerText text="4000만" hasUp={true} />, value: 4000 },
+            { text: <InnerText text="5000만" hasUp={true} />, value: 5000 },
+            { text: <InnerText text="6000만" hasUp={true} />, value: 6000 },
+            { text: <InnerText text="1억" hasUp={true} />, value: 10000 },
+          ]}
+          onChange={(val) => setFilter({ ...filter, age: val })}
+          activeTotal={false}
+        />
+      </Flex>
+      <Button onClick={searchHander}>조회</Button>
+    </Flex>
+  );
 };
 
 const FilterBrand = () => {
+  return <Flex>test</Flex>;
+};
+
+const FilterBrandSet = () => {
   return <Flex>test</Flex>;
 };
 

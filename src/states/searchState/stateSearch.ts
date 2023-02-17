@@ -277,7 +277,7 @@ export const resetSementicAtom = selector({
   get: () => {},
   set: ({ reset }) => {
     reset(atomAreaOption);
-    reset(atomMapControll);
+    reset(atomMapController);
     reset(atomSementicUpjong);
     reset(atomInfoCom);
   },
@@ -321,24 +321,17 @@ export const selectorSementicMapState = selector({
   },
 });
 
-export const atomMapControll = atom<ControllState>({
-  key: "mapControllState",
-  default: {
-    event: "",
-  },
-});
-
 export const areaSelectActivator = selector({
   key: "mapControllHandler",
   get: ({ get }) => {
-    const mapControllState = get(atomMapControll);
+    const mapControllState = get(atomMapController);
 
     return mapControllState.event;
   },
   set: ({ get, set }, val: any) => {
-    const currentState = get(atomMapControll);
+    const currentState = get(atomMapController);
 
-    set(atomMapControll, {
+    set(atomMapController, {
       ...currentState,
       event: val,
     });
@@ -411,6 +404,25 @@ export const selectorInfoCom = selector({
     newVal.length > 4 ? alert("선택제한 : 4") : set(atomInfoCom, newVal);
   },
 });
+
+export const atomMapController = atom<ControllState>({
+  key: "atomMapController",
+  default: {
+    event: null,
+  },
+});
+
+// 지역선택(맵 & 주소)
+export const atomArea = atom<any>({
+  key: "atomArea",
+  default: {
+    slctAreaName: null,
+    slctAreaCode: null,
+    eventName: "selectAreaHandler",
+  },
+});
+
+// 필터 공통 그룹옵션
 
 export const infoComFloatPop = atom<any>({
   key: "infoComFloatPop",

@@ -13,6 +13,7 @@ import linkTheme from "@styles/theme/components/common/Link";
 import selectTheme from "@styles/theme/components/common/selectTheme";
 import themeTable from "@styles/theme/components/table/tableTheme";
 import formTheme from "@styles/theme/components/form/formTheme";
+import switchTheme from "@styles/theme/components/common/switchTheme";
 //  Foundation
 import { fndtSize } from "@styles/theme/foundation/fndtSize";
 import { fndtRadius } from "@styles/theme/foundation/fndtRadius";
@@ -78,6 +79,7 @@ const createTheme = (name: string) => {
       Heading: headingTheme,
       Table: themeTable,
       Form: formTheme,
+      Switch: switchTheme,
       Tabs: {
         variants: {
           detailPage: {

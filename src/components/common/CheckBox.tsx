@@ -9,7 +9,7 @@ import {
 import Tag from "@components/common/Tag";
 
 type ChekboxProps = {
-  title?: string;
+  title?: any;
   isChecked?: boolean;
   onChange?: any;
   value?: any;
@@ -179,7 +179,7 @@ const CheckboxTagGroup = ({
   activeTotal = false,
   parseTotalTxt = "전체",
 }: {
-  chkboxData: { text: string; value: string | number }[];
+  chkboxData: { text: any; value: string | number }[];
   chkValue: (string | number)[];
   defaultValue?: (string | number)[];
   isDisabled?: boolean;
@@ -220,7 +220,7 @@ const CheckboxTagGroup = ({
       onChange={chkHandler}
       variant={variant}
     >
-      <Flex w="100%" justifyContent="space-between">
+      <Flex w="100%" flexWrap="wrap" gap="1rem">
         {activeTotal && (
           <CheckBoxTag
             onChange={() => {

@@ -4,6 +4,7 @@ import { Flex } from "@chakra-ui/react";
 import SementicSearchEngine from "@components/sementicMapLayer/SementicSearchEngine";
 import SementicMap from "@components/sementicMapLayer/SementicMap";
 import SementicViewer from "@components/sementicMapLayer/SementicViewer";
+import BaseAreaProvider from "@src/components/sementicMapLayer/filter/BaseAreaProvider";
 
 const Maps = () => {
   return (
@@ -15,9 +16,11 @@ const Maps = () => {
         w="inherit"
         overflow="hidden"
       >
-        <SementicSearchEngine />
-        <SementicMap />
-        <SementicViewer />
+        <BaseAreaProvider>
+          <SementicSearchEngine />
+          <SementicMap />
+          {/* <SementicViewer /> */}
+        </BaseAreaProvider>
       </Flex>
     </Flex>
   );

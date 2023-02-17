@@ -11,6 +11,7 @@ type PropsSlct = {
   variant?: string;
   defalutValue?: string | number;
   defaultText?: string;
+  value?: any;
   data: any[];
   opBaseTxt: string;
   opBaseId: string;
@@ -36,6 +37,7 @@ type PropSlctAddr = {
 const Select = ({
   selectProps,
   variant,
+  value,
   defaultText = "선택",
   defalutValue,
   data,
@@ -59,7 +61,8 @@ const Select = ({
       isReadOnly={isReadOnly}
       isRequired={isRequired}
       onChange={(e) => onChange(e.target.value)}
-      defaultValue={defaultId}
+      // defaultValue={defaultId}
+      value={value}
     >
       {!defalutValue && (
         <option key={defaultId} value={defaultId} hidden>
@@ -73,7 +76,7 @@ const Select = ({
           const opTxt = option[opBaseTxt];
 
           return (
-            <option key={`${idx}-${opKey}`} value={opKey} id={opId}>
+            <option key={`${idx}-${opId}`} value={opKey} id={opId}>
               {opTxt}
             </option>
           );

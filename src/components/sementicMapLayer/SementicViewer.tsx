@@ -52,6 +52,8 @@ const SementicViewer = (props: Props) => {
     return null;
   }
 
+  return;
+
   return (
     <Flex
       position="absolute"

@@ -1,5 +1,6 @@
 //  LIB
 import axios, { AxiosInstance } from "axios";
+import dayjs from "dayjs";
 
 interface AxiosInterceptorManager {}
 
@@ -51,9 +52,33 @@ instance.interceptors.request.use((req: any) => {
   const parseJson = sgisTokenInfo ? JSON.parse(sgisTokenInfo) : null;
 
   if (parseJson?.tk && parseJson?.to) {
-    const { tk } = parseJson;
-    req.params = { ...req.params, accessToken: tk };
-    return req;
+    const { tk, to } = parseJson;
+
+    if (dayjs().valueOf() < Number(to)) {
+      req.params = { ...req.params, accessToken: tk };
+      return req;
+    } else {
+      const accessReq = getAccessToken()
+        .then((loginRes) => {
+          if (loginRes?.data?.result) {
+            const { accessToken, accessTimeout } = loginRes.data.result;
+
+            localStorage.setItem(
+              "sg",
+              JSON.stringify({ tk: accessToken, to: accessTimeout })
+            );
+            req.params = { ...req.params, accessToken: accessToken };
+            return req;
+          } else {
+            return Promise.reject("getAccessToken Error");
+          }
+        })
+        .catch((err) => {
+          return Promise.reject(err);
+        });
+
+      return accessReq;
+    }
   } else {
     const accessReq = getAccessToken()
       .then((loginRes) => {
@@ -67,12 +92,10 @@ instance.interceptors.request.use((req: any) => {
           req.params = { ...req.params, accessToken: accessToken };
           return req;
         } else {
-          console.log("getAccessToken Error");
-          return req;
+          return Promise.reject("getAccessToken Error");
         }
       })
       .catch((err) => {
-        console.log(err);
         return Promise.reject(err);
       });
 
@@ -81,44 +104,61 @@ instance.interceptors.request.use((req: any) => {
 });
 
 instance.interceptors.response.use(
-  (res: any) => {
-    console.log(res);
+  async (res: any) => {
     switch (parseInt(res.data.errCd)) {
       case 0:
         return res.data;
       case -401:
-        const accessReq = getAccessToken()
-          .then((loginRes) => {
-            let req = res.config;
+        console.log(res);
+        console.log("유효기간만료");
+        let req = res.config;
 
-            if (loginRes?.data?.result && req) {
-              const { accessToken, accessTimeout } = loginRes.data.result;
+        const { data } = await getAccessToken();
 
-              localStorage.setItem(
-                "sg",
-                JSON.stringify({ tk: accessToken, to: accessTimeout })
-              );
-              req.params = { ...req.params, accessToken: accessToken };
-              return req;
-            } else {
-              console.log("getAccessToken Error");
-              return req;
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-            return Promise.reject(err);
-          });
+        if (data?.result && req) {
+          const { accessToken, accessTimeout } = data.result;
 
-        console.log(accessReq);
-        return accessReq;
+          localStorage.setItem(
+            "sg",
+            JSON.stringify({ tk: accessToken, to: accessTimeout })
+          );
+          req.params = { ...req.params, accessToken: accessToken };
+          return axios(req);
+        } else {
+          Promise.reject("getAccessToken Error");
+          // return req;
+        }
+
+      // getAccessToken()
+      //   .then((loginRes) => {
+      //     console.log(loginRes);
+      //     if (loginRes?.data?.result && req) {
+      //       const { accessToken, accessTimeout } = loginRes.data.result;
+
+      //       localStorage.setItem(
+      //         "sg",
+      //         JSON.stringify({ tk: accessToken, to: accessTimeout })
+      //       );
+      //       req.params = { ...req.params, accessToken: accessToken };
+
+      //       return req;
+      //     } else {
+      //       console.log("getAccessToken Error");
+      //       return req;
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //     return Promise.reject(err);
+      //   });
+
+      // console.log(accessReq);
+      // return accessReq;
       case -100:
-        console.log("error -100");
-        break;
+        return Promise.reject("error -100");
     }
   },
   (err: any) => {
-    console.log(err);
     return Promise.reject(err);
   }
 );
@@ -168,7 +208,7 @@ const addrDepthApi = {
     instance.get(`/boundary/hadmarea.geojson`, {
       params: addrCode
         ? { year: 2022, low_search: 1, adm_cd: addrCode }
-        : { year: 2022, low_search: 2 },
+        : { year: 2022, low_search: 0 },
     }),
 };
 
