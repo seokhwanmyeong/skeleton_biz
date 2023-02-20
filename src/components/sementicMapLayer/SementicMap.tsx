@@ -271,6 +271,7 @@ const SementicMap = () => {
     console.log(point);
   };
 
+  // sgis 주소기반 영역추출로직
   // const getDongArea = async (setGeo: any, code?: string) => {
   //   return await dong(code).then((res) => {
   //     console.log(res);
@@ -422,6 +423,30 @@ const SementicMap = () => {
   //     //     return null;
   //     //   });
   //     // });
+  //   });
+  // };
+
+  // 폴리곤 센터값 추출 로직
+  // const getCenterPolygon = (polygons: any[]) => {
+  //   const centers = polygons.map((polygon, idx: number) => {
+  //     const bounds = polygon.getPath();
+  //     const arr = bounds._array;
+  //     const length = arr.length;
+  //     let xcos = 0;
+  //     let ycos = 0;
+  //     let area = 0;
+
+  //     for (let i = 0, len = length, j = length - 1; i < len; j = i++) {
+  //       let p1 = arr[i];
+  //       let p2 = arr[j];
+
+  //       let f = p1.y * p2.x - p2.y * p1.x;
+  //       xcos += (p1.x + p2.x) * f;
+  //       ycos += (p1.y + p2.y) * f;
+  //       area += f * 3;
+  //     }
+
+  //     return [xcos / area, ycos / area];
   //   });
   // };
 
@@ -894,6 +919,26 @@ const SementicMap = () => {
       }
 
       const pol = polygonCreator(dongList, (dong) => {});
+      dongList.map((li) => {
+        const marker = new naver.maps.Marker({
+          position: new naver.maps.LatLng(li.center[0], li.center[1]),
+          map: mapRef.current,
+          icon: {
+            content: [
+              "<div style='display: grid; gap: 1rem; grid-template-columns: 1fr 1fr; transform: translate(-50%, -50%);'>",
+              "   <h3>test1</h3>",
+              "   <h3>test2</h3>",
+              "   <h3>test3</h3>",
+              "   <h3>test4</h3>",
+              "</div>",
+            ].join(""),
+          },
+        });
+      });
+
+      // 센터값 로직
+      // const centers = getCenterPolygon(pol)
+
       setDongPol(pol);
     }
   }, [sido, sigungu, sidoList, sigunguList, dongList]);
@@ -920,17 +965,6 @@ const SementicMap = () => {
       >
         {event === "activePoint" && <Test />}
         {event === "activePolygon" && <MapController />}
-        {/* {event === "activePoint" && (
-          <Button
-            onClick={() => setAddr(null)}
-            position="absolute"
-            bottom="5rem"
-            left="0"
-            zIndex={999}
-          >
-            시/도 선택
-          </Button>
-        )} */}
         {/* <Button
           onClick={() => exportData(test)}
           position="absolute"

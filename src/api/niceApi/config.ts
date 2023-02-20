@@ -146,7 +146,7 @@ export const getSigunguPopInfo = ({
   upjongCode: string;
   sigunguCode: string;
 }) => {
-  niceApi.post(`/nice/bizRecipe/getGuCustDataList`, {
+  niceApi.post(`/bizRecipe/getGuCustDataList`, {
     params: {
       upjongCd: "D11002",
       sigunguCode: sigunguCode,

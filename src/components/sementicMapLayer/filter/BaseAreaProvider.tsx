@@ -157,7 +157,13 @@ const BaseAreaProvider = ({ children }: any) => {
     } else if (sido.code && sigungu.code) {
       cubejsApi
         .load({
-          dimensions: ["AreaDong.code", "AreaDong.name", "AreaDong.polygon"],
+          dimensions: [
+            "AreaDong.code",
+            "AreaDong.name",
+            "AreaDong.polygon",
+            "AreaDong.lat",
+            "AreaDong.lng",
+          ],
           filters: [
             {
               member: "AreaDong.name",
@@ -171,6 +177,10 @@ const BaseAreaProvider = ({ children }: any) => {
             code: dong["AreaDong.code"],
             name: dong["AreaDong.name"],
             polygon: dong["AreaDong.polygon"],
+            center: [
+              Number(dong["AreaDong.lng"]),
+              Number(dong["AreaDong.lat"]),
+            ],
           }));
 
           if (data) {

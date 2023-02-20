@@ -1,5 +1,7 @@
+//  Lib
+import { Radio, RadioGroup, Flex } from "@chakra-ui/react";
 //  Components
-import { Radio, RadioGroup } from "@chakra-ui/react";
+import Tag from "@components/common/Tag";
 
 type RadioProps = {
   radioProps?: {};
@@ -55,4 +57,49 @@ const RadioBox = ({
   );
 };
 
-export { RadioBox, type RadioProps };
+const RadioTagGroup = ({
+  radioData,
+  radioValue,
+  isDisabled = false,
+  onChange,
+  variant,
+}: {
+  radioData: { text: any; value: string | number }[];
+  radioValue: string | number;
+  isDisabled?: boolean;
+  onChange: (value: string | number) => void;
+  variant?: string;
+}) => {
+  return (
+    <RadioGroup
+      value={radioValue}
+      isDisabled={isDisabled}
+      onChange={onChange}
+      variant={variant}
+    >
+      <Flex w="100%" flexWrap="wrap" gap="1rem">
+        {radioData.map(
+          ({ text, value }: { text: string; value: string | number }) => (
+            <Radio
+              key={`chk-${text}-${value}`}
+              variant="withTag"
+              isDisabled={isDisabled}
+              value={value}
+            >
+              <Tag
+                variant="checkbox"
+                key={`tag-${text}-${value}`}
+                text={text ?? ""}
+                hasBtn={false}
+                tagBtn={true}
+                isChecked={radioValue === value}
+              />
+            </Radio>
+          )
+        )}
+      </Flex>
+    </RadioGroup>
+  );
+};
+
+export { RadioBox, type RadioProps, RadioTagGroup };

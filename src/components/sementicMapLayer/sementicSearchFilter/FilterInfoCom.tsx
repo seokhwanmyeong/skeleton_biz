@@ -1,4 +1,5 @@
 //  Lib
+import { useEffect, useState } from "react";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import {
   Flex,
@@ -12,10 +13,20 @@ import {
   Button,
   Switch,
   IconButton,
+  Box,
 } from "@chakra-ui/react";
 import { SpinnerIcon, ChevronUpIcon, ChevronDownIcon } from "@chakra-ui/icons";
+//  API
+import { getSigunguPopInfo } from "@api/niceApi/config";
+import cubejsApi from "@api/cubeApi/config";
 //  Components
-import { CheckboxGroup, CheckboxTagGroup } from "@components/common/CheckBox";
+import {
+  CheckboxGroup,
+  CheckboxTagGroup,
+  FilterChkTagGroup,
+} from "@components/common/CheckBox";
+import { RadioTagGroup } from "@components/common/RadioBox";
+import { Input } from "@components/common/Input";
 //  State
 import {
   atomSementicBaseList,
@@ -23,10 +34,6 @@ import {
   selectorInfoCom,
   atomArea,
 } from "@states/searchState/stateSearch";
-import { useEffect, useState } from "react";
-import { RadioBox } from "@src/components/common/RadioBox";
-import { Input } from "@src/components/common/Input";
-import { getSigunguPopInfo } from "@src/api/niceApi/config";
 
 const FilterInfoCom = (props: any) => {
   const { isDisabled } = props;
@@ -86,7 +93,7 @@ const FilterInfoCom = (props: any) => {
                 fontWeight="bold"
                 gap="10px"
               >
-                <FilterHousehold />
+                <FilterHousehold areaCode={slctAreaCode} />
               </AccordionPanel>
             </AccordionItem>
             <AccordionItem key={`infoCom-upjong`} isDisabled={isDisabled}>
@@ -104,7 +111,7 @@ const FilterInfoCom = (props: any) => {
                 fontWeight="bold"
                 gap="10px"
               >
-                <FilterUpjong />
+                <FilterUpjong areaCode={slctAreaCode} />
               </AccordionPanel>
             </AccordionItem>
             <AccordionItem key={`infoCom-sale`} isDisabled={isDisabled}>
@@ -122,7 +129,7 @@ const FilterInfoCom = (props: any) => {
                 fontWeight="bold"
                 gap="10px"
               >
-                <FilterSale />
+                <FilterSale areaCode={slctAreaCode} />
               </AccordionPanel>
             </AccordionItem>
             <AccordionItem key={`infoCom-brandSet`} isDisabled={isDisabled}>
@@ -212,9 +219,7 @@ const FilterInfoCom = (props: any) => {
                 fontSize="0.8rem"
                 fontWeight="bold"
                 gap="10px"
-              >
-                <FilterFloatPop />
-              </AccordionPanel>
+              ></AccordionPanel>
             </AccordionItem>
             <AccordionItem key={`infoCom-bsns`} isDisabled={isDisabled}>
               <AccordionButton color="#ffffff">
@@ -230,9 +235,7 @@ const FilterInfoCom = (props: any) => {
                 fontSize="0.8rem"
                 fontWeight="bold"
                 gap="10px"
-              >
-                <FilterFloatPop />
-              </AccordionPanel>
+              ></AccordionPanel>
             </AccordionItem>
             <AccordionItem key={`infoCom-rent`} isDisabled={isDisabled}>
               <AccordionButton color="#ffffff">
@@ -248,9 +251,7 @@ const FilterInfoCom = (props: any) => {
                 fontSize="0.8rem"
                 fontWeight="bold"
                 gap="10px"
-              >
-                <FilterFloatPop />
-              </AccordionPanel>
+              ></AccordionPanel>
             </AccordionItem>
             <AccordionItem key={`filter-edior`} isDisabled={isDisabled}>
               <AccordionButton color="#ffffff">
@@ -266,9 +267,7 @@ const FilterInfoCom = (props: any) => {
                 fontSize="0.8rem"
                 fontWeight="bold"
                 gap="10px"
-              >
-                <FilterFloatPop />
-              </AccordionPanel>
+              ></AccordionPanel>
             </AccordionItem>
           </Accordion>
         </AccordionPanel>
@@ -365,19 +364,19 @@ const InnerText = ({
   hasDown?: boolean;
 }) => {
   return (
-    <Text>
-      {text}
-      {hasUp && <ChevronUpIcon />}
-      {hasDown && <ChevronDownIcon />}
-    </Text>
+    <Flex alignItems="center">
+      <Text>{text}</Text>
+      {hasUp && <ChevronUpIcon w="1.4rem" h="1.2rem" />}
+      {hasDown && <ChevronDownIcon w="1.4rem" h="1.2rem" />}
+    </Flex>
   );
 };
 
-const FilterFloatPop = ({ areaCode }: { areaCode?: string }) => {
+const FilterFloatPop = ({ areaCode }: { areaCode: string }) => {
   const [filter, setFilter] = useState<any>({
     gender: null,
     age: null,
-    range: {
+    popRange: {
       start: null,
       end: null,
     },
@@ -391,10 +390,58 @@ const FilterFloatPop = ({ areaCode }: { areaCode?: string }) => {
   const searchHander = () => {
     console.log(`\nstart search FloatPopulation`);
     console.log(filter);
-    if (areaCode) {
-      getSigunguPopInfo({ upjongCode: "D11002", sigunguCode: areaCode });
-    }
-    //apiService(filter).then((res) => {})
+
+    let dimensions = [];
+    filter.gender && dimensions.push(...filter.gender);
+    filter.age && dimensions.push(...filter.age);
+
+    let transFilter: any[] = [];
+    (filter.popRange.start || filter.popRange.end) &&
+      dimensions.push("Pop.ageT");
+    filter.popRange.start &&
+      transFilter.push({
+        member: "Pop.ageT",
+        operator: "gt",
+        values: [filter.popRange.start],
+      });
+    filter.popRange.end &&
+      transFilter.push({
+        member: "Pop.ageT",
+        operator: "lt",
+        values: [filter.popRange.end],
+      });
+
+    if (!areaCode || (dimensions.length === 0 && transFilter.length === 0))
+      return null;
+
+    cubejsApi
+      .load({
+        dimensions: [...dimensions, "Pop.areaCode"],
+        filters: [
+          {
+            member: "Pop.areaCode",
+            operator: "contains",
+            values: [areaCode.slice(0, 5)],
+          },
+          ...transFilter,
+        ],
+      })
+      .then((res) => {
+        const result = res?.rawData().map((li: any) => {
+          return {
+            dongCode: li["Pop.areaCode"],
+            genderM: li["Pop.genderM"],
+            genderW: li["Pop.genderW"],
+            ageT: li["Pop.ageT"],
+            age20th: li["Pop.age20th"],
+            age30th: li["Pop.age30th"],
+            age40th: li["Pop.age40th"],
+            age50th: li["Pop.age50th"],
+            age60th: li["Pop.age60th"],
+          };
+        });
+        console.log(result);
+      });
   };
 
   return (
@@ -422,11 +469,11 @@ const FilterFloatPop = ({ areaCode }: { areaCode?: string }) => {
       </Flex>
       <Flex flexDirection="row" w="35%">
         {/* <Text fontSize="1.6rem">성별</Text> */}
-        <CheckboxTagGroup
+        <FilterChkTagGroup
           chkValue={filter.gender}
           chkboxData={[
-            { text: "남", value: "man" },
-            { text: "여", value: "woman" },
+            { text: "남", value: "Pop.genderM" },
+            { text: "여", value: "Pop.genderW" },
           ]}
           onChange={(val) => setFilter({ ...filter, gender: val })}
           activeTotal={true}
@@ -435,14 +482,14 @@ const FilterFloatPop = ({ areaCode }: { areaCode?: string }) => {
       </Flex>
       <Flex flexDirection="row" w="90%">
         {/* <Text fontSize="1.6rem">나이</Text> */}
-        <CheckboxTagGroup
+        <FilterChkTagGroup
           chkValue={filter.age}
           chkboxData={[
-            { text: "20대", value: "20th" },
-            { text: "30대", value: "30th" },
-            { text: "40대", value: "40th" },
-            { text: "50대", value: "50th" },
-            { text: "60대", value: "60th" },
+            { text: "20대", value: "Pop.age20th" },
+            { text: "30대", value: "Pop.age30th" },
+            { text: "40대", value: "Pop.age40th" },
+            { text: "50대", value: "Pop.age50th" },
+            { text: "60대", value: "Pop.age60th" },
           ]}
           onChange={(val) => setFilter({ ...filter, age: val })}
           activeTotal={true}
@@ -455,7 +502,7 @@ const FilterFloatPop = ({ areaCode }: { areaCode?: string }) => {
           onChange={(val: number) => {
             setFilter({
               ...filter,
-              range: { start: val, end: filter.range.end },
+              popRange: { start: val, end: filter.popRange.end },
             });
           }}
           placeholder="placeHolder"
@@ -472,7 +519,7 @@ const FilterFloatPop = ({ areaCode }: { areaCode?: string }) => {
           onChange={(val: number) => {
             setFilter({
               ...filter,
-              range: { start: filter.range.start, end: val },
+              popRange: { start: filter.popRange.start, end: val },
             });
           }}
           placeholder="placeHolder"
@@ -485,27 +532,13 @@ const FilterFloatPop = ({ areaCode }: { areaCode?: string }) => {
         />
       </Flex>
       <Button onClick={searchHander}>조회</Button>
-      {/* <Flex flexDirection="row">
-        <Text fontSize="1.6rem">구간</Text>
-        <CheckboxGroup
-          chkValue={filter.age}
-          chkboxData={[
-            { text: "20대", value: "20th" },
-            { text: "30대", value: "30th" },
-          ]}
-          onChange={(val) => {
-            console.log(val);
-            setFilter({ ...filter, age: val });
-          }}
-        />
-      </Flex> */}
     </Flex>
   );
 };
 
-const FilterHousehold = () => {
-  const [filter, setFilter] = useState<any>({
-    household: null,
+const FilterHousehold = ({ areaCode }: { areaCode: string }) => {
+  const [filter, setFilter] = useState<{ hous: any }>({
+    hous: "0",
   });
   const mapViewHandler = () => {
     console.log(`\non/off view enter`);
@@ -516,7 +549,45 @@ const FilterHousehold = () => {
   const searchHander = () => {
     console.log(`\nstart search FloatPopulation`);
     console.log(filter);
+    console.log(areaCode);
     //apiService(filter).then((res) => {})
+
+    cubejsApi
+      .load({
+        dimensions: [
+          "House.areaCode",
+          "House.hous",
+          "House.apt",
+          "House.noe",
+          "House.com",
+          "House.offtel",
+        ],
+        filters: [
+          {
+            member: "House.areaCode",
+            operator: "contains",
+            values: [areaCode.slice(0, 5)],
+          },
+          {
+            member: "House.hous",
+            operator: "gt",
+            values: [filter.hous],
+          },
+        ],
+      })
+      .then((res) => {
+        const result = res?.rawData().map((li: any) => {
+          return {
+            dongCode: li["House.areaCode"],
+            apt: li["House.apt"],
+            com: li["House.com"],
+            hous: li["House.hous"],
+            noe: li["House.noe"],
+            offtel: li["House.offtel"],
+          };
+        });
+        console.log(result);
+      });
   };
 
   return (
@@ -534,7 +605,7 @@ const FilterHousehold = () => {
         />
         <IconButton
           aria-label="reset filter"
-          icon={<SpinnerIcon />}
+          icon={<SpinnerIcon key="test" />}
           onClick={resetFilter}
           bgColor="transparent"
           _hover={{
@@ -544,18 +615,17 @@ const FilterHousehold = () => {
       </Flex>
       <Flex flexDirection="row" w="90%">
         {/* <Text fontSize="1.6rem">나이</Text> */}
-        <CheckboxTagGroup
-          chkValue={filter.age}
-          chkboxData={[
-            { text: <InnerText text="1천" hasUp={true} />, value: 1000 },
-            { text: <InnerText text="2천" hasUp={true} />, value: 2000 },
-            { text: <InnerText text="3천" hasUp={true} />, value: 3000 },
-            { text: <InnerText text="4천" hasUp={true} />, value: 4000 },
-            { text: <InnerText text="5천" hasUp={true} />, value: 5000 },
-            { text: <InnerText text="1만" hasUp={true} />, value: 10000 },
+        <RadioTagGroup
+          radioValue={filter.hous}
+          radioData={[
+            { text: <InnerText text="1천" hasUp={true} />, value: "1000" },
+            { text: <InnerText text="2천" hasUp={true} />, value: "2000" },
+            { text: <InnerText text="3천" hasUp={true} />, value: "3000" },
+            { text: <InnerText text="4천" hasUp={true} />, value: "4000" },
+            { text: <InnerText text="5천" hasUp={true} />, value: "5000" },
+            { text: <InnerText text="1만" hasUp={true} />, value: "10000" },
           ]}
-          onChange={(val) => setFilter({ ...filter, age: val })}
-          activeTotal={false}
+          onChange={(val) => setFilter({ hous: val })}
         />
       </Flex>
       <Button onClick={searchHander}>조회</Button>
@@ -563,10 +633,8 @@ const FilterHousehold = () => {
   );
 };
 
-const FilterUpjong = () => {
-  const [filter, setFilter] = useState<any>({
-    minUpjong: null,
-  });
+const FilterUpjong = ({ areaCode }: { areaCode: string }) => {
+  const [filter, setFilter] = useState<number | string>(0);
   const mapViewHandler = () => {
     console.log(`\non/off view enter`);
   };
@@ -576,7 +644,92 @@ const FilterUpjong = () => {
   const searchHander = () => {
     console.log(`\nstart search FloatPopulation`);
     console.log(filter);
-    //apiService(filter).then((res) => {})
+    const countFilter: { [key: number | string]: any } = {
+      0: [],
+      1: [
+        {
+          member: "Upjong.storeCnt",
+          operator: "lt",
+          values: ["5"],
+        },
+      ],
+      2: [
+        {
+          member: "Upjong.storeCnt",
+          operator: "gt",
+          values: ["6"],
+        },
+        {
+          member: "Upjong.storeCnt",
+          operator: "lt",
+          values: ["10"],
+        },
+      ],
+      3: [
+        {
+          member: "Upjong.storeCnt",
+          operator: "gt",
+          values: ["11"],
+        },
+        {
+          member: "Upjong.storeCnt",
+          operator: "lt",
+          values: ["15"],
+        },
+      ],
+      4: [
+        {
+          member: "Upjong.storeCnt",
+          operator: "gt",
+          values: ["16"],
+        },
+        {
+          member: "Upjong.storeCnt",
+          operator: "lt",
+          values: ["20"],
+        },
+      ],
+      5: [
+        {
+          member: "Upjong.storeCnt",
+          operator: "gt",
+          values: ["20"],
+        },
+      ],
+      6: [
+        {
+          member: "Upjong.storeCnt",
+          operator: "gt",
+          values: ["50"],
+        },
+      ],
+    };
+
+    cubejsApi
+      .load({
+        dimensions: ["Upjong.storeCnt"],
+        filters: [
+          {
+            member: "Upjong.areaCode",
+            operator: "contains",
+            values: [areaCode.slice(0, 5)],
+          },
+          ...countFilter[filter],
+        ],
+      })
+      .then((res) => {
+        const result = res?.rawData().map((li: any) => {
+          return {
+            dongCode: li["House.areaCode"],
+            apt: li["House.apt"],
+            com: li["House.com"],
+            hous: li["House.hous"],
+            noe: li["House.noe"],
+            offtel: li["House.offtel"],
+          };
+        });
+        console.log(result);
+      });
   };
 
   return (
@@ -604,21 +757,20 @@ const FilterUpjong = () => {
       </Flex>
       <Flex flexDirection="row" w="100%">
         {/* <Text fontSize="1.6rem">나이</Text> */}
-        <CheckboxTagGroup
-          chkValue={filter.age}
-          chkboxData={[
+        <RadioTagGroup
+          radioValue={filter}
+          radioData={[
             {
               text: <InnerText text="5" hasDown={true} />,
-              value: "5down",
+              value: 1,
             },
-            { text: <InnerText text="6 ~ 10" />, value: "6to10" },
-            { text: <InnerText text="11 ~ 15" />, value: "11to15" },
-            { text: <InnerText text="16 ~ 20" />, value: "16to20" },
-            { text: <InnerText text="20" hasUp={true} />, value: "20up" },
-            { text: <InnerText text="50" hasUp={true} />, value: "50up" },
+            { text: <InnerText text="6 ~ 10" />, value: 2 },
+            { text: <InnerText text="11 ~ 15" />, value: 3 },
+            { text: <InnerText text="16 ~ 20" />, value: 4 },
+            { text: <InnerText text="20" hasUp={true} />, value: 5 },
+            { text: <InnerText text="50" hasUp={true} />, value: 6 },
           ]}
-          onChange={(val) => setFilter({ ...filter, age: val })}
-          activeTotal={false}
+          onChange={(val) => setFilter(val)}
         />
       </Flex>
       <Button onClick={searchHander}>조회</Button>
@@ -626,7 +778,7 @@ const FilterUpjong = () => {
   );
 };
 
-const FilterSale = () => {
+const FilterSale = ({ areaCode }: { areaCode: string }) => {
   const [filter, setFilter] = useState<any>({
     minUpjong: null,
   });

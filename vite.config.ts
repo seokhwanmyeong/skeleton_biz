@@ -11,15 +11,6 @@ export default defineConfig({
     watch: {
       usePolling: true,
     },
-    proxy: {
-      "/common": {
-        target: "http://localhost:3000",
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/nice/, ""),
-        // ws: true,
-      },
-    },
   },
   resolve: {
     alias: {
