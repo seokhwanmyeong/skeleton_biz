@@ -54,15 +54,25 @@ type StoreInfo = {
   addrDetail?: string;
 };
 
-const ErpStoreDetail = () => {
+const ErpStoreDetail = ({
+  id,
+  activeBack = true,
+  side = false,
+}: {
+  id?: string;
+  activeBack?: boolean;
+  side?: boolean;
+}) => {
   const { cubejsApi } = useContext(CubeContext);
-  const [storeInfo, setStoreInfo] = useState<StoreInfo | undefined>(undefined);
   const navigate = useNavigate();
   const { location } = useLocationState();
   const mapRef = useRef<any>();
+  const [storeInfo, setStoreInfo] = useState<StoreInfo | undefined>(undefined);
+  const [center, setCenter] = useState({ lat: null, lng: null });
   const state = location.state;
-  const storeCode = state[`StoreInfo.storeCode`];
-  console.log(storeCode);
+  const storeCode = state?.[`StoreInfo.storeCode`] || id;
+  // console.log(storeCode);
+
   useEffect(() => {
     if (storeCode) {
       cubejsApi
@@ -78,7 +88,7 @@ const ErpStoreDetail = () => {
         })
         .then((res: ResultSet<any>) => {
           const data = transDataKey<StoreInfo>(res.tablePivot());
-
+          console.log(data);
           setStoreInfo(data[0]);
         });
       cubejsApi
@@ -101,22 +111,23 @@ const ErpStoreDetail = () => {
     }
   }, [storeCode]);
 
-  useEffect(() => {
-    if (!mapRef.current) {
-      mapRef.current = new naver.maps.Map("map", {
-        center: new naver.maps.LatLng(state.lat, state.lng),
-        zoom: 13,
-      });
+  // useEffect(() => {
+  //   if (!mapRef.current) {
+  //     mapRef.current = new naver.maps.Map("map", {
+  //       center: new naver.maps.LatLng(state.lat, state.lng),
+  //       zoom: 13,
+  //     });
 
-      const marker = new naver.maps.Marker({
-        position: { lat: state.lat, lng: state.lng },
-        map: mapRef.current,
-      });
-    }
-  }, [mapRef]);
+  //     const marker = new naver.maps.Marker({
+  //       position: { lat: state.lat, lng: state.lng },
+  //       map: mapRef.current,
+  //     });
+  //   }
+  // }, [mapRef]);
 
   return (
     <Box
+      w="100%"
       overflowY="scroll"
       pl="1rem"
       __css={{
@@ -129,15 +140,17 @@ const ErpStoreDetail = () => {
         },
       }}
     >
-      <Button
-        mb="2rem"
-        key={`link-prev`}
-        w="max-content"
-        onClick={() => navigate(-1)}
-      >
-        {"< 매장리스트"}
-      </Button>
-      <Heading variant="outlet">
+      {activeBack && (
+        <Button
+          mb="2rem"
+          key={`link-prev`}
+          w="max-content"
+          onClick={() => navigate(-1)}
+        >
+          {"< 매장리스트"}
+        </Button>
+      )}
+      <Heading mb="2rem" variant="outlet">
         매장상세 : {storeInfo && storeInfo.storeName}
       </Heading>
       <List display="flex" gap="10rem" mb="2rem">
@@ -171,16 +184,16 @@ const ErpStoreDetail = () => {
               <Flex w="100%" justifyContent="flex-end">
                 <ModalStoreEditor update={true} info={storeInfo} />
               </Flex>
-              <Flex flexDirection="row" w="100%" gap="5rem">
+              <Flex flexDirection={side ? "column" : "row"} w="100%" gap="5rem">
                 <div
                   id="map"
                   style={{
-                    width: "50%",
+                    width: side ? "100%" : "50%",
                     height: "40rem",
                   }}
                 ></div>
                 <ListTable
-                  tableProps={{ w: "50%" }}
+                  tableProps={{ w: side ? "100%" : "50%" }}
                   data={storeInfo || {}}
                   listKeys={testKeys}
                 />
@@ -197,9 +210,7 @@ const ErpStoreDetail = () => {
               initialSort={initialSort}
             /> */}
           </TabPanel>
-          <TabPanel key="panel-area">
-            <ErpHistory />
-          </TabPanel>
+          <TabPanel key="panel-area">{/* <ErpHistory /> */}</TabPanel>
           <TabPanel key="panel-area">전자계약서</TabPanel>
         </TabPanels>
       </Tabs>

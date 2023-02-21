@@ -16,8 +16,11 @@ export const BaseAreaContext = createContext<{
   sidoHandler: any;
   sigunguHandler: any;
   addrHandler: any;
+  activeDrawHandler: any;
+  activeDraw: boolean;
 }>({
   active: true,
+  activeDraw: false,
   sido: {
     name: "",
     code: "",
@@ -30,6 +33,7 @@ export const BaseAreaContext = createContext<{
   sigunguList: [],
   dongList: [],
   activeHandler: () => {},
+  activeDrawHandler: () => {},
   sidoHandler: () => {},
   sigunguHandler: () => {},
   addrHandler: () => {},
@@ -38,6 +42,7 @@ export const BaseAreaContext = createContext<{
 const BaseAreaProvider = ({ children }: any) => {
   const slctArea = useRecoilValue(atomArea);
   const [active, setActive] = useState<boolean>(true);
+  const [activeDraw, setActiveDraw] = useState<boolean>(false);
   const [sido, setSido] = useState<{ name: string; code: string }>({
     name: "",
     code: "",
@@ -62,7 +67,6 @@ const BaseAreaProvider = ({ children }: any) => {
   const [sidoList, setSidoList] = useState<any[]>([]);
   const [sigunguList, setSigunguList] = useState<any[]>([]);
   const [dongList, setDongList] = useState<any[]>([]);
-  console.log(slctArea);
   const sidoHandler = (val: { name: string; code: string }) => {
     setSido(val);
   };
@@ -77,6 +81,10 @@ const BaseAreaProvider = ({ children }: any) => {
 
   const activeHandler = (bool: boolean) => {
     setActive(bool);
+  };
+
+  const activeDrawHandler = (bool: boolean) => {
+    setActiveDraw(bool);
   };
 
   useEffect(() => {
@@ -155,6 +163,7 @@ const BaseAreaProvider = ({ children }: any) => {
 
       if (dongList.length !== 0) setDongList([]);
     } else if (sido.code && sigungu.code) {
+      console.log(sigungu);
       cubejsApi
         .load({
           dimensions: [
@@ -193,6 +202,7 @@ const BaseAreaProvider = ({ children }: any) => {
   return (
     <BaseAreaContext.Provider
       value={{
+        activeDraw: activeDraw,
         active: active,
         sido: sido,
         sigungu: sigungu,
@@ -200,6 +210,7 @@ const BaseAreaProvider = ({ children }: any) => {
         sigunguList: sigunguList,
         dongList: dongList,
         activeHandler: activeHandler,
+        activeDrawHandler: activeDrawHandler,
         sidoHandler: sidoHandler,
         sigunguHandler: sigunguHandler,
         addrHandler: addrHandler,

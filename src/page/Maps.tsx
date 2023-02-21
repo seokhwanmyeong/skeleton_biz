@@ -19,7 +19,7 @@ const Maps = () => {
         <BaseAreaProvider>
           <SementicSearchEngine />
           <SementicMap />
-          {/* <SementicViewer /> */}
+          <SementicViewer />
         </BaseAreaProvider>
       </Flex>
     </Flex>

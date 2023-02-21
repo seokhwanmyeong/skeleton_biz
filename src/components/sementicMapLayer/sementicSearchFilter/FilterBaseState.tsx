@@ -22,14 +22,24 @@ import { BaseAreaContext } from "../filter/BaseAreaProvider";
 
 const FilterBaseState = memo(() => {
   const { slctAreaName, slctAreaCode } = useRecoilValue(atomArea);
-  const { activeHandler } = useContext(BaseAreaContext);
+  const { activeHandler, activeDraw, activeDrawHandler } =
+    useContext(BaseAreaContext);
   const mapState = useRecoilValue(atomAreaOption);
   const [currentEvent, setMapControll] = useRecoilState(areaSelectActivator);
   console.log("render FilterBaseState");
 
   return (
     <Flex>
-      <Button w="100%" variant="reverse" onClick={() => activeHandler(true)}>
+      <Button
+        w="100%"
+        variant="reverse"
+        onClick={() => {
+          if (activeDraw) {
+            activeDrawHandler(false);
+          }
+          activeHandler(true);
+        }}
+      >
         지역변경하기
       </Button>
     </Flex>

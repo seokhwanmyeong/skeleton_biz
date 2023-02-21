@@ -1,5 +1,5 @@
 //  Lib
-import { useEffect, useState, useRef, useContext } from "react";
+import { useEffect, useState, useRef, useContext, useMemo } from "react";
 import { CubeContext } from "@cubejs-client/react";
 import {
   useRecoilState,
@@ -12,8 +12,15 @@ import { Button, Flex, keyframes } from "@chakra-ui/react";
 import {
   selectorSementicMapState,
   areaSelectActivator,
-  atomArea,
   atomMapController,
+  infoComFloatPop,
+  infoComHousehold,
+  infoComUpjong,
+  infoComSale,
+  infoComMyStore,
+  infoComMyRent,
+  sementicViewState,
+  atomArea,
 } from "@states/searchState/stateSearch";
 //  Services
 import { addrAreaApiHandler, dong } from "@services/address/sgisDepthAddr";
@@ -23,11 +30,30 @@ import { dongData } from "@util/data/dongData";
 import { BaseAreaContext } from "./filter/BaseAreaProvider";
 
 const SementicMap = () => {
+  const slctArea = useRecoilValue(atomArea);
+  const mapFloatPop = useRecoilValue(infoComFloatPop);
+  const mapHousehold = useRecoilValue(infoComHousehold);
+  const mapUpjong = useRecoilValue(infoComUpjong);
+  const mapSale = useRecoilValue(infoComSale);
+  const mapStore = useRecoilValue(infoComMyStore);
+  const mapRent = useRecoilValue(infoComMyRent);
+  const setSVState = useSetRecoilState(sementicViewState);
+
+  const [originArea, changeOriginArea] = useState();
+  const [markerPop, setMarkerPop] = useState<any[]>([]);
+  const [markerHouse, setMarkerHouse] = useState<any[]>([]);
+  const [markerUpjong, setMarkerUpjong] = useState<any[]>([]);
+  const [markerSale, setMarkerSale] = useState<any[]>([]);
+  const [markerStore, setMarkerStore] = useState<any[]>([]);
+  const [markerRent, setMarkerRent] = useState<any[]>([]);
   // const { cubejsApi } = useContext(CubeContext);
   // const [baseArea, setBaseArea] = useRecoilState(atomArea);
   // const [slctArea, setSlctArea] = useRecoilState(atomTmpSlctArea);
   // const resetController = useResetRecoilState(atomMapController);
   const {
+    activeDraw,
+    activeDrawHandler,
+    active,
     sido,
     sigungu,
     sidoList,
@@ -39,6 +65,7 @@ const SementicMap = () => {
   const [siPol, setSiPol] = useState<any[]>([]);
   const [sigunguPol, setSigunguPol] = useState<any[]>([]);
   const [dongPol, setDongPol] = useState<any[]>([]);
+  const [dongCenter, setDongCenter] = useState<{}>({});
   // const [addr, setAddr] = useState(null);
   // const [geoTop, setGeoTop] = useState<any>(null);
   // const [geoMid, setGeoMid] = useState<any>(null);
@@ -51,6 +78,8 @@ const SementicMap = () => {
   );
   const setMapControll = useSetRecoilState(areaSelectActivator);
   const mapRef = useRef<any>();
+  const markers = useRef<any>();
+  const polygons = useRef<any>();
   const markerRef = useRef<any>();
   const [activeEvent, setActiveEvent] = useState<any>();
   const [offset, setOffset] = useState({ left: 0, top: 0 });
@@ -68,7 +97,8 @@ const SementicMap = () => {
 
   const polygonCreator = (
     areaLi: { code: string; name: string; polygon: string }[],
-    clickEvent: (area: { code: string; name: string; polygon: string }) => any
+    clickEvent: (area: { code: string; name: string; polygon: any }) => any,
+    activeEvent: boolean = true
   ) => {
     return areaLi.map((area) => {
       const polygon = Object.values(JSON.parse(area.polygon)).map(
@@ -93,52 +123,153 @@ const SementicMap = () => {
         strokeColor: color,
         strokeWeight: 1,
         strokeOpacity: 0.6,
-        clickable: true,
-      });
-      naver.maps.Event.addListener(setPolygon, "click", (e) => {
-        clickEvent(area);
+        clickable: activeEvent,
+        zIndex: activeEvent ? 0 : -1,
       });
 
-      naver.maps.Event.addListener(setPolygon, "mouseover", (e) => {
-        mapRef.current.setCursor("pointer");
-        setPolygon.setOptions("fillOpacity", 0.4);
-      });
+      if (activeEvent) {
+        naver.maps.Event.addListener(setPolygon, "click", (e) => {
+          clickEvent({ ...area, polygon: setPolygon });
+        });
 
-      naver.maps.Event.addListener(setPolygon, "mouseout", (e) => {
-        mapRef.current.setCursor("auto");
-        setPolygon.setOptions("fillOpacity", 0.1);
-      });
+        naver.maps.Event.addListener(setPolygon, "mouseover", (e) => {
+          mapRef.current.setCursor("pointer");
+          setPolygon.setOptions("fillOpacity", 0.4);
+        });
+
+        naver.maps.Event.addListener(setPolygon, "mouseout", (e) => {
+          mapRef.current.setCursor("auto");
+          setPolygon.setOptions("fillOpacity", 0.1);
+        });
+      }
 
       return setPolygon;
     });
   };
 
   const MapController = (props: any) => {
-    const { offset } = props;
+    const [drawType, setDrawType] = useState("");
+    const [dm, setDm] = useState<any>(null);
     const polygonType = [
       {
-        title: "ROUND",
-        key: "round",
-      },
-      {
-        title: "BOX",
-        key: "box",
-      },
-      {
-        title: "CUSTOM",
+        title: "다각형",
         key: "custom",
+      },
+      {
+        title: "포인터범위",
+        key: "pointer",
+      },
+      {
+        title: "주소범위",
+        key: "addr",
       },
     ];
 
     const boxAniKetframe = keyframes`
-      0% {bottom: -50px}
-      100% {bottom: 20px}
+      0% {top: -50px}
+      100% {top: 20px}
     `;
+
+    useEffect(() => {
+      let drawingManager = new naver.maps.drawing.DrawingManager({
+        map: mapRef.current,
+        drawingControl: [],
+        controlPointOptions: {
+          anchorPointOptions: {
+            radius: 5,
+            fillColor: "#ff0000",
+            strokeColor: "#0000ff",
+            strokeWeight: 2,
+          },
+          midPointOptions: {
+            radius: 4,
+            fillColor: "#ff0000",
+            strokeColor: "#0000ff",
+            strokeWeight: 2,
+            fillOpacity: 0.5,
+          },
+        },
+        rectangleOptions: {
+          fillColor: "#ff0000",
+          fillOpacity: 0.5,
+          strokeWeight: 3,
+          strokeColor: "#ff0000",
+        },
+        ellipseOptions: {
+          fillColor: "#ff25dc",
+          fillOpacity: 0.5,
+          strokeWeight: 3,
+          strokeColor: "#ff25dc",
+        },
+        polylineOptions: {
+          // 화살표 아이콘 계열 옵션은 무시됩니다.
+          strokeColor: "#222",
+          strokeWeight: 3,
+        },
+        arrowlineOptions: {
+          // startIcon || endIcon 옵션이 없으면 endIcon을 BLOCK_OPEN으로 설정합니다.
+          endIconSize: 16,
+          strokeWeight: 3,
+        },
+        polygonOptions: {
+          fillColor: "#ffc300",
+          fillOpacity: 0.5,
+          strokeWeight: 3,
+          strokeColor: "#ffc300",
+          zIndex: 0,
+        },
+      });
+
+      drawingManager.addListener("polygonAdded", function (overlay: any) {
+        // console.log(overlay);
+        // console.log(overlay.id);
+        // console.log(overlay.name);
+
+        const center = getCenterPolygon([overlay]);
+
+        const content = document.createElement("div");
+
+        const startBtn = document.createElement("button");
+        startBtn.innerHTML = "영역분석";
+        startBtn.onclick = function () {
+          console.log("click");
+          overlay.setMap(null);
+          activeDrawHandler(false);
+          setSVState({ viewId: "eval", props: null });
+          infowindow.close();
+        };
+        content.appendChild(startBtn);
+
+        // const removeBtn = document.createElement("button");
+        // removeBtn.innerHTML = "취소하기";
+        // removeBtn.onclick = function () {
+        //   overlay.setMap(null);
+        // };
+        // content.appendChild(removeBtn);
+
+        const infowindow = new naver.maps.InfoWindow({
+          maxWidth: 200,
+          position: new naver.maps.LatLng(center[0][1], center[0][0]),
+          content: content,
+          backgroundColor: "transparent",
+          borderColor: "none",
+          borderWidth: 0,
+          anchorSize: new naver.maps.Size(10, 5),
+          anchorSkew: false,
+          anchorColor: "#transparent",
+        });
+
+        naver.maps.Event.addListener(overlay, "click", (e) => {
+          infowindow.open(mapRef.current);
+        });
+      });
+      setDm(drawingManager);
+    }, []);
 
     return (
       <Flex
         position="absolute"
-        bottom="20px"
+        top="20px"
         left="50%"
         transform="translateX(-50%)"
         p="20px"
@@ -153,8 +284,10 @@ const SementicMap = () => {
           return (
             <Button
               key={key}
+              isActive={key === drawType}
               onClick={() => {
-                console.log("click");
+                setDrawType(key);
+                dm.setOptions("drawingMode", 5);
               }}
               bg="#555555"
               fontWeight="bold"
@@ -167,7 +300,7 @@ const SementicMap = () => {
           );
         })}
         <Button
-          key={"polygon-cancle"}
+          key={"polygon-reset"}
           onClick={() => {
             setMapControll("");
           }}
@@ -177,7 +310,23 @@ const SementicMap = () => {
             backgroundColor: "#ff2121",
           }}
         >
-          CANCEL
+          초기화
+        </Button>
+        <Button
+          key={"polygon-cancle"}
+          onClick={() => {
+            dm.setMap(null);
+            setDm(null);
+            setDrawType("");
+            activeDrawHandler(false);
+          }}
+          bg="#ff6161"
+          fontWeight="bold"
+          _hover={{
+            backgroundColor: "#ff2121",
+          }}
+        >
+          취소
         </Button>
       </Flex>
     );
@@ -427,28 +576,30 @@ const SementicMap = () => {
   // };
 
   // 폴리곤 센터값 추출 로직
-  // const getCenterPolygon = (polygons: any[]) => {
-  //   const centers = polygons.map((polygon, idx: number) => {
-  //     const bounds = polygon.getPath();
-  //     const arr = bounds._array;
-  //     const length = arr.length;
-  //     let xcos = 0;
-  //     let ycos = 0;
-  //     let area = 0;
+  const getCenterPolygon = (polygons: any[]) => {
+    const centers = polygons.map((polygon, idx: number) => {
+      const bounds = polygon.getPath();
+      const arr = bounds._array;
+      const length = arr.length;
+      let xcos = 0;
+      let ycos = 0;
+      let area = 0;
 
-  //     for (let i = 0, len = length, j = length - 1; i < len; j = i++) {
-  //       let p1 = arr[i];
-  //       let p2 = arr[j];
+      for (let i = 0, len = length, j = length - 1; i < len; j = i++) {
+        let p1 = arr[i];
+        let p2 = arr[j];
 
-  //       let f = p1.y * p2.x - p2.y * p1.x;
-  //       xcos += (p1.x + p2.x) * f;
-  //       ycos += (p1.y + p2.y) * f;
-  //       area += f * 3;
-  //     }
+        let f = p1.y * p2.x - p2.y * p1.x;
+        xcos += (p1.x + p2.x) * f;
+        ycos += (p1.y + p2.y) * f;
+        area += f * 3;
+      }
 
-  //     return [xcos / area, ycos / area];
-  //   });
-  // };
+      return [xcos / area, ycos / area];
+    });
+
+    return centers;
+  };
 
   useEffect(() => {
     console.log("initialize Map Event");
@@ -463,6 +614,7 @@ const SementicMap = () => {
         // center: new naver.maps.LatLng(37.3614483, 127.1114883),
         center: new naver.maps.LatLng(36.1223291, 126.9101228),
         zoom: 8,
+        tileTransition: true,
       });
 
       // cubejsApi
@@ -872,10 +1024,17 @@ const SementicMap = () => {
   // 지역선택 polygon
   useEffect(() => {
     if (siPol.length === 0) {
-      console.log("staep1");
+      console.log("step1");
+
+      mapRef.current.setOptions("minZoom", 8);
+      mapRef.current.setZoom(8);
+      mapRef.current.setOptions("scrollWheel", false);
+
       const pol = polygonCreator(sidoList, (sido) => {
+        mapRef.current.fitBounds(sido.polygon.getBounds());
         sidoHandler({ code: sido.code, name: sido.name });
       });
+
       setSiPol(pol);
     } else if (
       siPol.length !== 0 &&
@@ -884,6 +1043,10 @@ const SementicMap = () => {
       !sigungu.code
     ) {
       console.log("step2");
+
+      mapRef.current.setOptions("minZoom", 8);
+      mapRef.current.setZoom(8);
+      mapRef.current.setOptions("scrollWheel", false);
 
       if (sigunguPol.length !== 0) {
         sigunguPol.map((polygon) => polygon.setMap(null));
@@ -896,6 +1059,12 @@ const SementicMap = () => {
       siPol.map((polygon) => polygon.setMap(mapRef.current));
     } else if (sido.code && !sigungu.code && sigunguList.length !== 0) {
       console.log("step3");
+
+      let zoom = mapRef.current.getZoom();
+      mapRef.current.setOptions("minZoom", 0);
+      mapRef.current.setOptions("scrollWheel", false);
+      mapRef.current.setZoom(zoom);
+
       siPol.map((polygon) => polygon.setMap(null));
 
       if (sigunguPol.length !== 0) {
@@ -905,43 +1074,413 @@ const SementicMap = () => {
       if (dongPol.length !== 0) {
         dongPol.map((polygon) => polygon.setMap(null));
       }
-      console.log(sigunguList);
+
       const pol = polygonCreator(sigunguList, (sigungu) => {
+        mapRef.current.fitBounds(sigungu.polygon.getBounds());
         sigunguHandler({ code: sigungu.code, name: sigungu.name });
       });
+
+      for (let i = 0; i < sidoList.length; i++) {
+        if (sidoList[i].code === sido.code) {
+          mapRef.current.fitBounds(siPol[i].getBounds());
+          console.log(mapRef.current.fitBounds(siPol[i].getBounds()));
+          break;
+        }
+      }
+
       setSigunguPol(pol);
     } else if (sido.code && sigungu.code && dongList.length !== 0) {
       console.log("step4");
+
       sigunguPol.map((polygon) => polygon.setMap(null));
 
       if (dongPol.length !== 0) {
         dongPol.map((polygon) => polygon.setMap(null));
       }
 
-      const pol = polygonCreator(dongList, (dong) => {});
-      dongList.map((li) => {
-        const marker = new naver.maps.Marker({
-          position: new naver.maps.LatLng(li.center[0], li.center[1]),
-          map: mapRef.current,
-          icon: {
-            content: [
-              "<div style='display: grid; gap: 1rem; grid-template-columns: 1fr 1fr; transform: translate(-50%, -50%);'>",
-              "   <h3>test1</h3>",
-              "   <h3>test2</h3>",
-              "   <h3>test3</h3>",
-              "   <h3>test4</h3>",
-              "</div>",
-            ].join(""),
-          },
-        });
+      const pol = polygonCreator(dongList, (dong) => {}, false);
+      // 센터값 로직
+      // const centers = getCenterPolygon(pol);
+      const centers: { [key: string]: any } = {};
+
+      dongList.map((el: any) => {
+        centers[el.code] = el.center;
       });
 
-      // 센터값 로직
-      // const centers = getCenterPolygon(pol)
+      for (let i = 0; i < sidoList.length; i++) {
+        if (sigunguList[i].code === sigungu.code) {
+          mapRef.current.fitBounds(sigunguPol[i].getBounds());
+          break;
+        }
+      }
 
+      let zoom = mapRef.current.getZoom();
+      mapRef.current.setOptions("scrollWheel", true);
+      mapRef.current.setOptions("minZoom", zoom);
+      mapRef.current.setZoom(zoom);
+
+      setDongCenter(centers);
       setDongPol(pol);
     }
   }, [sido, sigungu, sidoList, sigunguList, dongList]);
+
+  // 마커생성함수
+  const markerCreator = (data: any, viewId: string, map?: any) => {
+    const markers = data.map((li: any) => {
+      const marker = new naver.maps.Marker({
+        map: map,
+        position: new naver.maps.LatLng(li.lat, li.lng),
+      });
+      naver.maps.Event.addListener(marker, "click", (e) => {
+        console.log(li);
+        setSVState({ viewId: viewId, props: li });
+      });
+
+      const contentString = [
+        "<div style='padding: 5px 10px; border: none; background-color: #ffffff; border-radius: 5px;'>",
+        `   <h3 style='font-size: 16px; font-weight: 900; color: #000000'>${li.name}</h3>`,
+        "</div>",
+      ].join("");
+
+      const infowindow = new naver.maps.InfoWindow({
+        maxWidth: 200,
+        content: contentString,
+        backgroundColor: "transparent",
+        borderColor: "none",
+        borderWidth: 0,
+        anchorSize: new naver.maps.Size(10, 5),
+        anchorSkew: true,
+        anchorColor: "#ffffff",
+      });
+
+      naver.maps.Event.addListener(marker, "mouseover", (e) => {
+        infowindow.open(map, marker);
+      });
+
+      naver.maps.Event.addListener(marker, "mouseout", (e) => {
+        infowindow.close();
+      });
+
+      return marker;
+    });
+
+    return markers;
+  };
+
+  // center 마커생성함수
+  const centerMarkerCreator = (
+    centers: any,
+    data: any,
+    map: any,
+    title: string,
+    trans: [number, number]
+  ) => {
+    console.log(data);
+    const markerContent = [
+      `<div style='padding: 5px 5px; width: 50px; border: none; background-color: #ffffff; border-radius: 5px; transform: translate(${trans[0]}%, ${trans[1]}%'>`,
+      `   <h3 style='text-align: center;font-size: 10px; font-weight: 900; color: #000000'>${title}</h3>`,
+      "</div>",
+    ].join("");
+
+    const markers = Object.entries(data).map((li: any) => {
+      const marker = new naver.maps.Marker({
+        map: map,
+        position: new naver.maps.LatLng(centers[li[0]]),
+        icon: {
+          content: markerContent,
+        },
+      });
+      console.log(li[1]);
+      const infoContent = [
+        `<div style='padding: 5px 10px; border: none; background-color: #ffffff; border-radius: 5px; transform: translate(${
+          trans[0] / 2
+        }%, ${trans[1] / 2}%)'>`,
+        `   <h3 style='font-size: 16px; font-weight: 900; color: #000000'>${JSON.stringify(
+          li[1]
+        )}</h3>`,
+        "</div>",
+      ].join("");
+
+      const infowindow = new naver.maps.InfoWindow({
+        maxWidth: 200,
+        content: infoContent,
+        backgroundColor: "transparent",
+        borderColor: "none",
+        borderWidth: 0,
+        anchorSize: new naver.maps.Size(10, 5),
+        anchorSkew: false,
+        anchorColor: "#transparent",
+      });
+
+      naver.maps.Event.addListener(marker, "mouseover", (e) => {
+        infowindow.open(map, marker);
+      });
+
+      naver.maps.Event.addListener(marker, "mouseout", (e) => {
+        // infowindow.close();
+        infowindow.close();
+      });
+
+      return marker;
+    });
+
+    return markers;
+  };
+
+  // 인구 마커
+  useEffect(() => {
+    if (markerPop.length === 0) {
+      if (mapFloatPop.data) {
+        setMarkerPop(
+          centerMarkerCreator(
+            dongCenter,
+            mapFloatPop.data,
+            mapRef.current,
+            "유동인구",
+            [55, 55]
+          )
+        );
+      } else {
+        return;
+      }
+    } else {
+      if (mapFloatPop.data) {
+        if (mapFloatPop.active) {
+          markerPop.map((marker: any) => marker.setMap(null));
+          setMarkerPop(
+            centerMarkerCreator(
+              dongCenter,
+              mapFloatPop.data,
+              mapRef.current,
+              "유동인구",
+              [55, 55]
+            )
+          );
+        } else {
+          markerPop.map((marker: any) => marker.setMap(null));
+        }
+      } else {
+        markerPop.map((marker: any) => marker.setMap(null));
+        setMarkerPop([]);
+      }
+    }
+  }, [mapFloatPop]);
+
+  // 세대수 마커
+  useEffect(() => {
+    if (markerHouse.length === 0) {
+      if (mapHousehold.data) {
+        setMarkerHouse(
+          centerMarkerCreator(
+            dongCenter,
+            mapHousehold.data,
+            mapRef.current,
+            "세대수",
+            [55, -55]
+          )
+        );
+      } else {
+        return;
+      }
+    } else {
+      if (mapHousehold.data) {
+        if (mapHousehold.active) {
+          markerHouse.map((marker: any) => marker.setMap(null));
+          setMarkerHouse(
+            centerMarkerCreator(
+              dongCenter,
+              mapHousehold.data,
+              mapRef.current,
+              "세대수",
+              [55, -55]
+            )
+          );
+        } else {
+          markerHouse.map((marker: any) => marker.setMap(null));
+        }
+      } else {
+        markerHouse.map((marker: any) => marker.setMap(null));
+        setMarkerHouse([]);
+      }
+    }
+  }, [mapHousehold]);
+
+  // 업종 마커
+  useEffect(() => {
+    if (markerUpjong.length === 0) {
+      if (mapUpjong.data) {
+        setMarkerUpjong(
+          centerMarkerCreator(
+            dongCenter,
+            mapUpjong.data,
+            mapRef.current,
+            "업종수",
+            [-55, -55]
+          )
+        );
+      } else {
+        return;
+      }
+    } else {
+      if (mapUpjong.data) {
+        if (mapUpjong.active) {
+          markerUpjong.map((marker: any) => marker.setMap(null));
+          setMarkerUpjong(
+            centerMarkerCreator(
+              dongCenter,
+              mapUpjong.data,
+              mapRef.current,
+              "업종수",
+              [-55, -55]
+            )
+          );
+        } else {
+          markerUpjong.map((marker: any) => marker.setMap(null));
+        }
+      } else {
+        markerUpjong.map((marker: any) => marker.setMap(null));
+        setMarkerUpjong([]);
+      }
+    }
+  }, [mapUpjong]);
+
+  // 매출 마커
+  useEffect(() => {
+    if (markerSale.length === 0) {
+      if (mapSale.data) {
+        setMarkerSale(
+          centerMarkerCreator(
+            dongCenter,
+            mapSale.data,
+            mapRef.current,
+            "매출",
+            [-55, 55]
+          )
+        );
+      } else {
+        return;
+      }
+    } else {
+      if (mapSale.data) {
+        if (mapSale.active) {
+          markerSale.map((marker: any) => marker.setMap(null));
+          setMarkerSale(
+            centerMarkerCreator(
+              dongCenter,
+              mapSale.data,
+              mapRef.current,
+              "매출",
+              [-55, 55]
+            )
+          );
+        } else {
+          markerSale.map((marker: any) => marker.setMap(null));
+        }
+      } else {
+        markerSale.map((marker: any) => marker.setMap(null));
+        setMarkerSale([]);
+      }
+    }
+  }, [mapSale]);
+
+  // 매장 마커
+  useEffect(() => {
+    if (markerStore.length === 0) {
+      if (mapStore.data.length !== 0) {
+        setMarkerStore(
+          markerCreator(mapStore.data, "storeInfo", mapRef.current)
+        );
+      } else {
+        return;
+      }
+    } else {
+      if (mapStore.data.length !== 0) {
+        if (mapStore.active) {
+          markerStore.map((marker: any) => marker.setMap(null));
+          setMarkerStore(
+            markerCreator(mapStore.data, "storeInfo", mapRef.current)
+          );
+        } else {
+          markerStore.map((marker: any) => marker.setMap(null));
+        }
+      } else {
+        markerStore.map((marker: any) => marker.setMap(null));
+        setMarkerStore([]);
+      }
+    }
+  }, [mapStore]);
+
+  // 매물 마커
+  useEffect(() => {
+    if (markerRent.length === 0) {
+      if (mapRent.data.length !== 0) {
+        setMarkerRent(markerCreator(mapRent.data, "rentInfo", mapRef.current));
+      } else {
+        return;
+      }
+    } else {
+      if (mapRent.data.length !== 0) {
+        if (mapRent.active) {
+          markerRent.map((marker: any) => marker.setMap(null));
+          setMarkerRent(
+            markerCreator(mapRent.data, "rentInfo", mapRef.current)
+          );
+        } else {
+          markerRent.map((marker: any) => marker.setMap(null));
+        }
+      } else {
+        markerRent.map((marker: any) => marker.setMap(null));
+        setMarkerRent([]);
+      }
+    }
+  }, [mapRent]);
+
+  useEffect(() => {
+    if (originArea !== slctArea.slctAreaCode) {
+      changeOriginArea(slctArea.slctAreaCode);
+
+      if (markerPop.length !== 0)
+        markerPop.map((marker) => marker.setMap(null));
+      if (markerHouse.length !== 0)
+        markerHouse.map((marker) => marker.setMap(null));
+      if (markerUpjong.length !== 0)
+        markerUpjong.map((marker) => marker.setMap(null));
+      if (markerSale.length !== 0)
+        markerSale.map((marker) => marker.setMap(null));
+      if (markerStore.length !== 0)
+        markerStore.map((marker) => marker.setMap(null));
+      if (markerRent.length !== 0)
+        markerRent.map((marker) => marker.setMap(null));
+    } else {
+      if (active) {
+        if (markerPop.length !== 0)
+          markerPop.map((marker) => marker.setVisible(false));
+        if (markerHouse.length !== 0)
+          markerHouse.map((marker) => marker.setVisible(false));
+        if (markerUpjong.length !== 0)
+          markerUpjong.map((marker) => marker.setVisible(false));
+        if (markerSale.length !== 0)
+          markerSale.map((marker) => marker.setVisible(false));
+        if (markerStore.length !== 0)
+          markerStore.map((marker) => marker.setVisible(false));
+        if (markerRent.length !== 0)
+          markerRent.map((marker) => marker.setVisible(false));
+      } else {
+        if (markerPop.length !== 0)
+          markerPop.map((marker) => marker.setVisible(true));
+        if (markerHouse.length !== 0)
+          markerHouse.map((marker) => marker.setVisible(true));
+        if (markerUpjong.length !== 0)
+          markerUpjong.map((marker) => marker.setVisible(true));
+        if (markerSale.length !== 0)
+          markerSale.map((marker) => marker.setVisible(true));
+        if (markerStore.length !== 0)
+          markerStore.map((marker) => marker.setVisible(true));
+        if (markerRent.length !== 0)
+          markerRent.map((marker) => marker.setVisible(true));
+      }
+    }
+  }, [active, slctArea]);
 
   const exportData = (data: any) => {
     const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
@@ -964,16 +1503,7 @@ const SementicMap = () => {
         }}
       >
         {event === "activePoint" && <Test />}
-        {event === "activePolygon" && <MapController />}
-        {/* <Button
-          onClick={() => exportData(test)}
-          position="absolute"
-          bottom="0"
-          left="0"
-          zIndex={999}
-        >
-          test
-        </Button> */}
+        {activeDraw && <MapController />}
       </div>
     </>
   );

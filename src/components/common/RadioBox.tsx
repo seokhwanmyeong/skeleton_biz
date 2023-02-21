@@ -67,7 +67,7 @@ const RadioTagGroup = ({
   radioData: { text: any; value: string | number }[];
   radioValue: string | number;
   isDisabled?: boolean;
-  onChange: (value: string | number) => void;
+  onChange: (value: any) => void;
   variant?: string;
 }) => {
   return (
@@ -78,25 +78,23 @@ const RadioTagGroup = ({
       variant={variant}
     >
       <Flex w="100%" flexWrap="wrap" gap="1rem">
-        {radioData.map(
-          ({ text, value }: { text: string; value: string | number }) => (
-            <Radio
-              key={`chk-${text}-${value}`}
-              variant="withTag"
-              isDisabled={isDisabled}
-              value={value}
-            >
-              <Tag
-                variant="checkbox"
-                key={`tag-${text}-${value}`}
-                text={text ?? ""}
-                hasBtn={false}
-                tagBtn={true}
-                isChecked={radioValue === value}
-              />
-            </Radio>
-          )
-        )}
+        {radioData.map(({ text, value }: { text: string; value: any }) => (
+          <Radio
+            key={`chk-${text}-${value}`}
+            variant="withTag"
+            isDisabled={isDisabled}
+            value={value}
+          >
+            <Tag
+              variant="checkbox"
+              key={`tag-${text}-${value}`}
+              text={text ?? ""}
+              hasBtn={false}
+              tagBtn={true}
+              isChecked={radioValue === value}
+            />
+          </Radio>
+        ))}
       </Flex>
     </RadioGroup>
   );

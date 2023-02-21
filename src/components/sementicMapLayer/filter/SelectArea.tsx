@@ -100,12 +100,11 @@ const SelectArea = () => {
               let name;
 
               for (let i = 0; i < sigunguList.length; i++) {
-                if (sigunguList[i].code) {
+                if (sigunguList[i].code === val) {
                   name = sigunguList[i].name;
                   break;
                 }
               }
-
               sigunguHandler({ code: val, name: name });
             }}
             isDisabled={sigunguList.length > 0 ? false : true}

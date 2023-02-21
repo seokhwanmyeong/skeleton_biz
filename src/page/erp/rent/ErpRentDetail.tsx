@@ -29,7 +29,7 @@ import { formSearchStore } from "@page/erp/store/form";
 import { mainTable } from "@page/erp/store/column";
 import ErpHistory from "../history/ErpHistory";
 
-const ErpStoreDetail = () => {
+const ErpRentDetail = () => {
   const navigate = useNavigate();
   const { location } = useLocationState();
   const mapRef = useRef<any>();
@@ -147,4 +147,4 @@ const ErpStoreDetail = () => {
   );
 };
 
-export default ErpStoreDetail;
+export default ErpRentDetail;

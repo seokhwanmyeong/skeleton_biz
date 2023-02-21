@@ -280,6 +280,14 @@ export const resetSementicAtom = selector({
     reset(atomMapController);
     reset(atomSementicUpjong);
     reset(atomInfoCom);
+
+    reset(infoComFloatPop);
+    reset(infoComHousehold);
+    reset(infoComUpjong);
+    reset(infoComSale);
+    reset(infoComMyStore);
+    reset(infoComMyBsns);
+    reset(infoComMyRent);
   },
 });
 
@@ -427,101 +435,109 @@ export const atomArea = atom<any>({
 export const infoComFloatPop = atom<any>({
   key: "infoComFloatPop",
   default: {
-    type: "externalData",
-    category: "floatPop",
-    title: "유동인구",
-    baseFilter: [
-      {
-        title: "성별",
-        key: "gender",
-        type: "totalChk",
-        value: [
-          { label: "전체", value: "total" },
-          { label: "남", value: "man" },
-          { label: "녀", value: "woman" },
-        ],
-      },
-      {
-        title: "나이대",
-        key: "age",
-        type: "totalChk",
-        value: [
-          { label: "전체", value: "total" },
-          { label: "20대", value: "20th" },
-          { label: "30대", value: "30th" },
-          { label: "40대", value: "40th" },
-          { label: "50대", value: "50th" },
-          { label: "60대", value: "60th" },
-        ],
-      },
-      {
-        title: "구간",
-        key: "range",
-        type: "range",
-        value: { start: null, end: null },
-      },
-    ],
-    req: {},
-    res: [],
-    activeView: false,
-    apiType: "nice",
-    apiEvent: null,
+    data: {},
+    active: false,
+    // type: "externalData",
+    // category: "floatPop",
+    // title: "유동인구",
+    // baseFilter: [
+    //   {
+    //     title: "성별",
+    //     key: "gender",
+    //     type: "totalChk",
+    //     value: [
+    //       { label: "전체", value: "total" },
+    //       { label: "남", value: "man" },
+    //       { label: "녀", value: "woman" },
+    //     ],
+    //   },
+    //   {
+    //     title: "나이대",
+    //     key: "age",
+    //     type: "totalChk",
+    //     value: [
+    //       { label: "전체", value: "total" },
+    //       { label: "20대", value: "20th" },
+    //       { label: "30대", value: "30th" },
+    //       { label: "40대", value: "40th" },
+    //       { label: "50대", value: "50th" },
+    //       { label: "60대", value: "60th" },
+    //     ],
+    //   },
+    //   {
+    //     title: "구간",
+    //     key: "range",
+    //     type: "range",
+    //     value: { start: null, end: null },
+    //   },
+    // ],
+    // req: {},
+    // res: [],
+    // activeView: false,
+    // apiType: "nice",
+    // apiEvent: null,
   },
 });
 
 export const infoComHousehold = atom<any>({
   key: "infoComHousehold",
   default: {
-    type: "externalData",
-    category: "household",
-    title: "세대수",
-    baseFilter: [
-      {
-        title: "성별",
-        key: "gender",
-        type: "totalChk",
-        value: [
-          { label: "전체", value: "total" },
-          { label: "남", value: "man" },
-          { label: "녀", value: "woman" },
-        ],
-      },
-    ],
-    req: {},
-    res: [],
-    activeView: false,
-    apiType: "nice",
-    apiEvent: null,
+    data: {},
+    active: false,
+    // type: "externalData",
+    // category: "household",
+    // title: "세대수",
+    // baseFilter: [
+    //   {
+    //     title: "성별",
+    //     key: "gender",
+    //     type: "totalChk",
+    //     value: [
+    //       { label: "전체", value: "total" },
+    //       { label: "남", value: "man" },
+    //       { label: "녀", value: "woman" },
+    //     ],
+    //   },
+    // ],
+    // req: {},
+    // res: [],
+    // activeView: false,
+    // apiType: "nice",
+    // apiEvent: null,
   },
 });
 
 export const infoComUpjong = atom<any>({
   key: "infoComUpjong",
   default: {
-    type: "externalData",
-    category: "upjong",
-    title: "업종 수",
-    baseFilter: {},
-    req: {},
-    res: [],
-    activeView: false,
-    apiType: "nice",
-    apiEvent: null,
+    data: {},
+    active: false,
+    // type: "externalData",
+    // category: "upjong",
+    // title: "업종 수",
+    // baseFilter: {},
+    // req: {},
+    // res: [],
+    // activeView: false,
+    // apiType: "nice",
+    // apiEvent: null,
   },
 });
 
 export const infoComSale = atom<any>({
   key: "infoComSale",
   default: {
-    type: "externalData",
-    category: "sale",
-    title: "매출",
-    baseFilter: {},
-    req: {},
-    res: [],
-    activeView: false,
-    apiType: "nice",
-    apiEvent: null,
+    data: {},
+    active: false,
+    // type: "externalData",
+    // category: "sale",
+    // title: "매출",
+    // baseFilter: {},
+    // req: {},
+    // res: [],
+    // activeView: false,
+    // apiType: "nice",
+    // apiEvent: null,
   },
 });
 
@@ -573,44 +589,58 @@ export const infoComBuilding = atom<any>({
 export const infoComMyStore = atom<any>({
   key: "infoComMyStore",
   default: {
-    type: "brandData",
-    category: "store",
-    title: "매장조회",
-    baseFilter: {},
-    req: {},
-    res: [],
-    activeView: false,
-    apiType: "nice",
-    apiEvent: null,
+    data: [],
+    active: false,
+    // type: "brandData",
+    // category: "store",
+    // title: "매장조회",
+    // baseFilter: {},
+    // req: {},
+    // res: [],
+    // activeView: false,
+    // apiType: "nice",
+    // apiEvent: null,
   },
 });
 
 export const infoComMyBsns = atom<any>({
   key: "infoComMyBsns",
   default: {
-    type: "brandData",
-    category: "bsns",
-    title: "상권조회",
-    baseFilter: {},
-    req: {},
-    res: [],
-    activeView: false,
-    apiType: "nice",
-    apiEvent: null,
+    data: [],
+    active: false,
+    // type: "brandData",
+    // category: "bsns",
+    // title: "상권조회",
+    // baseFilter: {},
+    // req: {},
+    // res: [],
+    // activeView: false,
+    // apiType: "nice",
+    // apiEvent: null,
   },
 });
 
 export const infoComMyRent = atom<any>({
   key: "infoComMyRent",
   default: {
-    type: "brandData",
-    category: "rent",
-    title: "매물조회",
-    baseFilter: {},
-    req: {},
-    res: [],
-    activeView: false,
-    apiType: "nice",
-    apiEvent: null,
+    data: [],
+    active: false,
+    // type: "brandData",
+    // category: "rent",
+    // title: "매물조회",
+    // baseFilter: {},
+    // req: {},
+    // res: [],
+    // activeView: false,
+    // apiType: "nice",
+    // apiEvent: null,
+  },
+});
+
+export const sementicViewState = atom<any>({
+  key: "sementicViewState",
+  default: {
+    viewId: "",
+    props: null,
   },
 });

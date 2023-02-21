@@ -81,6 +81,8 @@ const queryStoreInfo = {
       `StoreInfo.addr`,
       `StoreInfo.addrDetail`,
       `StoreInfo.openDate`,
+      `StoreInfo.lat`,
+      `StoreInfo.lng`,
     ],
   },
 };
