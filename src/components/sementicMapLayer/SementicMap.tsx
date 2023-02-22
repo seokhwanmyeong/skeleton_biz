@@ -1175,7 +1175,7 @@ const SementicMap = () => {
     title: string,
     trans: [number, number]
   ) => {
-    console.log(data);
+    console.log(centers, data, map);
     const markerContent = [
       `<div style='padding: 5px 5px; width: 50px; border: none; background-color: #ffffff; border-radius: 5px; transform: translate(${trans[0]}%, ${trans[1]}%'>`,
       `   <h3 style='text-align: center;font-size: 10px; font-weight: 900; color: #000000'>${title}</h3>`,
@@ -1183,14 +1183,20 @@ const SementicMap = () => {
     ].join("");
 
     const markers = Object.entries(data).map((li: any) => {
+      if (centers[li[0]] === undefined) {
+        console.log(centers);
+        console.log(li);
+        return;
+      }
+      console.log(centers[li[0]]);
+      console.log(centers[li[0]][0], centers[li[0]][1]);
       const marker = new naver.maps.Marker({
         map: map,
-        position: new naver.maps.LatLng(centers[li[0]]),
+        position: new naver.maps.LatLng(centers[li[0]][0], centers[li[0]][1]),
         icon: {
           content: markerContent,
         },
       });
-      console.log(li[1]);
       const infoContent = [
         `<div style='padding: 5px 10px; border: none; background-color: #ffffff; border-radius: 5px; transform: translate(${
           trans[0] / 2
@@ -1227,6 +1233,12 @@ const SementicMap = () => {
     return markers;
   };
 
+  useEffect(() => {
+    console.log(markerPop);
+    markerPop.map((res) => res.setMap(mapRef.current));
+    console.log(mapFloatPop);
+  }, [markerPop]);
+
   // 인구 마커
   useEffect(() => {
     if (markerPop.length === 0) {
@@ -1246,6 +1258,7 @@ const SementicMap = () => {
     } else {
       if (mapFloatPop.data) {
         if (mapFloatPop.active) {
+          console.log(mapFloatPop);
           markerPop.map((marker: any) => marker.setMap(null));
           setMarkerPop(
             centerMarkerCreator(

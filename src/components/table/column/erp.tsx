@@ -160,4 +160,79 @@ const columnSaleInfo = [
   }),
 ];
 
-export { columnStoreInfo, columnSaleInfo };
+const columnRentInfo = [
+  columnHelper.display({
+    header: "번호",
+    cell: (info) => info.row.index + 1,
+    enableResizing: false,
+    size: 80,
+  }),
+  columnHelper.accessor((row: any) => row["Rent.storeName"], {
+    id: "storeName",
+    header: "매장명",
+    cell: (info) => <Text noOfLines={2}>{info.getValue()}</Text>,
+    size: 140,
+  }),
+  columnHelper.accessor((row: any) => row["Rent.storeCode"], {
+    id: "storeCode",
+    header: "매장코드",
+    cell: (info) => info.getValue(),
+    enableResizing: false,
+    size: 120,
+  }),
+  columnHelper.accessor((row: any) => row["Rent.storeStatus"], {
+    id: "storeStatus",
+    header: "상태",
+    cell: (info) => info.getValue(),
+    enableResizing: false,
+    size: 80,
+  }),
+  columnHelper.accessor((row: any) => row["Rent.storeRank"], {
+    id: "storeRank",
+    header: "타입",
+    cell: (info) => info.getValue(),
+    enableResizing: false,
+    size: 80,
+  }),
+  columnHelper.accessor((row: any) => row["Rent.addr"], {
+    id: "addr",
+    header: "주소",
+    cell: (info) => <Text noOfLines={2}>{info.getValue()}</Text>,
+    enableResizing: true,
+    minSize: 200,
+  }),
+  columnHelper.accessor((row: any) => row["Rent.openDate"], {
+    id: "openDate",
+    header: "개업일",
+    cell: (info) => info.getValue(),
+    enableResizing: false,
+    size: 100,
+  }),
+  columnHelper.display({
+    header: "매장상세",
+    cell: (info: any) => (
+      <Button
+        as={Link}
+        to={"/erp/store/detail"}
+        state={info.row.original}
+        data-text={"상세보기"}
+      >
+        상세보기
+      </Button>
+    ),
+    enableResizing: false,
+    size: 100,
+  }),
+  // {
+  //   accessorKey: "owner_name",
+  //   header: "대표자명",
+  //   cell: (info) => info.getValue(),
+  // },
+  // {
+  //   accessorKey: "created_at",
+  //   header: "등록일",
+  //   cell: (info) => info.getValue(),
+  // },
+];
+
+export { columnStoreInfo, columnSaleInfo, columnRentInfo };
