@@ -80,6 +80,7 @@ const SementicMap = () => {
   const mapRef = useRef<any>();
   const markers = useRef<any>();
   const polygons = useRef<any>();
+  const centerPoi = useRef<any>();
   const markerRef = useRef<any>();
   const [activeEvent, setActiveEvent] = useState<any>();
   const [offset, setOffset] = useState({ left: 0, top: 0 });
@@ -94,6 +95,112 @@ const SementicMap = () => {
       isCheck: true,
     },
   });
+
+  // 마커생성함수
+  const markerCreator = (data: any, viewId: string, map?: any) => {
+    const markers = data.map((li: any) => {
+      const marker = new naver.maps.Marker({
+        map: map,
+        position: new naver.maps.LatLng(li.lat, li.lng),
+      });
+      naver.maps.Event.addListener(marker, "click", (e) => {
+        console.log(li);
+        setSVState({ viewId: viewId, props: li });
+      });
+
+      const contentString = [
+        "<div style='padding: 5px 10px; border: none; background-color: #ffffff; border-radius: 5px;'>",
+        `   <h3 style='font-size: 16px; font-weight: 900; color: #000000'>${li.name}</h3>`,
+        "</div>",
+      ].join("");
+
+      const infowindow = new naver.maps.InfoWindow({
+        maxWidth: 200,
+        content: contentString,
+        backgroundColor: "transparent",
+        borderColor: "none",
+        borderWidth: 0,
+        anchorSize: new naver.maps.Size(10, 5),
+        anchorSkew: true,
+        anchorColor: "#ffffff",
+      });
+
+      naver.maps.Event.addListener(marker, "mouseover", (e) => {
+        infowindow.open(map, marker);
+      });
+
+      naver.maps.Event.addListener(marker, "mouseout", (e) => {
+        infowindow.close();
+      });
+
+      return marker;
+    });
+
+    return markers;
+  };
+
+  // center 마커생성함수
+  const centerMarkerCreator = (
+    centers: any,
+    data: any,
+    map: any,
+    title: string,
+    trans: [number, number]
+  ) => {
+    console.log(centers, data, map);
+    const markerContent = [
+      `<div style='padding: 5px 5px; width: 50px; border: none; background-color: #ffffff; border-radius: 5px; box-shadow: 2px 2px 2px #0000004d;'>`,
+      `   <h3 style='text-align: center;font-size: 10px; font-weight: 900; color: #000000'>${title}</h3>`,
+      "</div>",
+    ].join("");
+
+    const markers = Object.entries(data).map((li: any) => {
+      // if (centers[li[0]] === undefined) {
+      //   console.log(centers);
+      //   console.log(li);
+      //   return;
+      // }
+      const marker = new naver.maps.Marker({
+        map: map,
+        position: new naver.maps.LatLng(centers[li[0]][0], centers[li[0]][1]),
+        icon: {
+          content: markerContent,
+          anchor: new naver.maps.Point(trans[0], trans[1]),
+        },
+      });
+      const infoContent = [
+        `<div style='padding: 5px 10px; border: none; background-color: #ffffff; border-radius: 5px;'>`,
+        `   <h3 style='font-size: 16px; font-weight: 900; color: #000000'>${JSON.stringify(
+          li[1]
+        )}</h3>`,
+        "</div>",
+      ].join("");
+
+      const infowindow = new naver.maps.InfoWindow({
+        maxWidth: 200,
+        content: infoContent,
+        backgroundColor: "transparent",
+        borderColor: "none",
+        borderWidth: 0,
+        anchorSize: new naver.maps.Size(10, 5),
+        anchorSkew: false,
+        anchorColor: "#transparent",
+      });
+
+      naver.maps.Event.addListener(marker, "mouseover", (e) => {
+        infowindow.open(map, marker);
+      });
+
+      naver.maps.Event.addListener(marker, "mouseout", (e) => {
+        // infowindow.close();
+        infowindow.close();
+      });
+
+      return marker;
+    });
+
+    return markers;
+  };
 
   const polygonCreator = (
     areaLi: { code: string; name: string; polygon: string }[],
@@ -112,7 +219,7 @@ const SementicMap = () => {
           }
         }
       );
-      let color = "red";
+      let color = "#ff00008c";
 
       // 인천, 전라남도 예외조건 paths
       const setPolygon = new naver.maps.Polygon({
@@ -126,6 +233,11 @@ const SementicMap = () => {
         clickable: activeEvent,
         zIndex: activeEvent ? 0 : -1,
       });
+
+      setPolygon.setStyles(
+        "strokeOpacity",
+        "0.6; filter: drop-shadow(4px 1px 2px rgb(0 0 0 / 1));"
+      );
 
       if (activeEvent) {
         naver.maps.Event.addListener(setPolygon, "click", (e) => {
@@ -1107,7 +1219,7 @@ const SementicMap = () => {
         centers[el.code] = el.center;
       });
 
-      for (let i = 0; i < sidoList.length; i++) {
+      for (let i = 0; i < sigunguList.length; i++) {
         if (sigunguList[i].code === sigungu.code) {
           mapRef.current.fitBounds(sigunguPol[i].getBounds());
           break;
@@ -1118,120 +1230,28 @@ const SementicMap = () => {
       mapRef.current.setOptions("scrollWheel", true);
       mapRef.current.setOptions("minZoom", zoom);
       mapRef.current.setZoom(zoom);
-
       setDongCenter(centers);
       setDongPol(pol);
     }
   }, [sido, sigungu, sidoList, sigunguList, dongList]);
 
-  // 마커생성함수
-  const markerCreator = (data: any, viewId: string, map?: any) => {
-    const markers = data.map((li: any) => {
-      const marker = new naver.maps.Marker({
-        map: map,
-        position: new naver.maps.LatLng(li.lat, li.lng),
-      });
-      naver.maps.Event.addListener(marker, "click", (e) => {
-        console.log(li);
-        setSVState({ viewId: viewId, props: li });
-      });
+  useEffect(() => {
+    if (centerPoi.current) {
+      centerPoi.current.map((marker: any) => marker.setMap(null));
+    }
 
-      const contentString = [
-        "<div style='padding: 5px 10px; border: none; background-color: #ffffff; border-radius: 5px;'>",
-        `   <h3 style='font-size: 16px; font-weight: 900; color: #000000'>${li.name}</h3>`,
-        "</div>",
-      ].join("");
-
-      const infowindow = new naver.maps.InfoWindow({
-        maxWidth: 200,
-        content: contentString,
-        backgroundColor: "transparent",
-        borderColor: "none",
-        borderWidth: 0,
-        anchorSize: new naver.maps.Size(10, 5),
-        anchorSkew: true,
-        anchorColor: "#ffffff",
-      });
-
-      naver.maps.Event.addListener(marker, "mouseover", (e) => {
-        infowindow.open(map, marker);
-      });
-
-      naver.maps.Event.addListener(marker, "mouseout", (e) => {
-        infowindow.close();
-      });
-
-      return marker;
-    });
-
-    return markers;
-  };
-
-  // center 마커생성함수
-  const centerMarkerCreator = (
-    centers: any,
-    data: any,
-    map: any,
-    title: string,
-    trans: [number, number]
-  ) => {
-    console.log(centers, data, map);
-    const markerContent = [
-      `<div style='padding: 5px 5px; width: 50px; border: none; background-color: #ffffff; border-radius: 5px; transform: translate(${trans[0]}%, ${trans[1]}%'>`,
-      `   <h3 style='text-align: center;font-size: 10px; font-weight: 900; color: #000000'>${title}</h3>`,
-      "</div>",
-    ].join("");
-
-    const markers = Object.entries(data).map((li: any) => {
-      if (centers[li[0]] === undefined) {
-        console.log(centers);
-        console.log(li);
-        return;
-      }
-      console.log(centers[li[0]]);
-      console.log(centers[li[0]][0], centers[li[0]][1]);
-      const marker = new naver.maps.Marker({
-        map: map,
-        position: new naver.maps.LatLng(centers[li[0]][0], centers[li[0]][1]),
+    const centerMarker = Object.values(dongCenter).map((point: any) => {
+      return new naver.maps.Marker({
+        map: mapRef.current,
+        position: new naver.maps.LatLng(point[0], point[1]),
         icon: {
-          content: markerContent,
+          content: `<div style="width: 5px; height: 5px; border-radius: 50px; background-color: #000000"></div>`,
+          size: new naver.maps.Size(10, 10),
         },
       });
-      const infoContent = [
-        `<div style='padding: 5px 10px; border: none; background-color: #ffffff; border-radius: 5px; transform: translate(${
-          trans[0] / 2
-        }%, ${trans[1] / 2}%)'>`,
-        `   <h3 style='font-size: 16px; font-weight: 900; color: #000000'>${JSON.stringify(
-          li[1]
-        )}</h3>`,
-        "</div>",
-      ].join("");
-
-      const infowindow = new naver.maps.InfoWindow({
-        maxWidth: 200,
-        content: infoContent,
-        backgroundColor: "transparent",
-        borderColor: "none",
-        borderWidth: 0,
-        anchorSize: new naver.maps.Size(10, 5),
-        anchorSkew: false,
-        anchorColor: "#transparent",
-      });
-
-      naver.maps.Event.addListener(marker, "mouseover", (e) => {
-        infowindow.open(map, marker);
-      });
-
-      naver.maps.Event.addListener(marker, "mouseout", (e) => {
-        // infowindow.close();
-        infowindow.close();
-      });
-
-      return marker;
     });
-
-    return markers;
-  };
+    centerPoi.current = centerMarker;
+  }, [dongCenter, dongList]);
 
   useEffect(() => {
     console.log(markerPop);
@@ -1249,7 +1269,7 @@ const SementicMap = () => {
             mapFloatPop.data,
             mapRef.current,
             "유동인구",
-            [55, 55]
+            [54, 36]
           )
         );
       } else {
@@ -1266,7 +1286,7 @@ const SementicMap = () => {
               mapFloatPop.data,
               mapRef.current,
               "유동인구",
-              [55, 55]
+              [54, 36]
             )
           );
         } else {
@@ -1289,7 +1309,7 @@ const SementicMap = () => {
             mapHousehold.data,
             mapRef.current,
             "세대수",
-            [55, -55]
+            [0, 36]
           )
         );
       } else {
@@ -1305,7 +1325,7 @@ const SementicMap = () => {
               mapHousehold.data,
               mapRef.current,
               "세대수",
-              [55, -55]
+              [0, 36]
             )
           );
         } else {
@@ -1328,7 +1348,7 @@ const SementicMap = () => {
             mapUpjong.data,
             mapRef.current,
             "업종수",
-            [-55, -55]
+            [54, 4]
           )
         );
       } else {
@@ -1344,7 +1364,7 @@ const SementicMap = () => {
               mapUpjong.data,
               mapRef.current,
               "업종수",
-              [-55, -55]
+              [54, 4]
             )
           );
         } else {
@@ -1367,7 +1387,7 @@ const SementicMap = () => {
             mapSale.data,
             mapRef.current,
             "매출",
-            [-55, 55]
+            [0, 4]
           )
         );
       } else {
@@ -1383,7 +1403,7 @@ const SementicMap = () => {
               mapSale.data,
               mapRef.current,
               "매출",
-              [-55, 55]
+              [0, 4]
             )
           );
         } else {
@@ -1515,7 +1535,7 @@ const SementicMap = () => {
           height: "100%",
         }}
       >
-        {event === "activePoint" && <Test />}
+        {/* {event === "activePoint" && <Test />} */}
         {activeDraw && <MapController />}
       </div>
     </>

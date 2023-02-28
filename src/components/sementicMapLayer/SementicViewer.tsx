@@ -48,31 +48,6 @@ const SementicViewer = (props: Props) => {
   const [sv, setSv] = useRecoilState(sementicViewState);
   const [toggle, setToggle] = useState<boolean>(true);
   const ref = useRef<any>();
-  const [data] = useState({
-    data1: [
-      { date: "2022-01", population: 5000 },
-      { date: "2022-02", population: 100 },
-      { date: "2022-03", population: 3500 },
-      { date: "2022-04", population: 1000 },
-      { date: "2022-05", population: 9000 },
-      { date: "2022-05", population: 1000 },
-      { date: "2022-08", population: 8000 },
-      { date: "2022-10", population: 677 },
-      { date: "2022-11", population: 800 },
-      { date: "2022-12", population: 3000 },
-      { date: "2022-12", population: 3000 },
-      { date: "2022-12", population: 3000 },
-      { date: "2022-12", population: 8000 },
-    ],
-    data2: [
-      { age: "10th", count: 2000 },
-      { age: "20th", count: 5000 },
-      { age: "30th", count: 12359 },
-      { age: "40th", count: 4560 },
-      { age: "50th", count: 1500 },
-      { age: "60th", count: 1290 },
-    ],
-  });
 
   const onToggle = () => {
     setToggle(!toggle);
@@ -84,8 +59,6 @@ const SementicViewer = (props: Props) => {
 
   const Content = () => {
     const { viewId, props } = sv;
-    console.log(viewId);
-    console.log(props);
     if (viewId === "storeInfo") {
       return (
         <Flex
@@ -113,51 +86,7 @@ const SementicViewer = (props: Props) => {
         </Flex>
       );
     } else if (viewId === "eval") {
-      return (
-        <Report />
-        // <Flex
-        //   minW="400px"
-        //   alignItems="center"
-        //   justifyContent="center"
-        //   flexDirection="column"
-        //   borderLeft="1px solid #ededed"
-        //   bgColor="primary.main.bg"
-        //   overflow="hidden"
-        //   transition="0.3s"
-        // >
-        //   <Heading>SementicViewer</Heading>
-        //   <ChartGraph Data={data.data1} />
-        //   <ChartCircle
-        //     Data={data.data2}
-        //     title=""
-        //     keyName="age"
-        //     valName="count"
-        //     zKey=""
-        //     Group={false}
-        //     width={360}
-        //     height={300}
-        //     innerRadius={0}
-        //     outerRadius={148}
-        //     labelRadius={110}
-        //     arcColor={[
-        //       "#98abc5",
-        //       "#8a89a6",
-        //       "#7b6888",
-        //       "#6b486b",
-        //       "#a05d56",
-        //       "#555555",
-        //     ]}
-        //     stroke="none"
-        //     strokeWidth={1}
-        //     strokeLinejoin="round"
-        //     padAngle={0}
-        //     svgStyle={{
-        //       width: "10px",
-        //       height: "auto",
-        //     }}
-        //   />
-        // </Flex>
-      );
+      return <Report />;
     } else {
       return null;
     }
@@ -1547,5 +1476,72 @@ const StackBarChart = (props: any) => {
     <Flex flexDirection="column" gap="1rem">
       <Bar options={options} data={data} />
     </Flex>
+  );
+};
+
+const SummaryBox = ({
+  text,
+  keyPoint,
+}: {
+  text: string[];
+  keyPoint: string[];
+}) => {
+  return (
+    <List>
+      {text.map(() => {
+        return (
+          <ListItem w="100%" m={"1rem 0"} display="flex" gap="4rem">
+            <Text w="100%" textAlign="center" textStyle="list.text">
+              <Highlight
+                query={["2,032", "남성", "40대", "화요일", "14시~18시"]}
+                styles={{
+                  fontWeight: "900",
+                  color: "#6363f1",
+                }}
+              >
+                선택 영역의 일 평균 유동인구수는 2,032명 입니다.
+              </Highlight>
+            </Text>
+          </ListItem>
+        );
+      })}
+      <ListItem w="100%" m={"1rem 0"} display="flex" gap="4rem">
+        <Text w="100%" textAlign="center" textStyle="list.text">
+          <Highlight
+            query={["2,032", "남성", "40대", "화요일", "14시~18시"]}
+            styles={{
+              fontWeight: "900",
+              color: "#6363f1",
+            }}
+          >
+            선택 영역의 일 평균 유동인구수는 2,032명 입니다.
+          </Highlight>
+        </Text>
+      </ListItem>
+      <ListItem w="100%" m={"1rem 0"} display="flex" gap="1rem">
+        <Text w="100%" textAlign="center" textStyle="list.text">
+          <Highlight
+            query={["454점"]}
+            styles={{
+              fontWeight: "900",
+              color: "#6363f1",
+            }}
+          >
+            성별/연령별 유동인구수는 남성, 40대 이며
+          </Highlight>
+        </Text>
+      </ListItem>
+      <ListItem
+        w="100%"
+        textAlign="center"
+        m={"1rem 0"}
+        display="flex"
+        gap="1rem"
+      >
+        <Text w="100%" textStyle="list.text">
+          요일/시간대별 유동인구수는 화요일, 14시~18시 입니다.
+        </Text>
+      </ListItem>
+    </List>
   );
 };

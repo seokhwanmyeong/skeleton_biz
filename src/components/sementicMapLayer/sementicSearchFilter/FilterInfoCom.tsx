@@ -428,7 +428,7 @@ const FilterFloatPop = ({ areaCode }: { areaCode: string }) => {
     console.log(`\nstart search FloatPopulation`);
     console.log(filter);
 
-    let dimensions = [];
+    let dimensions = ["Pop.ageT"];
     filter.gender.length !== 0 && dimensions.push(...filter.gender);
     filter.age.length !== 0 && dimensions.push(...filter.age);
 
@@ -468,14 +468,14 @@ const FilterFloatPop = ({ areaCode }: { areaCode: string }) => {
 
         res?.rawData().map((li: any) => {
           result[li["Pop.areaCode"]] = {
-            genderM: li["Pop.genderM"],
-            genderW: li["Pop.genderW"],
-            ageT: li["Pop.ageT"],
-            age20th: li["Pop.age20th"],
-            age30th: li["Pop.age30th"],
-            age40th: li["Pop.age40th"],
-            age50th: li["Pop.age50th"],
-            age60th: li["Pop.age60th"],
+            유동인구수: li["Pop.ageT"],
+            남성: li["Pop.genderM"],
+            여성: li["Pop.genderW"],
+            "20대": li["Pop.age20th"],
+            "30대": li["Pop.age30th"],
+            "40대": li["Pop.age40th"],
+            "50대": li["Pop.age50th"],
+            "60대이상": li["Pop.age60th"],
           };
         });
         // console.log(result);
@@ -629,21 +629,20 @@ const FilterHousehold = ({ areaCode }: { areaCode: string }) => {
       .then((res) => {
         const result: { [key: string]: any } = {};
         res?.rawData().map((li: any) => {
-          result[li["House.areaCode"]] = {
-            apt: li["House.apt"],
-            com: li["House.com"],
-            hous: li["House.hous"],
-            noe: li["House.noe"],
-            offtel: li["House.offtel"],
-          };
-          // return {
-          //   dongCode: li["House.areaCode"],
+          // result[li["House.areaCode"]] = {
           //   apt: li["House.apt"],
           //   com: li["House.com"],
           //   hous: li["House.hous"],
           //   noe: li["House.noe"],
           //   offtel: li["House.offtel"],
           // };
+          result[li["House.areaCode"]] = {
+            아파트: li["House.apt"],
+            복합주택: li["House.com"],
+            세대수: li["House.hous"],
+            단독주택: li["House.noe"],
+            오피스텔: li["House.offtel"],
+          };
         });
         console.log(result);
         setHousehold({ data: result, active: true });
@@ -885,12 +884,11 @@ const FilterSale = ({ areaCode }: { areaCode: string }) => {
 
         res?.rawData().map((li: any) => {
           result[li["Upjong.areaCode"]] = {
-            avg: li["Upjong.avgSalesAmt"],
-            top: li["Upjong.salesAmtTop20"],
-            bot: li["Upjong.salesAmtBottom20"],
+            평균매출: li["Upjong.avgSalesAmt"],
+            "상위20% 평균": li["Upjong.salesAmtTop20"],
+            "하위20% 평균": li["Upjong.salesAmtBottom20"],
           };
         });
-        console.log(result);
 
         setSales({ data: result, active: true });
       });
