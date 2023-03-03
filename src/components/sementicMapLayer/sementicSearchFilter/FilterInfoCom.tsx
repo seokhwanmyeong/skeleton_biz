@@ -62,6 +62,24 @@ const FilterInfoCom = (props: any) => {
           gap="10px"
         >
           <Accordion variant={"searchEngine"} allowToggle>
+            <AccordionItem key={`infoCom-test`} isDisabled={isDisabled}>
+              <AccordionButton color="#ffffff">
+                업종
+                <AccordionIcon />
+              </AccordionButton>
+              <AccordionPanel
+                display="flex"
+                flexDirection="row"
+                flexWrap="wrap"
+                backgroundColor="#ededed"
+                color="#555555"
+                fontSize="0.8rem"
+                fontWeight="bold"
+                gap="10px"
+              >
+                <UpjongExporter />
+              </AccordionPanel>
+            </AccordionItem>
             <AccordionItem key={`infoCom-floatPop`} isDisabled={isDisabled}>
               <AccordionButton color="#ffffff">
                 유동인구
@@ -305,45 +323,6 @@ const FilterInfoCom = (props: any) => {
           </Accordion>
         </AccordionPanel>
       </AccordionItem>
-      {/* {baseList.infoCom.content.map(
-        (info: { title: string; cate: string; list: [] }, idx: number) => {
-          const { title, cate, list } = info;
-
-          return (
-            <AccordionItem key={`infoCom-list-${cate}`} isDisabled={isDisabled}>
-              <AccordionButton color="#ffffff">
-                {title}
-                <AccordionIcon />
-              </AccordionButton>
-              <AccordionPanel
-                display="flex"
-                flexDirection="row"
-                flexWrap="wrap"
-                backgroundColor="#ededed"
-                color="#555555"
-                fontSize="0.8rem"
-                fontWeight="bold"
-                gap="10px"
-              >
-                {list &&
-                  list.map((item: { title: string; key: string }) => {
-                    const { title, key } = item;
-                    return (
-                      <CheckBoxTag
-                        isChecked={infocomList.includes(key)}
-                        isDisabled={isDisabled}
-                        key={key}
-                        value={key}
-                        title={title}
-                        onChange={() => setInfoCom(key)}
-                      />
-                    );
-                  })}
-              </AccordionPanel>
-            </AccordionItem>
-          );
-        }
-      )} */}
     </Accordion>
   );
 };
@@ -1659,6 +1638,132 @@ const FilterRent = ({ areaCode }: { areaCode: string }) => {
         />
       </Flex>
       <Button onClick={searchHander}>조회</Button>
+    </Flex>
+  );
+};
+
+const UpjongExporter = () => {
+  const [data, setData] = useState<any>([]);
+
+  const queryHandler = () => {
+    console.log("query start");
+    let category: {
+      type: string;
+      name: string;
+      code: string;
+      depth: { [key: string | number]: any };
+    }[] = [
+      {
+        type: "1cd",
+        name: "생활서비스",
+        code: "F",
+        depth: {},
+      },
+      {
+        type: "1cd",
+        name: "소매/유통",
+        code: "D",
+        depth: {},
+      },
+      {
+        type: "1cd",
+        name: "여가/오락",
+        code: "O",
+        depth: {},
+      },
+      {
+        type: "1cd",
+        name: "음식",
+        code: "Q",
+        depth: {},
+      },
+      {
+        type: "1cd",
+        name: "의료/건강",
+        code: "S",
+        depth: {},
+      },
+      {
+        type: "1cd",
+        name: "학문/교육",
+        code: "R",
+        depth: {},
+      },
+    ];
+
+    cubejsApi
+      .load({
+        dimensions: ["Upjong.name", "Upjong.code", "Upjong.parent"],
+        filters: [
+          { member: "Upjong.type", operator: "equals", values: ["2cd"] },
+        ],
+      })
+      .then((res) => {
+        console.log("\n2depth", res);
+
+        res.rawData().map((data: any) => {
+          for (let i = 0; i < category.length; i++) {
+            if (category[i].code === data[`Upjong.parent`]) {
+              const insertData = {
+                type: "2cd",
+                name: data["Upjong.name"],
+                code: data["Upjong.code"],
+                depth: {},
+              };
+              category[i].depth[data["Upjong.code"]] = insertData;
+              break;
+            }
+          }
+        });
+
+        cubejsApi
+          .load({
+            dimensions: ["Upjong.name", "Upjong.code", "Upjong.parent"],
+            filters: [
+              { member: "Upjong.type", operator: "equals", values: ["3cd"] },
+            ],
+          })
+          .then((res) => {
+            console.log("\n3depth", res);
+
+            res.rawData().map((data: any) => {
+              for (let i = 0; i < category.length; i++) {
+                if (category[i].code === data[`Upjong.parent`].slice(0, 1)) {
+                  const insertData = {
+                    type: "3cd",
+                    name: data["Upjong.name"],
+                    code: data["Upjong.code"],
+                  };
+
+                  category[i].depth[data[`Upjong.parent`]].depth[
+                    data["Upjong.code"]
+                  ] = insertData;
+
+                  break;
+                }
+              }
+            });
+
+            setData(category);
+          });
+      });
+  };
+
+  const exportData = () => {
+    const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
+      JSON.stringify(data)
+    )}`;
+    const link = document.createElement("a");
+    link.href = jsonString;
+    link.download = "data.json";
+
+    link.click();
+  };
+
+  return (
+    <Flex>
+      <Button onClick={queryHandler}>쿼리</Button>
+      <Button onClick={exportData}>추출</Button>
     </Flex>
   );
 };

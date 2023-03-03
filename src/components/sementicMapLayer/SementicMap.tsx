@@ -234,10 +234,10 @@ const SementicMap = () => {
         zIndex: activeEvent ? 0 : -1,
       });
 
-      setPolygon.setStyles(
-        "strokeOpacity",
-        "0.6; filter: drop-shadow(4px 1px 2px rgb(0 0 0 / 1));"
-      );
+      // setPolygon.setStyles(
+      //   "strokeOpacity",
+      //   "0.6; filter: drop-shadow(4px 1px 2px rgb(0 0 0 / 1));"
+      // );
 
       if (activeEvent) {
         naver.maps.Event.addListener(setPolygon, "click", (e) => {
