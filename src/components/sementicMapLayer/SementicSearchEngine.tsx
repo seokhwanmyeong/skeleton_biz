@@ -16,7 +16,6 @@ import FilterInfoCom from "@components/sementicMapLayer/sementicSearchFilter/Fil
 import FilterBaseState from "@components/sementicMapLayer/sementicSearchFilter/FilterBaseState";
 //  States
 import {
-  atomSementicBaseList,
   checkBaseState,
   resetSementicAtom,
   areaSelectActivator,
@@ -29,7 +28,6 @@ const SementicSearchEngine = () => {
   const { active } = useContext(BaseAreaContext);
   const { slctAreaName, slctAreaCode } = useRecoilValue(atomArea);
   //  Option Handler
-  const baseList = useRecoilValue(atomSementicBaseList);
   const isCheckbaseOption = useRecoilValue(checkBaseState);
   const [currentEvent, setMapControll] = useRecoilState(areaSelectActivator);
   const [openItem, setOpenItem] = useState<number>(0);
@@ -76,7 +74,7 @@ const SementicSearchEngine = () => {
               isDisabled={active || !(slctAreaName && slctAreaCode)}
             >
               <AccordionButton>
-                {baseList.infoCom.title}
+                검색필터
                 <AccordionIcon />
               </AccordionButton>
               <AccordionPanel>

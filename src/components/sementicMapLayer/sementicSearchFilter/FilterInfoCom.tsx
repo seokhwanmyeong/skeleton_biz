@@ -1,11 +1,6 @@
 //  Lib
 import { useContext, useEffect, useState } from "react";
-import {
-  useSetRecoilState,
-  useRecoilValue,
-  useRecoilState,
-  useResetRecoilState,
-} from "recoil";
+import { useRecoilValue, useRecoilState, useResetRecoilState } from "recoil";
 import {
   Flex,
   Accordion,
@@ -36,8 +31,9 @@ import {
   infoComSale,
   infoComMyStore,
   infoComMyRent,
+  infoComUpjongCnt,
 } from "@states/searchState/stateSearch";
-import { BaseAreaContext } from "../filter/BaseAreaProvider";
+import { BaseAreaContext } from "@components/sementicMapLayer/filter/BaseAreaProvider";
 
 const FilterInfoCom = (props: any) => {
   const { isDisabled } = props;
@@ -77,7 +73,7 @@ const FilterInfoCom = (props: any) => {
                 fontWeight="bold"
                 gap="10px"
               >
-                <UpjongExporter />
+                <FilterUpjong />
               </AccordionPanel>
             </AccordionItem>
             <AccordionItem key={`infoCom-floatPop`} isDisabled={isDisabled}>
@@ -131,7 +127,7 @@ const FilterInfoCom = (props: any) => {
                 fontWeight="bold"
                 gap="10px"
               >
-                <FilterUpjong areaCode={slctAreaCode} />
+                <FilterUpjongCnt areaCode={slctAreaCode} />
               </AccordionPanel>
             </AccordionItem>
             <AccordionItem key={`infoCom-sale`} isDisabled={isDisabled}>
@@ -380,6 +376,72 @@ const InnerText = ({
       <Text>{text}</Text>
       {hasUp && <ChevronUpIcon w="1.4rem" h="1.2rem" />}
       {hasDown && <ChevronDownIcon w="1.4rem" h="1.2rem" />}
+    </Flex>
+  );
+};
+
+const FilterUpjong = () => {
+  const [upjong, setUpjong] = useRecoilState(infoComUpjong);
+  const [topList, setTopList] = useState<{ name: string; code: string }[]>([]);
+  const [slct, setSlct] = useState<{ top: string; mid: string; bot: string }>({
+    top: "",
+    mid: "",
+    bot: "",
+  });
+
+  const searchHander = () => {
+    console.log("업종선택완료");
+  };
+
+  useEffect(() => {
+    if (topList.length === 0) {
+      cubejsApi
+        .load({
+          dimensions: ["Upjong.name", "Upjong.code"],
+        })
+        .then((res) => {
+          const result: { name: string; code: string }[] = [];
+
+          res.rawData().map((upjong: any) => {
+            result.push({
+              name: upjong["Upjong.name"],
+              code: upjong["Upjong.code"],
+            });
+          });
+
+          setTopList(result);
+        });
+    }
+  }, []);
+
+  return (
+    <Flex flexDirection="column" w="100%" gap="2rem">
+      <Flex flexDirection="row" w="100%">
+        {/* <Text fontSize="1.6rem">업종</Text> */}
+        <Flex
+          mb="2rem"
+          display="grid"
+          gridTemplateColumns="1fr 1fr 1fr"
+          gridTemplateRows="1fr 1fr"
+          gap="0.5rem"
+        >
+          {topList.map((top: { name: string; code: string }) => (
+            <Button
+              key={`1depth-${top.name}`}
+              onClick={() => setSlct({ ...slct, top: top.code })}
+              variant="reverse"
+              w="auto"
+              borderRadius="5px"
+              aria-selected={slct.top === top.code}
+              _selected={{ color: "white", bg: "green.400" }}
+            >
+              <Text>{top.name}</Text>
+            </Button>
+          ))}
+        </Flex>
+        <Flex></Flex>
+      </Flex>
+      <Button onClick={searchHander}>선택완료</Button>
     </Flex>
   );
 };
@@ -668,18 +730,21 @@ const FilterHousehold = ({ areaCode }: { areaCode: string }) => {
   );
 };
 
-const FilterUpjong = ({ areaCode }: { areaCode: string }) => {
-  const [upjong, setUpjong] = useRecoilState(infoComUpjong);
-  const resetUpjong = useResetRecoilState(infoComUpjong);
+const FilterUpjongCnt = ({ areaCode }: { areaCode: string }) => {
+  const [upjongCnt, setUpjongCnt] = useRecoilState(infoComUpjongCnt);
+  const resetUpjong = useResetRecoilState(infoComUpjongCnt);
   const [filter, setFilter] = useState<number | string>("0");
+
   const mapViewHandler = (active: boolean) => {
     console.log(`\non/off view enter`);
-    setUpjong({ ...upjong, active: active });
+    setUpjongCnt({ ...upjongCnt, active: active });
   };
+
   const resetFilter = () => {
     console.log(`\nreset FloatPopulation`);
     resetUpjong();
   };
+
   const searchHander = () => {
     console.log(`\nstart search FloatPopulation`);
     console.log(filter);
@@ -773,7 +838,7 @@ const FilterUpjong = ({ areaCode }: { areaCode: string }) => {
           // };
         });
         console.log(result);
-        setUpjong({ data: result, active: true });
+        setUpjongCnt({ data: result, active: true });
       });
   };
 
@@ -782,7 +847,7 @@ const FilterUpjong = ({ areaCode }: { areaCode: string }) => {
       <Flex w="100%" alignItems="center" flexDirection="row-reverse" gap="1rem">
         <Switch
           size="lg"
-          isChecked={upjong.active}
+          isChecked={upjongCnt.active}
           onChange={(e) => {
             mapViewHandler(e.target.checked);
           }}

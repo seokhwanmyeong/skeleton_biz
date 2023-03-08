@@ -4,185 +4,6 @@ type SearchOption = {
   [key: string]: any;
 };
 
-//  Base Option Data
-export const atomSementicBaseList = atom<{ [key: string]: any }>({
-  key: "sementicBaseList",
-  default: {
-    infoCom: {
-      title: "InfoCom",
-      content: [
-        {
-          title: "인구",
-          cate: "popu",
-          list: [
-            { title: "인구밀도", key: "population" },
-            { title: "밀집도", key: "congestion" },
-            { title: "성비", key: "gender" },
-          ],
-        },
-        {
-          title: "업종",
-          cate: "upjong",
-          list: [
-            { title: "업종1", key: "upjong1" },
-            { title: "업종2", key: "upjong2" },
-            { title: "업종3", key: "upjong3" },
-          ],
-        },
-      ],
-    },
-    upjong: {
-      title: "업종",
-      mainUpjong: {
-        title: "대분류",
-        list: [
-          {
-            title: "Total",
-            key: "totalUpjong",
-            code: "total",
-          },
-          {
-            title: "대분류1",
-            key: "mainUpjong01",
-            code: "m01",
-            midUpjong: {
-              title: "중분류",
-              list: [
-                {
-                  title: "1-중분류1",
-                  key: "midUpjong01",
-                  code: "mid0101",
-                  subUpjong: {
-                    title: "소분류",
-                    list: [
-                      { title: "1-1-소분류1", key: "111", code: "111" },
-                      { title: "1-1-소분류2", key: "112", code: "112" },
-                      { title: "1-1-소분류3", key: "113", code: "113" },
-                    ],
-                  },
-                },
-                {
-                  title: "1-중분류2",
-                  key: "midUpjong02",
-                  code: "mid0102",
-                  subUpjong: {
-                    title: "소분류",
-                    list: [
-                      { title: "1-2-소분류1", key: "121", code: "121" },
-                      { title: "1-2-소분류2", key: "122", code: "122" },
-                      { title: "1-2-소분류3", key: "123", code: "123" },
-                    ],
-                  },
-                },
-                {
-                  title: "1-중분류3",
-                  key: "midUpjong03",
-                  code: "mid0103",
-                  subUpjong: {
-                    title: "소분류",
-                    list: [
-                      { title: "1-3-소분류1", key: "131", code: "131" },
-                      { title: "1-3-소분류2", key: "132", code: "132" },
-                      { title: "1-3-소분류3", key: "133", code: "133" },
-                    ],
-                  },
-                },
-                {
-                  title: "1-중분류4",
-                  key: "midUpjong04",
-                  code: "mid0104",
-                  subUpjong: {
-                    title: "소분류",
-                    list: [
-                      { title: "1-3-소분류1", key: "131", code: "131" },
-                      { title: "1-3-소분류2", key: "132", code: "132" },
-                      { title: "1-3-소분류3", key: "133", code: "133" },
-                    ],
-                  },
-                },
-                {
-                  title: "1-중분류5",
-                  key: "midUpjong05",
-                  code: "mid0105",
-                  subUpjong: {
-                    title: "소분류",
-                    list: [
-                      { title: "1-3-소분류1", key: "131", code: "131" },
-                      { title: "1-3-소분류2", key: "132", code: "132" },
-                      { title: "1-3-소분류3", key: "133", code: "133" },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-          {
-            title: "대분류2",
-            key: "mainUpjong02",
-            code: "m2",
-            midUpjong: {
-              title: "중분류",
-              list: [
-                {
-                  title: "2-중분류1",
-                  key: "midUpjong01",
-                  code: "mid0201",
-                  subUpjong: {
-                    title: "소분류",
-                    list: [
-                      { title: "2-1-소분류1", key: "211", code: "211" },
-                      { title: "2-1-소분류2", key: "212", code: "212" },
-                      { title: "2-1-소분류3", key: "213", code: "213" },
-                    ],
-                  },
-                },
-                {
-                  title: "2-중분류2",
-                  key: "midUpjong02",
-                  code: "mid0202",
-                  subUpjong: {
-                    title: "소분류",
-                    list: [
-                      { title: "2-2-소분류1", key: "221", code: "221" },
-                      { title: "2-2-소분류2", key: "222", code: "222" },
-                      { title: "2-2-소분류3", key: "223", code: "223" },
-                    ],
-                  },
-                },
-                {
-                  title: "2-중분류3",
-                  key: "midUpjong03",
-                  code: "mid0203",
-                  subUpjong: {
-                    titl: "소분류",
-                    list: [
-                      { title: "2-3-소분류1", key: "231", code: "231" },
-                      { title: "2-3-소분류2", key: "232", code: "232" },
-                      { title: "2-3-소분류3", key: "233", code: "233" },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-          {
-            title: "대분류3",
-            key: "mainUpjong03",
-          },
-          {
-            title: "대분류4",
-            key: "mainUpjong04",
-          },
-          {
-            title: "대분류5",
-            key: "mainUpjong05",
-          },
-        ],
-      },
-    },
-  },
-});
-
 //  Atom Effect Handler
 const sessionStorageEffect =
   (key: string) =>
@@ -437,45 +258,6 @@ export const infoComFloatPop = atom<any>({
   default: {
     data: {},
     active: false,
-    // type: "externalData",
-    // category: "floatPop",
-    // title: "유동인구",
-    // baseFilter: [
-    //   {
-    //     title: "성별",
-    //     key: "gender",
-    //     type: "totalChk",
-    //     value: [
-    //       { label: "전체", value: "total" },
-    //       { label: "남", value: "man" },
-    //       { label: "녀", value: "woman" },
-    //     ],
-    //   },
-    //   {
-    //     title: "나이대",
-    //     key: "age",
-    //     type: "totalChk",
-    //     value: [
-    //       { label: "전체", value: "total" },
-    //       { label: "20대", value: "20th" },
-    //       { label: "30대", value: "30th" },
-    //       { label: "40대", value: "40th" },
-    //       { label: "50대", value: "50th" },
-    //       { label: "60대", value: "60th" },
-    //     ],
-    //   },
-    //   {
-    //     title: "구간",
-    //     key: "range",
-    //     type: "range",
-    //     value: { start: null, end: null },
-    //   },
-    // ],
-    // req: {},
-    // res: [],
-    // activeView: false,
-    // apiType: "nice",
-    // apiEvent: null,
   },
 });
 
@@ -484,31 +266,21 @@ export const infoComHousehold = atom<any>({
   default: {
     data: {},
     active: false,
-    // type: "externalData",
-    // category: "household",
-    // title: "세대수",
-    // baseFilter: [
-    //   {
-    //     title: "성별",
-    //     key: "gender",
-    //     type: "totalChk",
-    //     value: [
-    //       { label: "전체", value: "total" },
-    //       { label: "남", value: "man" },
-    //       { label: "녀", value: "woman" },
-    //     ],
-    //   },
-    // ],
-    // req: {},
-    // res: [],
-    // activeView: false,
-    // apiType: "nice",
-    // apiEvent: null,
   },
 });
 
-export const infoComUpjong = atom<any>({
-  key: "infoComUpjong",
+export const infoComUpjong = atom<{ name: string | null; code: string | null }>(
+  {
+    key: "infoComUpjong",
+    default: {
+      name: null,
+      code: null,
+    },
+  }
+);
+
+export const infoComUpjongCnt = atom<any>({
+  key: "infoComUpjongCnt",
   default: {
     data: {},
     active: false,
