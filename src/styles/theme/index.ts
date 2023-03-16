@@ -22,7 +22,7 @@ import { selectColorScheme } from "@styles/theme/foundation/fndtColor";
 
 const createTheme = (name: string) => {
   const config: ThemeConfig = {
-    initialColorMode: "dark",
+    initialColorMode: "light",
     useSystemColorMode: false,
   };
   const theme = extendTheme({
@@ -40,8 +40,9 @@ const createTheme = (name: string) => {
     },
     fontSizes: {
       xs: "1.2rem",
-      sm: "1.4rem",
-      md: "1.6rem",
+      sm: "0.75rem",
+      um: "0.875",
+      md: "1rem",
       lg: "1.8rem",
       xl: "2.4rem",
       "2xl": "1.5rem",

@@ -1,7 +1,7 @@
 //  Lib
 import { Link as RoutLink } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { Link, Grid } from "@chakra-ui/react";
+import { Link, Flex } from "@chakra-ui/react";
 //  State
 import {
   mainRoute,
@@ -16,7 +16,7 @@ const MenuHeader = () => {
   const { rootState } = useLocationState();
 
   return (
-    <Grid
+    <Flex
       h="inherit"
       gridTemplateColumns={`repeat(${menuList.length}, minmax(0, auto))`}
     >
@@ -34,7 +34,7 @@ const MenuHeader = () => {
           </Link>
         );
       })}
-    </Grid>
+    </Flex>
   );
 };
 

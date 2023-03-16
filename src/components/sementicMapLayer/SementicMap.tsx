@@ -16,6 +16,7 @@ import {
   infoComFloatPop,
   infoComHousehold,
   infoComUpjong,
+  infoComUpjongCnt,
   infoComSale,
   infoComMyStore,
   infoComMyRent,
@@ -33,7 +34,7 @@ const SementicMap = () => {
   const slctArea = useRecoilValue(atomArea);
   const mapFloatPop = useRecoilValue(infoComFloatPop);
   const mapHousehold = useRecoilValue(infoComHousehold);
-  const mapUpjong = useRecoilValue(infoComUpjong);
+  const mapUpjong = useRecoilValue(infoComUpjongCnt);
   const mapSale = useRecoilValue(infoComSale);
   const mapStore = useRecoilValue(infoComMyStore);
   const mapRent = useRecoilValue(infoComMyRent);
@@ -147,7 +148,6 @@ const SementicMap = () => {
     title: string,
     trans: [number, number]
   ) => {
-    console.log(centers, data, map);
     const markerContent = [
       `<div style='padding: 5px 5px; width: 50px; border: none; background-color: #ffffff; border-radius: 5px; box-shadow: 2px 2px 2px #0000004d;'>`,
       `   <h3 style='text-align: center;font-size: 10px; font-weight: 900; color: #000000'>${title}</h3>`,

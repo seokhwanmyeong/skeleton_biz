@@ -69,7 +69,7 @@ export const mainRoute = atom<Array<MainRouteType>>({
   default: [
     {
       root: "maps",
-      title: "Map",
+      title: "상권분석",
       path: "/maps",
       hasSub: false,
       page: Maps,
@@ -82,7 +82,7 @@ export const mainRoute = atom<Array<MainRouteType>>({
     },
     {
       root: "mypage",
-      title: "My Page",
+      title: "마이페이지",
       path: "/mypage",
       hasSub: true,
     },

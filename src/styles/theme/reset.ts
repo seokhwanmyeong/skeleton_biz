@@ -1,6 +1,6 @@
 const resetTheme = {
   html: {
-    fontSize: "10px",
+    fontSize: "16px",
   },
   body: {
     // fontFamily: "Noto Sans KR, sans-serif",

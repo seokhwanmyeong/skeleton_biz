@@ -3,6 +3,9 @@ const headingTheme = {
     color: "primary.main.font",
   },
   variants: {
+    serviceName: {
+      fontSize: "sm",
+    },
     outlet: {
       fontSize: "xl",
     },
