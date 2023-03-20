@@ -9,8 +9,30 @@ const switchTheme = {
         },
       },
       track: {
-        w: "3.5rem",
+        w: "4rem",
         h: "1.5rem",
+      },
+    },
+    themeChanger: {
+      container: {
+        w: "100%",
+        h: "100%",
+      },
+      thumb: {
+        // transform: "translateX(3.5rem - 1.5rem)",
+        _checked: {
+          transform: "translateX(130%)",
+        },
+        w: "18px",
+        h: "18px",
+      },
+      track: {
+        p: 0,
+        w: "42px",
+        h: "22px",
+        alignItems: "center",
+        // w: "2.625rem",
+        // h: "1.5rem",
       },
     },
   },

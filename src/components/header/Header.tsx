@@ -11,47 +11,33 @@ const Header = () => {
 
   return (
     <Flex
-      padding="9px 16px"
+      zIndex={999}
+      padding="0 19px"
       w="100%"
-      h="3rem"
+      h="2.5rem"
       justify="space-between"
       alignItems="center"
-      zIndex={999}
-      bgColor="primary.main.bg"
+      bgColor="system.bg"
       borderBottom="1px solid"
       borderColor="primary.main.bdColor"
     >
-      <Flex alignItems="center" gap="8px">
+      <Flex alignItems="center" gap="0.5rem">
         <Image w="26.99px" h="30.5px" src="logo.png" />
         <Heading variant="serviceName">ON THE MAP</Heading>
       </Flex>
       {pathState !== "/" && (
-        <Flex>
+        <Flex h="100%">
           <MenuHeader />
-          {/* <ThemeBox /> */}
         </Flex>
       )}
-      {/* <Flex
-        position="fixed"
-        top="0"
-        justify="space-between"
-        alignItems="center"
-        w="100%"
-        h="inherit"
-        bgColor="primary.main.bg"
-        borderBottom="1px solid"
-        borderColor="primary.main.bdColor"
-      >
-        <Flex>
-          <Heading>ON THE MAP</Heading>
+      {pathState !== "/" && (
+        <Flex
+          pr={{ base: "10rem", mobile: 0, tablet: 0, pc: "10rem" }}
+          h="100%"
+        >
+          <ThemeBox />
         </Flex>
-        {pathState !== "/" && (
-          <Flex>
-            <MenuHeader />
-            <ThemeBox />
-          </Flex>
-        )}
-      </Flex> */}
+      )}
     </Flex>
   );
 };

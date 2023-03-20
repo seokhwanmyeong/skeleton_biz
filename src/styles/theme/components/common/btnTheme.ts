@@ -13,7 +13,7 @@ const btnTheme = {
       p: "1rem 1.5rem",
       w: "auto",
       h: "fit-content",
-      fontSize: "1.6rem",
+      fontSize: "md",
     },
     page: {
       fontSize: "1.2rem",
@@ -24,7 +24,8 @@ const btnTheme = {
   },
   variants: {
     base: {
-      bgColor: "primary.main.bg",
+      p: "0.5rem",
+      bgColor: "system.bg",
       borderRadius: "base",
       color: "primary.main.font",
       transition: "0.3s",

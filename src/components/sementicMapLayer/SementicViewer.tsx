@@ -1,5 +1,5 @@
 //  LIB
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRecoilState } from "recoil";
 import {
   Flex,
@@ -17,7 +17,6 @@ import {
 } from "@chakra-ui/react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -30,16 +29,11 @@ import {
   Legend,
 } from "chart.js";
 import { Line, Bar } from "react-chartjs-2";
-//  Components
-import ChartCircle from "@components/charts/ChartCircle";
-import ChartGraph from "@components/charts/ChartGraph";
 //  Page
 import ErpStoreDetail from "@src/page/erp/store/ErpStoreDetail";
 import ErpRentDetail from "@src/page/erp/rent/ErpRentDetail";
 //  States
 import { sementicViewState } from "@states/searchState/stateSearch";
-import BaseTable from "../table/BaseTable";
-import ListTable from "../table/ListTable";
 import { Select } from "../common/Select";
 
 type Props = {};

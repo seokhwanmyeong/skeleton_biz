@@ -7,6 +7,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import RouterOutlet from "@router/RouterOutlet";
 //  Style
 import { createTheme } from "@styles/theme/index";
+import "@fontsource/roboto";
 //  State
 import { atomThemeColor } from "@states/theme/themeState";
 

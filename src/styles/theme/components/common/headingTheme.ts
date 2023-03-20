@@ -1,10 +1,14 @@
 const headingTheme = {
   baseStyle: {
-    color: "primary.main.font",
+    fontFamily: "main",
+    fontWeight: "strong",
+    color: "character.primary",
   },
   variants: {
     serviceName: {
-      fontSize: "sm",
+      fontSize: "xs",
+      fontWeight: "heavy",
+      lineHeight: 1.8,
     },
     outlet: {
       fontSize: "xl",
