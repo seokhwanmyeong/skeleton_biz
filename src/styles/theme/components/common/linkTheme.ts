@@ -1,6 +1,8 @@
 const linkTheme = {
   baseStyle: {
-    color: "character.primary",
+    fontFamily: "main",
+    fontStyle: "normal",
+    color: "font.primary",
     textDecoration: "none",
     outline: "none",
     lineHeight: "normal",
@@ -20,7 +22,7 @@ const linkTheme = {
       gap: "0.75rem",
       h: "100%",
       textStyle: "body.strong",
-      color: "character.placeholder",
+      color: "font.placeholder",
       transition: "all 0.3s",
       _hover: {
         fontWeight: "strong",

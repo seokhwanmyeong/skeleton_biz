@@ -103,7 +103,7 @@ const ThemeSwitch = ({
             visibility={isChecked ? "visible" : "hidden"}
             fontSize="sm"
             fontWeight="strong"
-            color="character.primary"
+            color="font.primary"
           >
             {activeContent || "on"}
           </Flex>

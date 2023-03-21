@@ -8,9 +8,10 @@ const FrameMain = () => (
   <Flex
     flexWrap="wrap"
     flexDirection="column"
+    w="100vw"
     h="100vh"
     overflow="hidden"
-    bgColor="primary.main.bg"
+    bgColor="bg.primary"
   >
     <Header />
     <Flex flex="1" w="100%" overflow="hidden">

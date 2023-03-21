@@ -11,7 +11,7 @@ import { btnTheme } from "@styles/theme/components/common/btnTheme";
 import tagTheme from "@styles/theme/components/common/tagTheme";
 import checkboxTheme from "@styles/theme/components/common/checkBoxTheme";
 import accordionTheme from "@styles/theme/components/menu/accordionTheme";
-import linkTheme from "@styles/theme/components/common/Link";
+import linkTheme from "@styles/theme/components/common/linkTheme";
 import selectTheme from "@styles/theme/components/common/selectTheme";
 import themeTable from "@styles/theme/components/table/tableTheme";
 import formTheme from "@styles/theme/components/form/formTheme";
@@ -154,17 +154,17 @@ const createTheme = (name: string) => {
       pc: "1280px",
     },
     components: {
-      Input: inputTheme,
-      Button: btnTheme,
-      Tag: tagTheme,
       Accordion: accordionTheme,
       Checkbox: checkboxTheme,
       Radio: radioTheme,
       Select: selectTheme,
-      Link: linkTheme,
       Heading: headingTheme,
-      Table: themeTable,
+      Link: linkTheme,
       Form: formTheme,
+      Table: themeTable,
+      Button: btnTheme,
+      Input: inputTheme,
+      Tag: tagTheme,
       Switch: switchTheme,
       Tabs: {
         variants: {

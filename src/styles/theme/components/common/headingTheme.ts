@@ -2,13 +2,20 @@ const headingTheme = {
   baseStyle: {
     fontFamily: "main",
     fontWeight: "strong",
-    color: "character.primary",
+    fontStyle: "normal",
+    color: "font.primary",
   },
   variants: {
     serviceName: {
       fontSize: "xs",
       fontWeight: "heavy",
-      lineHeight: 1.8,
+    },
+    subMenu: {
+      fontSize: "1.7rem",
+      lineHeight: "1.875rem",
+      color: "font.primary",
+      textAlign: "center",
+      opacity: 0.8,
     },
     outlet: {
       fontSize: "xl",

@@ -1,6 +1,6 @@
 //  LIB
 import { useState, useMemo, useEffect } from "react";
-import { Flex, Heading, Button, Box } from "@chakra-ui/react";
+import { Flex, Button, Box } from "@chakra-ui/react";
 import { useCubeQuery } from "@cubejs-client/react";
 //  Components
 import ChartGraph from "@components/charts/ChartGraph";
@@ -214,7 +214,6 @@ const ErpDashBoard = () => {
   }, []);
 
   useEffect(() => {
-    console.log(resultSet);
     if (!resultSet) {
       return;
     } else {
@@ -233,36 +232,33 @@ const ErpDashBoard = () => {
         },
       ];
       const data = cubeChartHandler(resultSet, pivotConfig);
-
-      console.log(data);
       setChartData(data || []);
     }
   }, [resultSet]);
 
   return (
     <Box
-      overflowY="scroll"
-      pl="1rem"
-      __css={{
-        "::-webkit-scrollbar": {
-          w: "5px",
-        },
-        "::-webkit-scrollbar-thumb": {
-          borderRadius: "5",
-          bg: `primary.reverse.bdColor`,
-        },
-      }}
+      w="100%"
+      h="100%"
+      // overflowY="scroll"
+      // __css={{
+      //   "::-webkit-scrollbar": {
+      //     w: "5px",
+      //   },
+      //   "::-webkit-scrollbar-thumb": {
+      //     borderRadius: "5",
+      //     bg: `primary.reverse.bdColor`,
+      //   },
+      // }}
     >
-      <Heading>DashBoard</Heading>
       <Flex gap={10} w="100%" h="500px">
-        <Flex w="50%">
+        {/* <Flex w="50%">
           <ChartDonut
             data={chartData[2] || []}
             accessKey={"Sales.sum"}
-            // subKey={testMargin3.subKey}
           />
-        </Flex>
-        <Flex w="50%">
+        </Flex> */}
+        <Flex w="100%">
           <ChartBar
             data={testMargin2.data}
             accessKey={testMargin2.accessKey}

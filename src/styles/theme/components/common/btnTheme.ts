@@ -25,12 +25,48 @@ const btnTheme = {
   variants: {
     base: {
       p: "0.5rem",
-      bgColor: "system.bg",
+      bgColor: "bg.primary",
       borderRadius: "base",
+      fontFamily: "main",
+      fontStyle: "normal",
       color: "primary.main.font",
       transition: "0.3s",
       _hover: {
         bgColor: "primary.main.hover",
+      },
+    },
+    subMenu: {
+      p: "0",
+      display: "inline-flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      gap: "0.25rem",
+      lineHeight: "0.875rem",
+      fontFamily: "main",
+      fontSize: "0.8125rem",
+      fontStyle: "normal",
+      fontWeight: "regular",
+      color: "font.primary",
+      bgColor: "transparent",
+      _active: {
+        fontWeight: "strong",
+        div: {
+          bg: "linear-gradient(180deg, #D4B106 0%, rgba(212, 177, 6, 0) 100%)",
+        },
+        svg: {
+          color: "#FFFFFF",
+        },
+      },
+      _hover: {
+        bgColor: "transparent",
+        fontWeight: "strong",
+        div: {
+          bg: "linear-gradient(180deg, #D4B106 0%, rgba(212, 177, 6, 0) 100%)",
+        },
+        svg: {
+          color: "#FFFFFF",
+        },
       },
     },
     reverse: {

@@ -2,9 +2,8 @@
 import { atom, selector, selectorFamily } from "recoil";
 //  Pages: Common
 import Login from "@page/login/Login";
-import Guide from "@page/Guide";
 //  Pages: Map
-import Maps from "@page/Maps";
+import Maps from "@page/maps/Maps";
 //  Pages: Erp
 import ErpDashBoard from "@page/erp/ErpDashBoard";
 import ErpStore from "@page/erp/store/ErpStore";
@@ -23,7 +22,7 @@ import ErpClientDetail from "@page/erp/client/ErpClientDetail";
 import MyPage from "@page/mypage/MyPage";
 import MyPageCompany from "@page/mypage/MyPageCompany";
 //  Icon
-import { HeaderMenu01, HeaderMenu02 } from "@assets/icons/icon";
+import { HeaderMenu01, HeaderMenu02, SubMenu01 } from "@assets/icons/icon";
 
 type MainRouteType = {
   title: string;
@@ -32,7 +31,7 @@ type MainRouteType = {
   index?: boolean;
   hasSub: boolean;
   page?: (props: any) => JSX.Element;
-  icon?: (color?: string) => JSX.Element;
+  icon?: (color?: HEX) => JSX.Element;
 };
 
 type SubRouteType = {
@@ -42,6 +41,7 @@ type SubRouteType = {
   children?: DepthRouteType[];
   page?: (props: any) => JSX.Element;
   isMenu: boolean;
+  icon?: (color?: HEX) => JSX.Element;
 };
 
 type DepthRouteType = {
@@ -50,6 +50,8 @@ type DepthRouteType = {
   page: (props: any) => JSX.Element;
   isMenu: boolean;
 };
+
+type HEX = `#${string}`;
 
 export type { MainRouteType, SubRouteType, DepthRouteType };
 
@@ -75,7 +77,7 @@ export const mainRoute = atom<Array<MainRouteType>>({
       path: "/maps",
       hasSub: false,
       page: Maps,
-      icon: (color?: string) => {
+      icon: (color?: HEX) => {
         return HeaderMenu01(color);
       },
     },
@@ -84,7 +86,7 @@ export const mainRoute = atom<Array<MainRouteType>>({
       title: "ERP",
       path: "/erp",
       hasSub: true,
-      icon: (color?: string) => {
+      icon: (color?: HEX) => {
         return HeaderMenu02(color);
       },
     },
@@ -94,13 +96,6 @@ export const mainRoute = atom<Array<MainRouteType>>({
       path: "/mypage",
       hasSub: true,
     },
-    // {
-    //   root: "guide",
-    //   title: "Guide",
-    //   path: "/guide",
-    //   hasSub: false,
-    //   page: Guide,
-    // },
   ],
 });
 
@@ -114,11 +109,14 @@ export const subRoute = atom<{
     //  value = subRoute List
     erp: [
       {
-        title: "DashBoard",
+        title: "홈",
         hasChild: false,
         path: "index",
         page: ErpDashBoard,
         isMenu: true,
+        icon: (color?: HEX) => {
+          return SubMenu01(color);
+        },
       },
       {
         title: "매장",
@@ -126,6 +124,9 @@ export const subRoute = atom<{
         path: "store",
         page: ErpStore,
         isMenu: true,
+        icon: (color?: HEX) => {
+          return SubMenu01(color);
+        },
       },
       {
         title: "매장상세보기",
@@ -140,6 +141,9 @@ export const subRoute = atom<{
         path: "sale",
         page: ErpSale,
         isMenu: true,
+        icon: (color?: HEX) => {
+          return SubMenu01(color);
+        },
       },
       {
         title: "상권",
@@ -147,6 +151,9 @@ export const subRoute = atom<{
         path: "bsnsDis",
         page: ErpBsnsDis,
         isMenu: true,
+        icon: (color?: HEX) => {
+          return SubMenu01(color);
+        },
       },
       {
         title: "매물",
@@ -154,6 +161,9 @@ export const subRoute = atom<{
         path: "rent",
         page: ErpRent,
         isMenu: true,
+        icon: (color?: HEX) => {
+          return SubMenu01(color);
+        },
       },
       {
         title: "매장상세보기",
@@ -168,6 +178,9 @@ export const subRoute = atom<{
         path: "client",
         page: ErpClient,
         isMenu: true,
+        icon: (color?: HEX) => {
+          return SubMenu01(color);
+        },
       },
       {
         title: "고객상세보기",
@@ -228,6 +241,13 @@ export const mainRouteSelector = selector({
   key: "mainRouteSelector",
   get: ({ get }) => {
     return [...get(loginRoute), ...get(mainRoute)];
+  },
+});
+
+export const headerRouteList = selector({
+  key: "headerRouteList",
+  get: ({ get }) => {
+    return get(mainRoute).filter((li: MainRouteType) => li.root !== "mypage");
   },
 });
 

@@ -2,6 +2,7 @@
 import { useMemo, useState } from "react";
 import { Flex, Heading, Button } from "@chakra-ui/react";
 //  Components
+import Section from "@components/common/Section";
 import ModalStoreEditor from "@components/modal/erp/ModalStoreEditor";
 import Search from "@components/search/Search";
 import TableCube from "@components/table/TableCube";
@@ -33,16 +34,18 @@ const ErpStore = () => {
   };
 
   return (
-    <Flex flexDirection="column" gap="3rem" overflow="hidden">
-      <Heading variant="outlet">매장</Heading>
-      <Search
-        initQ={initQ}
-        totalQ={totalQ}
-        page={curPage}
-        setTotal={setTotalPage}
-        setQueryData={setTableData}
-      />
-      <Flex gap={2}>
+    <Flex flexDirection="column" gap="0.5rem">
+      <Section>
+        <Heading variant="outlet">매장</Heading>
+        <Search
+          initQ={initQ}
+          totalQ={totalQ}
+          page={curPage}
+          setTotal={setTotalPage}
+          setQueryData={setTableData}
+        />
+      </Section>
+      <Section>
         <ModalStoreEditor update={false} />
         <Button
           variant="reverse"
@@ -60,16 +63,16 @@ const ErpStore = () => {
         >
           매장삭제
         </Button>
-      </Flex>
-      <TableCube
-        actviePage={true}
-        data={tableData}
-        columns={column}
-        totalReg={totalPage}
-        page={curPage}
-        getSelectData={setSelectData}
-        getPage={setCurPage}
-      />
+        <TableCube
+          actviePage={true}
+          data={tableData}
+          columns={column}
+          totalReg={totalPage}
+          page={curPage}
+          getSelectData={setSelectData}
+          getPage={setCurPage}
+        />
+      </Section>
     </Flex>
   );
 };
