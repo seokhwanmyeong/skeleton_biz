@@ -35,14 +35,12 @@ const ErpRent = () => {
       <Flex gap={2}>
         <ModalRentEditor update={false} />
         <Button
-          variant="reverse"
           onClick={() => exportFileCSV(selectData, mainTable, "매물리스트")}
           isDisabled={selectData.length > 0 ? false : true}
         >
           다운로드
         </Button>
         <Button
-          variant="reverse"
           onClick={removeStoreHandler}
           isDisabled={selectData.length > 0 ? false : true}
         >

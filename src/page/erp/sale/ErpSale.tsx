@@ -3,7 +3,7 @@ import { Fragment, useMemo, useState, useRef } from "react";
 import { Flex, Heading, Button } from "@chakra-ui/react";
 //  Components
 import Search from "@components/search/Search";
-import TableCube from "@components/table/TableCube";
+import TableCube from "@src/components/table/Table";
 import ModalSaleEditor from "@components/modal/erp/ModalSaleEditor";
 //  Form & Column
 import { columnSaleInfo } from "@components/table/column/erp";
@@ -44,7 +44,6 @@ const ErpSale = () => {
       <Flex gap={2}>
         <ModalSaleEditor />
         <Button
-          variant="reverse"
           onClick={() =>
             exportFileCSV(selectData, columnSaleInfo, "매출리스트")
           }
@@ -53,7 +52,6 @@ const ErpSale = () => {
           다운로드
         </Button>
         <Button
-          variant="reverse"
           onClick={removeStoreHandler}
           isDisabled={selectData.length > 0 ? false : true}
         >
@@ -64,7 +62,7 @@ const ErpSale = () => {
         actviePage={true}
         data={tableData}
         columns={column}
-        totalReg={totalPage}
+        totalPage={totalPage}
         page={curPage}
         getSelectData={setSelectData}
         getPage={setCurPage}

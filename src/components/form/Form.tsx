@@ -140,12 +140,7 @@ const Form = ({
             </Flex>
             {activeBtn && (
               <Flex w="100%" justifyContent="center">
-                <Button
-                  onClick={onSubmit}
-                  variant="reverse"
-                  type="submit"
-                  w="10rem"
-                >
+                <Button onClick={onSubmit} type="submit" w="10rem">
                   {submitText}
                 </Button>
               </Flex>

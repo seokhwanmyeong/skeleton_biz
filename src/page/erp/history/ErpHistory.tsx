@@ -36,7 +36,6 @@ const ErpHistory = (props: TypeHistory) => {
       <Flex gap={2}>
         <ModalHistoryEditor update={false} />
         <Button
-          variant="reverse"
           onClick={removeStoreHandler}
           isDisabled={selectData.length > 0 ? false : true}
         >

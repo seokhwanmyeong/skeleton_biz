@@ -32,7 +32,6 @@ const FilterBaseState = memo(() => {
     <Flex>
       <Button
         w="100%"
-        variant="reverse"
         onClick={() => {
           if (activeDraw) {
             activeDrawHandler(false);

@@ -39,14 +39,12 @@ const ErpClient = () => {
       <Flex gap={2}>
         <ModalClientEditor update={false} />
         <Button
-          variant="reverse"
           onClick={() => exportFileHandler}
           isDisabled={selectData.length > 0 ? false : true}
         >
           다운로드
         </Button>
         <Button
-          variant="reverse"
           onClick={removeStoreHandler}
           isDisabled={selectData.length > 0 ? false : true}
         >

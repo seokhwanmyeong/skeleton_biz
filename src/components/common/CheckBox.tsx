@@ -74,6 +74,7 @@ const TableCheckBox = ({
 
   return (
     <ChakraCheckbox
+      variant="table"
       key={`td-chk-total`}
       ref={ref}
       isChecked={checked}
@@ -107,6 +108,7 @@ const CheckboxGroup = ({
   const originLength = chkboxData.length;
 
   const chkHandler = (val: (string | number)[]) => {
+    console.log(val);
     const exceptTotal = val.filter((l: string | number) => l !== "total");
 
     if (activeTotal) {
@@ -136,7 +138,7 @@ const CheckboxGroup = ({
       onChange={chkHandler}
       variant={variant}
     >
-      <Flex w="100%" justifyContent="space-between">
+      <Flex w="100%" gap="1rem">
         {activeTotal && (
           <ChakraCheckbox
             onChange={() => {
@@ -148,19 +150,12 @@ const CheckboxGroup = ({
             }}
             key={`check-total`}
             value={"total"}
-            fontSize="xs"
-            lineHeight="1.2rem"
           >
             {parseTotalTxt}
           </ChakraCheckbox>
         )}
         {chkboxData.map((data: { text: string; value: string | number }) => (
-          <ChakraCheckbox
-            key={`check-${data.value}`}
-            value={data.value}
-            fontSize="xs"
-            lineHeight="1.2rem"
-          >
+          <ChakraCheckbox key={`check-${data.value}`} value={data.value}>
             {data.text}
           </ChakraCheckbox>
         ))}

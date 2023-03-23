@@ -1,11 +1,13 @@
 //  LIB
 import React from "react";
-import { Flex } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 //  Components
 import PaginationItem from "@components/table/PaginationItem";
 
 type PaginationProps = {
   dividePages: number[];
+  divideNum: number;
+  totalPage: number;
   currentPage: number;
   lastPage: number;
   next: {
@@ -23,6 +25,8 @@ type PaginationProps = {
 
 const Pagination = ({
   dividePages,
+  divideNum,
+  totalPage,
   currentPage,
   lastPage,
   next,
@@ -31,33 +35,49 @@ const Pagination = ({
   onPageChange,
   variant,
 }: PaginationProps) => {
-  // console.log(next, prev);
   return (
     <Flex w="100%" justifyContent="center" flexDirection="row" align="center">
-      <Flex flexDirection="row" gap="2" position="relative">
-        {prev.exist && (
-          <Flex
-            position="absolute"
-            left="-8rem"
-            top="50%"
-            transform="translateY(-50%)"
+      <Flex align="center" flexDirection="row" position="relative">
+        {totalPage && (
+          <Text
+            mr="0.75rem"
+            fontFamily="main"
+            fontWeight="regular"
+            fontSize="sm"
+            color="font.primary"
           >
-            <PaginationItem
-              isPageEvent={true}
-              onPageChange={onPageChange}
-              page={1}
-              key="first"
-              customChild={"<<"}
-              variant={variant}
-            />
-            <PaginationItem
-              isPageEvent={true}
-              onPageChange={onPageChange}
-              page={prev.prevPage}
-              key={prev.prevPage}
-              customChild={"<"}
-              variant={variant}
-            />
+            Total {totalPage} items
+          </Text>
+        )}
+        <PaginationItem
+          isPageEvent={true}
+          onPageChange={onPageChange}
+          page={prev.prevPage}
+          key={prev.prevPage}
+          customChild={"<"}
+          variant={variant}
+          isDisabled={!prev.exist}
+        />
+        {prev.exist && (
+          <PaginationItem
+            isPageEvent={true}
+            onPageChange={onPageChange}
+            page={1}
+            key="first"
+            customChild={"1"}
+            variant={variant}
+          />
+        )}
+        {currentPage > divideNum && (
+          <Flex w="1.109375rem" h="1.1775rem" align="center" justify="center">
+            <Text
+              fontFamily="main"
+              fontWeight="heavy"
+              fontSize="sm"
+              color="#00000040"
+            >
+              ···
+            </Text>
           </Flex>
         )}
         {dividePages &&
@@ -70,13 +90,28 @@ const Pagination = ({
               variant={variant}
             />
           ))}
+        {!dividePages.includes(lastPage) && (
+          <Flex w="1.109375rem" h="1.1775rem" align="center" justify="center">
+            <Text
+              fontFamily="main"
+              fontWeight="heavy"
+              fontSize="sm"
+              color="#00000040"
+            >
+              ···
+            </Text>
+          </Flex>
+        )}
         {next.exist && (
-          <Flex
-            position="absolute"
-            right="-8rem"
-            top="50%"
-            transform="translateY(-50%)"
-          >
+          <>
+            <PaginationItem
+              isPageEvent={true}
+              onPageChange={onPageChange}
+              page={lastPage}
+              key="last"
+              customChild={lastPage}
+              variant={variant}
+            />
             <PaginationItem
               isPageEvent={true}
               onPageChange={onPageChange}
@@ -85,15 +120,7 @@ const Pagination = ({
               customChild={">"}
               variant={variant}
             />
-            <PaginationItem
-              isPageEvent={true}
-              onPageChange={onPageChange}
-              page={lastPage}
-              key="last"
-              customChild={">>"}
-              variant={variant}
-            />
-          </Flex>
+          </>
         )}
       </Flex>
     </Flex>

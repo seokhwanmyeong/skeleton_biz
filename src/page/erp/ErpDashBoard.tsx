@@ -251,13 +251,13 @@ const ErpDashBoard = () => {
       //   },
       // }}
     >
-      <Flex gap={10} w="100%" h="500px">
-        {/* <Flex w="50%">
+      {/* <Flex gap={10} w="100%" h="500px">
+        <Flex w="50%">
           <ChartDonut
             data={chartData[2] || []}
             accessKey={"Sales.sum"}
           />
-        </Flex> */}
+        </Flex>
         <Flex w="100%">
           <ChartBar
             data={testMargin2.data}
@@ -285,7 +285,7 @@ const ErpDashBoard = () => {
           isDivide={divide}
           legend={testMargin.legend}
         />
-      </Flex>
+      </Flex> */}
     </Box>
   );
 };

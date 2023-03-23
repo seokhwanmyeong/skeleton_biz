@@ -50,12 +50,8 @@ const SelectArea = () => {
       flexDirection="column"
       transition="0.5s"
     >
-      <Flex
-        p="1.5rem 3rem"
-        borderRadius="5px 5px 0 0"
-        bgColor="primary.reverse.bg"
-      >
-        <Heading color="primary.reverse.font" fontWeight="700" fontSize="2xl">
+      <Flex p="1.5rem 3rem" borderRadius="5px 5px 0 0" bgColor="bg.primary">
+        <Heading color="font.inverse" fontWeight="700" fontSize="2xl">
           지역을 선택해주세요.
         </Heading>
       </Flex>

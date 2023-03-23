@@ -179,7 +179,6 @@ const InputPwd = ({
           {...addonProps}
         >
           <Button
-            variant="reverse"
             w="100%"
             h="100%"
             borderLeftRadius="0"
@@ -369,6 +368,7 @@ const InputTotalDate = ({
           inputProps={inputProps}
           focusBorderColor={focusBorderColor}
           errorBorderColor={errorBorderColor}
+          isDisabled={value === "total"}
         />
       </Radio>
     </Flex>
@@ -544,7 +544,6 @@ const InputFile = ({
       )}
       <Text mb="2rem">파일 형식 제한없음 (최대 40MB)</Text>
       <Button
-        variant="reverse"
         onClick={(e) => {
           e.stopPropagation();
           fileRef.current?.click();
@@ -645,12 +644,7 @@ const InputImg = ({
         <IconDownload boxSize="4rem" mb="1rem" />
         <Text mb="0.5rem">이미지를 드래그 해보세요.</Text>
         <Text mb="2rem">이미지 형식: jpg/png (최대 500kb)</Text>
-        <Button
-          variant="reverse"
-          onClick={uploadBtnHandler}
-          zIndex="2"
-          gap="0.5rem"
-        >
+        <Button onClick={uploadBtnHandler} zIndex="2" gap="0.5rem">
           <IconFileAdd />
           이미지 등록하기
         </Button>

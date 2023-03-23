@@ -3,6 +3,8 @@ import { Flex } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
 //  Components
 import MenuSide from "@components/menu/MenuSide";
+//  image
+import bgImg from "/src/assets/background.png";
 
 const FrameSub = () => {
   return (
@@ -14,7 +16,7 @@ const FrameSub = () => {
       bgSize="cover"
       bgPosition="center"
       bgRepeat="no-repeat"
-      bgImage="url('src/assets/background.png')"
+      bgImage={bgImg}
       _before={{
         content: '""',
         bgSize: "cover",
@@ -27,10 +29,11 @@ const FrameSub = () => {
         opacity: 0.75,
         w: "100%",
         h: "100%",
+        zIndex: 0,
       }}
     >
       <MenuSide />
-      <Flex w="100%" h="100%" overflowY="hidden">
+      <Flex zIndex={1} w="100%" h="100%">
         <Outlet />
       </Flex>
     </Flex>

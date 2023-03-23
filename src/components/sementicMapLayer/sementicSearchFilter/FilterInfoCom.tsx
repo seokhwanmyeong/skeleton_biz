@@ -429,7 +429,6 @@ const FilterUpjong = () => {
             <Button
               key={`1depth-${top.name}`}
               onClick={() => setSlct({ ...slct, top: top.code })}
-              variant="reverse"
               w="auto"
               borderRadius="5px"
               aria-selected={slct.top === top.code}

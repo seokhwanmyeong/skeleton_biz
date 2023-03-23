@@ -1,16 +1,14 @@
 //  LIB
 import { useMemo, useState } from "react";
-import { Flex, Heading, Button } from "@chakra-ui/react";
+import { Divider, Flex, Heading } from "@chakra-ui/react";
 //  Components
 import Section from "@components/common/Section";
+import SearchStore from "@components/search/SearchStore";
+import Table from "@components/table/Table";
 import ModalStoreEditor from "@components/modal/erp/ModalStoreEditor";
-import Search from "@components/search/Search";
-import TableCube from "@components/table/TableCube";
+import { IcoBtnDownload, IcoBtnDelete } from "@components/common/Btn";
 //  Form & Column
-import { formSearchStore } from "@page/erp/store/form";
 import { columnStoreInfo } from "@components/table/column/erp";
-//  Api & URL
-import { queryStoreList } from "@src/api/cubeApi/query";
 //  Util & Data
 import { exportFileCSV } from "@util/file/manageFile";
 
@@ -19,55 +17,57 @@ const ErpStore = () => {
   const [selectData, setSelectData] = useState<any>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [curPage, setCurPage] = useState<number>(1);
-  const { column, initQ, totalQ, form } = useMemo(
+  const { column, initVal } = useMemo(
     () => ({
+      initVal: {
+        areaCode: "",
+        storeType: ["total"],
+        storeRank: ["total"],
+        openDate: "total",
+      },
       column: columnStoreInfo,
-      initQ: queryStoreList.initQ,
-      totalQ: queryStoreList.totalQ,
-      form: formSearchStore,
     }),
     []
   );
+
+  const searchHandler = () => {};
 
   const removeStoreHandler = () => {
     setSelectData([]);
   };
 
   return (
-    <Flex flexDirection="column" gap="0.5rem">
-      <Section>
+    <Flex w="100%" flexDirection="column" gap="0.5rem">
+      <Section p="1.25rem 0.75rem 1rem" flex="none">
         <Heading variant="outlet">매장</Heading>
-        <Search
-          initQ={initQ}
-          totalQ={totalQ}
-          page={curPage}
-          setTotal={setTotalPage}
-          setQueryData={setTableData}
-        />
+        <Divider m="1rem 0 1.25rem" color="font.title" />
+        <SearchStore initVal={initVal} setValues={setTableData} />
       </Section>
-      <Section>
-        <ModalStoreEditor update={false} />
-        <Button
-          variant="reverse"
-          onClick={() =>
-            exportFileCSV(selectData, columnStoreInfo, "매장리스트")
-          }
-          isDisabled={selectData.length > 0 ? false : true}
+      <Section p="0.625rem 0rem 1rem" h="100%">
+        <Flex
+          p="0rem 1.65625rem 0.5rem"
+          w="100%"
+          justify="flex-end"
+          gap="1.5rem"
         >
-          다운로드
-        </Button>
-        <Button
-          variant="reverse"
-          onClick={removeStoreHandler}
-          isDisabled={selectData.length > 0 ? false : true}
-        >
-          매장삭제
-        </Button>
-        <TableCube
-          actviePage={true}
+          <ModalStoreEditor update={false} />
+          <IcoBtnDownload
+            onClick={() =>
+              exportFileCSV(selectData, columnStoreInfo, "매장리스트")
+            }
+            isDisabled={selectData.length > 0 ? false : true}
+          />
+          <IcoBtnDelete
+            onClick={removeStoreHandler}
+            isDisabled={selectData.length > 0 ? false : true}
+          />
+        </Flex>
+        <Table
           data={tableData}
+          actviePage={true}
+          divide={5}
           columns={column}
-          totalReg={totalPage}
+          totalPage={totalPage}
           page={curPage}
           getSelectData={setSelectData}
           getPage={setCurPage}

@@ -4,6 +4,7 @@ type Colors = {
   system: {};
   font: {};
   bg: {};
+  border: {};
   neutral: {};
 };
 
@@ -78,6 +79,16 @@ export const selectColorScheme = (type: string) => {
           bdColor: "ededed",
         },
       },
+      bg: {
+        primary: "#FFFFFF",
+        deco: "#FFFFFF",
+        inverse: "#000000",
+        thead: "#FAFAFA",
+      },
+      border: {
+        input: "#D9D9D9",
+        chkBox: "#D9D9D9",
+      },
       font: {
         inverse: "#FFFFFF",
         title: "#000000CC",
@@ -85,11 +96,6 @@ export const selectColorScheme = (type: string) => {
         secondary: "#00000080",
         disabled: "#00000040",
         placeholder: "#00000040",
-      },
-      bg: {
-        primary: "#FFFFFF",
-        deco: "#FFFFFF",
-        inverse: "#000000",
       },
       system: {
         default: {
@@ -182,6 +188,11 @@ export const selectColorScheme = (type: string) => {
         primary: "#242426",
         deco: "#242426",
         inverse: "#FFFFFF",
+        thead: "#1a1a1a",
+      },
+      border: {
+        input: "#D9D9D9",
+        chkBox: "#D9D9D9",
       },
       font: {
         inverse: "#FFFFFF",

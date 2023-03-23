@@ -2,9 +2,13 @@
 import { useEffect, useState, useContext } from "react";
 import { QueryBuilder, useCubeQuery } from "@cubejs-client/react";
 import type { Query } from "@cubejs-client/core";
-import { Flex, Button } from "@chakra-ui/react";
+import { Flex, Button, Text, FormControl, FormLabel } from "@chakra-ui/react";
 import SearchMember from "./element/SearchMember";
 import { CubeContext } from "@cubejs-client/react";
+import { IcoSearch } from "@assets/icons/icon";
+import { Formik, Form, FormikProps } from "formik";
+//  Component
+import { SelectAddr } from "@components/common/Select";
 
 type PropsSearch = {
   initQ: Query;
@@ -49,7 +53,7 @@ const Search = ({
 
   return (
     <Flex flexDirection="column" gap="10px">
-      <QueryBuilder
+      {/* <QueryBuilder
         defaultChartType="table"
         // onVizStateChanged={(vizState) => {}}
         render={({
@@ -78,18 +82,6 @@ const Search = ({
           resultSet,
         }) => {
           resultSet && console.log("resultSet\n", resultSet.tablePivot(), "\n");
-          // console.log("validatedQuery\n", validatedQuery, "\n");
-          // console.log("Mesures\n", measures, availableMeasures, "\n");
-          // console.log("Dimensions\n", dimensions, availableDimensions, "\n");
-          // console.log("segments\n", segments, availableSegments, "\n");
-          // console.log("Filters\n", filters, "\n");
-          // console.log("Config\n", pivotConfig, updatePivotConfig, "\n");
-          // console.log(
-          //   "Etc\n",
-          //   timeDimensions,
-          //   availableTimeDimensions,
-          //   orderMembers
-          // );
           const queryHandler = () => {
             console.log("click");
           };
@@ -131,19 +123,89 @@ const Search = ({
                 )}
               </Flex>
               <Flex justifyContent="center">
-                <Button
-                  w="10rem"
-                  variant="reverse"
-                  justifyContent="center"
-                  onClick={() => queryHandler()}
-                >
-                  검색
+                <Button variant="search" onClick={() => queryHandler()}>
+                  <IcoSearch />
+                  <Text variant="search">검색</Text>
                 </Button>
               </Flex>
             </Flex>
           );
         }}
-      />
+      /> */}
+      <Flex justifyContent="center">
+        <Button variant="search" onClick={() => {}}>
+          <IcoSearch />
+          <Text variant="search">검색</Text>
+        </Button>
+      </Flex>
+    </Flex>
+  );
+};
+
+const SearchTest = ({
+  initVal,
+  setValues,
+}: {
+  initVal: {};
+  setValues: any;
+}) => {
+  return (
+    <Flex
+      p="2rem 2rem"
+      border="1px solid"
+      borderColor="primary.main.bdColor"
+      borderRadius="base"
+    >
+      <Formik
+        initialValues={initVal}
+        onSubmit={(values) => {
+          if (values && setValues !== undefined) {
+            setValues(values);
+          }
+        }}
+      >
+        {({ handleSubmit, errors, touched, getFieldProps, setFieldValue }) => {
+          return (
+            <Form onSubmit={handleSubmit} style={{ width: "100%" }}>
+              <Flex w="100%" flexDirection="row" gap="2rem">
+                <FormControl as={Flex} flexDirection="row">
+                  <FormLabel
+                    display="flex"
+                    alignItems="center"
+                    marginBottom={0}
+                    gap="0.5rem"
+                  >
+                    {/* <Text color="red.500">*</Text> */}
+                    검색어
+                  </FormLabel>
+                  {fieldElement[fieldType]}
+                  <SelectAddr
+                    selectProps={fieldStyle}
+                    value={_value}
+                    onChange={(val: any) => setFieldValue(_fieldKey, val)}
+                    isDisabled={isDisabled}
+                    isInvalid={isInvalid}
+                    isReadOnly={isReadOnly}
+                    isRequired={isRequired}
+                  />
+                </FormControl>
+                <Flex justifyContent="center">
+                  <Button
+                    type="submit"
+                    variant="search"
+                    onClick={() => {
+                      handleSubmit();
+                    }}
+                  >
+                    <IcoSearch />
+                    <Text variant="search">검색</Text>
+                  </Button>
+                </Flex>
+              </Flex>
+            </Form>
+          );
+        }}
+      </Formik>
     </Flex>
   );
 };

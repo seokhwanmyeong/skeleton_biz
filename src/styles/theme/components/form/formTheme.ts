@@ -2,12 +2,27 @@ const formTheme = {
   baseStyle: {
     container: {
       label: {
-        color: "primary.main.font",
+        m: 0,
+        fontFamily: "main",
+        fontStyle: "normal",
+        color: "font.primary",
       },
     },
   },
   sizes: {},
-  variants: {},
+  variants: {
+    search: {
+      container: {
+        display: "flex",
+        flexDirection: "row",
+        label: {
+          fontSize: "xs",
+          fontWeight: "strong",
+          color: "font.secondary",
+        },
+      },
+    },
+  },
   defaultProps: {},
 };
 

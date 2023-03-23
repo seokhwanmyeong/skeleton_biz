@@ -10,10 +10,18 @@ import { ComponentStyleConfig } from "@chakra-ui/react";
 const btnTheme = {
   sizes: {
     auto: {
-      p: "1rem 1.5rem",
+      p: "0.25rem 1rem",
       w: "auto",
       h: "fit-content",
+      bgColor: "primary.type7",
+      fontFamily: "main",
+      fontStyle: "normal",
       fontSize: "md",
+      color: "font.inverse",
+      borderRadius: "2px",
+      _hover: {
+        bgColor: "primary.type8",
+      },
     },
     page: {
       fontSize: "1.2rem",
@@ -23,18 +31,6 @@ const btnTheme = {
     },
   },
   variants: {
-    base: {
-      p: "0.5rem",
-      bgColor: "bg.primary",
-      borderRadius: "base",
-      fontFamily: "main",
-      fontStyle: "normal",
-      color: "primary.main.font",
-      transition: "0.3s",
-      _hover: {
-        bgColor: "primary.main.hover",
-      },
-    },
     subMenu: {
       p: "0",
       display: "inline-flex",
@@ -69,15 +65,6 @@ const btnTheme = {
         },
       },
     },
-    reverse: {
-      bgColor: "primary.reverse.bg",
-      borderRadius: "base",
-      color: "primary.reverse.font",
-      transition: "0.3s",
-      _hover: {
-        bgColor: "primary.reverse.hover",
-      },
-    },
     inputElement: {
       bgColor: "primary.main.bg",
       borderRadius: "base",
@@ -89,31 +76,42 @@ const btnTheme = {
       },
     },
     pagenation: {
-      fontSize: "xs",
-      bg: "primary.main.bg",
-      borderRadius: "base",
+      display: "flex",
+      alignItems: "center",
+      minW: "17.75px",
+      w: "auto",
+      h: "18.48px",
+      borderRadius: "pagenation",
       border: "1px solid",
-      borderColor: "primary.main.bdColor",
-      color: "primary.main.font",
+      borderColor: "transparent",
+      fontSize: "0.8125rem",
+      fontWeight: "medium",
+      lineHeight: "1.375rem",
+      color: "font.primary",
       transition: "0.3s",
       _hover: {
-        opacity: 0.8,
-        color: "primary.main.font",
-        bg: "primary.main.hover",
+        color: "primary.type7",
       },
       _active: {
-        opacity: 1,
-        bg: "primary.reverse.bg",
-        color: "primary.reverse.font",
         cursor: "initial",
-        border: "1px solid",
-        borderColor: "primary.reverse.bdColor",
+        color: "primary.type7",
+        borderColor: "primary.type7",
       },
+    },
+    search: {
+      p: "0.25rem 1rem",
+      w: "auto",
+      h: "auto",
+      gap: "0.5rem",
+      fontSize: "sm",
+      lineHeight: "1.5rem",
+    },
+    linkBtn: {
+      p: "0.5rem 1rem",
     },
   },
   defaultProps: {
     size: "auto",
-    variant: "base",
   },
 };
 

@@ -18,7 +18,9 @@ const headingTheme = {
       opacity: 0.8,
     },
     outlet: {
-      fontSize: "xl",
+      fontSize: "title",
+      lineHeight: "1",
+      color: "font.title",
     },
   },
 };

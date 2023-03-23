@@ -40,12 +40,12 @@ const columnStoreInfo = [
     enableResizing: false,
     size: 80,
   }),
-  columnHelper.accessor((row: any) => row["StoreInfo.addr"], {
-    id: "addr",
-    header: "주소",
-    cell: (info) => <Text noOfLines={2}>{info.getValue()}</Text>,
-    enableResizing: true,
-    minSize: 200,
+  columnHelper.accessor((row: any) => row["StoreInfo.ownerName"], {
+    id: "ownerName",
+    header: "대표자명",
+    cell: (info) => info.getValue(),
+    enableResizing: false,
+    size: 80,
   }),
   columnHelper.accessor((row: any) => row["StoreInfo.openDate"], {
     id: "openDate",
@@ -54,10 +54,18 @@ const columnStoreInfo = [
     enableResizing: false,
     size: 100,
   }),
+  columnHelper.accessor((row: any) => row["StoreInfo.addr"], {
+    id: "addr",
+    header: "주소",
+    cell: (info) => <Text noOfLines={2}>{info.getValue()}</Text>,
+    enableResizing: true,
+    minSize: 200,
+  }),
   columnHelper.display({
     header: "매장상세",
     cell: (info: any) => (
       <Button
+        variant="linkBtn"
         as={Link}
         to={"/erp/store/detail"}
         state={info.row.original}
@@ -69,16 +77,6 @@ const columnStoreInfo = [
     enableResizing: false,
     size: 100,
   }),
-  // {
-  //   accessorKey: "owner_name",
-  //   header: "대표자명",
-  //   cell: (info) => info.getValue(),
-  // },
-  // {
-  //   accessorKey: "created_at",
-  //   header: "등록일",
-  //   cell: (info) => info.getValue(),
-  // },
 ];
 
 const columnSaleInfo = [
@@ -147,6 +145,7 @@ const columnSaleInfo = [
     header: "매출상세",
     cell: (info: any) => (
       <Button
+        variant="linkBtn"
         as={Link}
         to={"/erp/store/detail"}
         state={info.row.original}
@@ -212,6 +211,7 @@ const columnRentInfo = [
     header: "매장상세",
     cell: (info: any) => (
       <Button
+        variant="linkBtn"
         as={Link}
         to={"/erp/store/detail"}
         state={info.row.original}

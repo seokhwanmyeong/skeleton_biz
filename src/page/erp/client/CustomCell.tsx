@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 
 const CustomModalCell = (info: any) => (
   <Button
-    variant="reverse"
     as={Link}
     to={"/erp/client/detail"}
     state={info}

@@ -6,7 +6,6 @@ import { Button } from "@chakra-ui/react";
 // const CustomModalCell = (info: any) => {
 //   return (
 //     <Button
-//       variant={"reverse"}
 //       as={Link}
 //       to={"/erp/client/detail"}
 //       state={info}
@@ -45,7 +44,8 @@ export const mainTable: ColumnDef<any>[] = [
   {
     accessorKey: "img",
     header: "이미지",
-    cell: (info) => (info.getValue() && info.getValue().length > 0 ? "O" : "X"),
+    cell: (info: any) =>
+      info.getValue() && info.getValue().length > 0 ? "O" : "X",
   },
   // {
   //   header: "상세보기",

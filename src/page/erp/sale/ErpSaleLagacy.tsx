@@ -35,14 +35,12 @@ const ErpSale = () => {
       <Flex gap={2}>
         <ModalSaleEditor />
         <Button
-          variant="reverse"
           onClick={() => exportFileCSV(selectData, mainTable, "매출리스트")}
           isDisabled={selectData.length > 0 ? false : true}
         >
           다운로드
         </Button>
         <Button
-          variant="reverse"
           onClick={removeStoreHandler}
           isDisabled={selectData.length > 0 ? false : true}
         >

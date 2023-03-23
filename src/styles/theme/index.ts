@@ -17,6 +17,7 @@ import themeTable from "@styles/theme/components/table/tableTheme";
 import formTheme from "@styles/theme/components/form/formTheme";
 import switchTheme from "@styles/theme/components/common/switchTheme";
 import radioTheme from "@styles/theme/components/common/radioTheme";
+import textTheme from "@styles/theme/components/common/textTheme";
 
 const createTheme = (name: string) => {
   const config: ThemeConfig = {
@@ -46,6 +47,7 @@ const createTheme = (name: string) => {
       xl: "1.5rem",
       "2xl": "2.5rem",
       "3xl": "3rem",
+      title: '1.75rem'
     },
     fontWeights: {
       regular: 400,
@@ -78,13 +80,25 @@ const createTheme = (name: string) => {
       list: {
         title: {
           fontSize: "lg",
-          color: "primary.main.font",
+          color: "font.primary",
           opacity: 0.8,
         },
         text: {
           fontSize: "lg",
-          color: "primary.main.font",
+          color: "font.primary"
         },
+      },
+      input: {
+        fontFamily: 'main',
+        fontStyle: 'normal',
+        fontWeight: 'regular',
+        color: "font.primary"
+      },
+      chkBox: {
+        fontFamily: 'main',
+        fontStyle: 'normal',
+        fontWeight: 'regular',
+        color: "font.primary"
       },
       h1: {
         fontFamily: 'main',
@@ -146,7 +160,9 @@ const createTheme = (name: string) => {
       }
     },
     radii: {
-      base: "0.5rem",
+      base: "2px",
+      pagenation: '2px',
+      Box: '10.6749px'
     },
     breakpoints: {
       mobile: "320px",
@@ -207,6 +223,7 @@ const createTheme = (name: string) => {
           },
         },
       },
+      Text: textTheme,
     },
   });
 

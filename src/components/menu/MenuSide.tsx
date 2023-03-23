@@ -42,6 +42,7 @@ const MenuSide = () => {
 
   return (
     <Flex
+      zIndex={1}
       p="0.875rem 0"
       w="4.75rem"
       h="100%"
@@ -51,7 +52,6 @@ const MenuSide = () => {
       border="1.42332px solid"
       borderColor="neutral.gray1"
       boxShadow="0px 2.84664px 2.84664px rgba(0, 0, 0, 0.25)"
-      backdropFilter="blur(3.5583px)"
       borderRadius="10.6749px"
     >
       <Flex mb="26px" direction="column" align="center" gap="6px">

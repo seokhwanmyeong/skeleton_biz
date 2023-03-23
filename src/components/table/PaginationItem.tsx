@@ -4,6 +4,7 @@ import { Button, ThemeTypings } from "@chakra-ui/react";
 type PaginationItemProps = {
   isPageEvent?: boolean;
   isCurrent?: boolean;
+  isDisabled?: boolean;
   page: number;
   onPageChange: (page: number) => void;
   customChild?: any;
@@ -13,6 +14,7 @@ type PaginationItemProps = {
 const PaginationItem = ({
   isPageEvent = false,
   isCurrent = false,
+  isDisabled = false,
   page,
   onPageChange,
   customChild,
@@ -23,6 +25,7 @@ const PaginationItem = ({
       variant={variant}
       size="page"
       isActive={isCurrent}
+      isDisabled={isDisabled}
       onClick={() => {
         !isCurrent && onPageChange(page);
       }}
