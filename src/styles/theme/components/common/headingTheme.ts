@@ -1,5 +1,6 @@
 const headingTheme = {
   baseStyle: {
+    mb: 0,
     fontFamily: "main",
     fontWeight: "strong",
     fontStyle: "normal",
@@ -19,8 +20,20 @@ const headingTheme = {
     },
     outlet: {
       fontSize: "title",
-      lineHeight: "1",
+      lineHeight: 1,
       color: "font.title",
+    },
+    cardTitle: {
+      fontWeight: "regular",
+      fontSize: "sm",
+      lineHeight: "normal",
+      color: "font.secondary",
+    },
+    detailTitle: {
+      m: 0,
+      fontSize: "sm",
+      lineHeight: "1.375rem",
+      color: "font.primary",
     },
   },
 };

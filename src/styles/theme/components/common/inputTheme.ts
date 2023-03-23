@@ -1,11 +1,23 @@
 const inputTheme = {
   baseStyle: {
     // addon: {},
-    // field: {},
+    field: {
+      px: "0.5rem",
+      h: "1.5rem",
+      border: "1px solid",
+      borderRadius: "base",
+      textStyle: "input",
+      fontSize: "0.8125rem",
+      fontWeight: "regular",
+      lineHeight: "1.5rem",
+    },
     // element: {},
   },
-  sizes: {},
+  sizes: {
+    base: {},
+  },
   variants: {
+    base: {},
     fileHidden: {
       field: {
         position: "absolute",
@@ -31,7 +43,10 @@ const inputTheme = {
     },
     form: {},
   },
-  defaultProps: {},
+  defaultProps: {
+    size: "base",
+    variants: "base",
+  },
 };
 
 export default inputTheme;

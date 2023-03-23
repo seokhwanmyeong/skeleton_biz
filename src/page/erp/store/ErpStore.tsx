@@ -20,6 +20,8 @@ const ErpStore = () => {
   const { column, initVal } = useMemo(
     () => ({
       initVal: {
+        type: "total",
+        text: "",
         areaCode: "",
         storeType: ["total"],
         storeRank: ["total"],
@@ -39,7 +41,9 @@ const ErpStore = () => {
   return (
     <Flex w="100%" flexDirection="column" gap="0.5rem">
       <Section p="1.25rem 0.75rem 1rem" flex="none">
-        <Heading variant="outlet">매장</Heading>
+        <Heading as={"h3"} variant="outlet">
+          매장
+        </Heading>
         <Divider m="1rem 0 1.25rem" color="font.title" />
         <SearchStore initVal={initVal} setValues={setTableData} />
       </Section>

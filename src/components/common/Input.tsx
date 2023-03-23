@@ -122,6 +122,7 @@ const Input = ({
       isInvalid={isInvalid}
       isReadOnly={isReadOnly}
       isRequired={isRequired}
+      borderColor="border.input"
       {...inputProps}
     />
   );
@@ -272,6 +273,7 @@ const InputDate = ({
           }
           isReadOnly={isReadOnly}
           isRequired={isRequired}
+          borderColor="border.input"
           {...inputProps}
         />
       </Flex>
@@ -293,6 +295,7 @@ const InputDate = ({
               isInvalid={validate(date.start, date.end)}
               isReadOnly={isReadOnly}
               isRequired={isRequired}
+              borderColor="border.input"
               {...inputProps}
             />
           </Flex>
@@ -319,6 +322,7 @@ const InputTotalDate = ({
     <Flex gap="1rem">
       <Radio
         key={`radio-date-total`}
+        variant="search"
         value={"total"}
         isChecked={value === "total"}
         onChange={() => {
@@ -328,13 +332,12 @@ const InputTotalDate = ({
         isInvalid={isInvalid}
         isReadOnly={isReadOnly}
         isRequired={isRequired}
-        w="max-content"
-        size="md"
       >
         전체기간
       </Radio>
       <Radio
         key={`radio-date-duration`}
+        variant="search"
         onChange={() => {
           onChange(
             value !== "total"

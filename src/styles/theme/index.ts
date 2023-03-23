@@ -38,6 +38,8 @@ const createTheme = (name: string) => {
     },
     fonts: {
       main: "Roboto, sans-serif",
+      // main: "Noto Sans KR, sans-serif;",
+      // main: "Roboto, sans-serif",
     },
     fontSizes: {
       xs: "0.75rem",
@@ -47,13 +49,13 @@ const createTheme = (name: string) => {
       xl: "1.5rem",
       "2xl": "2.5rem",
       "3xl": "3rem",
-      title: '1.75rem'
+      title: "1.75rem",
     },
     fontWeights: {
       regular: 400,
       medium: 500,
       strong: 700,
-      heavy: 900
+      heavy: 900,
     },
     lineHeights: {
       normal: "normal",
@@ -62,8 +64,8 @@ const createTheme = (name: string) => {
       short: 1.14,
       tall: 1.19,
       taller: "1.28",
-      "body": "1.34",
-      "foot": "1.42",
+      body: "1.34",
+      foot: "1.42",
     },
     letterSpacings: {
       tighter: "-0.05em",
@@ -85,84 +87,84 @@ const createTheme = (name: string) => {
         },
         text: {
           fontSize: "lg",
-          color: "font.primary"
+          color: "font.primary",
         },
       },
       input: {
-        fontFamily: 'main',
-        fontStyle: 'normal',
-        fontWeight: 'regular',
-        color: "font.primary"
+        fontFamily: "main",
+        fontStyle: "normal",
+        fontWeight: "regular",
+        color: "font.primary",
       },
       chkBox: {
-        fontFamily: 'main',
-        fontStyle: 'normal',
-        fontWeight: 'regular',
-        color: "font.primary"
+        fontFamily: "main",
+        fontStyle: "normal",
+        fontWeight: "regular",
+        color: "font.primary",
       },
       h1: {
-        fontFamily: 'main',
-        fontSize: '3xl',
-        fontWeight: 'strong',
-        lineHeight: 'shorter',
-        letterSpacing: 'normal'
+        fontFamily: "main",
+        fontSize: "3xl",
+        fontWeight: "strong",
+        lineHeight: "shorter",
+        letterSpacing: "normal",
       },
       h2: {
-        fontFamily: 'main',
-        fontSize: '2xl',
-        fontWeight: 'strong',
-        lineHeight: 'short',
-        letterSpacing: 'normal'
-    },
+        fontFamily: "main",
+        fontSize: "2xl",
+        fontWeight: "strong",
+        lineHeight: "short",
+        letterSpacing: "normal",
+      },
       h3: {
-        fontFamily: 'main',
-        fontSize: 'xl',
-        fontWeight: 'strong',
-        lineHeight: 'short',
-        letterSpacing: 'normal'
-    },
+        fontFamily: "main",
+        fontSize: "xl",
+        fontWeight: "strong",
+        lineHeight: "short",
+        letterSpacing: "normal",
+      },
       h4: {
-        fontFamily: 'main',
-        fontSize: 'lg',
-        fontWeight: 'strong',
-        lineHeight: 'tall',
-        letterSpacing: 'normal'
+        fontFamily: "main",
+        fontSize: "lg",
+        fontWeight: "strong",
+        lineHeight: "tall",
+        letterSpacing: "normal",
       },
       h5: {
-        fontFamily: 'main',
-        fontSize: 'md',
-        fontWeight: 'strong',
-        lineHeight: 'taller',
-        letterSpacing: 'normal'
+        fontFamily: "main",
+        fontSize: "md",
+        fontWeight: "strong",
+        lineHeight: "taller",
+        letterSpacing: "normal",
       },
       body: {
         regular: {
-          fontFamily: 'main',
-          fontSize: 'sm',
-          fontWeight: 'regular',
-          lineHeight: 'body',
-          letterSpacing: 'normal'
+          fontFamily: "main",
+          fontSize: "sm",
+          fontWeight: "regular",
+          lineHeight: "body",
+          letterSpacing: "normal",
         },
         bold: {
-          fontFamily: 'main',
-          fontSize: 'sm',
-          fontWeight: 'medium',
-          lineHeight: 'body',
-          letterSpacing: 'normal'
+          fontFamily: "main",
+          fontSize: "sm",
+          fontWeight: "medium",
+          lineHeight: "body",
+          letterSpacing: "normal",
         },
         strong: {
-          fontFamily: 'main',
-          fontSize: 'sm',
-          fontWeight: 'strong',
-          lineHeight: 'body',
-          letterSpacing: 'normal'
+          fontFamily: "main",
+          fontSize: "sm",
+          fontWeight: "strong",
+          lineHeight: "body",
+          letterSpacing: "normal",
         },
-      }
+      },
     },
     radii: {
       base: "2px",
-      pagenation: '2px',
-      Box: '10.6749px'
+      pagenation: "2px",
+      Box: "10.6749px",
     },
     breakpoints: {
       mobile: "320px",
@@ -187,38 +189,33 @@ const createTheme = (name: string) => {
           detailPage: {
             root: {
               w: "100%",
+              h: "100%",
             },
             tablist: {
-              w: "100%",
-              justifyContent: "flex-start",
-              borderBottom: "1px solid #DEDEDE",
+              p: "2px",
+              w: "auto",
+              bgColor: "#0000000f",
             },
             tab: {
-              p: "0.5rem 3rem",
-              borderTop: "1px solid",
-              borderRight: "1px solid",
-              borderColor: "#DEDEDE",
-              color: "primary.main.font",
-              _first: {
-                borderLeft: "1px solid",
-                borderLeftRadius: "base",
-                borderBottomRadius: "0",
-                borderColor: "#DEDEDE",
-              },
-              _last: {
-                borderRightRadius: "base",
-                borderBottomRadius: "0",
-                borderColor: "#DEDEDE",
-              },
+              minW: "7.375rem",
+              h: "1.75rem",
+              fontFamily: "main",
+              fontWeight: "regular",
+              fontStyle: "normal",
+              lineHeight: "1.75rem",
+              color: "#000000a6",
               _selected: {
-                backgroundColor: "primary.reverse.bg",
-                fontWeight: "bold",
-                color: "primary.reverse.font",
+                border: "none",
+                bgColor: "#FFFFFF",
+                color: "#262626",
               },
             },
-            tabpanels: {},
+            tabpanels: { w: "100%", h: "100%" },
             tabpanel: {
-              p: "3rem",
+              overflow: "hidden",
+              p: "3rem 0rem",
+              w: "100%",
+              h: "100%",
             },
           },
         },

@@ -88,6 +88,7 @@ export const selectColorScheme = (type: string) => {
       border: {
         input: "#D9D9D9",
         chkBox: "#D9D9D9",
+        radio: "#D9D9D9",
       },
       font: {
         inverse: "#FFFFFF",
@@ -193,6 +194,7 @@ export const selectColorScheme = (type: string) => {
       border: {
         input: "#D9D9D9",
         chkBox: "#D9D9D9",
+        radio: "#D9D9D9",
       },
       font: {
         inverse: "#FFFFFF",

@@ -3,10 +3,12 @@ import { Flex, List, ListItem, Text } from "@chakra-ui/react";
 const ListTable = ({
   data,
   listKeys,
+  isDivide = false,
   tableProps,
 }: {
-  data: { [key: string]: string | number | undefined };
+  data: { [key: string]: any };
   listKeys: { [key: string]: string };
+  isDivide?: boolean;
   tableProps?: {};
 }) => {
   return (

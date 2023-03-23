@@ -136,11 +136,11 @@ const CheckboxGroup = ({
       value={activeTotal ? totalTrans() : chkValue}
       isDisabled={isDisabled}
       onChange={chkHandler}
-      variant={variant}
     >
       <Flex w="100%" gap="1rem">
         {activeTotal && (
           <ChakraCheckbox
+            variant={variant}
             onChange={() => {
               if (chkValue.length === 1 && chkValue[0] === "total") {
                 onChange([]);
@@ -150,12 +150,26 @@ const CheckboxGroup = ({
             }}
             key={`check-total`}
             value={"total"}
+            sx={{
+              span: {
+                _last: { fontSize: "sm", position: "relative", top: "1px" },
+              },
+            }}
           >
             {parseTotalTxt}
           </ChakraCheckbox>
         )}
         {chkboxData.map((data: { text: string; value: string | number }) => (
-          <ChakraCheckbox key={`check-${data.value}`} value={data.value}>
+          <ChakraCheckbox
+            variant={variant}
+            key={`check-${data.value}`}
+            value={data.value}
+            sx={{
+              span: {
+                _last: { fontSize: "sm", position: "relative", top: "1px" },
+              },
+            }}
+          >
             {data.text}
           </ChakraCheckbox>
         ))}
@@ -228,9 +242,6 @@ const CheckboxTagGroup = ({
             key={`check-total`}
             title={parseTotalTxt}
             value={"total"}
-            checkBoxProps={{
-              fontSize: "xs",
-            }}
           />
         )}
         {chkboxData.map((data: { text: string; value: string | number }) => (
@@ -238,9 +249,6 @@ const CheckboxTagGroup = ({
             key={`check-${data.value}`}
             title={data.text}
             value={data.value}
-            checkBoxProps={{
-              fontSize: "xs",
-            }}
             // onChange={}
           />
         ))}
@@ -296,9 +304,6 @@ const FilterChkTagGroup = ({
             key={`check-total`}
             title={parseTotalTxt}
             value={"total"}
-            checkBoxProps={{
-              fontSize: "xs",
-            }}
             isChecked={chkValue.length === chkboxData.length}
           />
         )}
@@ -308,9 +313,6 @@ const FilterChkTagGroup = ({
               key={`check-${value}`}
               title={text}
               value={value}
-              checkBoxProps={{
-                fontSize: "xs",
-              }}
               isChecked={chkValue.includes(value)}
               // onChange={}
             />

@@ -7,16 +7,27 @@ import { atomThemeColor } from "@states/theme/themeState";
 import { ThemeSwitch } from "@components/common/Switch";
 
 const ThemeBox = () => {
-  const { toggleColorMode } = useColorMode();
+  const { colorMode, toggleColorMode } = useColorMode();
   const [themeColor, setThemeColor] = useRecoilState(atomThemeColor);
-
   return (
     <Flex position="relative" alignItems="center">
       <ThemeSwitch
         isChecked={themeColor === "light"}
         onChange={() => {
-          setThemeColor(themeColor === "light" ? "dark" : "light");
-          toggleColorMode();
+          console.log(themeColor);
+          console.log(colorMode);
+          if (themeColor === colorMode) {
+            setThemeColor(themeColor === "light" ? "dark" : "light");
+            toggleColorMode();
+          } else {
+            if (colorMode === "light") {
+              setThemeColor("dark");
+              toggleColorMode();
+            } else {
+              setThemeColor("light");
+              toggleColorMode();
+            }
+          }
         }}
       />
     </Flex>

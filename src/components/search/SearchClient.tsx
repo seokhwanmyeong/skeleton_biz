@@ -7,7 +7,7 @@ import { CheckboxGroup } from "@components/common/CheckBox";
 import { IcoSearch } from "@assets/icons/icon";
 import { Input, InputTotalDate } from "@components/common/Input";
 
-const SearchStore = ({
+const SearchClient = ({
   initVal,
   setValues,
 }: {
@@ -41,11 +41,10 @@ const SearchStore = ({
                   <Flex w="100%" gap="2rem">
                     <Select
                       data={[
-                        { text: "매장명", value: "storeName" },
-                        { text: "매장코드", value: "storeCode" },
-                        { text: "대표자", value: "ownerName" },
+                        { text: "매장명", value: "clientName" },
+                        { text: "담당자명", value: "manager" },
                       ]}
-                      defalutValue="storeName"
+                      defalutValue="clientName"
                       opBaseTxt="text"
                       opBaseId="value"
                       opBaseKey="value"
@@ -65,7 +64,7 @@ const SearchStore = ({
                     w="10%"
                     flex="none"
                   >
-                    지역
+                    희망지역
                   </FormLabel>
                   <SelectAddr
                     value={getFieldProps("areaCode").value}
@@ -83,15 +82,14 @@ const SearchStore = ({
                   </FormLabel>
                   <CheckboxGroup
                     chkboxData={[
-                      { text: "입점", value: "statusOpen" },
-                      { text: "폐점", value: "statusClose" },
-                      { text: "휴점", value: "statusRest" },
-                      { text: "대기", value: "statusReady" },
-                      { text: "기타", value: "statusEtc" },
+                      { text: "상담대기", value: "statusReady" },
+                      { text: "상담중", value: "statusCurrent" },
+                      { text: "상담완료", value: "statusComplete" },
+                      { text: "종료", value: "statusEnd" },
                     ]}
-                    chkValue={getFieldProps("storeType").value}
+                    chkValue={getFieldProps("clientStatus").value}
                     activeTotal={true}
-                    onChange={(val: any) => setFieldValue("storeType", val)}
+                    onChange={(val: any) => setFieldValue("clientStatus", val)}
                   />
                 </FormControl>
                 <FormControl variant="search" maxW="80%">
@@ -101,19 +99,19 @@ const SearchStore = ({
                     w="10%"
                     flex="none"
                   >
-                    타입
+                    유입경로
                   </FormLabel>
                   <CheckboxGroup
                     chkboxData={[
-                      { text: "A타입", value: "rankA" },
-                      { text: "B타입", value: "rankB" },
-                      { text: "C타입", value: "rankC" },
-                      { text: "D타입", value: "rankD" },
-                      { text: "E타입", value: "rankE" },
+                      { text: "지인소개", value: "friend" },
+                      { text: "온라인광고", value: "onlineAd" },
+                      { text: "TV,지면 광고", value: "tvAd" },
+                      { text: "박람회", value: "exhibition" },
+                      { text: "포털검색", value: "potal" },
                     ]}
-                    chkValue={getFieldProps("storeRank").value}
+                    chkValue={getFieldProps("clientPath").value}
                     activeTotal={true}
-                    onChange={(val: any) => setFieldValue("storeRank", val)}
+                    onChange={(val: any) => setFieldValue("clientPath", val)}
                   />
                 </FormControl>
                 <FormControl variant="search" maxW="80%">
@@ -123,11 +121,11 @@ const SearchStore = ({
                     w="10%"
                     flex="none"
                   >
-                    개업일
+                    등록일
                   </FormLabel>
                   <InputTotalDate
-                    value={getFieldProps("openDate").value}
-                    onChange={(val: string) => setFieldValue("openDate", val)}
+                    value={getFieldProps("registDate").value}
+                    onChange={(val: string) => setFieldValue("registDate", val)}
                     _placeholder={{ color: "gray.500" }}
                     focusBorderColor="black.100"
                     errorBorderColor="red.300"
@@ -154,4 +152,4 @@ const SearchStore = ({
   );
 };
 
-export default SearchStore;
+export default SearchClient;

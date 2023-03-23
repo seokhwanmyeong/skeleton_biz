@@ -7,7 +7,7 @@ import { CheckboxGroup } from "@components/common/CheckBox";
 import { IcoSearch } from "@assets/icons/icon";
 import { Input, InputTotalDate } from "@components/common/Input";
 
-const SearchStore = ({
+const SearchSale = ({
   initVal,
   setValues,
 }: {
@@ -41,21 +41,32 @@ const SearchStore = ({
                   <Flex w="100%" gap="2rem">
                     <Select
                       data={[
-                        { text: "매장명", value: "storeName" },
-                        { text: "매장코드", value: "storeCode" },
-                        { text: "대표자", value: "ownerName" },
+                        { text: "평균월매출", value: "avgM" },
+                        { text: "평균일매출", value: "avgD" },
+                        { text: "누적매출", value: "sum" },
                       ]}
-                      defalutValue="storeName"
+                      defalutValue="avgM"
                       opBaseTxt="text"
                       opBaseId="value"
                       opBaseKey="value"
                       onChange={(val: any) => setFieldValue("type", val)}
-                      selectProps={{ w: "31.5%" }}
+                      selectProps={{ w: "32%" }}
                     />
-                    <Input
-                      inputProps={{ w: "68.5%" }}
-                      onChange={(val: any) => setFieldValue("text", val)}
-                    />
+                    <Flex w="68%" gap="1rem">
+                      <Input
+                        inputProps={{ w: "100%" }}
+                        onChange={(val: any) =>
+                          setFieldValue("rangeAmount.start", val)
+                        }
+                      />
+                      <Text>~</Text>
+                      <Input
+                        inputProps={{ w: "100%" }}
+                        onChange={(val: any) =>
+                          setFieldValue("rangeAmount.end", val)
+                        }
+                      />
+                    </Flex>
                   </Flex>
                 </FormControl>
                 <FormControl variant="search" maxW="80%">
@@ -70,28 +81,6 @@ const SearchStore = ({
                   <SelectAddr
                     value={getFieldProps("areaCode").value}
                     onChange={(val: any) => setFieldValue("areaCode", val)}
-                  />
-                </FormControl>
-                <FormControl variant="search" maxW="80%">
-                  <FormLabel
-                    display="flex"
-                    alignItems="center"
-                    w="10%"
-                    flex="none"
-                  >
-                    상태
-                  </FormLabel>
-                  <CheckboxGroup
-                    chkboxData={[
-                      { text: "입점", value: "statusOpen" },
-                      { text: "폐점", value: "statusClose" },
-                      { text: "휴점", value: "statusRest" },
-                      { text: "대기", value: "statusReady" },
-                      { text: "기타", value: "statusEtc" },
-                    ]}
-                    chkValue={getFieldProps("storeType").value}
-                    activeTotal={true}
-                    onChange={(val: any) => setFieldValue("storeType", val)}
                   />
                 </FormControl>
                 <FormControl variant="search" maxW="80%">
@@ -123,11 +112,11 @@ const SearchStore = ({
                     w="10%"
                     flex="none"
                   >
-                    개업일
+                    기간
                   </FormLabel>
                   <InputTotalDate
-                    value={getFieldProps("openDate").value}
-                    onChange={(val: string) => setFieldValue("openDate", val)}
+                    value={getFieldProps("rangeDate").value}
+                    onChange={(val: string) => setFieldValue("rangeDate", val)}
                     _placeholder={{ color: "gray.500" }}
                     focusBorderColor="black.100"
                     errorBorderColor="red.300"
@@ -154,4 +143,4 @@ const SearchStore = ({
   );
 };
 
-export default SearchStore;
+export default SearchSale;

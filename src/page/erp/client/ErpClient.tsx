@@ -1,76 +1,94 @@
 //  LIB
-import { Fragment, useRef, useMemo, useState, memo } from "react";
-import { Flex, Heading, Button } from "@chakra-ui/react";
+import { useMemo, useState } from "react";
+import { Divider, Flex, Heading } from "@chakra-ui/react";
 //  Components
-import ApiTable from "@components/table/ApiTable";
-import ModalClientEditor from "@components/modal/erp/ModalClientEditor";
+import Section from "@components/common/Section";
+import SearchClient from "@components/search/SearchClient";
+import Table from "@components/table/Table";
+import ModalRentEditor from "@components/modal/erp/ModalRentEditor";
+import {
+  IcoBtnDownload,
+  IcoBtnDelete,
+  IcoBtnEditor,
+} from "@components/common/Btn";
 //  Form & Column
-import { formSearchClient } from "@page/erp/client/form";
-import { mainTable } from "@page/erp/client/column";
-//  Api & URL
-import { erpStoreApi } from "@api/bizApi/config";
+import { columnRentInfo } from "@components/table/column/erp";
 //  Util & Data
 import { exportFileCSV } from "@util/file/manageFile";
+import { useNavigate } from "react-router-dom";
 
 const ErpClient = () => {
-  const refreshTable = useRef<any>();
-  const [selectData, setSelectData] = useState([]);
-  const { column, initReq, form } = useMemo(
+  const navigate = useNavigate();
+  const [tableData, setTableData] = useState<any[]>([]);
+  const [selectData, setSelectData] = useState<any>([]);
+  const [totalPage, setTotalPage] = useState<number>(1);
+  const [curPage, setCurPage] = useState<number>(1);
+  const { column, initVal } = useMemo(
     () => ({
-      column: mainTable,
-      initReq: formSearchClient.initVal,
-      form: formSearchClient,
+      initVal: {
+        type: "clientName",
+        text: "",
+        areaCode: "",
+        clientStatus: ["total"],
+        clientPath: ["total"],
+        registDate: "total",
+      },
+      column: columnRentInfo,
     }),
     []
   );
 
-  const BtnGroup = (props: any) => {
-    const removeStoreHandler = () => {
-      console.log(selectData);
-      setSelectData([]);
-      refreshTable?.current && refreshTable?.current?.focus();
-    };
+  const searchHandler = () => {};
 
-    const exportFileHandler = () => {
-      exportFileCSV(selectData, mainTable, "고객리스트");
-    };
-
-    return (
-      <Flex gap={2}>
-        <ModalClientEditor update={false} />
-        <Button
-          onClick={() => exportFileHandler}
-          isDisabled={selectData.length > 0 ? false : true}
-        >
-          다운로드
-        </Button>
-        <Button
-          onClick={removeStoreHandler}
-          isDisabled={selectData.length > 0 ? false : true}
-        >
-          고객삭제
-        </Button>
-      </Flex>
-    );
+  const removeStoreHandler = () => {
+    setSelectData([]);
   };
 
   return (
-    <Fragment>
-      <Heading variant="outlet">고객</Heading>
-      <ApiTable
-        api={erpStoreApi.getData}
-        initReq={initReq}
-        form={form}
-        columns={column}
-        caption="BaseApiTable"
-        actviePage={true}
-        emptyData={{ text: "No Contents" }}
-        getSelectData={setSelectData}
-        ref={refreshTable}
-      >
-        <BtnGroup />
-      </ApiTable>
-    </Fragment>
+    <Flex w="100%" flexDirection="column" gap="0.5rem">
+      <Section p="1.25rem 0.75rem 1rem" flex="none">
+        <Heading as={"h3"} variant="outlet">
+          고객
+        </Heading>
+        <Divider m="1rem 0 1.25rem" color="font.title" />
+        <SearchClient initVal={initVal} setValues={setTableData} />
+      </Section>
+      <Section p="0.625rem 0rem 1rem" h="100%">
+        <Flex
+          p="0rem 1.65625rem 0.5rem"
+          w="100%"
+          justify="flex-end"
+          gap="1.5rem"
+        >
+          <ModalRentEditor update={false} />
+          <IcoBtnEditor
+            onClick={() => {
+              navigate("/client/create");
+            }}
+          />
+          <IcoBtnDownload
+            onClick={() =>
+              exportFileCSV(selectData, columnRentInfo, "고객리스트")
+            }
+            isDisabled={selectData.length > 0 ? false : true}
+          />
+          <IcoBtnDelete
+            onClick={removeStoreHandler}
+            isDisabled={selectData.length > 0 ? false : true}
+          />
+        </Flex>
+        <Table
+          data={tableData}
+          actviePage={true}
+          divide={5}
+          columns={column}
+          totalPage={totalPage}
+          page={curPage}
+          getSelectData={setSelectData}
+          getPage={setCurPage}
+        />
+      </Section>
+    </Flex>
   );
 };
 

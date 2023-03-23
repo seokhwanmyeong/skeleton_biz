@@ -11,8 +11,11 @@ const selectTheme = {
         borderColor: "border.input",
         borderRadius: "base",
         textStyle: "input",
-        fontSize: "sm",
+        fontSize: "0.8125rem",
+        fontWeight: "regular",
         lineHeight: "1.5rem",
+        bgColor: "bg.primary",
+        options: {},
       },
       icon: {
         color: "border.input",

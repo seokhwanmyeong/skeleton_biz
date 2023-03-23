@@ -1,72 +1,141 @@
 //  LIB
-import { Fragment, useMemo, useState, useRef } from "react";
-import { Flex, Heading, Button } from "@chakra-ui/react";
+import { useMemo, useState } from "react";
+import { Box, Divider, Flex, Heading, Text } from "@chakra-ui/react";
 //  Components
-import Search from "@components/search/Search";
-import TableCube from "@src/components/table/Table";
+import Section from "@components/common/Section";
+import SearchSale from "@components/search/SearchSale";
+import Table from "@components/table/Table";
 import ModalSaleEditor from "@components/modal/erp/ModalSaleEditor";
+import { IcoBtnDownload, IcoBtnDelete } from "@components/common/Btn";
 //  Form & Column
 import { columnSaleInfo } from "@components/table/column/erp";
-//  Api & URL
-import { querySaleList } from "@src/api/cubeApi/query";
-//  Util
+//  Util & Data
 import { exportFileCSV } from "@util/file/manageFile";
+import { IcoHome, IcoWon } from "@src/assets/icons/icon";
 
 const ErpSale = () => {
   const [tableData, setTableData] = useState<any[]>([]);
   const [selectData, setSelectData] = useState<any>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [curPage, setCurPage] = useState<number>(1);
-  const { column, initQ, totalQ } = useMemo(
+  const { column, initVal } = useMemo(
     () => ({
+      initVal: {
+        type: "avgM",
+        rangeAmount: {
+          start: 0,
+          end: 0,
+        },
+        areaCode: "",
+        storeRank: ["total"],
+        rangeDate: "total",
+      },
       column: columnSaleInfo,
-      initQ: querySaleList.initQ,
-      totalQ: querySaleList.totalQ,
-      // form: formSearchStore,
     }),
     []
   );
+
+  const searchHandler = () => {};
+
   const removeStoreHandler = () => {
     setSelectData([]);
   };
-  console.log(tableData);
 
   return (
-    <Flex flexDirection="column" gap="3rem" overflow="hidden">
-      <Heading variant="outlet">매출</Heading>
-      <Search
-        initQ={initQ}
-        totalQ={totalQ}
-        page={curPage}
-        setTotal={setTotalPage}
-        setQueryData={setTableData}
-      />
-      <Flex gap={2}>
-        <ModalSaleEditor />
-        <Button
-          onClick={() =>
-            exportFileCSV(selectData, columnSaleInfo, "매출리스트")
-          }
-          isDisabled={selectData.length > 0 ? false : true}
+    <Flex w="100%" flexDirection="column" gap="0.5rem">
+      <Section p="1.25rem 0.75rem 1rem" flex="none">
+        <Heading as={"h3"} variant="outlet">
+          매출
+        </Heading>
+        <Divider m="1rem 0 1.25rem" color="font.title" />
+        <SearchSale initVal={initVal} setValues={setTableData} />
+      </Section>
+      <Section
+        p="1.25rem 4.6875rem 1rem"
+        flex="none"
+        justify="space-between"
+        direction="row"
+      >
+        <Flex direction="column">
+          <Flex mb="0.5rem" align="center" gap="0.5rem">
+            <Box w="6px" h="6px" borderRadius="100px" bgColor="#FF4D4F"></Box>
+            <Heading as={"h4"} variant="cardTitle">
+              매장수
+            </Heading>
+          </Flex>
+          <Flex pl="0.825rem" align="center" gap="0.5rem">
+            <IcoHome w="1.5rem" h="1.5rem" position="relative" top="-1px" />
+            <Text variant="cardContent">540</Text>
+          </Flex>
+        </Flex>
+        <Flex direction="column">
+          <Flex mb="0.5rem" align="center" gap="0.5rem">
+            <Box w="6px" h="6px" borderRadius="100px" bgColor="#FF4D4F"></Box>
+            <Heading as={"h4"} variant="cardTitle">
+              평균 월매출 (KRW)
+            </Heading>
+          </Flex>
+          <Flex pl="0.825rem" align="center" gap="0.5rem">
+            <IcoWon />
+            <Text variant="cardContent">112,893.00</Text>
+          </Flex>
+        </Flex>
+        <Flex direction="column">
+          <Flex mb="0.5rem" align="center" gap="0.5rem">
+            <Box w="6px" h="6px" borderRadius="100px" bgColor="#FF4D4F"></Box>
+            <Heading as={"h4"} variant="cardTitle">
+              평균 DLF매출 (KRW)
+            </Heading>
+          </Flex>
+          <Flex pl="0.825rem" align="center" gap="0.5rem">
+            <IcoWon />
+            <Text variant="cardContent">112,893.00</Text>
+          </Flex>
+        </Flex>
+        <Flex direction="column">
+          <Flex mb="0.5rem" align="center" gap="0.5rem">
+            <Box w="6px" h="6px" borderRadius="100px" bgColor="#FF4D4F"></Box>
+            <Heading as={"h4"} variant="cardTitle">
+              평균 누적 매출 (KRW)
+            </Heading>
+          </Flex>
+          <Flex pl="0.825rem" align="center" gap="0.5rem">
+            <IcoWon />
+            <Text variant="cardContent">112,893.00</Text>
+          </Flex>
+        </Flex>
+      </Section>
+      <Section p="0.625rem 0rem 1rem" h="100%">
+        <Flex
+          p="0rem 1.65625rem 0.5rem"
+          w="100%"
+          justify="flex-end"
+          align="center"
+          gap="1.5rem"
         >
-          다운로드
-        </Button>
-        <Button
-          onClick={removeStoreHandler}
-          isDisabled={selectData.length > 0 ? false : true}
-        >
-          매출삭제
-        </Button>
-      </Flex>
-      <TableCube
-        actviePage={true}
-        data={tableData}
-        columns={column}
-        totalPage={totalPage}
-        page={curPage}
-        getSelectData={setSelectData}
-        getPage={setCurPage}
-      />
+          <ModalSaleEditor />
+          <IcoBtnDownload
+            onClick={() =>
+              exportFileCSV(selectData, columnSaleInfo, "매출리스트")
+            }
+            isDisabled={selectData.length > 0 ? false : true}
+          />
+          <IcoBtnDelete
+            onClick={removeStoreHandler}
+            isDisabled={selectData.length > 0 ? false : true}
+          />
+        </Flex>
+        <Table
+          data={tableData}
+          actviePage={true}
+          divide={5}
+          columns={column}
+          totalPage={totalPage}
+          page={curPage}
+          getSelectData={setSelectData}
+          getPage={setCurPage}
+        />
+      </Section>
     </Flex>
   );
 };

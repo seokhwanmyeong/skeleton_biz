@@ -1,9 +1,10 @@
 //  LIB
-import { useState, useRef, useCallback } from "react";
+import { Fragment, useState, useRef, useCallback } from "react";
 import { Flex, Button } from "@chakra-ui/react";
 import { FormikProps } from "formik";
 //  Components
-import Modal from "../Modal";
+import Modal from "@components/modal/Modal";
+import { IcoBtnEditor } from "@components/common/Btn";
 import Form from "@components/form/Form";
 //  Form
 import { formRentInfo } from "@page/erp/rent/form";
@@ -25,9 +26,11 @@ const ModalRentEditor = ({ info, update }: { info?: any; update: boolean }) => {
 
   return (
     <Modal
+      isOpen={false}
+      onClose={() => {}}
       title={update ? "매물 수정" : "매물 추가"}
-      openBtnText={update ? "매물 수정" : "매물 추가"}
-      cancelBtnText={"취소"}
+      // openBtnText={update ? "매물 수정" : "매물 추가"}
+      cancelText={"취소"}
       botBtnComponent={bottomBtn()}
     >
       <Flex flexDirection="column" w="50rem">

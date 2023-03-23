@@ -1,6 +1,11 @@
 import { Button, IconButton } from "@chakra-ui/react";
 //  Icon
-import { IcoPlusSquare, IcoDelete, IcoDownload } from "@assets/icons/icon";
+import {
+  IcoPlusSquare,
+  IcoDelete,
+  IcoDownload,
+  IcoUpdate,
+} from "@assets/icons/icon";
 
 type Props = {};
 
@@ -33,7 +38,11 @@ const IcoBtnEditor = ({
       icon={<IcoPlusSquare />}
       w="1rem"
       h="1rem"
+      bg="transparent"
       color="font.main"
+      _hover={{
+        bg: "transparent",
+      }}
       {...rest}
     />
   );
@@ -48,7 +57,11 @@ const IcoBtnDownload = ({ onClick, isDisabled, ...rest }: IcoBtnProps) => {
       icon={<IcoDownload />}
       w="1rem"
       h="1rem"
+      bg="transparent"
       color="font.main"
+      _hover={{
+        bg: "transparent",
+      }}
       {...rest}
     />
   );
@@ -63,10 +76,34 @@ const IcoBtnDelete = ({ onClick, isDisabled, ...rest }: IcoBtnProps) => {
       icon={<IcoDelete />}
       w="1rem"
       h="1rem"
+      bg="transparent"
       color="font.main"
+      _hover={{
+        bg: "transparent",
+      }}
       {...rest}
     />
   );
 };
 
-export { Btn, IcoBtnEditor, IcoBtnDownload, IcoBtnDelete };
+const IcoBtnUpdate = ({ onClick, isDisabled, ...rest }: IcoBtnProps) => {
+  return (
+    <IconButton
+      onClick={onClick}
+      isDisabled={isDisabled}
+      aria-label="수정"
+      icon={<IcoUpdate />}
+      w="1rem"
+      h="1rem"
+      bg="transparent"
+      color="primary.type7"
+      _hover={{
+        bg: "transparent",
+        color: "primary.type8",
+      }}
+      {...rest}
+    />
+  );
+};
+
+export { Btn, IcoBtnEditor, IcoBtnDownload, IcoBtnDelete, IcoBtnUpdate };

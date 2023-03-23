@@ -7,7 +7,7 @@ import { CheckboxGroup } from "@components/common/CheckBox";
 import { IcoSearch } from "@assets/icons/icon";
 import { Input, InputTotalDate } from "@components/common/Input";
 
-const SearchStore = ({
+const SearchRent = ({
   initVal,
   setValues,
 }: {
@@ -41,19 +41,18 @@ const SearchStore = ({
                   <Flex w="100%" gap="2rem">
                     <Select
                       data={[
-                        { text: "매장명", value: "storeName" },
-                        { text: "매장코드", value: "storeCode" },
-                        { text: "대표자", value: "ownerName" },
+                        { text: "매물명", value: "rentName" },
+                        { text: "매물코드", value: "rentCode" },
                       ]}
-                      defalutValue="storeName"
+                      defalutValue="rentName"
                       opBaseTxt="text"
                       opBaseId="value"
                       opBaseKey="value"
                       onChange={(val: any) => setFieldValue("type", val)}
-                      selectProps={{ w: "31.5%" }}
+                      selectProps={{ w: "32%" }}
                     />
                     <Input
-                      inputProps={{ w: "68.5%" }}
+                      inputProps={{ w: "68%" }}
                       onChange={(val: any) => setFieldValue("text", val)}
                     />
                   </Flex>
@@ -79,37 +78,15 @@ const SearchStore = ({
                     w="10%"
                     flex="none"
                   >
-                    상태
-                  </FormLabel>
-                  <CheckboxGroup
-                    chkboxData={[
-                      { text: "입점", value: "statusOpen" },
-                      { text: "폐점", value: "statusClose" },
-                      { text: "휴점", value: "statusRest" },
-                      { text: "대기", value: "statusReady" },
-                      { text: "기타", value: "statusEtc" },
-                    ]}
-                    chkValue={getFieldProps("storeType").value}
-                    activeTotal={true}
-                    onChange={(val: any) => setFieldValue("storeType", val)}
-                  />
-                </FormControl>
-                <FormControl variant="search" maxW="80%">
-                  <FormLabel
-                    display="flex"
-                    alignItems="center"
-                    w="10%"
-                    flex="none"
-                  >
                     타입
                   </FormLabel>
                   <CheckboxGroup
                     chkboxData={[
-                      { text: "A타입", value: "rankA" },
-                      { text: "B타입", value: "rankB" },
-                      { text: "C타입", value: "rankC" },
-                      { text: "D타입", value: "rankD" },
-                      { text: "E타입", value: "rankE" },
+                      { text: "A타입", value: "rentRankA" },
+                      { text: "B타입", value: "rentRankB" },
+                      { text: "C타입", value: "rentRankC" },
+                      { text: "D타입", value: "rentRankD" },
+                      { text: "E타입", value: "rentRankE" },
                     ]}
                     chkValue={getFieldProps("storeRank").value}
                     activeTotal={true}
@@ -123,7 +100,7 @@ const SearchStore = ({
                     w="10%"
                     flex="none"
                   >
-                    개업일
+                    등록일
                   </FormLabel>
                   <InputTotalDate
                     value={getFieldProps("openDate").value}
@@ -154,4 +131,4 @@ const SearchStore = ({
   );
 };
 
-export default SearchStore;
+export default SearchRent;

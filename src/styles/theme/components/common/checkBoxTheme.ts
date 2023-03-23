@@ -1,10 +1,20 @@
+import { checkboxAnatomy as parts } from "@chakra-ui/anatomy";
+import {
+  createMultiStyleConfigHelpers,
+  cssVar,
+} from "@chakra-ui/styled-system";
+
+const { definePartsStyle, defineMultiStyleConfig } =
+  createMultiStyleConfigHelpers(parts.keys);
+const $size = cssVar("checkbox-size");
+
 const checkboxTheme = {
   baseStyle: {
-    container: {},
+    container: { fontSize: "sm" },
     label: {
-      fontSize: "1.2rem",
-      textStyle: "chkBox",
+      fontSize: "sm",
       lineHeight: "1.375rem",
+      textStyle: "chkBox",
     },
     control: {
       borderColor: "border.chkBox",

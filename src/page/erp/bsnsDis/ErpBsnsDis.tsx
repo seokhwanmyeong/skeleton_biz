@@ -1,74 +1,97 @@
 //  LIB
-import { Fragment, useMemo, useState, useRef } from "react";
-import { Flex, Heading, Button } from "@chakra-ui/react";
-import { Link as RoutLink } from "react-router-dom";
+import { useMemo, useState } from "react";
+import { Button, Divider, Flex, Heading } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 //  Components
-import ApiTable from "@components/table/ApiTable";
+import Section from "@components/common/Section";
+import SearchBsns from "@components/search/SearchBsns";
+import Table from "@components/table/Table";
+import {
+  IcoBtnDownload,
+  IcoBtnDelete,
+  IcoBtnEditor,
+} from "@components/common/Btn";
 //  Form & Column
-import { formSearchBsnsDis } from "@src/page/erp/bsnsDis/form";
-import { mainTable } from "@src/page/erp/bsnsDis/column";
-//  Api & URL
-import { erpSaleApi } from "@api/bizApi/config";
-//  Util
+import { columnBsnsInfo } from "@components/table/column/erp";
+//  Util & Data
 import { exportFileCSV } from "@util/file/manageFile";
 
 const ErpBsnsDis = () => {
-  const [selectData, setSelectData] = useState([]);
-  const refreshTable = useRef<any>();
-  const { column, initReq, form } = useMemo(
+  const navigate = useNavigate();
+  const [tableData, setTableData] = useState<any[]>([]);
+  const [selectData, setSelectData] = useState<any>([]);
+  const [totalPage, setTotalPage] = useState<number>(1);
+  const [curPage, setCurPage] = useState<number>(1);
+  const { column, initVal } = useMemo(
     () => ({
-      column: mainTable,
-      initReq: formSearchBsnsDis.initVal,
-      form: formSearchBsnsDis,
+      initVal: {
+        type: "bsnsName",
+        text: "",
+        areaCode: "",
+        bsnsType: ["total"],
+      },
+      column: columnBsnsInfo,
     }),
     []
   );
 
-  const BtnGroup = (props: any) => {
-    const removeStoreHandler = () => {
-      console.log(selectData);
-      setSelectData([]);
-      refreshTable?.current && refreshTable?.current?.focus();
-    };
+  const searchHandler = () => {};
 
-    return (
-      <Flex gap={2}>
-        <Button as={RoutLink} to={"/maps"} data-text={"등록하기"}>
-          등록하기
-        </Button>
-        <Button
-          onClick={() => exportFileCSV(selectData, mainTable, "상권리스트")}
-          isDisabled={selectData.length > 0 ? false : true}
-        >
-          다운로드
-        </Button>
-        <Button
-          onClick={removeStoreHandler}
-          isDisabled={selectData.length > 0 ? false : true}
-        >
-          상권삭제
-        </Button>
-      </Flex>
-    );
+  const removeStoreHandler = () => {
+    setSelectData([]);
   };
 
   return (
-    <Fragment>
-      <Heading variant="outlet">상권</Heading>
-      <ApiTable
-        api={erpSaleApi.getData}
-        initReq={initReq}
-        form={form}
-        columns={column}
-        caption="BaseApiTable"
-        actviePage={true}
-        emptyData={{ text: "No Contents" }}
-        getSelectData={setSelectData}
-        ref={refreshTable}
-      >
-        <BtnGroup />
-      </ApiTable>
-    </Fragment>
+    <Flex w="100%" flexDirection="column" gap="0.5rem">
+      <Section p="1.25rem 0.75rem 1rem" flex="none">
+        <Heading as={"h3"} variant="outlet">
+          상권
+        </Heading>
+        <Divider m="1rem 0 1.25rem" color="font.title" />
+        <SearchBsns initVal={initVal} setValues={setTableData} />
+      </Section>
+      <Section p="0.625rem 0rem 1rem" h="100%">
+        <Flex
+          p="0rem 1.65625rem 0.5rem"
+          w="100%"
+          justify="flex-end"
+          align="center"
+          gap="1.5rem"
+        >
+          <Button
+            variant={"upload"}
+            onClick={() => {
+              navigate("/bsns/detail");
+            }}
+          >
+            상권레이어 설정
+          </Button>
+          <IcoBtnEditor
+            onClick={() => {
+              navigate("/maps");
+            }}
+          />
+          <IcoBtnDownload
+            onClick={() => exportFileCSV(selectData, columnBsnsInfo, "상권")}
+            isDisabled={selectData.length > 0 ? false : true}
+          />
+          <IcoBtnDelete
+            onClick={removeStoreHandler}
+            isDisabled={selectData.length > 0 ? false : true}
+          />
+        </Flex>
+        <Table
+          data={tableData}
+          actviePage={true}
+          divide={5}
+          columns={column}
+          totalPage={totalPage}
+          page={curPage}
+          getSelectData={setSelectData}
+          getPage={setCurPage}
+        />
+      </Section>
+    </Flex>
   );
 };
 
