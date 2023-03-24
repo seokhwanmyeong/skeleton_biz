@@ -7,13 +7,14 @@ import {
   Text,
   Button,
   Divider,
+  IconButton,
+  Box,
 } from "@chakra-ui/react";
 //  Component
-import { Select, SelectAddr } from "@components/common/Select";
-import { CheckboxGroup } from "@components/common/CheckBox";
-import { IcoSearch } from "@assets/icons/icon";
-import { Input, InputTotalDate } from "@components/common/Input";
+import { Select } from "@components/common/Select";
+import { Input, InputAddr } from "@components/common/Input";
 import { RadioBox } from "@components/common/RadioBox";
+import { IcoClose, IcoSearch } from "@assets/icons/icon";
 
 const FormStoreEditor = ({
   initVal,
@@ -29,6 +30,7 @@ const FormStoreEditor = ({
   return (
     <Flex p="2.0625rem 4.3125rem">
       <Formik
+        key="storeEditor"
         initialValues={initVal}
         onSubmit={(values) => {
           if (values && setValues !== undefined) {
@@ -39,14 +41,26 @@ const FormStoreEditor = ({
       >
         {({ handleSubmit, errors, touched, getFieldProps, setFieldValue }) => {
           return (
-            <Form onSubmit={handleSubmit} style={{ width: "100%" }}>
+            <Form
+              onSubmit={(values) => {
+                console.log(values);
+                handleSubmit();
+              }}
+              style={{ width: "100%" }}
+            >
               <Flex>
-                <Flex w="100%" flexDirection="column" gap="1rem">
-                  <FormControl variant="search">
+                <Flex
+                  p="0 1.4rem"
+                  w="50%"
+                  flexDirection="column"
+                  gap="1.625rem"
+                >
+                  <FormControl variant="create">
                     <FormLabel
                       display="flex"
                       alignItems="center"
-                      w="10%"
+                      minW="4.4rem"
+                      w="30%"
                       flex="none"
                     >
                       매장상태
@@ -65,16 +79,26 @@ const FormStoreEditor = ({
                         onChange={(val: any) =>
                           setFieldValue("storeStatus", val)
                         }
+                        radioProps={{
+                          flexWrap: "wrap",
+                          sx: {
+                            label: {
+                              mr: 0,
+                              w: "3rem",
+                            },
+                          },
+                        }}
                       />
                     ) : (
                       <Text>{initVal.storeStatus}</Text>
                     )}
                   </FormControl>
-                  <FormControl variant="search">
+                  <FormControl variant="create">
                     <FormLabel
                       display="flex"
                       alignItems="center"
-                      w="10%"
+                      minW="2rem"
+                      w="30%"
                       flex="none"
                     >
                       매장타입
@@ -91,16 +115,26 @@ const FormStoreEditor = ({
                         ]}
                         value={getFieldProps("storeRank").value}
                         onChange={(val: any) => setFieldValue("storeRank", val)}
+                        radioProps={{
+                          flexWrap: "wrap",
+                          sx: {
+                            label: {
+                              mr: 0,
+                              w: "auto",
+                            },
+                          },
+                        }}
                       />
                     ) : (
                       <Text>{initVal.storeRank}</Text>
                     )}
                   </FormControl>
-                  <FormControl variant="search">
+                  <FormControl variant="create">
                     <FormLabel
                       display="flex"
                       alignItems="center"
-                      w="10%"
+                      minW="4.4rem"
+                      w="30%"
                       flex="none"
                     >
                       매장연락처
@@ -112,14 +146,15 @@ const FormStoreEditor = ({
                         onChange={(val: any) => setFieldValue("phone", val)}
                       />
                     ) : (
-                      <Text>{initVal.storeRank}</Text>
+                      <Text>{initVal.phone}</Text>
                     )}
                   </FormControl>
-                  <FormControl variant="search">
+                  <FormControl variant="create">
                     <FormLabel
                       display="flex"
                       alignItems="center"
-                      w="10%"
+                      minW="4.4rem"
+                      w="30%"
                       flex="none"
                     >
                       사업자등록번호
@@ -133,17 +168,29 @@ const FormStoreEditor = ({
                         }
                       />
                     ) : (
-                      <Text>{initVal.storeRank}</Text>
+                      <Text>{initVal.biz_number}</Text>
                     )}
                   </FormControl>
                 </Flex>
-                <Divider />
-                <Flex w="100%" flexDirection="column" gap="1rem">
-                  <FormControl variant="search">
+                <Divider
+                  orientation="vertical"
+                  m="0.5rem 1.4rem"
+                  h="auto"
+                  borderColor="font.primary"
+                  borderLeftWidth="2px"
+                />
+                <Flex
+                  p="0 1.4rem"
+                  w="50%"
+                  flexDirection="column"
+                  gap="1.625rem"
+                >
+                  <FormControl variant="create">
                     <FormLabel
                       display="flex"
                       alignItems="center"
-                      w="10%"
+                      minW="4.4rem"
+                      w="30%"
                       flex="none"
                     >
                       대표자
@@ -157,14 +204,15 @@ const FormStoreEditor = ({
                         }
                       />
                     ) : (
-                      <Text>{initVal.storeRank}</Text>
+                      <Text>{initVal.owner_name}</Text>
                     )}
                   </FormControl>
-                  <FormControl variant="search">
+                  <FormControl variant="create">
                     <FormLabel
                       display="flex"
                       alignItems="center"
-                      w="10%"
+                      minW="4.4rem"
+                      w="30%"
                       flex="none"
                     >
                       대표자 연락처
@@ -178,47 +226,55 @@ const FormStoreEditor = ({
                         }
                       />
                     ) : (
-                      <Text>{initVal.storeRank}</Text>
+                      <Text>{initVal.owner_phone}</Text>
                     )}
                   </FormControl>
-                  <FormControl variant="search">
+                  <FormControl variant="create">
                     <FormLabel
                       display="flex"
                       alignItems="center"
-                      w="10%"
+                      minW="4.4rem"
+                      w="30%"
                       flex="none"
                     >
                       주소
                     </FormLabel>
                     {!update || fixMode ? (
-                      <Input
-                        value={getFieldProps("owner_phone").value}
-                        inputProps={{ w: "100%" }}
-                        onChange={(val: any) =>
-                          setFieldValue("owner_phone", val)
-                        }
-                      />
+                      <Flex w="100%" direction="column" gap="0.5rem">
+                        <InputAddr
+                          fieldKey={"addr"}
+                          value={getFieldProps("addr").value}
+                          onChange={(val: any) => setFieldValue("addr", val)}
+                        />
+                        <Input
+                          value={getFieldProps("addrDetail").value}
+                          onChange={(val: any) =>
+                            setFieldValue("addrDetail", val)
+                          }
+                        />
+                      </Flex>
                     ) : (
-                      <Text>{initVal.storeRank}</Text>
+                      <Text>
+                        {initVal.addr}
+                        {initVal.addrDetail}
+                      </Text>
                     )}
                   </FormControl>
-                  <FormControl variant="search">
+                  <FormControl variant="create">
                     <FormLabel
                       display="flex"
                       alignItems="center"
-                      w="10%"
+                      minW="4.4rem"
+                      w="30%"
                       flex="none"
                     >
                       연동상권
                     </FormLabel>
                     {!update || fixMode ? (
-                      <Flex>
+                      <Flex position="relative" w="100%" direction="column">
                         <Input
-                          value={getFieldProps("owner_phone").value}
                           inputProps={{ w: "100%" }}
-                          onChange={(val: any) =>
-                            setFieldValue("owner_phone", val)
-                          }
+                          onChange={(val: any) => console.log(val)}
                         />
                         <Select
                           data={[
@@ -231,11 +287,51 @@ const FormStoreEditor = ({
                           opBaseId="value"
                           opBaseKey="value"
                           onChange={(val: any) => setFieldValue("type", val)}
-                          selectProps={{ w: "31.5%" }}
+                          selectProps={{ w: "100%", zIndex: -1 }}
                         />
+                        {getFieldProps("linkBsns").value && (
+                          <Flex gap="0.5rem">
+                            {getFieldProps("linkBsns").value?.map(
+                              (link: any) => {
+                                console.log(link);
+                                return (
+                                  <Flex
+                                    position="relative"
+                                    p="1px 0.5rem 0"
+                                    display="flex"
+                                    align="center"
+                                    bgColor="primary.type2"
+                                    fontFamily="main"
+                                    fontSize="xs"
+                                    lineHeight="1.5rem"
+                                    color="primary.type7"
+                                  >
+                                    {link.name}
+                                    <IconButton
+                                      bgColor="inherit"
+                                      _hover={{
+                                        bgColor: "primary.type6",
+                                      }}
+                                      icon={
+                                        <IcoClose color='color="inherit"' />
+                                      }
+                                      aria-label="삭제버튼"
+                                    />
+                                  </Flex>
+                                );
+                              }
+                            )}
+                          </Flex>
+                        )}
                       </Flex>
                     ) : (
-                      <Text>{initVal.storeRank}</Text>
+                      <Flex>
+                        {initVal.linkBsns.map((li: any) => (
+                          <Text key={li.name} mr="1rem">
+                            {li.name}
+                          </Text>
+                        ))}
+                      </Flex>
                     )}
                   </FormControl>
                 </Flex>

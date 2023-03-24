@@ -42,6 +42,7 @@ import { ResultSet } from "@cubejs-client/core";
 import { transDataKey } from "@services/cube/transformer";
 import Table from "@src/components/table/Table";
 import { columnStoreInfo } from "@src/components/table/column/erp";
+import { Input } from "@src/components/common/Input";
 
 type StoreInfo = {
   storeName: string;
@@ -54,6 +55,7 @@ type StoreInfo = {
   owner_phone?: string;
   addr: string;
   addrDetail?: string;
+  linkBsns?: any[];
 };
 
 const ErpStoreDetail = ({
@@ -74,6 +76,24 @@ const ErpStoreDetail = ({
   const state = location.state;
   const storeCode = state?.[`StoreInfo.storeCode`] || id;
   const [activeUpdate, setActiveUpdate] = useState(false);
+  const [storeData, setStoreData] = useState<StoreInfo | undefined>({
+    storeName: "종로점",
+    storeCode: "1234567",
+    storeStatus: "입점",
+    storeRank: "A타입",
+    phone: "010-8277-8260",
+    biz_number: "01-524-64211-21",
+    owner_name: "홍길동",
+    owner_phone: "010-8277-8260",
+    addr: "경기도 김포시 풍무로 69번길 51",
+    addrDetail: "102동 101호",
+    linkBsns: [
+      { name: "종로상권1", code: "1234" },
+      { name: "종로상권2", code: "12345" },
+    ],
+  });
+  const [name, setName] = useState();
+  const [code, setCode] = useState();
   // console.log(storeCode);
 
   useEffect(() => {
@@ -117,14 +137,14 @@ const ErpStoreDetail = ({
   useEffect(() => {
     if (!mapRef.current) {
       mapRef.current = new naver.maps.Map("map", {
-        // center: new naver.maps.LatLng(state.lat, state.lng),
+        center: new naver.maps.LatLng(37.5666805, 126.9784147),
         zoom: 13,
       });
 
-      // const marker = new naver.maps.Marker({
-      //   position: { lat: state.lat, lng: state.lng },
-      //   map: mapRef.current,
-      // });
+      const marker = new naver.maps.Marker({
+        position: { lat: 37.5666805, lng: 126.9784147 },
+        map: mapRef.current,
+      });
     }
   }, [mapRef]);
 
@@ -164,18 +184,34 @@ const ErpStoreDetail = ({
           {"< 매장리스트"}
         </Button>
         <Flex align="center" gap="0.5rem">
-          <Heading as="h3" mb="2rem" variant="detailTitle">
-            {storeInfo ? storeInfo.storeName : "종로점"}
-          </Heading>
+          {activeUpdate ? (
+            <Input
+              value={storeData ? storeData.storeName : "12341234"}
+              inputProps={{ w: "100%" }}
+              onChange={(val: any) => setName(val)}
+            />
+          ) : (
+            <Heading as="h3" mb="2rem" variant="detailTitle">
+              {storeInfo ? storeInfo.storeName : "종로점"}
+            </Heading>
+          )}
           <IcoBtnUpdate
             onClick={() => {
               setActiveUpdate(!activeUpdate);
             }}
           />
         </Flex>
-        <Text variant="detailSub">
-          매장코드 : {storeInfo ? storeInfo.storeCode : "12341234"}
-        </Text>
+        {activeUpdate ? (
+          <Input
+            value={storeData ? storeData.storeCode : "12341234"}
+            inputProps={{ w: "10rem" }}
+            onChange={(val: any) => setCode(val)}
+          />
+        ) : (
+          <Text variant="detailSub">
+            매장코드 : {storeData ? storeData.storeCode : "12341234"}
+          </Text>
+        )}
       </Flex>
       <Divider m="1rem 0 1.375rem" color="font.title" />
       <Tabs variant="detailPage">
@@ -197,23 +233,25 @@ const ErpStoreDetail = ({
         </Flex>
         <TabPanels>
           <TabPanel key="panel-pointer">
-            <Flex flexDirection="column" gap="1rem">
+            <Flex p="0 3vw" flexDirection="column" gap="1rem">
               <div
                 id="map"
                 style={{
+                  padding: "0 3vw",
                   width: "100%",
-                  height: "400px",
+                  height: "20vw",
                 }}
               ></div>
               <FormStoreEditor
                 initVal={{
-                  storeStatus: "입점",
-                  storeRank: "A타입",
+                  storeStatus: "statusOpen",
+                  storeRank: "rankA",
                   phone: "010-8277-8260",
                   biz_number: "01-524-64211-21",
                   owner_name: "홍길동",
                   owner_phone: "010-8277-8260",
-                  addr: "경기도 김포시 풍무로 69번길 51 102동 101호",
+                  addr: "경기도 김포시 풍무로 69번길 51",
+                  addrDetail: "102동 101호",
                   linkBsns: [
                     { name: "종로상권1", code: "1234" },
                     { name: "종로상권2", code: "12345" },
@@ -222,25 +260,6 @@ const ErpStoreDetail = ({
                 fixMode={activeUpdate}
                 update={true}
               />
-              {/* <ListTable
-                tableProps={{ w: "100%" }}
-                isDivide={true}
-                data={
-                  storeInfo || {
-                    storeStatus: "입점",
-                    storeRank: "A타입",
-                    phone: "010-8277-8260",
-                    biz_number: "01-524-64211-21",
-                    owner_name: "홍길동",
-                    owner_phone: "010-8277-8260",
-                    addr: "경기도 김포시 풍무로 69번길 51 102동 101호",
-                    linkBsns: [
-                      { name: "종로상권1", code: "1234" },
-                      { name: "종로상권2", code: "12345" },
-                    ],
-                  }
-                }
-              /> */}
             </Flex>
           </TabPanel>
           <TabPanel key="panel-upjong">

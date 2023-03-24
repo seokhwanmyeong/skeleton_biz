@@ -1,7 +1,7 @@
 //  Lib
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { Flex, Image, Heading, Text, Button, useTheme } from "@chakra-ui/react";
+import { Flex, Image, Heading, Text, Button } from "@chakra-ui/react";
 //  State
 import {
   subMenuSelector,
@@ -15,7 +15,6 @@ const MenuSide = () => {
   const { rootState, pathState } = useLocationState();
   const subMenu = useRecoilValue(subMenuSelector(rootState) || undefined);
   const navigate = useNavigate();
-  const theme = useTheme();
 
   const navigator = (path: string): void => {
     if (path) {
@@ -64,7 +63,7 @@ const MenuSide = () => {
           boxShadow="0px 0px 2.84664px rgba(0, 0, 0, 0.4)"
           bgColor="#FFFFFF"
         >
-          <Image />
+          <Image src="/src/assets/clientSampleLogo.png" alt="브랜드 로고" />
         </Flex>
         <Heading variant="subMenu">BBQ</Heading>
         <Text

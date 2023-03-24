@@ -10,9 +10,11 @@ import { Input, InputTotalDate } from "@components/common/Input";
 const SearchStore = ({
   initVal,
   setValues,
+  setTotalPage,
 }: {
   initVal: any;
   setValues: any;
+  setTotalPage: any;
 }) => {
   return (
     <Flex p="0rem 2rem">
@@ -21,7 +23,22 @@ const SearchStore = ({
         onSubmit={(values) => {
           if (values && setValues !== undefined) {
             console.log(values);
-            setValues(values);
+            // setValues(values);
+            let sample = [];
+
+            for (let i = 0; i < 200; i++) {
+              sample.push({
+                storeName: "종로종로",
+                storeCode: "12314515",
+                storeStatus: "입점",
+                storeRank: "B",
+                ownerName: "홍길동",
+                openDate: "2022-88-88",
+                addr: "경기도 김포시 풍무로 69번길 51",
+              });
+            }
+            setValues(sample);
+            setTotalPage(sample.length);
           }
         }}
       >

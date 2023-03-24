@@ -190,7 +190,7 @@ const Table = ({
                   {activeCheck && (
                     <Td
                       key={`table-td-chk-${rowIdx + 1}`}
-                      onClick={(e) => e.stopPropagation()}
+                      onClick={(e: any) => e.stopPropagation()}
                     >
                       <TableCheckBox
                         checked={row.getIsSelected()}

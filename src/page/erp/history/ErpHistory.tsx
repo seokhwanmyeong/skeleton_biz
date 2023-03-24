@@ -97,7 +97,11 @@ const ErpHistory = ({ id }: { id?: string | number }) => {
   return (
     <Flex w="100%" h="100%" flexDirection="column" gap="0.5rem">
       <Flex p="0rem 1.65625rem 0.5rem" w="100%" justify="flex-end" gap="0.5rem">
-        <SearchHistory initVal={initVal} setValues={setTableData} />
+        <SearchHistory
+          initVal={initVal}
+          setValues={setTableData}
+          setTotalPage={setTotalPage}
+        />
         <Button
           w="7rem"
           variant={"historyAdd"}
@@ -109,13 +113,15 @@ const ErpHistory = ({ id }: { id?: string | number }) => {
         </Button>
       </Flex>
       <Table
-        data={tableData}
+        data={tableData.slice(
+          Math.floor(curPage / 10),
+          Math.floor(curPage / 10) + 10
+        )}
         actviePage={true}
         divide={5}
         columns={column}
         totalPage={totalPage}
         page={curPage}
-        getSelectData={setSelectData}
         getPage={setCurPage}
       />
     </Flex>

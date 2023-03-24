@@ -12,7 +12,7 @@ import {
   IcoBtnEditor,
 } from "@components/common/Btn";
 //  Form & Column
-import { columnRentInfo } from "@components/table/column/erp";
+import { columnClientInfo } from "@components/table/column/erp";
 //  Util & Data
 import { exportFileCSV } from "@util/file/manageFile";
 import { useNavigate } from "react-router-dom";
@@ -33,7 +33,7 @@ const ErpClient = () => {
         clientPath: ["total"],
         registDate: "total",
       },
-      column: columnRentInfo,
+      column: columnClientInfo,
     }),
     []
   );
@@ -68,7 +68,7 @@ const ErpClient = () => {
           />
           <IcoBtnDownload
             onClick={() =>
-              exportFileCSV(selectData, columnRentInfo, "고객리스트")
+              exportFileCSV(selectData, columnClientInfo, "고객리스트")
             }
             isDisabled={selectData.length > 0 ? false : true}
           />

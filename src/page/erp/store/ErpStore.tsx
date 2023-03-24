@@ -15,7 +15,7 @@ import { exportFileCSV } from "@util/file/manageFile";
 const ErpStore = () => {
   const [tableData, setTableData] = useState<any[]>([]);
   const [selectData, setSelectData] = useState<any>([]);
-  const [totalPage, setTotalPage] = useState<number>(1);
+  const [totalPage, setTotalPage] = useState<number>(0);
   const [curPage, setCurPage] = useState<number>(1);
   const { column, initVal } = useMemo(
     () => ({
@@ -45,7 +45,11 @@ const ErpStore = () => {
           매장
         </Heading>
         <Divider m="1rem 0 1.25rem" color="font.title" />
-        <SearchStore initVal={initVal} setValues={setTableData} />
+        <SearchStore
+          initVal={initVal}
+          setValues={setTableData}
+          setTotalPage={setTotalPage}
+        />
       </Section>
       <Section p="0.625rem 0rem 1rem" h="100%">
         <Flex
@@ -67,13 +71,15 @@ const ErpStore = () => {
           />
         </Flex>
         <Table
-          data={tableData}
+          data={tableData.slice(
+            Math.floor(curPage / 10),
+            Math.floor(curPage / 10) + 10
+          )}
           actviePage={true}
           divide={5}
           columns={column}
           totalPage={totalPage}
           page={curPage}
-          getSelectData={setSelectData}
           getPage={setCurPage}
         />
       </Section>

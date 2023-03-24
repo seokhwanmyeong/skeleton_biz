@@ -13,48 +13,48 @@ const columnStoreInfo = [
     enableResizing: false,
     size: 80,
   }),
-  columnHelper.accessor((row: any) => row["StoreInfo.storeName"], {
+  columnHelper.accessor((row: any) => row["storeName"], {
     id: "storeName",
     header: "매장명",
     cell: (info) => <Text noOfLines={2}>{info.getValue()}</Text>,
     size: 140,
   }),
-  columnHelper.accessor((row: any) => row["StoreInfo.storeCode"], {
+  columnHelper.accessor((row: any) => row["storeCode"], {
     id: "storeCode",
     header: "매장코드",
     cell: (info) => info.getValue(),
     enableResizing: false,
     size: 120,
   }),
-  columnHelper.accessor((row: any) => row["StoreInfo.storeStatus"], {
+  columnHelper.accessor((row: any) => row["storeStatus"], {
     id: "storeStatus",
     header: "상태",
     cell: (info) => info.getValue(),
     enableResizing: false,
     size: 80,
   }),
-  columnHelper.accessor((row: any) => row["StoreInfo.storeRank"], {
+  columnHelper.accessor((row: any) => row["storeRank"], {
     id: "storeRank",
     header: "타입",
     cell: (info) => info.getValue(),
     enableResizing: false,
     size: 80,
   }),
-  columnHelper.accessor((row: any) => row["StoreInfo.ownerName"], {
+  columnHelper.accessor((row: any) => row["ownerName"], {
     id: "ownerName",
     header: "대표자명",
     cell: (info) => info.getValue(),
     enableResizing: false,
     size: 80,
   }),
-  columnHelper.accessor((row: any) => row["StoreInfo.openDate"], {
+  columnHelper.accessor((row: any) => row["openDate"], {
     id: "openDate",
     header: "개업일",
     cell: (info) => info.getValue(),
     enableResizing: false,
     size: 100,
   }),
-  columnHelper.accessor((row: any) => row["StoreInfo.addr"], {
+  columnHelper.accessor((row: any) => row["addr"], {
     id: "addr",
     header: "주소",
     cell: (info) => <Text noOfLines={2}>{info.getValue()}</Text>,
@@ -392,7 +392,7 @@ const columnHistory = [
   columnHelper.accessor((row: any) => row["img"], {
     id: "img",
     header: "사진첨부",
-    cell: (info) => info.getValue(),
+    cell: (info) => (info.getValue().length > 0 ? "Y" : "N"),
     enableResizing: false,
     size: 80,
   }),
@@ -411,6 +411,35 @@ const columnHistory = [
     ),
     enableResizing: false,
     size: 100,
+  }),
+];
+
+const columnStoreSale = [
+  columnHelper.display({
+    header: "번호",
+    cell: (info) => info.row.index + 1,
+    enableResizing: false,
+    size: 80,
+  }),
+  columnHelper.accessor((row: any) => row["storeName"], {
+    id: "storeName",
+    header: "매장명",
+    cell: (info) => <Text noOfLines={2}>{info.getValue()}</Text>,
+    size: 140,
+  }),
+  columnHelper.accessor((row: any) => row["storeCode"], {
+    id: "storeCode",
+    header: "매장코드",
+    cell: (info) => info.getValue(),
+    enableResizing: false,
+    size: 120,
+  }),
+  columnHelper.accessor((row: any) => row["storeStatus"], {
+    id: "storeStatus",
+    header: "상태",
+    cell: (info) => info.getValue(),
+    enableResizing: false,
+    size: 80,
   }),
 ];
 

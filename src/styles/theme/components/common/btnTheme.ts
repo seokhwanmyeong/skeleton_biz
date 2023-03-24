@@ -1,12 +1,3 @@
-// Lib
-import { defineStyle, defineStyleConfig, extendTheme } from "@chakra-ui/react";
-import {
-  mode,
-  StyleFunctionProps,
-  GlobalStyleProps,
-} from "@chakra-ui/theme-tools";
-import { ComponentStyleConfig } from "@chakra-ui/react";
-
 const btnTheme = {
   sizes: {
     auto: {
@@ -18,7 +9,7 @@ const btnTheme = {
       fontStyle: "normal",
       fontSize: "md",
       color: "font.inverse",
-      borderRadius: "2px",
+      borderRadius: "base",
       _hover: {
         bgColor: "primary.type8",
       },
@@ -168,6 +159,22 @@ const btnTheme = {
           borderColor: "primary.type8",
           color: "#FFFFFF",
         },
+      },
+    },
+    addrBtn: {
+      background: "#FFFFFF",
+      px: "0.5rem",
+      w: "100%",
+      h: "1.5rem",
+      justifyContent: "flex-start",
+      border: "1px solid",
+      borderColor: "border.input",
+      fontSize: "0.8125rem",
+      fontWeight: "regular",
+      lineheight: "1.5rem",
+      color: "font.primary",
+      _hover: {
+        color: "font.inverse",
       },
     },
   },

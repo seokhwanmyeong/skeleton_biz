@@ -748,8 +748,8 @@ const InputAddr = ({
   // };
 
   return (
-    <Flex w="100%" h="100%">
-      <Button w="100%" h="3.6rem" onClick={onOpen}>
+    <Flex minW={0} w="100%" h="100%">
+      <Button variant="addrBtn" onClick={onOpen}>
         {value}
       </Button>
       <ChakraModal isOpen={isOpen} onClose={onClose}>

@@ -22,6 +22,24 @@ const formTheme = {
         },
       },
     },
+    create: {
+      container: {
+        display: "flex",
+        flexDirection: "row",
+        label: {
+          mr: "4.9rem",
+          fontSize: "xs",
+          fontWeight: "700",
+          color: "font.title",
+          lineHeight: "1.5rem",
+        },
+        p: {
+          fontSize: "xs",
+          fontWeight: "medium",
+          lineHeight: "1.5rem",
+        },
+      },
+    },
   },
   defaultProps: {},
 };
