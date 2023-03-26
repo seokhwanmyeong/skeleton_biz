@@ -26,14 +26,14 @@ const FrameSub = () => {
         right: 0,
         left: 0,
         bottom: 0,
-        opacity: 0.75,
+        opacity: 0.9,
         w: "100%",
         h: "100%",
         zIndex: 0,
       }}
     >
       <MenuSide />
-      <Flex zIndex={1} w="100%" h="100%">
+      <Flex zIndex={1} w="calc(100% - 13px - 4.5rem)" h="100%">
         <Outlet />
       </Flex>
     </Flex>

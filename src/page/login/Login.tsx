@@ -1,20 +1,22 @@
 //  LIB
-import { Flex } from "@chakra-ui/react";
+import { useState } from "react";
+import { Flex, Heading, Link } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 //  Components
 import Form from "@components/form/Form";
-//  Form & Column
-import { formLogin } from "@page/login/form";
+import FormLogin from "@components/form/FormLogin";
+import { Input, InputPwd } from "@components/common/Input";
 //  Services
-import { loginHandler } from "@services/login/loginHandler";
-
-import instance from "@api/bizApi/config";
 import { BIZ_LOGIN } from "@api/bizApi/url";
+import instance from "@api/bizApi/config";
+import { loginHandler } from "@services/login/loginHandler";
+import { IcoLogoMain } from "@src/assets/icons/icon";
 
 const Login = () => {
   const navigator = useNavigate();
 
   const requsetLoginBtn = (val: { username: string; password: string }) => {
+    console.log(val);
     instance
       .post<
         { username: string; password: string },
@@ -43,13 +45,34 @@ const Login = () => {
   };
 
   return (
-    <Flex w="100%" alignItems="center" justifyContent="center">
-      <Form
-        formType="search"
-        form={formLogin}
-        onSubmit={requsetLoginBtn}
-        styleProps={{ width: "40rem" }}
-      />
+    <Flex w="100%" justify="center" align="center">
+      <Flex direction="column">
+        <IcoLogoMain mb="5rem" w="16.125rem" h="8rem" color="font.title" />
+        <Heading variant="loginHead">ONTHE MAP</Heading>
+        <FormLogin
+          initVal={{
+            id: "",
+            pwd: "",
+          }}
+          setValues={requsetLoginBtn}
+        />
+        <Flex w="100%" justify="space-between">
+          <Link
+            variant="serviceLink"
+            isExternal={true}
+            href="https://www.bizrecipe.co.kr/"
+          >
+            아이디 / 비밀번호 찾기
+          </Link>
+          <Link
+            variant="serviceLink"
+            isExternal={true}
+            href="https://www.bizrecipe.co.kr/"
+          >
+            회원가입
+          </Link>
+        </Flex>
+      </Flex>
     </Flex>
   );
 };

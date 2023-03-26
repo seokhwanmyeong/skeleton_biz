@@ -13,6 +13,11 @@ const linkTheme = {
   },
   sizes: {},
   variants: {
+    serviceLink: {
+      fontSize: "sm",
+      fontWeight: "200",
+      linHeight: "1.375rem",
+    },
     headMenuOff: {
       position: "relative",
       display: "flex",

@@ -19,7 +19,6 @@ import {
   ListItem,
   Image,
 } from "@chakra-ui/react";
-
 import DaumPostcode from "react-daum-postcode";
 //  Icons
 import { IconDownload, IconFileAdd } from "@assets/icons/icon";
@@ -31,11 +30,13 @@ import {
 } from "@util/file/manageFile";
 import { importDateConverter, exportDateConverter } from "@util/time/date";
 import resizer from "@util/file/resizer";
+import dayjs from "dayjs";
 //  Services
 import { getAddressList } from "@services/address/autoAddressCreator";
 //  Type
 import { TypeFormCsv } from "@util/data/fileCSV";
-import dayjs from "dayjs";
+//  Components
+import { IcoBtnEye } from "@components/common/Btn";
 
 interface InpProps {
   fieldKey?: string;
@@ -135,7 +136,6 @@ const InputPwd = ({
   onChange,
   groupProps,
   addonProps,
-  btnProps,
   inputProps,
   placeholder,
   _placeholder,
@@ -145,7 +145,7 @@ const InputPwd = ({
   isInvalid = false,
   isReadOnly = false,
   isRequired = false,
-  variant,
+  variant = "pwd",
   autoComplete = "off",
 }: InpPwdProps) => {
   const [show, setShow] = useState(false);
@@ -172,23 +172,8 @@ const InputPwd = ({
           autoComplete={autoComplete}
           {...inputProps}
         />
-        <InputRightElement
-          right="-1px"
-          borderRadius="md"
-          w="6rem"
-          h="100%"
-          {...addonProps}
-        >
-          <Button
-            w="100%"
-            h="100%"
-            borderLeftRadius="0"
-            borderRightRadius="md"
-            {...btnProps}
-            onClick={handleClick}
-          >
-            {show ? "Hide" : "Show"}
-          </Button>
+        <InputRightElement w="2.5rem" h="100%" {...addonProps}>
+          <IcoBtnEye isShow={show} onClick={handleClick} />
         </InputRightElement>
       </InputGroup>
       {type === "chk" && (

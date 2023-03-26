@@ -42,8 +42,8 @@ const MenuSide = () => {
   return (
     <Flex
       zIndex={1}
-      p="0.875rem 0"
-      w="4.75rem"
+      p="1rem 0"
+      w="4.5rem"
       h="100%"
       flex="none"
       direction="column"
@@ -53,7 +53,7 @@ const MenuSide = () => {
       boxShadow="0px 2.84664px 2.84664px rgba(0, 0, 0, 0.25)"
       borderRadius="10.6749px"
     >
-      <Flex mb="26px" direction="column" align="center" gap="6px">
+      {/* <Flex mb="26px" direction="column" align="center" gap="6px">
         <Flex
           w="1.5rem"
           h="1.5rem"
@@ -77,8 +77,8 @@ const MenuSide = () => {
         >
           admin
         </Text>
-      </Flex>
-      <Flex direction="column" align="center" gap="2rem">
+      </Flex> */}
+      <Flex direction="column" align="center" gap="0.8125rem">
         {subMenu &&
           subMenu.map((menuLi: SubRouteType) => {
             return menuLi.isMenu ? (

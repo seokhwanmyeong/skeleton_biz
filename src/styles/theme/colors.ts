@@ -97,6 +97,9 @@ export const selectColorScheme = (type: string) => {
         secondary: "#00000080",
         disabled: "#00000040",
         placeholder: "#00000040",
+        section: {
+          sub: "#26232380",
+        },
       },
       system: {
         default: {
@@ -203,6 +206,9 @@ export const selectColorScheme = (type: string) => {
         secondary: "#ffffff",
         disabled: "#ffffff",
         placeholder: "#ffffff",
+        section: {
+          sub: "#ffffff80",
+        },
       },
       system: {
         default: {

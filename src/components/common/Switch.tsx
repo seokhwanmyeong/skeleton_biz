@@ -1,10 +1,13 @@
+//  Lib
+import { useState } from "react";
 import {
   Flex,
   ResponsiveValue,
   Switch as ChakraSwitch,
   Text,
 } from "@chakra-ui/react";
-import { useState } from "react";
+//  Icon
+import { IcoLight } from "@assets/icons/icon";
 
 type SwitchProps = {
   variant?: string;
@@ -74,8 +77,6 @@ const Switch = ({
 const ThemeSwitch = ({
   size,
   hasContent = true,
-  activeContent,
-  inactiveContent,
   isChecked = false,
   onChange,
 }: SwitchProps) => {
@@ -96,7 +97,7 @@ const ThemeSwitch = ({
             position="absolute"
             left={0}
             zIndex={1}
-            p="0 2px"
+            p="0 6px"
             w="fit-content"
             h="100%"
             alignItems="center"
@@ -105,13 +106,13 @@ const ThemeSwitch = ({
             fontWeight="strong"
             color="font.primary"
           >
-            {activeContent || "on"}
+            <IcoLight color="font.inverse" />
           </Flex>
           <Flex
             position="absolute"
             right={0}
             zIndex={1}
-            p="0 2px"
+            p="0 6px"
             w="fit-content"
             h="100%"
             alignItems="center"
@@ -119,7 +120,7 @@ const ThemeSwitch = ({
             fontSize="sm"
             fontWeight="strong"
           >
-            {inactiveContent || "off"}
+            <IcoLight color="font.inverse" />
           </Flex>
         </>
       )}

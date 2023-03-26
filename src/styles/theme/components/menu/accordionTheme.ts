@@ -3,7 +3,9 @@ import { GlobalStyleProps } from "@chakra-ui/theme-tools";
 
 const accordionTheme = {
   baseStyle: {
-    root: {},
+    root: {
+      fontFamily: "main",
+    },
     container: {},
     button: {},
     panel: {},
@@ -64,6 +66,46 @@ const accordionTheme = {
         fontSize: "1.6rem",
       },
       panel: {},
+      icon: {},
+    },
+    dashboardRent: {
+      root: {
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-around",
+        h: "100%",
+        color: "font.primary",
+      },
+      container: {},
+      button: {
+        p: "0rem 0.5rem",
+        h: "2.5em",
+        border: "1px solid",
+        borderRadius: "base",
+        borderColor: "rgba(0, 0, 0, 0.15)",
+        fontSize: "xs",
+        fontWeight: "strong",
+        color: "rgba(38, 35, 35, 0.5)",
+        _expanded: {
+          borderRadius: "2px 2px 0 0",
+          borderBottom: "none",
+          color: "font.primary",
+          _hover: {
+            bg: "transparent",
+          },
+        },
+      },
+      panel: {
+        p: "0 1rem 1rem 0.5rem",
+        position: "relative",
+        top: "-1px",
+        color: "font.primary",
+        border: "1px solid",
+        borderTop: "none",
+        borderRadius: "0 0 2px 2px",
+        borderColor: "rgba(0, 0, 0, 0.15)",
+        _expanded: {},
+      },
       icon: {},
     },
   },

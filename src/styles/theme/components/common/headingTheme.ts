@@ -7,6 +7,13 @@ const headingTheme = {
     color: "font.primary",
   },
   variants: {
+    loginHead: {
+      mb: "8.375rem",
+      fontSize: "3.75rem",
+      fontWeight: "heavy",
+      lineHeight: 1,
+      color: "#262323cc",
+    },
     serviceName: {
       fontSize: "xs",
       fontWeight: "heavy",
@@ -28,6 +35,10 @@ const headingTheme = {
       fontSize: "sm",
       lineHeight: "normal",
       color: "font.secondary",
+    },
+    sectionTitle: {
+      fontSize: "1rem",
+      color: "font.primary",
     },
     detailTitle: {
       m: 0,

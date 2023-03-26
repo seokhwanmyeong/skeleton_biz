@@ -27,6 +27,7 @@ const FormStoreEditor = ({
   fixMode?: boolean;
   setValues?: any;
 }) => {
+  console.log(initVal);
   return (
     <Flex p="2.0625rem 4.3125rem">
       <Formik

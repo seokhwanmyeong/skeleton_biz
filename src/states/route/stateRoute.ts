@@ -14,15 +14,26 @@ import ErpRent from "@page/erp/rent/ErpRent";
 import ErpRentDetail from "@page/erp/rent/ErpRentDetail";
 import ErpClient from "@page/erp/client/ErpClient";
 import ErpClientDetail from "@page/erp/client/ErpClientDetail";
-// import ErpBrand from "@page/erp/brand/ErpBrand";
+import ErpBrand from "@page/erp/brand/ErpBrand";
+import ErpSmart from "@page/erp/smart/ErpSmart";
+import ErpNotice from "@page/erp/notice/ErpNotice";
 
 // import ErpDetailSample from "@page/erp/ErpDetailSample";
 // import ErpBaseTable from "@page/erp/ErpBaseTable";
-//  Pages: Mypage
-import MyPage from "@page/mypage/MyPage";
-import MyPageCompany from "@page/mypage/MyPageCompany";
 //  Icon
-import { HeaderMenu01, HeaderMenu02, SubMenu01 } from "@assets/icons/icon";
+import {
+  HeaderMenu01,
+  HeaderMenu02,
+  SubMenu01,
+  SubMenu02,
+  SubMenu03,
+  SubMenu04,
+  SubMenu05,
+  SubMenu06,
+  SubMenu07,
+  SubMenu08,
+  SubMenu09,
+} from "@assets/icons/icon";
 
 type MainRouteType = {
   title: string;
@@ -125,7 +136,7 @@ export const subRoute = atom<{
         page: ErpStore,
         isMenu: true,
         icon: (color?: HEX) => {
-          return SubMenu01(color);
+          return SubMenu02(color);
         },
       },
       {
@@ -142,7 +153,7 @@ export const subRoute = atom<{
         page: ErpSale,
         isMenu: true,
         icon: (color?: HEX) => {
-          return SubMenu01(color);
+          return SubMenu03(color);
         },
       },
       {
@@ -152,7 +163,7 @@ export const subRoute = atom<{
         page: ErpBsnsDis,
         isMenu: true,
         icon: (color?: HEX) => {
-          return SubMenu01(color);
+          return SubMenu04(color);
         },
       },
       {
@@ -162,7 +173,7 @@ export const subRoute = atom<{
         page: ErpRent,
         isMenu: true,
         icon: (color?: HEX) => {
-          return SubMenu01(color);
+          return SubMenu05(color);
         },
       },
       {
@@ -179,7 +190,7 @@ export const subRoute = atom<{
         page: ErpClient,
         isMenu: true,
         icon: (color?: HEX) => {
-          return SubMenu01(color);
+          return SubMenu06(color);
         },
       },
       {
@@ -189,13 +200,36 @@ export const subRoute = atom<{
         page: ErpClientDetail,
         isMenu: false,
       },
-      // {
-      //   title: "브랜드 기준",
-      //   hasChild: false,
-      //   path: "brand",
-      //   page: ErpBrand,
-      //   isMenu: true,
-      // },
+      {
+        title: "브랜드",
+        hasChild: false,
+        path: "brand",
+        page: ErpBrand,
+        isMenu: true,
+        icon: (color?: HEX) => {
+          return SubMenu07(color);
+        },
+      },
+      {
+        title: "Smart",
+        hasChild: false,
+        path: "smart",
+        page: ErpSmart,
+        isMenu: true,
+        icon: (color?: HEX) => {
+          return SubMenu08(color);
+        },
+      },
+      {
+        title: "공지",
+        hasChild: false,
+        path: "notice",
+        page: ErpNotice,
+        isMenu: true,
+        icon: (color?: HEX) => {
+          return SubMenu09(color);
+        },
+      },
       // {
       //   title: "Sample Table",
       //   hasChild: true,
@@ -217,22 +251,6 @@ export const subRoute = atom<{
       //   page: ErpDetailSample,
       //   isMenu: true,
       // },
-    ],
-    mypage: [
-      {
-        title: "계정 관리",
-        hasChild: false,
-        path: "index",
-        page: MyPage,
-        isMenu: true,
-      },
-      {
-        title: "회사 관리",
-        hasChild: false,
-        path: "company",
-        page: MyPageCompany,
-        isMenu: true,
-      },
     ],
   },
 });

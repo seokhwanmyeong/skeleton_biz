@@ -86,27 +86,27 @@ const columnSaleInfo = [
     enableResizing: false,
     size: 50,
   }),
-  columnHelper.accessor((row: any) => row["StoreInfo.storeName"], {
+  columnHelper.accessor((row: any) => row["storeName"], {
     id: "storeName",
     header: "매장명",
     cell: (info) => <Text noOfLines={2}>{info.getValue()}</Text>,
     size: 80,
   }),
-  columnHelper.accessor((row: any) => row["StoreInfo.storeCode"], {
+  columnHelper.accessor((row: any) => row["storeCode"], {
     id: "storeCode",
     header: "매장코드",
     cell: (info) => info.getValue(),
     enableResizing: false,
     size: 120,
   }),
-  columnHelper.accessor((row: any) => row["StoreInfo.storeRank"], {
+  columnHelper.accessor((row: any) => row["storeRank"], {
     id: "storeRank",
     header: "타입",
     cell: (info) => info.getValue(),
     enableResizing: false,
     size: 80,
   }),
-  columnHelper.accessor((row: any) => row["StoreInfo.openDate"], {
+  columnHelper.accessor((row: any) => row["openDate"], {
     id: "openDate",
     header: "개업일",
     cell: (info) => info.getValue(),
@@ -120,21 +120,21 @@ const columnSaleInfo = [
   //   enableResizing: false,
   //   size: 100,
   // }),
-  columnHelper.accessor((row: any) => row["Sales.avgM"], {
+  columnHelper.accessor((row: any) => row["avgM"], {
     id: "avgM",
     header: "평균월매출",
     cell: (info) => info.getValue(),
     enableResizing: false,
     size: 100,
   }),
-  columnHelper.accessor((row: any) => row["Sales.avgD"], {
+  columnHelper.accessor((row: any) => row["avgD"], {
     id: "avgD",
     header: "평균일매출",
     cell: (info) => info.getValue(),
     enableResizing: false,
     size: 100,
   }),
-  columnHelper.accessor((row: any) => row["Sales.sum"], {
+  columnHelper.accessor((row: any) => row["sum"], {
     id: "sum",
     header: "누적매출",
     cell: (info) => info.getValue(),
@@ -148,7 +148,7 @@ const columnSaleInfo = [
         variant="linkBtn"
         as={Link}
         to={"/erp/store/detail"}
-        state={info.row.original}
+        state={{ ...info.row.original, tabIdx: 1 }}
         data-text={"상세보기"}
       >
         상세보기

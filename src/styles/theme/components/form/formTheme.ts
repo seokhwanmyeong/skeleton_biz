@@ -26,6 +26,7 @@ const formTheme = {
       container: {
         display: "flex",
         flexDirection: "row",
+        alignItems: "flex-start",
         label: {
           mr: "4.9rem",
           fontSize: "xs",
@@ -37,6 +38,7 @@ const formTheme = {
           fontSize: "xs",
           fontWeight: "medium",
           lineHeight: "1.5rem",
+          color: "font.title",
         },
       },
     },

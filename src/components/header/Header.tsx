@@ -1,12 +1,12 @@
 //  Lib
-import { Flex, Heading, useTheme } from "@chakra-ui/react";
+import { Flex, Heading, Link, useTheme } from "@chakra-ui/react";
 //  Components
 import MenuHeader from "@components/menu/MenuHeader";
 import ThemeBox from "@components/header/ThemeBox";
 //  CustomHooks
 import useLocationState from "@hook/useLocationState";
 //  Icon
-import { Logo } from "@assets/icons/icon";
+import { IcoMy, Logo } from "@assets/icons/icon";
 
 const Header = () => {
   const { pathState } = useLocationState();
@@ -15,9 +15,9 @@ const Header = () => {
   return (
     <Flex
       zIndex={999}
-      padding="0 19px"
+      padding="0 18px"
       w="100%"
-      h="2.5rem"
+      h="2.875rem"
       justify="space-between"
       alignItems="center"
       bgColor="bg.primary"
@@ -32,10 +32,25 @@ const Header = () => {
       </Flex>
       {pathState !== "/" && (
         <Flex
-          pr={{ base: "10rem", mobile: 0, tablet: 0, pc: "10rem" }}
+          alignItems="center"
+          pr={{ base: "10rem", mobile: 0, tablet: "8rem", pc: "10rem" }}
           h="100%"
+          gap="2rem"
         >
           <ThemeBox />
+          <Link
+            isExternal={true}
+            href="https://www.bizrecipe.co.kr/"
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            w="2rem"
+            h="2rem"
+            borderRadius="50%"
+            bgColor="neutral.gray6"
+          >
+            <IcoMy w="1.125rem" h="1.125rem" color="neutral.gray1" />
+          </Link>
         </Flex>
       )}
     </Flex>

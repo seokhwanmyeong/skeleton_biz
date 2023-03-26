@@ -13,7 +13,6 @@ import {
   Divider,
   useTheme,
 } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import {
   Chart as ChartJS,
@@ -26,12 +25,11 @@ import {
   Legend,
   Filler,
 } from "chart.js";
-import { Line, Bar } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 //  Components
 import ErpHistory from "@page/erp/history/ErpHistory";
-import ListTable from "@components/table/ListTable";
 import Section from "@components/common/Section";
-import { IcoBtnUpdate } from "@components/common/Btn";
+import { IcoBtnBack, IcoBtnUpdate } from "@components/common/Btn";
 import FormStoreEditor from "@components/form/erp/FormStoreEditor";
 //  Hook
 import useLocationState from "@hook/useLocationState";
@@ -68,7 +66,6 @@ const ErpStoreDetail = ({
   side?: boolean;
 }) => {
   const { cubejsApi } = useContext(CubeContext);
-  const navigate = useNavigate();
   const { location } = useLocationState();
   const mapRef = useRef<any>();
   const [storeInfo, setStoreInfo] = useState<StoreInfo | undefined>(undefined);
@@ -76,6 +73,7 @@ const ErpStoreDetail = ({
   const state = location.state;
   const storeCode = state?.[`StoreInfo.storeCode`] || id;
   const [activeUpdate, setActiveUpdate] = useState(false);
+  const [tabIdx, setTabIdx] = useState<number>(state?.tabIdx || 0);
   const [storeData, setStoreData] = useState<StoreInfo | undefined>({
     storeName: "종로점",
     storeCode: "1234567",
@@ -94,6 +92,7 @@ const ErpStoreDetail = ({
   });
   const [name, setName] = useState();
   const [code, setCode] = useState();
+  console.log(state);
   // console.log(storeCode);
 
   useEffect(() => {
@@ -151,20 +150,6 @@ const ErpStoreDetail = ({
   const column = useMemo(() => columnStoreInfo, []);
 
   return (
-    // <Box
-    //     w="100%"
-    //     overflowY="scroll"
-    //     pl="1rem"
-    //     __css={{
-    //       "::-webkit-scrollbar": {
-    //         w: "5px",
-    //       },
-    //       "::-webkit-scrollbar-thumb": {
-    //         borderRadius: "5",
-    //         bg: `primary.reverse.bdColor`,
-    //       },
-    //     }}
-    //   ></Box>
     <Section p="0.625rem 0.75rem 3.75rem">
       <Flex
         position="relative"
@@ -173,16 +158,7 @@ const ErpStoreDetail = ({
         align="center"
         direction="column"
       >
-        <Button
-          key={`link-prev`}
-          onClick={() => navigate(-1)}
-          position="absolute"
-          top={0}
-          left={0}
-          w="max-content"
-        >
-          {"< 매장리스트"}
-        </Button>
+        <IcoBtnBack position="absolute" top={0} left={0} w="max-content" />
         <Flex align="center" gap="0.5rem">
           {activeUpdate ? (
             <Input
@@ -214,7 +190,11 @@ const ErpStoreDetail = ({
         )}
       </Flex>
       <Divider m="1rem 0 1.375rem" color="font.title" />
-      <Tabs variant="detailPage">
+      <Tabs
+        variant="detailPage"
+        index={tabIdx}
+        onChange={(index) => setTabIdx(index)}
+      >
         <Flex w="100%" justifyContent="center">
           <TabList>
             <Tab key="tab-info" flexDirection="column">
@@ -309,6 +289,7 @@ const LineChart = () => {
   );
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         display: false,
@@ -344,25 +325,48 @@ const LineChart = () => {
         ],
         fill: true,
         borderColor: "#D9D9D9",
-        backgroundColor: `${theme.colors.primary.type7}40`,
+        backgroundColor: [
+          "rgba(235, 255, 5, 0.49) 10%",
+          "rgba(56, 59, 61, 0) 98.46%)",
+        ],
+        // "linear-gradient(178.56deg, rgba(235, 255, 5, 0.49) 10%, rgba(56, 59, 61, 0) 98.46%)",
       },
     ],
   };
 
   return (
-    <Flex w="100%" h="50%" justify="center">
+    <Flex w="100%" h="60%" justify="center">
       <Flex
         p="1rem"
         w="auto"
-        minW="50%"
+        minW="80%"
         h="100%"
         border="1px solid"
         borderColor="font.primary"
       >
-        <Line options={options} data={data} updateMode={"resize"} />
+        <Line
+          options={options}
+          data={data}
+          style={{ width: "100%", height: "500px" }}
+        />
       </Flex>
     </Flex>
   );
 };
 
 export default ErpStoreDetail;
+
+// <Box
+//     w="100%"
+//     overflowY="scroll"
+//     pl="1rem"
+//     __css={{
+//       "::-webkit-scrollbar": {
+//         w: "5px",
+//       },
+//       "::-webkit-scrollbar-thumb": {
+//         borderRadius: "5",
+//         bg: `primary.reverse.bdColor`,
+//       },
+//     }}
+//   ></Box>

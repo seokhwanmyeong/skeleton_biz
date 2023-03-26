@@ -31,6 +31,10 @@ const switchTheme = {
         w: "42px",
         h: "22px",
         alignItems: "center",
+        bgColor: "primary.type7",
+        _checked: {
+          bgColor: "primary.type7",
+        },
         // w: "2.625rem",
         // h: "1.5rem",
       },

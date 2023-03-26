@@ -1,5 +1,5 @@
 //  LIB
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Box, Divider, Flex, Heading, Text } from "@chakra-ui/react";
 //  Components
 import Section from "@components/common/Section";
@@ -18,28 +18,52 @@ const ErpSale = () => {
   const [selectData, setSelectData] = useState<any>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [curPage, setCurPage] = useState<number>(1);
-  const { column, initVal } = useMemo(
-    () => ({
-      initVal: {
-        type: "avgM",
-        rangeAmount: {
-          start: 0,
-          end: 0,
-        },
-        areaCode: "",
-        storeRank: ["total"],
-        rangeDate: "total",
-      },
-      column: columnSaleInfo,
-    }),
-    []
-  );
+  const [initVal, setInitVal] = useState<any>({
+    type: "avgM",
+    rangeAmount: {
+      start: 0,
+      end: 0,
+    },
+    areaCode: "",
+    storeRank: ["total"],
+    rangeDate: "total",
+  });
+  const column = useMemo(() => columnSaleInfo, []);
 
-  const searchHandler = () => {};
+  const searchHandler = (values: any) => {
+    console.log(values);
+    // setValues(values);
+    setInitVal({ ...values, page: curPage });
+  };
 
   const removeStoreHandler = () => {
     setSelectData([]);
   };
+
+  useEffect(() => {
+    if (tableData.length === 0) {
+      searchHandler({ ...initVal, page: curPage });
+    }
+  }, []);
+
+  useEffect(() => {
+    let sample = [];
+    console.log("search start");
+
+    for (let i = 0; i < 200; i++) {
+      sample.push({
+        storeName: "종로종로",
+        storeCode: "12314515",
+        storeRank: "B",
+        openDate: "2022-88-88",
+        avgM: "3000000",
+        avgD: "100000",
+        sum: "9000000",
+      });
+    }
+    setTableData(sample);
+    setTotalPage(sample.length);
+  }, [initVal, curPage]);
 
   return (
     <Flex w="100%" flexDirection="column" gap="0.5rem">

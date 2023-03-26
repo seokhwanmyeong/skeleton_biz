@@ -12,7 +12,7 @@ import { columnStoreInfo } from "@components/table/column/erp";
 //  Util & Data
 import { exportFileCSV } from "@util/file/manageFile";
 
-const ErpStore = () => {
+const ErpSmart = () => {
   const [tableData, setTableData] = useState<any[]>([]);
   const [selectData, setSelectData] = useState<any>([]);
   const [totalPage, setTotalPage] = useState<number>(0);
@@ -66,7 +66,7 @@ const ErpStore = () => {
     <Flex w="100%" flexDirection="column" gap="0.5rem">
       <Section p="1.25rem 0.75rem 1rem" flex="none">
         <Heading as={"h3"} variant="outlet">
-          매장
+          공지사항
         </Heading>
         <Divider m="1rem 0 1.25rem" color="font.title" />
         <SearchStore
@@ -82,12 +82,6 @@ const ErpStore = () => {
           gap="1.5rem"
         >
           <ModalStoreEditor update={false} />
-          <IcoBtnDownload
-            onClick={() =>
-              exportFileCSV(selectData, columnStoreInfo, "매장리스트")
-            }
-            isDisabled={selectData.length > 0 ? false : true}
-          />
           <IcoBtnDelete
             onClick={removeStoreHandler}
             isDisabled={selectData.length > 0 ? false : true}
@@ -110,4 +104,4 @@ const ErpStore = () => {
   );
 };
 
-export default ErpStore;
+export default ErpSmart;

@@ -164,7 +164,7 @@ const createTheme = (name: string) => {
     radii: {
       base: "2px",
       pagenation: "2px",
-      Box: "10.6749px",
+      Box: "12px",
     },
     breakpoints: {
       mobile: "320px",

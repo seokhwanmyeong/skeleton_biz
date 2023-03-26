@@ -10,6 +10,9 @@ const inputTheme = {
       fontSize: "0.8125rem",
       fontWeight: "regular",
       lineHeight: "1.5rem",
+      _focus: {
+        bgColor: "bg.primary",
+      },
     },
     // element: {},
   },
@@ -42,6 +45,9 @@ const inputTheme = {
       },
     },
     form: {},
+    pwd: {
+      field: {},
+    },
   },
   defaultProps: {
     size: "base",

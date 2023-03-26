@@ -21,6 +21,13 @@ const textTheme = {
       lineHeight: "0.875rem",
       color: "#26232380",
     },
+    sectionSub: {
+      fontFamily: "main",
+      fontStyle: "normal",
+      fontWeight: "regular",
+      fontSize: "xs",
+      color: "font.section.sub",
+    },
   },
   defaultProps: {},
 };
