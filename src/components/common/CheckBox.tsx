@@ -150,11 +150,11 @@ const CheckboxGroup = ({
             }}
             key={`check-total`}
             value={"total"}
-            sx={{
-              span: {
-                _last: { fontSize: "sm", position: "relative", top: "1px" },
-              },
-            }}
+            // sx={{
+            //   span: {
+            //     _last: { fontSize: "sm", position: "relative", top: "1px" },
+            //   },
+            // }}
           >
             {parseTotalTxt}
           </ChakraCheckbox>
@@ -164,11 +164,11 @@ const CheckboxGroup = ({
             variant={variant}
             key={`check-${data.value}`}
             value={data.value}
-            sx={{
-              span: {
-                _last: { fontSize: "sm", position: "relative", top: "1px" },
-              },
-            }}
+            // sx={{
+            //   span: {
+            //     _last: { fontSize: "sm", position: "relative", top: "1px" },
+            //   },
+            // }}
           >
             {data.text}
           </ChakraCheckbox>

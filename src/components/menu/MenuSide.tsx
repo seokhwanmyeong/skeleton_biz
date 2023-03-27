@@ -78,7 +78,12 @@ const MenuSide = () => {
           admin
         </Text>
       </Flex> */}
-      <Flex direction="column" align="center" gap="0.8125rem">
+      <Flex
+        position="relative"
+        direction="column"
+        align="center"
+        gap="0.8125rem"
+      >
         {subMenu &&
           subMenu.map((menuLi: SubRouteType) => {
             return menuLi.isMenu ? (

@@ -8,7 +8,6 @@ const headingTheme = {
   },
   variants: {
     loginHead: {
-      mb: "8.375rem",
       fontSize: "3.75rem",
       fontWeight: "heavy",
       lineHeight: 1,

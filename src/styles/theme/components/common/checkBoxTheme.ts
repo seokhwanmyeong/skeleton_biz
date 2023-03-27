@@ -10,13 +10,13 @@ const $size = cssVar("checkbox-size");
 
 const checkboxTheme = {
   baseStyle: {
-    container: { fontSize: "sm" },
+    container: { fontSize: "11px" },
     label: {
-      fontSize: "sm",
-      lineHeight: "1.375rem",
       textStyle: "chkBox",
     },
     control: {
+      w: "1rem",
+      h: "1rem",
       borderColor: "border.chkBox",
       _hover: {
         borderColor: "primary.type6",
@@ -31,13 +31,22 @@ const checkboxTheme = {
         },
       },
     },
-    icon: {},
+    icon: {
+      w: "80%",
+      h: "80%",
+    },
+  },
+  size: {
+    base: {
+      fontSize: "0.6875rem",
+      lineHeight: "1.375rem",
+    },
   },
   variants: {
     withTag: {
       control: { display: "none" },
       container: {},
-      label: { m: "0px" },
+      label: { m: "0px", fontSize: "sm" },
       icon: { display: "none" },
     },
     table: {
@@ -57,11 +66,15 @@ const checkboxTheme = {
         },
       },
       container: {},
-      label: {},
+      label: {
+        fontSize: "sm",
+      },
       icon: {},
     },
   },
-  defaultProps: {},
+  defaultProps: {
+    size: "base",
+  },
 };
 
 export default checkboxTheme;

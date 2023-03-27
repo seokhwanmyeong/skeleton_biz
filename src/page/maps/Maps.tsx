@@ -5,6 +5,7 @@ import SementicSearchEngine from "@components/sementicMapLayer/SementicSearchEng
 import SementicMap from "@components/sementicMapLayer/SementicMap";
 import SementicViewer from "@components/sementicMapLayer/SementicViewer";
 import BaseAreaProvider from "@src/components/sementicMapLayer/filter/BaseAreaProvider";
+import SementicMapLagacy from "@src/components/sementicMapLayer/SementicMapLagacy";
 
 const Maps = () => {
   return (
@@ -16,11 +17,12 @@ const Maps = () => {
         w="inherit"
         overflow="hidden"
       >
-        <BaseAreaProvider>
+        <SementicMap />
+        {/* <BaseAreaProvider>
           <SementicSearchEngine />
           <SementicMap />
           <SementicViewer />
-        </BaseAreaProvider>
+        </BaseAreaProvider> */}
       </Flex>
     </Flex>
   );

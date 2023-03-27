@@ -1,6 +1,6 @@
 //  LIB
 import { useState } from "react";
-import { Flex, Heading, Link } from "@chakra-ui/react";
+import { Flex, Heading, Link, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 //  Components
 import Form from "@components/form/Form";
@@ -17,6 +17,8 @@ const Login = () => {
 
   const requsetLoginBtn = (val: { username: string; password: string }) => {
     console.log(val);
+    navigator("/maps");
+    return;
     instance
       .post<
         { username: string; password: string },
@@ -48,7 +50,9 @@ const Login = () => {
     <Flex w="100%" justify="center" align="center">
       <Flex direction="column">
         <IcoLogoMain mb="5rem" w="16.125rem" h="8rem" color="font.title" />
-        <Heading variant="loginHead">ONTHE MAP</Heading>
+        <Heading variant="loginHead" mb="8.5rem">
+          ONTHE MAP
+        </Heading>
         <FormLogin
           initVal={{
             id: "",
@@ -56,7 +60,7 @@ const Login = () => {
           }}
           setValues={requsetLoginBtn}
         />
-        <Flex w="100%" justify="space-between">
+        <Flex mb="10rem" w="100%" justify="space-between">
           <Link
             variant="serviceLink"
             isExternal={true}
@@ -71,6 +75,11 @@ const Login = () => {
           >
             회원가입
           </Link>
+        </Flex>
+        <Flex w="100%" justify="center">
+          <Text fontSize="sm" lineHeight="1.375rem" color="font.placeholder">
+            Copyright ©2023 Produced by OntheMap
+          </Text>
         </Flex>
       </Flex>
     </Flex>

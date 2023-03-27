@@ -15,8 +15,9 @@ const linkTheme = {
   variants: {
     serviceLink: {
       fontSize: "sm",
-      fontWeight: "200",
+      fontWeight: "regular",
       linHeight: "1.375rem",
+      color: "font.placeholder",
     },
     headMenuOff: {
       position: "relative",

@@ -29,10 +29,11 @@ import {
   LineElement,
   Filler,
   registerables,
+  scales,
 } from "chart.js";
 import { Pie, Bar, Line } from "react-chartjs-2";
 import { Navigation } from "swiper";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 //  Components
 import Section from "@components/common/Section";
 import { DashboardLi } from "@components/common/List";
@@ -44,13 +45,17 @@ import { transMarginData } from "@util/data/testData";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
+import { useNavigate } from "react-router-dom";
 
 const ErpDashBoard = () => {
   const [notice, setNotic] = useState<any[]>([]);
   const [doc, setDoc] = useState<any[]>([]);
+  const navigate = useNavigate();
   const { resultSet, error, isLoading } = useCubeQuery(
     querySaleDashboard.initQ
   );
+
+  const swiper = useSwiper();
 
   useEffect(() => {
     setNotic([
@@ -85,6 +90,7 @@ const ErpDashBoard = () => {
             data={notice}
             onClick={(props: any) => {
               console.log(props);
+              navigate("/erp/notice");
             }}
           />
         </Section>
@@ -106,12 +112,12 @@ const ErpDashBoard = () => {
       </Flex>
       <Flex gap="0.75rem" w="100%" h="30%" flexBasis="30%" flexGrow={1}>
         <Section p="0.75rem" w="52%" h="100%">
-          <Flex mb="1rem" align="flex-end" gap="4px">
+          <Flex mb="1rem" w="100%" align="flex-end" gap="4px">
             <Heading variant={"sectionTitle"}>매장</Heading>
             <Text variant="sectionSub">Store</Text>
           </Flex>
           <Flex w="100%" h="inherit">
-            <Flex pt="1rem" pb="1rem" w="50%" h="100%">
+            <Flex direction="column" pt="1rem" pb="1rem" w="60%" h="100%">
               <ChartBar
                 title="매장수"
                 data={[35, 25, 15, 10, 4]}
@@ -125,7 +131,7 @@ const ErpDashBoard = () => {
               orientation="vertical"
               borderColor="#26232380"
             />
-            <Flex w="50%" h="100%" flex="none">
+            <Flex w="40%" h="100%" flex="none">
               <Swiper
                 modules={[Navigation]}
                 spaceBetween={50}
@@ -138,6 +144,9 @@ const ErpDashBoard = () => {
                   height: "100%",
                 }}
               >
+                <button onClick={() => swiper.slideNext()}>
+                  Slide to the next slide
+                </button>
                 <SwiperSlide style={{ padding: "5%", width: "100%" }}>
                   <ChartPie
                     title="매장타입"
@@ -677,23 +686,16 @@ const ErpDashBoard = () => {
               <SwiperSlide style={{ padding: "5%", width: "100%" }}>
                 <ChartPie
                   title="고객현황"
-                  data={[35, 25, 15, 10, 4]}
-                  labels={["A", "B", "C", "D", "E"]}
+                  data={[35, 25, 15, 10]}
+                  labels={["상담대기", "상담중", "상담완료", "종료"]}
                   labelText="고객현황"
                 />
               </SwiperSlide>
               <SwiperSlide style={{ padding: "5%", width: "100%" }}>
                 <ChartPie
-                  title="유입경로"
-                  data={[35, 25, 15, 10, 4, 5]}
-                  labels={[
-                    "지인소개",
-                    "온라인광고",
-                    "TV, 지면",
-                    "박람회",
-                    "포탈",
-                    "기타",
-                  ]}
+                  title="인기희망지역"
+                  data={[35, 25, 35, 20, 54]}
+                  labels={["서울", "인천", "경기도", "부산", "기타"]}
                   labelText="유입경로"
                 />
               </SwiperSlide>
@@ -706,11 +708,11 @@ const ErpDashBoard = () => {
             <Text variant="sectionSub">Sale</Text>
           </Flex>
           <Flex w="100%" h="100%" direction={"row"}>
-            <Flex w="30%">
+            <Flex p="1rem" w="30%">
               <ChartBarHorizon />
             </Flex>
             <Divider
-              m="0 1.25rem"
+              m="0 1rem"
               h="90%"
               orientation="vertical"
               borderColor="#26232380"
@@ -730,7 +732,7 @@ const ErpDashBoard = () => {
               >
                 <SwiperSlide style={{ padding: "5%", width: "100%" }}>
                   <ChartPie
-                    title="인기메뉴"
+                    title="인기메뉴별"
                     data={[35, 25, 15, 10, 4]}
                     labels={["A", "B", "C", "D", "E"]}
                     labelText="인기메뉴"
@@ -738,22 +740,40 @@ const ErpDashBoard = () => {
                 </SwiperSlide>
                 <SwiperSlide style={{ padding: "5%", width: "100%" }}>
                   <ChartPie
-                    title="인기메뉴"
-                    data={[35, 25, 15, 10, 4]}
-                    labels={["A", "B", "C", "D", "E"]}
-                    labelText="인기메뉴"
+                    title="주문방식별"
+                    data={[55, 15, 3]}
+                    labels={["배달", "포장", "테이블"]}
+                    labelText="주문방식"
                   />
                 </SwiperSlide>
               </Swiper>
             </Flex>
             <Divider
-              m="0 1.25rem"
+              m="0 1rem"
               h="90%"
               orientation="vertical"
               borderColor="#26232380"
             />
             <Flex w="30%">
-              <LineChart />
+              <Swiper
+                modules={[Navigation]}
+                spaceBetween={0}
+                slidesPerView={1}
+                navigation
+                onSlideChange={() => console.log("slide change")}
+                onSwiper={(swiper) => console.log(swiper)}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                }}
+              >
+                <SwiperSlide style={{ padding: "5%", width: "100%" }}>
+                  <LineChart />
+                </SwiperSlide>
+                <SwiperSlide style={{ padding: "5%", width: "100%" }}>
+                  <LineChart />
+                </SwiperSlide>
+              </Swiper>
             </Flex>
           </Flex>
         </Section>
@@ -799,6 +819,16 @@ const ChartPie = ({
           fontWeight: 700,
         },
       },
+      layout: {
+        padding: {
+          bottom: 0,
+        },
+      },
+    },
+    layout: {
+      padding: {
+        bottom: 5,
+      },
     },
   };
 
@@ -827,7 +857,7 @@ const ChartBar = ({
   data,
   labelText,
 }: {
-  title: string;
+  title?: string;
   data: any[];
   labels: any[];
   labelText: string;
@@ -842,50 +872,43 @@ const ChartBar = ({
     ...registerables
   );
 
-  const sample = {
-    January: {
+  const sample: { [key: string]: any } = {
+    "9월": {
       A: 100,
       B: 50,
       C: 30,
       D: 20,
       E: 50,
     },
-    February: {
+    "10월": {
       A: 100,
       B: 50,
       C: 30,
       D: 20,
       E: 50,
     },
-    March: {
+    "11월": {
       A: 100,
       B: 50,
       C: 30,
       D: 20,
       E: 50,
     },
-    April: {
+    "12월": {
       A: 100,
       B: 50,
       C: 30,
       D: 20,
       E: 50,
     },
-    May: {
+    "1월": {
       A: 100,
       B: 50,
       C: 30,
       D: 20,
       E: 50,
     },
-    June: {
-      A: 100,
-      B: 50,
-      C: 30,
-      D: 20,
-      E: 50,
-    },
-    July: {
+    "2월": {
       A: 100,
       B: 50,
       C: 30,
@@ -894,15 +917,7 @@ const ChartBar = ({
     },
   };
 
-  const labels = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-  ];
+  const labels = ["9월", "10월", "11월", "12월", "1월", "2월"];
 
   const options = {
     responsive: true,
@@ -917,7 +932,7 @@ const ChartBar = ({
       },
       title: {
         position: "bottom" as const,
-        display: true,
+        display: title ? true : false,
         text: title,
         color: "#26232380",
         font: {
@@ -925,6 +940,16 @@ const ChartBar = ({
           size: 12,
           fontWeight: 700,
         },
+      },
+      layout: {
+        padding: {
+          bottom: 0,
+        },
+      },
+    },
+    layout: {
+      padding: {
+        bottom: 0,
       },
     },
     scales: {
@@ -935,7 +960,7 @@ const ChartBar = ({
           color: "#000000",
         },
         ticks: {
-          display: false,
+          display: true,
         },
         grid: {
           drawBorder: false,
@@ -1027,90 +1052,90 @@ const ChartBarHorizon = ({
     ...registerables
   );
 
-  const sample = {
+  const sample: { [key: string]: any } = {
     "1월": {
-      A: 100,
-      B: 50,
-      C: 30,
-      D: 20,
-      E: 50,
+      A: 1000000,
+      B: 500000,
+      C: 300000,
+      D: 200000,
+      E: 5000000,
     },
     "2월": {
-      A: 100,
-      B: 50,
-      C: 30,
-      D: 20,
-      E: 50,
+      A: 100000,
+      B: 5000,
+      C: 300000,
+      D: 2000,
+      E: 5000,
     },
     "3월": {
-      A: 100,
-      B: 50,
-      C: 30,
-      D: 20,
-      E: 50,
+      A: 100000,
+      B: 5000,
+      C: 300000,
+      D: 2000,
+      E: 5000,
     },
     "4월": {
-      A: 100,
-      B: 50,
-      C: 30,
-      D: 20,
-      E: 50,
+      A: 300000,
+      B: 500000,
+      C: 300000,
+      D: 200000,
+      E: 5000000,
     },
     "5월": {
-      A: 100,
-      B: 50,
-      C: 30,
-      D: 20,
-      E: 50,
+      A: 1000000,
+      B: 500000,
+      C: 300000,
+      D: 200000,
+      E: 5000000,
     },
     "6월": {
-      A: 100,
-      B: 50,
-      C: 30,
-      D: 20,
-      E: 50,
+      A: 5000900,
+      B: 5000900,
+      C: 3000900,
+      D: 200800,
+      E: 500000,
     },
     "7월": {
-      A: 100,
-      B: 50,
-      C: 30,
-      D: 20,
-      E: 50,
+      A: 100000,
+      B: 5000,
+      C: 300000,
+      D: 2000,
+      E: 5000,
     },
     "8월": {
-      A: 100,
-      B: 50,
-      C: 30,
-      D: 20,
-      E: 50,
+      A: 5000900,
+      B: 500000,
+      C: 300000,
+      D: 200000,
+      E: 5000000,
     },
     "9월": {
-      A: 100,
-      B: 50,
-      C: 30,
-      D: 20,
-      E: 50,
+      A: 1000000,
+      B: 500000,
+      C: 300000,
+      D: 200000,
+      E: 5000000,
     },
     "10월": {
-      A: 100,
-      B: 50,
-      C: 30,
-      D: 20,
-      E: 50,
+      A: 1000000,
+      B: 500000,
+      C: 300000,
+      D: 200000,
+      E: 5000000,
     },
     "11월": {
-      A: 100,
-      B: 50,
-      C: 30,
-      D: 20,
-      E: 50,
+      A: 100000,
+      B: 5000,
+      C: 300000,
+      D: 2000,
+      E: 5000,
     },
     "12월": {
-      A: 100,
-      B: 50,
-      C: 30,
-      D: 20,
-      E: 50,
+      A: 100000,
+      B: 5000,
+      C: 300000,
+      D: 2000,
+      E: 5000,
     },
   };
 
@@ -1144,6 +1169,11 @@ const ChartBarHorizon = ({
       },
       title: {
         display: false,
+      },
+    },
+    layout: {
+      padding: {
+        bottom: 50,
       },
     },
     scales: {
@@ -1229,13 +1259,8 @@ const ChartBarHorizon = ({
         },
       },
     ],
-    scales: {
-      display: false,
-      y: {
-        beginAtZero: false,
-      },
-    },
   };
+
   return (
     <Bar
       data={dataSet}
@@ -1257,7 +1282,8 @@ const LineChart = () => {
     Filler,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    ...registerables
   );
   const options = {
     responsive: true,
@@ -1270,19 +1296,25 @@ const LineChart = () => {
         display: true,
         text: "요일별",
         position: "bottom" as const,
+        color: "#26232380",
+        font: {
+          family: "Roboto",
+          size: 12,
+          fontWeight: 700,
+        },
       },
     },
-    scales: {
-      yAxes: [
-        {
-          ticks: {
-            min: 0,
-            stepSize: 1000000,
-            fontSize: 14,
-          },
-        },
-      ],
-    },
+    // scales: {
+    //   yAxes: [
+    //     {
+    //       ticks: {
+    //         min: 0,
+    //         stepSize: 1000000,
+    //         fontSize: 14,
+    //       },
+    //     },
+    //   ],
+    // },
   };
   const labels = ["Mon", "Tue", "Thu", "Wed", "Fri", "Sat", "Sun"];
   const data = {
@@ -1300,12 +1332,12 @@ const LineChart = () => {
   };
 
   return (
-    <Flex w="100%" h="50%" justify="center">
-      <Flex w="100%" h="100%">
+    <Flex w="100%" h="100%" justify="center">
+      <Flex p="0 0 1.2rem" w="100%" h="100%">
         <Line
           options={options}
           data={data}
-          style={{ width: "100%", height: "500px" }}
+          style={{ width: "100%", height: "100%" }}
         />
       </Flex>
     </Flex>

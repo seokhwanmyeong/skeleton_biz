@@ -44,6 +44,7 @@ const FormLogin = ({
                       bgColor: "bg.primary",
                       borderColor: "neutral.gray5",
                     }}
+                    placeholder={"아이디를 입력해주세요"}
                     onChange={(val: any) => setFieldValue("id", val)}
                   />
                 </Flex>
@@ -68,11 +69,15 @@ const FormLogin = ({
                       w: "100%",
                       h: "2.5rem",
                       borderColor: "neutral.gray5",
+                      _focus: {
+                        borderColor: "#000000",
+                      },
                     }}
                     groupProps={{
                       _focus: "#000000",
                     }}
                     focusBorderColor={"#cbd5e0"}
+                    placeholder={"비밀번호를 입력해주세요"}
                     onChange={(val: any) => setFieldValue("pwd", val)}
                   />
                 </Flex>

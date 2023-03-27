@@ -127,9 +127,13 @@ const IcoBtnEye = ({
       aria-label="수정"
       icon={
         isShow ? (
-          <IcoHidden viewBox="0 0 36 26" />
+          <IcoHidden viewBox="0 0 36 26" color="primary.type7" />
         ) : (
-          <IcoVisible viewBox="0 0 16 16" />
+          <IcoVisible
+            viewBox="0 0 16 16"
+            color="font.placeholder"
+            _hover={{ color: "primary.type7" }}
+          />
         )
       }
       w="1rem"
