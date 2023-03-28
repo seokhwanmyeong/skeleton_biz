@@ -724,7 +724,7 @@ const SementicMapLagacy = () => {
     if (!mapRef.current) {
       mapRef.current = new naver.maps.Map("map", {
         // center: new naver.maps.LatLng(37.3614483, 127.1114883),
-        center: new naver.maps.LatLng(36.1223291, 126.9101228),
+        center: new naver.maps.LatLng(35.9223291, 127.9101228),
         zoom: 8,
         tileTransition: true,
       });

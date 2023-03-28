@@ -4,6 +4,7 @@ const inputTheme = {
     field: {
       px: "0.5rem",
       h: "1.5rem",
+      bgColor: "#FFFFFF",
       border: "1px solid",
       borderRadius: "base",
       textStyle: "input",

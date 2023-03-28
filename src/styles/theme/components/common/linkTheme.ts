@@ -16,8 +16,9 @@ const linkTheme = {
     serviceLink: {
       fontSize: "sm",
       fontWeight: "regular",
-      linHeight: "1.375rem",
+      lineHeight: "1.375rem",
       color: "font.placeholder",
+      transition: "0.1s",
     },
     headMenuOff: {
       position: "relative",

@@ -16,7 +16,10 @@ const FormLogin = ({
     <Formik
       key="login"
       initialValues={initVal}
-      onSubmit={(values) => setValues(values)}
+      onSubmit={(values) => {
+        console.log(values);
+        setValues(values);
+      }}
     >
       {({ handleSubmit, errors, touched, getFieldProps, setFieldValue }) => {
         return (
@@ -35,7 +38,7 @@ const FormLogin = ({
                     color="#B1B431"
                   />
                   <Input
-                    value={getFieldProps("id").value}
+                    value={getFieldProps("username").value}
                     inputProps={{
                       zIndex: "1",
                       p: "0 3.8125rem 0 3.875rem",
@@ -45,7 +48,7 @@ const FormLogin = ({
                       borderColor: "neutral.gray5",
                     }}
                     placeholder={"아이디를 입력해주세요"}
-                    onChange={(val: any) => setFieldValue("id", val)}
+                    onChange={(val: any) => setFieldValue("username", val)}
                   />
                 </Flex>
               </FormControl>
@@ -62,7 +65,7 @@ const FormLogin = ({
                     color="#B1B431"
                   />
                   <InputPwd
-                    value={getFieldProps("pwd").value}
+                    value={getFieldProps("password").value}
                     inputProps={{
                       zIndex: "1",
                       p: "0 3.8125rem 0 3.875rem",
@@ -78,7 +81,7 @@ const FormLogin = ({
                     }}
                     focusBorderColor={"#cbd5e0"}
                     placeholder={"비밀번호를 입력해주세요"}
-                    onChange={(val: any) => setFieldValue("pwd", val)}
+                    onChange={(val: any) => setFieldValue("password", val)}
                   />
                 </Flex>
               </FormControl>

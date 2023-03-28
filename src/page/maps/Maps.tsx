@@ -17,12 +17,12 @@ const Maps = () => {
         w="inherit"
         overflow="hidden"
       >
-        <SementicMap />
-        {/* <BaseAreaProvider>
+        {/* <SementicMap /> */}
+        <BaseAreaProvider>
           <SementicSearchEngine />
-          <SementicMap />
+          <SementicMapLagacy />
           <SementicViewer />
-        </BaseAreaProvider> */}
+        </BaseAreaProvider>
       </Flex>
     </Flex>
   );
