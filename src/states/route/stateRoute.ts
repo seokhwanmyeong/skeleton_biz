@@ -120,7 +120,7 @@ export const subRoute = atom<{
     //  value = subRoute List
     erp: [
       {
-        title: "홈",
+        title: "대쉬보드",
         hasChild: false,
         path: "index",
         page: ErpDashBoard,

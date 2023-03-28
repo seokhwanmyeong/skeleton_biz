@@ -78,9 +78,9 @@ const btnTheme = {
       borderRadius: "pagenation",
       border: "1px solid",
       borderColor: "transparent",
-      fontSize: "0.8125rem",
+      fontSize: "xs",
       fontWeight: "medium",
-      lineHeight: "1.375rem",
+      lineHeight: "18.48px",
       color: "font.primary",
       transition: "0.3s",
       _hover: {
@@ -101,7 +101,10 @@ const btnTheme = {
       lineHeight: "1.5rem",
     },
     linkBtn: {
-      p: "0.5rem 1rem",
+      p: "0",
+      bg: "transparent",
+      fontSize: "sm",
+      color: "primary.type7",
     },
     upload: {
       display: "flex",

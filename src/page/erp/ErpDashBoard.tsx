@@ -111,7 +111,7 @@ const ErpDashBoard = () => {
         </Section>
       </Flex>
       <Flex gap="0.75rem" w="100%" h="30%" flexBasis="30%" flexGrow={1}>
-        <Section p="0.75rem" w="52%" h="100%">
+        <Section p="0.75rem" w="55%" h="100%">
           <Flex mb="1rem" w="100%" align="flex-end" gap="4px">
             <Heading variant={"sectionTitle"}>매장</Heading>
             <Text variant="sectionSub">Store</Text>
@@ -167,7 +167,93 @@ const ErpDashBoard = () => {
             </Flex>
           </Flex>
         </Section>
-        <Section p="0.75rem" h="100%" w="24%">
+        <Section p="0.75rem" w="45%" h="100%">
+          <Flex mb="1rem" align="flex-end" gap="4px">
+            <Heading variant={"sectionTitle"}>상권</Heading>
+            <Text variant="sectionSub">Area</Text>
+          </Flex>
+          <Flex padding="5%" w="100%" h="inherit">
+            <Flex direction="column" pt="1rem" pb="1rem" w="50%" h="100%">
+              <ChartPie
+                title="상권타입"
+                data={[35, 25, 15, 10, 4]}
+                labels={["A", "B", "C", "D", "E"]}
+                labelText="상권타입"
+              />
+            </Flex>
+            <Divider
+              m="0 1.25rem"
+              h="90%"
+              orientation="vertical"
+              borderColor="#26232380"
+            />
+            <Flex direction="column" pt="1rem" pb="1rem" w="50%" h="100%">
+              <ChartPie
+                title="상권타입"
+                data={[35, 25, 15, 10, 4]}
+                labels={["A", "B", "C", "D", "E"]}
+                labelText="상권타입"
+              />
+            </Flex>
+          </Flex>
+        </Section>
+      </Flex>
+      <Flex gap="0.75rem" w="100%" h="30%" flexBasis="30%" flexGrow={1}>
+        <Section p="0.75rem" w="55%" h="100%">
+          <Flex mb="1rem" align="flex-end" gap="4px">
+            <Heading variant={"sectionTitle"}>매출</Heading>
+            <Text variant="sectionSub">Sale</Text>
+          </Flex>
+          <Flex w="100%" h="100%" direction={"row"}>
+            <Flex p="1rem" w="50%">
+              <ChartBarHorizon />
+            </Flex>
+            <Divider
+              m="0 1rem"
+              h="90%"
+              orientation="vertical"
+              borderColor="#26232380"
+            />
+            <Flex w="50%">
+              <Swiper
+                modules={[Navigation]}
+                spaceBetween={50}
+                slidesPerView={1}
+                navigation
+                onSlideChange={() => console.log("slide change")}
+                onSwiper={(swiper) => console.log(swiper)}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                }}
+              >
+                <SwiperSlide style={{ padding: "5%", width: "100%" }}>
+                  <ChartPie
+                    title="인기메뉴별"
+                    data={[35, 25, 15, 10, 4]}
+                    labels={["A", "B", "C", "D", "E"]}
+                    labelText="인기메뉴"
+                  />
+                </SwiperSlide>
+                <SwiperSlide style={{ padding: "5%", width: "100%" }}>
+                  <ChartPie
+                    title="주문방식별"
+                    data={[55, 15, 3]}
+                    labels={["배달", "포장", "테이블"]}
+                    labelText="주문방식"
+                  />
+                </SwiperSlide>
+                <SwiperSlide>
+                  <LineChart />
+                </SwiperSlide>
+                <SwiperSlide>
+                  <LineChart />
+                </SwiperSlide>
+              </Swiper>
+            </Flex>
+          </Flex>
+        </Section>
+        <Section p="0.75rem" w="calc(22.5% - 0.375rem)" h="100%">
           <Flex mb="1rem" align="flex-end" gap="4px">
             <Heading variant={"sectionTitle"}>매물</Heading>
             <Text variant="sectionSub">Rent</Text>
@@ -649,23 +735,7 @@ const ErpDashBoard = () => {
             </Accordion>
           </Flex>
         </Section>
-        <Section p="0.75rem" h="100%" w="24%">
-          <Flex mb="1rem" align="flex-end" gap="4px">
-            <Heading variant={"sectionTitle"}>상권</Heading>
-            <Text variant="sectionSub">Area</Text>
-          </Flex>
-          <Flex padding="5%" w="100%" h="inherit">
-            <ChartPie
-              title="상권타입"
-              data={[35, 25, 15, 10, 4]}
-              labels={["A", "B", "C", "D", "E"]}
-              labelText="상권타입"
-            />
-          </Flex>
-        </Section>
-      </Flex>
-      <Flex gap="0.75rem" w="100%" h="30%" flexBasis="30%" flexGrow={1}>
-        <Section p="0.75rem" w="24%" h="100%">
+        <Section p="0.75rem" w="calc(22.5% - 0.375rem)" h="100%">
           <Flex mb="1rem" align="flex-end" gap="4px">
             <Heading variant={"sectionTitle"}>고객</Heading>
             <Text variant="sectionSub">Client</Text>
@@ -700,81 +770,6 @@ const ErpDashBoard = () => {
                 />
               </SwiperSlide>
             </Swiper>
-          </Flex>
-        </Section>
-        <Section p="0.75rem" w="76%" h="100%" flexGrow={1}>
-          <Flex mb="1rem" align="flex-end" gap="4px">
-            <Heading variant={"sectionTitle"}>매출</Heading>
-            <Text variant="sectionSub">Sale</Text>
-          </Flex>
-          <Flex w="100%" h="100%" direction={"row"}>
-            <Flex p="1rem" w="30%">
-              <ChartBarHorizon />
-            </Flex>
-            <Divider
-              m="0 1rem"
-              h="90%"
-              orientation="vertical"
-              borderColor="#26232380"
-            />
-            <Flex w="30%">
-              <Swiper
-                modules={[Navigation]}
-                spaceBetween={50}
-                slidesPerView={1}
-                navigation
-                onSlideChange={() => console.log("slide change")}
-                onSwiper={(swiper) => console.log(swiper)}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                }}
-              >
-                <SwiperSlide style={{ padding: "5%", width: "100%" }}>
-                  <ChartPie
-                    title="인기메뉴별"
-                    data={[35, 25, 15, 10, 4]}
-                    labels={["A", "B", "C", "D", "E"]}
-                    labelText="인기메뉴"
-                  />
-                </SwiperSlide>
-                <SwiperSlide style={{ padding: "5%", width: "100%" }}>
-                  <ChartPie
-                    title="주문방식별"
-                    data={[55, 15, 3]}
-                    labels={["배달", "포장", "테이블"]}
-                    labelText="주문방식"
-                  />
-                </SwiperSlide>
-              </Swiper>
-            </Flex>
-            <Divider
-              m="0 1rem"
-              h="90%"
-              orientation="vertical"
-              borderColor="#26232380"
-            />
-            <Flex w="30%">
-              <Swiper
-                modules={[Navigation]}
-                spaceBetween={0}
-                slidesPerView={1}
-                navigation
-                onSlideChange={() => console.log("slide change")}
-                onSwiper={(swiper) => console.log(swiper)}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                }}
-              >
-                <SwiperSlide style={{ padding: "5%", width: "100%" }}>
-                  <LineChart />
-                </SwiperSlide>
-                <SwiperSlide style={{ padding: "5%", width: "100%" }}>
-                  <LineChart />
-                </SwiperSlide>
-              </Swiper>
-            </Flex>
           </Flex>
         </Section>
       </Flex>
