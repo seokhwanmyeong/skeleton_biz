@@ -163,7 +163,7 @@ const createTheme = (name: string) => {
     },
     radii: {
       base: "2px",
-      pagenation: "2px",
+      pagenation: "4px",
       Box: "12px",
     },
     breakpoints: {

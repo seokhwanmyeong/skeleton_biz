@@ -74,7 +74,18 @@ const ErpStore = () => {
           setValues={searchHandler}
         />
       </Section>
-      <Section p="0.625rem 0rem 1rem" h="100%">
+      <Table
+        data={tableData.slice(
+          Math.floor(curPage / 10),
+          Math.floor(curPage / 10) + 10
+        )}
+        actviePage={true}
+        divide={5}
+        columns={column}
+        totalPage={totalPage}
+        page={curPage}
+        getPage={setCurPage}
+      >
         <Flex
           p="0rem 1.65625rem 0.5rem"
           w="100%"
@@ -93,19 +104,7 @@ const ErpStore = () => {
             isDisabled={selectData.length > 0 ? false : true}
           />
         </Flex>
-        <Table
-          data={tableData.slice(
-            Math.floor(curPage / 10),
-            Math.floor(curPage / 10) + 10
-          )}
-          actviePage={true}
-          divide={5}
-          columns={column}
-          totalPage={totalPage}
-          page={curPage}
-          getPage={setCurPage}
-        />
-      </Section>
+      </Table>
     </Flex>
   );
 };
