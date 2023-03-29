@@ -9,28 +9,38 @@ interface InteractAreaProps {
     | naver.maps.ArrayOfCoords[]
     | naver.maps.KVOArrayOfCoords[]
     | naver.maps.ArrayOfCoordsLiteral[];
+  style?: any;
+  hoverStyle?: any;
 }
 
-const InteractArea = ({ onClick, name, num, path }: InteractAreaProps) => {
+const InteractArea = ({
+  onClick,
+  name,
+  num,
+  path,
+  style,
+  hoverStyle,
+}: InteractAreaProps) => {
   const { state, dispatch } = useContext(NaverMapContext);
-  const [areaId] = useState("local" + num);
-
+  const [areaId] = useState("area" + num);
   const onMouseOverArea = (e: PointerEvent) => {
     //console.log(name);
     const poly = state.objects.get(areaId) as naver.maps.Polygon;
     poly.setOptions({
-      fillColor: "#13BD68",
-      strokeColor: "#E51D1A",
+      fillColor: "#0088ff",
+      strokeColor: "#007afe",
       zIndex: 1,
+      ...hoverStyle,
     });
   };
   const onMouseOutArea = (e: PointerEvent) => {
     // state.objects.get(areaId)?.set("fillColor", "#0305F2");
     const poly = state.objects.get(areaId) as naver.maps.Polygon;
     poly.setOptions({
-      fillColor: "#0305F2",
-      strokeColor: "#000000",
+      fillColor: "#4446ff",
+      strokeColor: "#6badf5",
       zIndex: 0,
+      ...style,
     });
   };
   useEffect(() => {
@@ -46,16 +56,15 @@ const InteractArea = ({ onClick, name, num, path }: InteractAreaProps) => {
         onMouseOut={(e: any) => onMouseOutArea(e)}
         opts={{
           paths: path,
-          fillColor: "#0305F2",
-          fillOpacity: 0.3,
-          strokeColor: "#000000",
+          fillColor: "#4446ff",
+          fillOpacity: 0.2,
+          strokeColor: "#6badf5",
           strokeOpacity: 0.8,
-          strokeWeight: 3,
+          strokeWeight: 2,
           clickable: true,
+          ...style,
         }}
       />
-
-      <div style={{ fontSize: 40 }}>{name}</div>
     </>
   );
 };

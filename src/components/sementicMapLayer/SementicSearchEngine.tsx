@@ -1,19 +1,12 @@
 //  Lib
 import { useState, useRef, useEffect, useContext } from "react";
 import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
-import {
-  Flex,
-  Button,
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon,
-} from "@chakra-ui/react";
+import { Flex, Button, Text } from "@chakra-ui/react";
 //  Components
-import SelectArea from "@components/sementicMapLayer/filter/SelectArea";
-import FilterInfoCom from "@components/sementicMapLayer/sementicSearchFilter/FilterInfoCom";
-import FilterBaseState from "@components/sementicMapLayer/sementicSearchFilter/FilterBaseState";
+import FlowEnter from "@components/sementicMapLayer/sementicFilter/FlowEnter";
+import FlowSigungu from "@components/sementicMapLayer/sementicFilter/FlowSigungu";
+import FlowDong from "@components/sementicMapLayer/sementicFilter/FlowDong";
+import FlowCustom from "@components/sementicMapLayer/sementicFilter/FlowCustom";
 //  States
 import {
   checkBaseState,
@@ -23,84 +16,23 @@ import {
   atomMapController,
 } from "@states/searchState/stateSearch";
 import { BaseAreaContext } from "./filter/BaseAreaProvider";
+import { atomAreaState, atomSidoLi } from "@src/states/sementicMap/mapState";
+import { atomFilterFlow } from "@states/sementicMap/filterState";
 
 const SementicSearchEngine = () => {
-  const { active } = useContext(BaseAreaContext);
-  const { slctAreaName, slctAreaCode } = useRecoilValue(atomArea);
-  //  Option Handler
-  const isCheckbaseOption = useRecoilValue(checkBaseState);
-  const [currentEvent, setMapControll] = useRecoilState(areaSelectActivator);
-  const [openItem, setOpenItem] = useState<number>(0);
-  const resetState = useSetRecoilState(resetSementicAtom);
-
-  const resetHandler = () => {
-    setOpenItem(0);
-    resetState();
-  };
+  const flow = useRecoilValue(atomFilterFlow);
 
   return (
-    <Flex>
-      {active && <SelectArea />}
-      {!active && (
-        <Flex
-          position="absolute"
-          top="0"
-          left="0"
-          zIndex="100"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          w={"auto"}
-          backgroundColor="transparent"
-          transition="0.5s"
-        >
-          <Accordion
-            index={openItem}
-            variant={"searchEngine"}
-            onChange={(idx: number) => setOpenItem(idx)}
-            allowToggle
-          >
-            <AccordionItem key={`Item-Map-Select`}>
-              <AccordionButton>
-                지역 : {slctAreaName}
-                <AccordionIcon />
-              </AccordionButton>
-              <AccordionPanel>
-                <FilterBaseState />
-              </AccordionPanel>
-            </AccordionItem>
-            <AccordionItem
-              key={`Item-Option-Select`}
-              isDisabled={active || !(slctAreaName && slctAreaCode)}
-            >
-              <AccordionButton>
-                검색필터
-                <AccordionIcon />
-              </AccordionButton>
-              <AccordionPanel>
-                <FilterInfoCom
-                  isDisabled={active || !(slctAreaName && slctAreaCode)}
-                />
-              </AccordionPanel>
-            </AccordionItem>
-          </Accordion>
-          <Button
-            position="absolute"
-            bottom="-4rem"
-            left="1rem"
-            w="auto"
-            bgColor="primary.main.bg"
-            color="primary.main.font"
-            transition="0.3s"
-            _hover={{
-              bgColor: "primary.main.hover",
-            }}
-            onClick={resetHandler}
-          >
-            초기화
-          </Button>
-        </Flex>
-      )}
+    <Flex pos="absolute" w="100%" h="100%">
+      {flow === 0 ? (
+        <FlowEnter />
+      ) : flow === 1 ? (
+        <FlowSigungu />
+      ) : flow === 2 ? (
+        <FlowDong />
+      ) : flow === 3 ? (
+        <FlowCustom />
+      ) : null}
     </Flex>
   );
 };
