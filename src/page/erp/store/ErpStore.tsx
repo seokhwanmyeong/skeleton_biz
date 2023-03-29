@@ -1,18 +1,24 @@
 //  LIB
 import { useMemo, useState, useEffect } from "react";
-import { Divider, Flex, Heading } from "@chakra-ui/react";
+import { Divider, Flex, Heading, Text } from "@chakra-ui/react";
 //  Components
 import Section from "@components/common/Section";
 import SearchStore from "@components/search/SearchStore";
 import Table from "@components/table/Table";
 import ModalStoreEditor from "@components/modal/erp/ModalStoreEditor";
-import { IcoBtnDownload, IcoBtnDelete } from "@components/common/Btn";
+import {
+  IcoBtnDownload,
+  IcoBtnDelete,
+  IcoBtnEditor,
+} from "@components/common/Btn";
 //  Form & Column
 import { columnStoreInfo } from "@components/table/column/erp";
 //  Util & Data
 import { exportFileCSV } from "@util/file/manageFile";
+import { useNavigate } from "react-router-dom";
 
 const ErpStore = () => {
+  const navigate = useNavigate();
   const [tableData, setTableData] = useState<any[]>([]);
   const [selectData, setSelectData] = useState<any>([]);
   const [totalPage, setTotalPage] = useState<number>(0);
@@ -49,6 +55,7 @@ const ErpStore = () => {
 
     for (let i = 0; i < 200; i++) {
       sample.push({
+        id: "test",
         storeName: "종로종로",
         storeCode: "12314515",
         storeStatus: "입점",
@@ -64,11 +71,14 @@ const ErpStore = () => {
 
   return (
     <Flex w="100%" flexDirection="column" gap="0.5rem">
-      <Section p="1.25rem 0.75rem 1rem" flex="none">
-        <Heading as={"h3"} variant="outlet">
-          매장
-        </Heading>
-        <Divider m="1rem 0 1.25rem" color="font.title" />
+      <Section p="1rem 0.75rem 1.125rem" flex="none">
+        <Flex pl="0.8125rem" align="flex-end" gap="0.25rem">
+          <Heading as={"h3"} variant="outlet">
+            매장
+          </Heading>
+          <Text variant="outlet">Store</Text>
+        </Flex>
+        <Divider m="0.5rem 0 1rem" color="font.title" />
         <SearchStore
           initVal={{ ...initVal, page: curPage }}
           setValues={searchHandler}
@@ -85,6 +95,7 @@ const ErpStore = () => {
         totalPage={totalPage}
         page={curPage}
         getPage={setCurPage}
+        getSelectData={setSelectData}
       >
         <Flex
           p="0rem 1.65625rem 0.5rem"
@@ -92,7 +103,7 @@ const ErpStore = () => {
           justify="flex-end"
           gap="1.5rem"
         >
-          <ModalStoreEditor update={false} />
+          <IcoBtnEditor onClick={() => navigate("/erp/store/create")} />
           <IcoBtnDownload
             onClick={() =>
               exportFileCSV(selectData, columnStoreInfo, "매장리스트")

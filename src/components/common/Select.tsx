@@ -161,7 +161,7 @@ const SelectAddr = ({
   };
 
   return (
-    <Flex gap={"2rem"} w="100%">
+    <Flex gap={"0.5rem"} w="100%">
       <Select
         selectProps={selectProps}
         variant={variant}

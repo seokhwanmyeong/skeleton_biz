@@ -43,6 +43,7 @@ const Pagination = forwardRef(
     return (
       <Flex
         ref={ref}
+        m="2rem 0"
         w="100%"
         justifyContent="center"
         flexDirection="row"

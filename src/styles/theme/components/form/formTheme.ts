@@ -19,6 +19,7 @@ const formTheme = {
           fontSize: "xs",
           fontWeight: "strong",
           color: "font.secondary",
+          lineHeight: 1,
         },
       },
     },

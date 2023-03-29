@@ -29,7 +29,7 @@ const radioTheme = {
       control: {
         w: "1rem",
         h: "1rem",
-        borderRadius: "base",
+        borderRadius: "chk",
         borderColor: "border.radio",
         bgColor: "#FFFFFF",
         _checked: {
@@ -41,7 +41,22 @@ const radioTheme = {
             position: "relative",
             w: "0.5rem",
             h: "0.5rem",
-            borderRadius: "base",
+            borderRadius: "chk",
+            bgColor: "primary.type7",
+          },
+          _hover: {
+            bgColor: "#FFFFFF",
+            borderColor: "border.radio",
+          },
+        },
+        _hover: {
+          _before: {
+            content: '""',
+            display: "inline-block",
+            position: "relative",
+            w: "0.5rem",
+            h: "0.5rem",
+            borderRadius: "chk",
             bgColor: "primary.type7",
           },
         },

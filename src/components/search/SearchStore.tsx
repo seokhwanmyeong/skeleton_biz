@@ -15,7 +15,7 @@ const SearchStore = ({
   setValues: any;
 }) => {
   return (
-    <Flex p="0rem 2rem">
+    <Flex p="0rem 0.8125rem">
       <Formik
         initialValues={initVal}
         onSubmit={(values) => {
@@ -27,8 +27,14 @@ const SearchStore = ({
         {({ handleSubmit, errors, touched, getFieldProps, setFieldValue }) => {
           return (
             <Form onSubmit={handleSubmit} style={{ width: "100%" }}>
-              <Flex w="100%" flexDirection="column" gap="1rem">
-                <FormControl variant="search" maxW="80%">
+              <Flex
+                w="100%"
+                justify="space-between"
+                direction="row"
+                wrap="wrap"
+                gap="1rem"
+              >
+                <FormControl variant="search" maxW="49%">
                   <FormLabel
                     display="flex"
                     alignItems="center"
@@ -37,7 +43,7 @@ const SearchStore = ({
                   >
                     검색어
                   </FormLabel>
-                  <Flex w="100%" gap="2rem">
+                  <Flex w="100%" gap="0.5rem">
                     <Select
                       data={[
                         { text: "매장명", value: "storeName" },
@@ -49,15 +55,16 @@ const SearchStore = ({
                       opBaseId="value"
                       opBaseKey="value"
                       onChange={(val: any) => setFieldValue("type", val)}
-                      selectProps={{ w: "31.5%" }}
+                      selectProps={{ w: "20%" }}
                     />
                     <Input
-                      inputProps={{ w: "68.5%" }}
+                      inputProps={{ w: "50%" }}
+                      placeholder={"매장코드를 입력해주세요"}
                       onChange={(val: any) => setFieldValue("text", val)}
                     />
                   </Flex>
                 </FormControl>
-                <FormControl variant="search" maxW="80%">
+                <FormControl variant="search" maxW="49%">
                   <FormLabel
                     display="flex"
                     alignItems="center"
@@ -71,7 +78,7 @@ const SearchStore = ({
                     onChange={(val: any) => setFieldValue("areaCode", val)}
                   />
                 </FormControl>
-                <FormControl variant="search" maxW="80%">
+                <FormControl variant="search" maxW="49%">
                   <FormLabel
                     display="flex"
                     alignItems="center"
@@ -93,7 +100,7 @@ const SearchStore = ({
                     onChange={(val: any) => setFieldValue("storeType", val)}
                   />
                 </FormControl>
-                <FormControl variant="search" maxW="80%">
+                <FormControl variant="search" maxW="49%">
                   <FormLabel
                     display="flex"
                     alignItems="center"
@@ -115,7 +122,7 @@ const SearchStore = ({
                     onChange={(val: any) => setFieldValue("storeRank", val)}
                   />
                 </FormControl>
-                <FormControl variant="search" maxW="80%">
+                <FormControl variant="search" maxW="49%">
                   <FormLabel
                     display="flex"
                     alignItems="center"
@@ -132,18 +139,18 @@ const SearchStore = ({
                     errorBorderColor="red.300"
                   />
                 </FormControl>
-              </Flex>
-              <Flex mt="1rem" justifyContent="center">
-                <Button
-                  type="submit"
-                  variant="search"
-                  onClick={() => {
-                    handleSubmit();
-                  }}
-                >
-                  <IcoSearch />
-                  <Text variant="search">검색</Text>
-                </Button>
+                <Flex justifyContent="center">
+                  <Button
+                    type="submit"
+                    variant="search"
+                    onClick={() => {
+                      handleSubmit();
+                    }}
+                  >
+                    <IcoSearch w="0.875rem" h="0.875rem" />
+                    <Text variant="search">검색</Text>
+                  </Button>
+                </Flex>
               </Flex>
             </Form>
           );

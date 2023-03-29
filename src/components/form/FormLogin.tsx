@@ -87,8 +87,22 @@ const FormLogin = ({
               </FormControl>
             </Flex>
             <Flex mt="1rem" justifyContent="center">
-              <Button variant="search" type="submit" p="0" w="100%" h="2.5rem">
-                <Text variant="search">로그인</Text>
+              <Button
+                type="submit"
+                p="0"
+                w="100%"
+                h="2.5rem"
+                gap="0.5rem"
+                fontSize="sm"
+                lineHeight="1.5rem"
+                bg="primary.type7"
+                _hover={{
+                  bgColor: "primary.type8",
+                }}
+              >
+                <Text position="relative" top="1px">
+                  로그인
+                </Text>
               </Button>
             </Flex>
           </Form>

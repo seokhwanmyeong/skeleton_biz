@@ -16,6 +16,7 @@ type Props = {};
 type IcoBtnProps = {
   onClick: any;
   isDisabled?: boolean;
+  style?: any;
 };
 
 interface IcoBtnEditProps extends IcoBtnProps {
@@ -75,7 +76,7 @@ const IcoBtnDownload = ({ onClick, isDisabled, ...rest }: IcoBtnProps) => {
   );
 };
 
-const IcoBtnDelete = ({ onClick, isDisabled, ...rest }: IcoBtnProps) => {
+const IcoBtnDelete = ({ onClick, isDisabled, style, ...rest }: IcoBtnProps) => {
   return (
     <IconButton
       onClick={onClick}
@@ -94,7 +95,7 @@ const IcoBtnDelete = ({ onClick, isDisabled, ...rest }: IcoBtnProps) => {
   );
 };
 
-const IcoBtnUpdate = ({ onClick, isDisabled, ...rest }: IcoBtnProps) => {
+const IcoBtnUpdate = ({ onClick, isDisabled, style, ...rest }: IcoBtnProps) => {
   return (
     <IconButton
       onClick={onClick}
@@ -104,11 +105,12 @@ const IcoBtnUpdate = ({ onClick, isDisabled, ...rest }: IcoBtnProps) => {
       w="1rem"
       h="1rem"
       bg="transparent"
-      color="primary.type7"
+      color="font.title"
       _hover={{
         bg: "transparent",
-        color: "primary.type8",
+        color: "primary.type7",
       }}
+      {...style}
       {...rest}
     />
   );
@@ -171,7 +173,7 @@ const IcoBtnBack = (props: any) => {
         bg: "transparent",
         color: "primary.type7",
       }}
-      {...props}
+      {...props.style}
     />
   );
 };

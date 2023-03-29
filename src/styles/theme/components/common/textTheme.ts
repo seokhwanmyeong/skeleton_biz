@@ -1,9 +1,17 @@
 const textTheme = {
   sizes: {},
   variants: {
+    outlet: {
+      fontFamily: "main",
+      fontStyle: "normal",
+      fontWeight: "regular",
+      fontSize: "xs",
+      lineHeight: "0.875rem",
+      color: "#26232380",
+    },
     search: {
-      position: "relative",
-      top: "1px",
+      fontWeight: "regular",
+      fontSize: "xs",
     },
     cardContent: {
       fontFamily: "main",

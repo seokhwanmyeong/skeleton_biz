@@ -137,7 +137,7 @@ const CheckboxGroup = ({
       isDisabled={isDisabled}
       onChange={chkHandler}
     >
-      <Flex w="100%" gap="1rem">
+      <Flex w="100%" gap="0.5rem">
         {activeTotal && (
           <ChakraCheckbox
             variant={variant}

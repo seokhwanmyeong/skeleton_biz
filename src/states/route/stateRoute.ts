@@ -8,6 +8,7 @@ import Maps from "@page/maps/Maps";
 import ErpDashBoard from "@page/erp/ErpDashBoard";
 import ErpStore from "@page/erp/store/ErpStore";
 import ErpStoreDetail from "@page/erp/store/ErpStoreDetail";
+import ErpStoreCreate from "@page/erp/store/ErpStoreCreate";
 import ErpSale from "@page/erp/sale/ErpSale";
 import ErpBsnsDis from "@page/erp/bsnsDis/ErpBsnsDis";
 import ErpRent from "@page/erp/rent/ErpRent";
@@ -147,6 +148,13 @@ export const subRoute = atom<{
         isMenu: false,
       },
       {
+        title: "매장등록",
+        hasChild: false,
+        path: "store/create",
+        page: ErpStoreCreate,
+        isMenu: false,
+      },
+      {
         title: "매출",
         hasChild: false,
         path: "sale",
@@ -177,12 +185,13 @@ export const subRoute = atom<{
         },
       },
       {
-        title: "매장상세보기",
+        title: "매물상세보기",
         hasChild: false,
         path: "rent/detail",
         page: ErpRentDetail,
         isMenu: false,
       },
+
       {
         title: "고객",
         hasChild: false,

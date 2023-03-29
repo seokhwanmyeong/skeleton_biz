@@ -10,16 +10,16 @@ const themeTable = {
       tr: {
         zIndex: "1",
         th: {
-          position: "sticky",
+          // position: "sticky",
           zIndex: "1",
-          top: 0,
+          top: "0.5rem",
           p: "1.1875rem 0 0.6875rem",
           bgColor: "inherit",
           borderBottom: "0",
           fontFamily: "main",
           fontSize: "xs",
           fontWeight: "strong",
-          color: "font.primary",
+          color: "font.secondary",
           textAlign: "center",
           verticalAlign: "middle",
           wordBreak: "keep-all",
@@ -45,7 +45,7 @@ const themeTable = {
       zIndex: "1",
       tr: {
         td: {
-          p: "1.03125rem 1rem",
+          p: "0.8125rem 0.75rem",
           bgColor: "inherit",
           borderTop: "1px solid",
           borderBottom: "1px solid",

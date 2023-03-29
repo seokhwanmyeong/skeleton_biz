@@ -12,7 +12,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 //  Components
-import Modal from "@components/modal/Modal";
+import Modal from "@components/modal/modal";
 import Form from "@components/form/Form";
 import XlsxController from "@components/modal/XlsxController";
 import { IcoBtnEditor } from "@components/common/Btn";

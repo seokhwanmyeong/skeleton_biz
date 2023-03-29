@@ -87,7 +87,7 @@ const Table = ({
     debugHeaders: false,
     debugTable: false,
   });
-  const pagingRef = useRef(null);
+  const pagingRef = useRef<any>(undefined);
   const selectedData = getSelectedRowModel().rows;
   const pagingH = pagingRef?.current?.clientHeight || 0;
 
@@ -232,7 +232,6 @@ const Table = ({
       {actviePage && data.length !== 0 && (
         <Pagination
           ref={pagingRef}
-          {...pagenation}
           totalPage={totalPage}
           divideNum={divide}
           onPageChange={(e) => {
@@ -240,6 +239,7 @@ const Table = ({
             getPage && getPage(e);
           }}
           variant={pageVariant}
+          {...pagenation}
         />
       )}
     </>

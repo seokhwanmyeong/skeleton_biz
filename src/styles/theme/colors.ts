@@ -96,7 +96,7 @@ export const selectColorScheme = (type: string) => {
         primary: "#000000CC",
         secondary: "#00000080",
         disabled: "#00000040",
-        placeholder: "#00000073",
+        placeholder: "#00000040",
         section: {
           sub: "#26232380",
         },
