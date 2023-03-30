@@ -38,37 +38,39 @@ const FlowSigungu = (props: Props) => {
   };
 
   const getDongList = () => {
-    cubejsApi
-      .load({
-        dimensions: [
-          "AreaDong.code",
-          "AreaDong.name",
-          "AreaDong.polygon",
-          "AreaDong.lat",
-          "AreaDong.lng",
-        ],
-        filters: [
-          {
-            member: "AreaDong.name",
-            operator: "contains",
-            values: [sigungu.slctName],
-          },
-        ],
-      })
-      .then((res) => {
-        const data = res.rawData().map((si: any) => {
-          return {
-            code: si["AreaDong.code"],
-            name: si["AreaDong.name"],
-            path: si["AreaDong.polygon"],
-          };
-        });
-        if (data) {
-          const transData = pathTransHandler(data);
+    if (sigungu?.slctName) {
+      cubejsApi
+        .load({
+          dimensions: [
+            "AreaDong.code",
+            "AreaDong.name",
+            "AreaDong.polygon",
+            "AreaDong.lat",
+            "AreaDong.lng",
+          ],
+          filters: [
+            {
+              member: "AreaDong.name",
+              operator: "contains",
+              values: [sigungu.slctName],
+            },
+          ],
+        })
+        .then((res) => {
+          const data = res.rawData().map((si: any) => {
+            return {
+              code: si["AreaDong.code"],
+              name: si["AreaDong.name"],
+              path: si["AreaDong.polygon"],
+            };
+          });
+          if (data) {
+            const transData = pathTransHandler(data);
 
-          setDongLi(transData);
-        }
-      });
+            setDongLi(transData);
+          }
+        });
+    }
   };
 
   useEffect(() => {
@@ -102,7 +104,7 @@ const FlowSigungu = (props: Props) => {
             setFlow(0);
           }}
         />
-        <Flex color="#000000">{sigungu.slctName}</Flex>
+        <Flex color="#000000">{sigungu?.slctName}</Flex>
         <BtnFlowCustom />
       </Flex>
       {/* ------------------------------ 하단 ------------------------------*/}

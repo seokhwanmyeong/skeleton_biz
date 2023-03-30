@@ -1,22 +1,12 @@
 //  Lib
-import { useState, useRef, useEffect, useContext } from "react";
-import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
-import { Flex, Button, Text } from "@chakra-ui/react";
+import { useRecoilValue } from "recoil";
+import { Flex } from "@chakra-ui/react";
 //  Components
 import FlowEnter from "@components/sementicMapLayer/sementicFilter/FlowEnter";
 import FlowSigungu from "@components/sementicMapLayer/sementicFilter/FlowSigungu";
 import FlowDong from "@components/sementicMapLayer/sementicFilter/FlowDong";
 import FlowCustom from "@components/sementicMapLayer/sementicFilter/FlowCustom";
 //  States
-import {
-  checkBaseState,
-  resetSementicAtom,
-  areaSelectActivator,
-  atomArea,
-  atomMapController,
-} from "@states/searchState/stateSearch";
-import { BaseAreaContext } from "./filter/BaseAreaProvider";
-import { atomAreaState, atomSidoLi } from "@src/states/sementicMap/mapState";
 import { atomFilterFlow } from "@states/sementicMap/filterState";
 
 const SementicSearchEngine = () => {

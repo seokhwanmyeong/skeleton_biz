@@ -39,6 +39,7 @@ const Login = () => {
       })
       .catch((err) => {
         console.log(err);
+        navigator("/maps");
         setLoadingChk(false);
       });
   };
@@ -98,8 +99,8 @@ const Login = () => {
         />
       ) : (
         <Flex direction="column">
-          <IcoLogoMain mb="5rem" w="16.125rem" h="8rem" color="font.title" />
-          <Heading variant="loginHead" mb="8.5rem">
+          <IcoLogoMain mb="7vh" w="16.125rem" h="8rem" color="font.title" />
+          <Heading variant="loginHead" mb="7vh">
             ONTHE MAP
           </Heading>
           <FormLogin
@@ -109,7 +110,7 @@ const Login = () => {
             }}
             setValues={requsetLoginBtn}
           />
-          <Flex mb="10rem" w="100%" justify="space-between">
+          <Flex mb="15vh" w="100%" justify="space-between">
             <Link
               variant="serviceLink"
               isExternal={true}

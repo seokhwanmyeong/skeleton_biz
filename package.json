@@ -1,13 +1,12 @@
 {
   "name": "bizfe",
-  "homepage": "./",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "preview": "rm -rf build && tsc && vite build && vite preview",
-    "preview:test": "rm -rf build && vite build && vite preview",
+    "preview:test": "vite build && vite preview",
     "build": "rm -rf build && tsc && vite build",
     "build:test": "rm -rf build && vite build",
     "storybook": "start-storybook -p 6006",

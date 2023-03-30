@@ -1,7 +1,7 @@
 //  Lib
-import React from "react";
-import { Button } from "@chakra-ui/react";
-//  State
+import { Button, Text } from "@chakra-ui/react";
+//  Icon
+import { IcoAreaBack } from "@assets/icons/icon";
 
 type Props = {
   onClick: (props?: any) => any;
@@ -10,8 +10,9 @@ type Props = {
 
 const BtnBack = ({ onClick, disabled = false }: Props) => {
   return (
-    <Button color="#000000" disabled={disabled} onClick={onClick}>
-      위치 지정
+    <Button variant="backBtn" disabled={disabled} onClick={onClick}>
+      <IcoAreaBack />
+      <Text>Back</Text>
     </Button>
   );
 };

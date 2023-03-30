@@ -22,18 +22,20 @@ const MapFlowSigungu = (props: Props) => {
   const setDong = useSetRecoilState(atomSlctDong);
 
   useEffect(() => {
-    state.map?.setOptions({
-      minZoom: 0,
-      maxZoom: 16,
-    });
-    state.map?.fitBounds(sigungu.slctPath);
+    if (sigungu?.slctPath) {
+      state.map?.setOptions({
+        minZoom: 0,
+        maxZoom: 16,
+      });
+      state.map?.fitBounds(sigungu.slctPath);
 
-    let curZoom = state.map?.getZoom();
+      // let curZoom = state.map?.getZoom();
 
-    state.map?.setOptions({
-      minZoom: curZoom,
-      maxZoom: curZoom,
-    });
+      // state.map?.setOptions({
+      //   minZoom: curZoom,
+      //   maxZoom: curZoom,
+      // });
+    }
   }, []);
 
   return (

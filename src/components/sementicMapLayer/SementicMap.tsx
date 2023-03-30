@@ -71,7 +71,7 @@ const SementicMap = (props: Props) => {
       {/* <DrawPolygon />
       <DrawingManager opts={{}} /> */}
       <Map
-        ncpClientId="etl68eqfll"
+        ncpClientId="ypiwp561ux"
         className="map"
         opts={{
           center: {

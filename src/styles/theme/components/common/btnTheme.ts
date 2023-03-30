@@ -183,6 +183,106 @@ const btnTheme = {
         color: "font.inverse",
       },
     },
+    filterTop: {
+      p: 0,
+      bg: "none",
+      flexDirection: "column",
+      justifyContent: "center",
+      gap: "0.25rem",
+      fontWeight: "regular",
+      fontSize: "xs",
+      lineHeight: "1.0625rem",
+      color: "font.primary",
+      div: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        w: "2.5rem",
+        h: "2.5rem",
+        boxSizing: "border-box",
+        borderRadius: "70px",
+        backdropFilter: "blur(5px)",
+        bg: "linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%)",
+        filter: "drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25))",
+      },
+      _active: {
+        bg: "none",
+        fontWeight: "strong",
+        div: {
+          bgColor: "primary.type7",
+        },
+      },
+      _hover: {
+        bg: "none",
+        fontWeight: "strong",
+        div: {
+          bgColor: "primary.type7",
+        },
+      },
+    },
+    filterTopMain: {
+      bg: "none",
+      // fontFamily: 'Inter';
+      fontWeight: "strong",
+      fontSize: "xs",
+      lineHeight: "1",
+      color: "font.secondary",
+      textShadow: "0px 6.4px 6.4px rgba(0, 0, 0, 0.25)",
+      _active: {
+        bg: "none",
+        div: {
+          bgColor: "primary.type7",
+        },
+      },
+      _hover: {
+        bg: "none",
+        div: {
+          bgColor: "primary.type7",
+        },
+      },
+    },
+    backBtn: {
+      position: "absolute",
+      top: 0,
+      left: "-3rem",
+      zIndex: 1,
+      gap: "4px",
+      bg: "none",
+      // fontFamily: 'Vox',
+      fontWeight: "strong",
+      fontSize: "0.6875rem",
+      lineHeight: "0.9375rem",
+      p: {
+        p: "0 2px",
+        bg: "font.title",
+        color: "font.inverse",
+      },
+      svg: {
+        color: "font.title",
+      },
+      _active: {
+        bg: "none",
+      },
+      _hover: {
+        bg: "none",
+      },
+    },
+    slctArea: {
+      w: "100%",
+      h: "1.75rem",
+      bgColor: "neutral.gray1",
+      border: "1px solid",
+      borderColor: "neutral.gray6",
+      borderRadius: "base",
+      fontWeight: "strong",
+      fontSize: "0.6875rem",
+      lineHeight: 1,
+      color: "font.secondary",
+      _hover: {
+        bgColor: "primary.type7",
+        color: "#EDEDED",
+      },
+    },
   },
   defaultProps: {
     size: "auto",

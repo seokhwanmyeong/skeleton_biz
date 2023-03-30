@@ -1,25 +1,35 @@
 //  Lib
 import React from "react";
 import { useSetRecoilState } from "recoil";
-import { Button } from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
 //  State
 import { atomFilterFlow } from "@states/sementicMap/filterState";
 import { resetHandler } from "@states/sementicMap/mapState";
+import { IcoReset } from "@assets/icons/icon";
 
-type Props = {};
+type Props = {
+  activeReset?: boolean;
+  onClick?: (props?: any) => any;
+};
 
-const BtnReset = (props: Props) => {
+const BtnReset = ({ activeReset = true, onClick }: Props) => {
   const setFlow = useSetRecoilState(atomFilterFlow);
   const reset = useSetRecoilState(resetHandler);
 
   return (
     <Button
-      color="#000000"
+      variant="filterTop"
       onClick={() => {
-        reset();
-        setFlow(0);
+        if (activeReset) {
+          reset();
+          setFlow(0);
+        }
+        onClick && onClick();
       }}
     >
+      <Box>
+        <IcoReset />
+      </Box>
       전체 초기화
     </Button>
   );

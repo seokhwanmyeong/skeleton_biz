@@ -73,7 +73,7 @@ export const loginRoute = atom<Array<MainRouteType>>({
     {
       root: "",
       title: "Login",
-      path: "",
+      path: "/",
       hasSub: false,
       page: Login,
     },

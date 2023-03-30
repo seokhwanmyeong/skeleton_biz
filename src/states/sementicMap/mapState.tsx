@@ -1,5 +1,26 @@
 import { atom, selector } from "recoil";
 
+type AreaListProps = {
+  name: string;
+  code: string;
+  path: never[] | any[];
+}[];
+
+type SlctAreaProps = {
+  sido?: {
+    slctName: string;
+    slctCode: string;
+    slctIdx: string;
+    slctPath: any[] | never[];
+  };
+  sigungu?: {
+    slctName: string;
+    slctCode: string;
+    slctIdx: string;
+    slctPath: any[] | never[];
+  };
+};
+
 export const atomAreaState = atom<{ [key: string]: any }>({
   key: "sementicAreaState",
   default: {
@@ -21,7 +42,7 @@ export const atomAreaState = atom<{ [key: string]: any }>({
   },
 });
 
-export const atomFlowEnterArea = atom({
+export const atomFlowEnterArea = atom<SlctAreaProps>({
   key: "flowEnterArea",
   default: {
     sido: {
@@ -39,12 +60,12 @@ export const atomFlowEnterArea = atom({
   },
 });
 
-export const atomSidoLi = atom<{ [key: string]: any }>({
+export const atomSidoLi = atom<AreaListProps>({
   key: "sidoLi",
   default: [],
 });
 
-export const atomSigunguLi = atom<{ [key: string]: any }>({
+export const atomSigunguLi = atom<AreaListProps>({
   key: "sigunguLi",
   default: [],
 });

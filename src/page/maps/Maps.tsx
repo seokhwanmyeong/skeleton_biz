@@ -3,9 +3,6 @@ import { Flex } from "@chakra-ui/react";
 //  Components
 import SementicSearchEngine from "@components/sementicMapLayer/SementicSearchEngine";
 import SementicMap from "@components/sementicMapLayer/SementicMap";
-import SementicViewer from "@components/sementicMapLayer/SementicViewer";
-import BaseAreaProvider from "@src/components/sementicMapLayer/filter/BaseAreaProvider";
-import SementicMapLagacy from "@src/components/sementicMapLayer/SementicMapLagacy";
 
 const Maps = () => {
   return (
@@ -18,12 +15,9 @@ const Maps = () => {
         h="100%"
         overflow="hidden"
       >
-        {/* <SementicMap /> */}
-        {/* <BaseAreaProvider> */}
         <SementicSearchEngine />
         <SementicMap />
         {/* <SementicViewer /> */}
-        {/* </BaseAreaProvider> */}
       </Flex>
     </Flex>
   );

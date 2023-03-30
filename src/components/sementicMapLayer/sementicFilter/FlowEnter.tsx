@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { Button, Flex, Text, useDisclosure } from "@chakra-ui/react";
+import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
+import { Box, Button, Flex, Text, useDisclosure } from "@chakra-ui/react";
 //  Api
 import cubejsApi from "@api/cubeApi/config";
 //  State
@@ -9,18 +9,26 @@ import {
   atomFlowEnterArea,
   atomSidoLi,
   atomSigunguLi,
-  resetHandler,
 } from "@states/sementicMap/mapState";
 import { NaverMapContext } from "@src/lib/src";
 //  Component
 import BtnReset from "@components/sementicMapLayer/mapElement/BtnReset";
 import BtnFlowCustom from "@components/sementicMapLayer/mapElement/BtnFlowCustom";
 import BtnBack from "@components/sementicMapLayer/mapElement/BtnBack";
+import DecoTop from "@components/sementicMapLayer/mapElement/DecoTop";
+//  Icon
+import {
+  IcoAppStore,
+  IcoBarChart,
+  IcoErp,
+  IcoFilter,
+} from "@assets/icons/icon";
+import AreaListBox from "../mapElement/AreaListBox";
 
 const FlowEnter = () => {
   const { state } = useContext(NaverMapContext);
   const setFlow = useSetRecoilState(atomFilterFlow);
-  const reset = useSetRecoilState(resetHandler);
+  const resetSlct = useResetRecoilState(atomFlowEnterArea);
   const [{ sido, sigungu }, setSlctArea] = useRecoilState(atomFlowEnterArea);
   const [sidoLi, setSidoLi] = useRecoilState(atomSidoLi);
   const [sigunguLi, setSigunguLi] = useRecoilState(atomSigunguLi);
@@ -101,171 +109,238 @@ const FlowEnter = () => {
   }, []);
 
   useEffect(() => {
-    if (sido.slctCode && sido.slctName && sido.slctIdx) {
+    if (sido?.slctCode && sido?.slctName && sido?.slctIdx) {
       getSigunguList(sido.slctCode);
     }
   }, [sido]);
 
   useEffect(() => {
-    if (sigungu.slctCode && sigungu.slctName && sigungu.slctIdx) {
+    if (
+      sigungu?.slctCode &&
+      sigungu?.slctName &&
+      sigungu?.slctIdx &&
+      sido?.slctCode
+    ) {
       getSigunguList(sido.slctCode);
     }
   }, [sigungu]);
 
+  const upjong = {
+    top: [
+      "생활서비스",
+      "소매/유통",
+      "여가/오락",
+      "음식",
+      "의료/건강",
+      "학문/교육",
+    ],
+    mid: {
+      F: [
+        "광고/인쇄/인화",
+        "미용서비스",
+        "법무세무회계",
+        "부동산",
+        "사우나/휴게시설",
+        "세탁/가사서비스",
+        "수리서비스",
+        "예식/의례",
+        "주유소/충전소",
+        "차량관리",
+      ],
+    },
+  };
+
   return (
     <>
+      {/* ------------------------------ 상단 ------------------------------*/}
       <Flex
         pos="absolute"
         top="1%"
         left="50%"
         zIndex={999}
         transform="translateX(-50%)"
+        gap={sido?.slctName ? "3rem" : "2rem"}
       >
         <Button
           onClick={() => {
             onClose();
           }}
-          color="#000000"
+          variant="filterTop"
         >
+          <Box>
+            <IcoAppStore />
+          </Box>
           업종
         </Button>
+        {sidoLi.length !== 0 && (
+          <AreaListBox
+            title="시/도 선택"
+            isOpen={isOpen}
+            list={sido?.slctCode && sigunguLi.length !== 0 ? sigunguLi : sidoLi}
+            setSlctArea={(val: {
+              slctName: string;
+              slctCode: string;
+              slctIdx: string;
+              slctPath: any;
+            }) => {
+              if (sido?.slctCode && sigunguLi.length !== 0) {
+                setSlctArea({
+                  sido,
+                  sigungu: val,
+                });
+
+                setFlow(1);
+              } else {
+                setSlctArea({
+                  sido: val,
+                  sigungu,
+                });
+              }
+            }}
+          />
+        )}
         <Flex
           pos="relative"
+          pt="0.6rem"
           direction="column"
-          justify="center"
+          justify="flex-start"
           color="#000000"
+          gap="0.5rem"
         >
-          <BtnBack onClick={() => {}} disabled={!sido?.slctName} />
-          <Button
-            onClick={() => {
-              isOpen ? onClose() : onOpen();
-            }}
-            color="#000000"
-          >
-            지역을 선택해주세요
-          </Button>
-          {sido?.slctName && <Text align="center">{sido.slctName}</Text>}
-          {sido?.slctCode
-            ? sigunguLi.length !== 0 &&
-              isOpen && (
-                <Flex
-                  display={isOpen ? "flex" : "none"}
-                  pos="absolute"
-                  top="4rem"
-                  left="50%"
-                  transform="translateX(-50%)"
-                  w="30rem"
-                  wrap="wrap"
-                >
-                  {sigunguLi.map(
-                    ({
-                      name,
-                      code,
-                      path,
-                    }: {
-                      name: string;
-                      code: string;
-                      path: never[];
-                    }) => {
-                      return (
-                        <Button
-                          key={`key-${code}`}
-                          color="#000000"
-                          onClick={() => {
-                            setSlctArea({
-                              sigungu: {
-                                slctName: name,
-                                slctCode: code,
-                                slctIdx: `area${code}`,
-                                slctPath: path,
-                              },
-                              sido,
-                            });
-                            setFlow(1);
-                          }}
-                        >
-                          {name}
-                        </Button>
-                      );
-                    }
-                  )}
-                </Flex>
+          <Flex pos="relative" direction="column">
+            {sido?.slctName && (
+              <BtnBack
+                onClick={() => {
+                  resetSlct();
+                }}
+                disabled={!sido?.slctName}
+              />
+            )}
+            <Button
+              variant="filterTopMain"
+              onClick={() => {
+                isOpen ? onClose() : onOpen();
+              }}
+            >
+              {sido?.slctName ? "시군구를 선택하세요" : "지역을 선택하세요"}
+            </Button>
+            <DecoTop width={sido?.slctName ? "13rem" : "10rem"} />
+          </Flex>
+          {sido?.slctName && (
+            <Text variant="filterTopArea">{sido.slctName}</Text>
+          )}
+          {sidoLi.length !== 0 && (
+            <AreaListBox
+              title="시/도 선택"
+              isOpen={isOpen}
+              list={
+                sido?.slctCode && sigunguLi.length !== 0 ? sigunguLi : sidoLi
+              }
+              setSlctArea={(val: {
+                slctName: string;
+                slctCode: string;
+                slctIdx: string;
+                slctPath: any;
+              }) => {
+                if (sido?.slctCode && sigunguLi.length !== 0) {
+                  setSlctArea({
+                    sido,
+                    sigungu: val,
+                  });
+
+                  setFlow(1);
+                } else {
+                  setSlctArea({
+                    sido: val,
+                    sigungu,
+                  });
+                }
+              }}
+            />
+          )}
+          {/* {sido?.slctCode
+            ? sigunguLi.length !== 0 && (
+                <AreaListBox
+                  title="시/군/구 선택"
+                  isOpen={isOpen}
+                  list={sigunguLi}
+                  setSlctArea={(val: {
+                    slctName: string;
+                    slctCode: string;
+                    slctIdx: string;
+                    slctPath: any;
+                  }) =>
+                    setSlctArea({
+                      sido,
+                      sigungu: val,
+                    })
+                  }
+                  onClick={() => {
+                    setFlow(1);
+                  }}
+                />
               )
-            : sidoLi.length !== 0 &&
-              isOpen && (
-                <Flex
-                  display={isOpen ? "flex" : "none"}
-                  pos="absolute"
-                  top="4rem"
-                  left="50%"
-                  transform="translateX(-50%)"
-                  w="30rem"
-                  wrap="wrap"
-                >
-                  {sidoLi.map(
-                    ({
-                      name,
-                      code,
-                      path,
-                    }: {
-                      name: string;
-                      code: string;
-                      path: never[];
-                    }) => {
-                      return (
-                        <Button
-                          key={`key-${code}`}
-                          color="#000000"
-                          onClick={() => {
-                            setSlctArea({
-                              sido: {
-                                slctName: name,
-                                slctCode: code,
-                                slctIdx: `area${code}`,
-                                slctPath: path,
-                              },
-                              sigungu,
-                            });
-
-                            state.map?.setOptions({
-                              minZoom: 0,
-                              maxZoom: 16,
-                            });
-                            state.map?.fitBounds(path);
-
-                            let curZoom = state.map?.getZoom();
-
-                            state.map?.setOptions({
-                              minZoom: curZoom,
-                              maxZoom: curZoom,
-                            });
-                          }}
-                        >
-                          {name}
-                        </Button>
-                      );
-                    }
-                  )}
-                </Flex>
-              )}
+            : sidoLi.length !== 0 && (
+                <AreaListBox
+                  title="시/도 선택"
+                  isOpen={isOpen}
+                  list={
+                    sido?.slctCode && sigunguLi.length !== 0
+                      ? sigunguLi
+                      : sidoLi
+                  }
+                  setSlctArea={(val: {
+                    slctName: string;
+                    slctCode: string;
+                    slctIdx: string;
+                    slctPath: any;
+                  }) =>
+                    sido?.slctCode && sigunguLi.length !== 0
+                      ? setSlctArea({
+                          sido,
+                          sigungu: val,
+                        })
+                      : setSlctArea({
+                          sido: val,
+                          sigungu,
+                        })
+                  }
+                />
+              )} */}
         </Flex>
         <BtnFlowCustom />
       </Flex>
+      {/* ------------------------------ 하단 ------------------------------*/}
       <Flex
         pos="absolute"
         bottom="1%"
         left="50%"
         zIndex={999}
         transform="translateX(-50%)"
+        gap="1.25rem"
       >
-        <Button onClick={() => {}} color="#000000">
+        <Button variant="filterTop" onClick={() => {}}>
+          <Box>
+            <IcoFilter />
+          </Box>
           분석필터
         </Button>
-        <Button onClick={() => {}} color="#000000">
+        <Button variant="filterTop" onClick={() => {}}>
+          <Box>
+            <IcoErp />
+          </Box>
           ERP 필터
         </Button>
-        <BtnReset />
-        <Button onClick={() => {}} color="#000000">
+        <BtnReset
+          activeReset={false}
+          onClick={() => {
+            resetSlct();
+          }}
+        />
+        <Button variant="filterTop" onClick={() => {}}>
+          <Box>
+            <IcoBarChart />
+          </Box>
           리포트
         </Button>
       </Flex>

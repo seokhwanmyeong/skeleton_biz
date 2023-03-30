@@ -57,7 +57,7 @@ const RouterOutlet = () => {
                 <Route
                   key={`route-main-${main.root}`}
                   index={indexChecker(main.path)}
-                  path={indexChecker(main.path) ? "" : main.root}
+                  path={indexChecker(main.path) ? "/" : main.root}
                   element={<main.page />}
                 />
               )
