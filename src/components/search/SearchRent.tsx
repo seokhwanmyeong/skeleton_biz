@@ -15,7 +15,7 @@ const SearchRent = ({
   setValues: any;
 }) => {
   return (
-    <Flex p="0rem 2rem">
+    <Flex p="0rem 0.8125rem">
       <Formik
         initialValues={initVal}
         onSubmit={(values) => {
@@ -28,8 +28,14 @@ const SearchRent = ({
         {({ handleSubmit, errors, touched, getFieldProps, setFieldValue }) => {
           return (
             <Form onSubmit={handleSubmit} style={{ width: "100%" }}>
-              <Flex w="100%" flexDirection="column" gap="1rem">
-                <FormControl variant="search" maxW="80%">
+              <Flex
+                w="100%"
+                justify="space-between"
+                direction="row"
+                wrap="wrap"
+                gap="1rem"
+              >
+                <FormControl variant="search" maxW="49%">
                   <FormLabel
                     display="flex"
                     alignItems="center"
@@ -57,7 +63,7 @@ const SearchRent = ({
                     />
                   </Flex>
                 </FormControl>
-                <FormControl variant="search" maxW="80%">
+                <FormControl variant="search" maxW="49%">
                   <FormLabel
                     display="flex"
                     alignItems="center"
@@ -71,7 +77,24 @@ const SearchRent = ({
                     onChange={(val: any) => setFieldValue("areaCode", val)}
                   />
                 </FormControl>
-                <FormControl variant="search" maxW="80%">
+                <FormControl variant="search" maxW="49%">
+                  <FormLabel
+                    display="flex"
+                    alignItems="center"
+                    w="10%"
+                    flex="none"
+                  >
+                    등록일
+                  </FormLabel>
+                  <InputTotalDate
+                    value={getFieldProps("openDate").value}
+                    onChange={(val: string) => setFieldValue("openDate", val)}
+                    _placeholder={{ color: "gray.500" }}
+                    focusBorderColor="black.100"
+                    errorBorderColor="red.300"
+                  />
+                </FormControl>
+                <FormControl variant="search" maxW="49%">
                   <FormLabel
                     display="flex"
                     alignItems="center"
@@ -93,35 +116,18 @@ const SearchRent = ({
                     onChange={(val: any) => setFieldValue("storeRank", val)}
                   />
                 </FormControl>
-                <FormControl variant="search" maxW="80%">
-                  <FormLabel
-                    display="flex"
-                    alignItems="center"
-                    w="10%"
-                    flex="none"
+                <Flex w="100%" justifyContent="center">
+                  <Button
+                    type="submit"
+                    variant="search"
+                    onClick={() => {
+                      handleSubmit();
+                    }}
                   >
-                    등록일
-                  </FormLabel>
-                  <InputTotalDate
-                    value={getFieldProps("openDate").value}
-                    onChange={(val: string) => setFieldValue("openDate", val)}
-                    _placeholder={{ color: "gray.500" }}
-                    focusBorderColor="black.100"
-                    errorBorderColor="red.300"
-                  />
-                </FormControl>
-              </Flex>
-              <Flex mt="1rem" justifyContent="center">
-                <Button
-                  type="submit"
-                  variant="search"
-                  onClick={() => {
-                    handleSubmit();
-                  }}
-                >
-                  <IcoSearch />
-                  <Text variant="search">검색</Text>
-                </Button>
+                    <IcoSearch />
+                    <Text variant="search">검색</Text>
+                  </Button>
+                </Flex>
               </Flex>
             </Form>
           );

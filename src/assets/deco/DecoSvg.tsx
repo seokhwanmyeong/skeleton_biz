@@ -3,7 +3,6 @@ import { Icon, createIcon, Flex, Box } from "@chakra-ui/react";
 type HEX = `#${string}`;
 
 const Deco01 = (iconProps: any) => {
-  console.log(iconProps);
   return (
     <Icon
       viewBox="0 0 429 4"

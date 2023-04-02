@@ -261,6 +261,22 @@ export const infoComFloatPop = atom<any>({
   },
 });
 
+export const infoComResiPop = atom<any>({
+  key: "infoComResiPop",
+  default: {
+    data: {},
+    active: false,
+  },
+});
+
+export const infoComJobPop = atom<any>({
+  key: "infoComJobPop",
+  default: {
+    data: {},
+    active: false,
+  },
+});
+
 export const infoComHousehold = atom<any>({
   key: "infoComHousehold",
   default: {

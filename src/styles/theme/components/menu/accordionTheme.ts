@@ -78,8 +78,8 @@ const accordionTheme = {
       },
       container: {},
       button: {
-        p: "0rem 0.5rem",
-        h: "2.5em",
+        p: "0rem 5%",
+        h: "3vh",
         border: "1px solid",
         borderRadius: "base",
         borderColor: "rgba(0, 0, 0, 0.15)",

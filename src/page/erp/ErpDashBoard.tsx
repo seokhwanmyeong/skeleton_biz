@@ -46,6 +46,7 @@ import { transMarginData } from "@util/data/testData";
 import "swiper/css";
 import "swiper/css/navigation";
 import { useNavigate } from "react-router-dom";
+import sampleImg from "@assets/rentSample.png";
 
 const ErpDashBoard = () => {
   const [notice, setNotic] = useState<any[]>([]);
@@ -117,7 +118,7 @@ const ErpDashBoard = () => {
             <Text variant="sectionSub">Store</Text>
           </Flex>
           <Flex w="100%" h="inherit">
-            <Flex direction="column" pt="1rem" pb="1rem" w="60%" h="100%">
+            <Flex direction="column" w="60%" h="100%">
               <ChartBar
                 title="매장수"
                 data={[35, 25, 15, 10, 4]}
@@ -147,7 +148,7 @@ const ErpDashBoard = () => {
                 <button onClick={() => swiper.slideNext()}>
                   Slide to the next slide
                 </button>
-                <SwiperSlide style={{ padding: "5%", width: "100%" }}>
+                <SwiperSlide style={{ paddingBottom: "12%", width: "100%" }}>
                   <ChartPie
                     title="매장타입"
                     data={[35, 25, 15, 10, 4]}
@@ -155,7 +156,7 @@ const ErpDashBoard = () => {
                     labelText="매장타입"
                   />
                 </SwiperSlide>
-                <SwiperSlide style={{ padding: "5%", width: "100%" }}>
+                <SwiperSlide style={{ paddingBottom: "12%", width: "100%" }}>
                   <ChartPie
                     title="매장상태"
                     data={[35, 25, 15, 10, 4]}
@@ -172,8 +173,8 @@ const ErpDashBoard = () => {
             <Heading variant={"sectionTitle"}>상권</Heading>
             <Text variant="sectionSub">Area</Text>
           </Flex>
-          <Flex padding="5%" w="100%" h="inherit">
-            <Flex direction="column" pt="1rem" pb="1rem" w="50%" h="100%">
+          <Flex w="100%" h="inherit">
+            <Flex direction="column" w="50%" h="100%">
               <ChartPie
                 title="상권타입"
                 data={[35, 25, 15, 10, 4]}
@@ -182,12 +183,12 @@ const ErpDashBoard = () => {
               />
             </Flex>
             <Divider
-              m="0 1.25rem"
+              m="0"
               h="90%"
               orientation="vertical"
               borderColor="#26232380"
             />
-            <Flex direction="column" pt="1rem" pb="1rem" w="50%" h="100%">
+            <Flex direction="column" w="50%" h="100%">
               <ChartPie
                 title="상권타입"
                 data={[35, 25, 15, 10, 4]}
@@ -205,7 +206,7 @@ const ErpDashBoard = () => {
             <Text variant="sectionSub">Sale</Text>
           </Flex>
           <Flex w="100%" h="100%" direction={"row"}>
-            <Flex p="1rem" w="50%">
+            <Flex p="0 0 1rem" w="50%">
               <ChartBarHorizon />
             </Flex>
             <Divider
@@ -227,7 +228,7 @@ const ErpDashBoard = () => {
                   height: "100%",
                 }}
               >
-                <SwiperSlide style={{ padding: "5%", width: "100%" }}>
+                <SwiperSlide style={{ width: "100%" }}>
                   <ChartPie
                     title="인기메뉴별"
                     data={[35, 25, 15, 10, 4]}
@@ -235,7 +236,7 @@ const ErpDashBoard = () => {
                     labelText="인기메뉴"
                   />
                 </SwiperSlide>
-                <SwiperSlide style={{ padding: "5%", width: "100%" }}>
+                <SwiperSlide style={{ width: "100%" }}>
                   <ChartPie
                     title="주문방식별"
                     data={[55, 15, 3]}
@@ -269,11 +270,7 @@ const ErpDashBoard = () => {
                 <AccordionButton>매물1</AccordionButton>
                 <AccordionPanel>
                   <Flex gap="0.75rem" alignItems="center">
-                    <Image
-                      w="2.3125rem"
-                      h="2.3125rem"
-                      src="/src/assets/rentSample.png"
-                    />
+                    <Image w="2.3125rem" h="2.3125rem" src={sampleImg} />
                     <List
                       display="flex"
                       flexDirection="column"
@@ -423,313 +420,309 @@ const ErpDashBoard = () => {
                 </AccordionPanel>
               </AccordionItem>
               <AccordionItem>
-                <AccordionButton>매물2</AccordionButton>
+                <AccordionButton>매물1</AccordionButton>
                 <AccordionPanel>
-                  <Image
-                    w="2.3125rem"
-                    h="2.3125rem"
-                    src="/src/assets/rentSample.png"
-                  />
-                  <List
-                    display="flex"
-                    flexDirection="column"
-                    w="100%"
-                    gap="0.375rem"
-                  >
-                    <ListItem
-                      w="100%"
+                  <Flex gap="0.75rem" alignItems="center">
+                    <Image w="2.3125rem" h="2.3125rem" src={sampleImg} />
+                    <List
                       display="flex"
-                      justifyContent={"space-between"}
-                      alignItems="center"
-                    >
-                      <Text
-                        fontFamily="main"
-                        fontSize="0.5rem"
-                        fontWeight="strong"
-                        color="font.title"
-                      >
-                        준공기간
-                      </Text>
-                      <Text
-                        fontFamily="main"
-                        fontSize="0.5rem"
-                        fontWeight="regular"
-                        color="font.primary"
-                      >
-                        89.11.03~94.10.25
-                      </Text>
-                    </ListItem>
-                    <ListItem
+                      flexDirection="column"
                       w="100%"
-                      display="flex"
-                      justifyContent={"space-between"}
-                      alignItems="center"
+                      gap="0.375rem"
                     >
-                      <Text
-                        fontFamily="main"
-                        fontSize="0.5rem"
-                        fontWeight="strong"
-                        color="font.title"
+                      <ListItem
+                        w="100%"
+                        display="flex"
+                        justifyContent={"space-between"}
+                        alignItems="center"
                       >
-                        대장종류
-                      </Text>
-                      <Text
-                        fontFamily="main"
-                        fontSize="0.5rem"
-                        fontWeight="regular"
-                        color="font.primary"
+                        <Text
+                          fontFamily="main"
+                          fontSize="0.5rem"
+                          fontWeight="strong"
+                          color="font.title"
+                        >
+                          준공기간
+                        </Text>
+                        <Text
+                          fontFamily="main"
+                          fontSize="0.5rem"
+                          fontWeight="regular"
+                          color="font.primary"
+                        >
+                          89.11.03~94.10.25
+                        </Text>
+                      </ListItem>
+                      <ListItem
+                        w="100%"
+                        display="flex"
+                        justifyContent={"space-between"}
+                        alignItems="center"
                       >
-                        건축물대장
-                      </Text>
-                    </ListItem>
-                    <ListItem
-                      w="100%"
-                      display="flex"
-                      justifyContent={"space-between"}
-                      alignItems="center"
-                    >
-                      <Text
-                        fontFamily="main"
-                        fontSize="0.5rem"
-                        fontWeight="strong"
-                        color="font.title"
+                        <Text
+                          fontFamily="main"
+                          fontSize="0.5rem"
+                          fontWeight="strong"
+                          color="font.title"
+                        >
+                          대장종류
+                        </Text>
+                        <Text
+                          fontFamily="main"
+                          fontSize="0.5rem"
+                          fontWeight="regular"
+                          color="font.primary"
+                        >
+                          건축물대장
+                        </Text>
+                      </ListItem>
+                      <ListItem
+                        w="100%"
+                        display="flex"
+                        justifyContent={"space-between"}
+                        alignItems="center"
                       >
-                        지붕
-                      </Text>
-                      <Text
-                        fontFamily="main"
-                        fontSize="0.5rem"
-                        fontWeight="regular"
-                        color="font.primary"
+                        <Text
+                          fontFamily="main"
+                          fontSize="0.5rem"
+                          fontWeight="strong"
+                          color="font.title"
+                        >
+                          지붕
+                        </Text>
+                        <Text
+                          fontFamily="main"
+                          fontSize="0.5rem"
+                          fontWeight="regular"
+                          color="font.primary"
+                        >
+                          시멘트
+                        </Text>
+                      </ListItem>
+                      <ListItem
+                        w="100%"
+                        display="flex"
+                        justifyContent={"space-between"}
+                        alignItems="center"
                       >
-                        시멘트
-                      </Text>
-                    </ListItem>
-                    <ListItem
-                      w="100%"
-                      display="flex"
-                      justifyContent={"space-between"}
-                      alignItems="center"
-                    >
-                      <Text
-                        fontFamily="main"
-                        fontSize="0.5rem"
-                        fontWeight="strong"
-                        color="font.title"
+                        <Text
+                          fontFamily="main"
+                          fontSize="0.5rem"
+                          fontWeight="strong"
+                          color="font.title"
+                        >
+                          용도
+                        </Text>
+                        <Text
+                          fontFamily="main"
+                          fontSize="0.5rem"
+                          fontWeight="regular"
+                          color="font.primary"
+                        >
+                          근린생활시설
+                        </Text>
+                      </ListItem>
+                      <ListItem
+                        w="100%"
+                        display="flex"
+                        justifyContent={"space-between"}
+                        alignItems="center"
                       >
-                        용도
-                      </Text>
-                      <Text
-                        fontFamily="main"
-                        fontSize="0.5rem"
-                        fontWeight="regular"
-                        color="font.primary"
+                        <Text
+                          fontFamily="main"
+                          fontSize="0.5rem"
+                          fontWeight="strong"
+                          color="font.title"
+                        >
+                          구조
+                        </Text>
+                        <Text
+                          fontFamily="main"
+                          fontSize="0.5rem"
+                          fontWeight="regular"
+                          color="font.primary"
+                        >
+                          철근콘크리트
+                        </Text>
+                      </ListItem>
+                      <ListItem
+                        w="100%"
+                        display="flex"
+                        justifyContent={"space-between"}
+                        alignItems="center"
                       >
-                        근린생활시설
-                      </Text>
-                    </ListItem>
-                    <ListItem
-                      w="100%"
-                      display="flex"
-                      justifyContent={"space-between"}
-                      alignItems="center"
-                    >
-                      <Text
-                        fontFamily="main"
-                        fontSize="0.5rem"
-                        fontWeight="strong"
-                        color="font.title"
-                      >
-                        구조
-                      </Text>
-                      <Text
-                        fontFamily="main"
-                        fontSize="0.5rem"
-                        fontWeight="regular"
-                        color="font.primary"
-                      >
-                        철근콘크리트
-                      </Text>
-                    </ListItem>
-                    <ListItem
-                      w="100%"
-                      display="flex"
-                      justifyContent={"space-between"}
-                      alignItems="center"
-                    >
-                      <Text
-                        fontFamily="main"
-                        fontSize="0.5rem"
-                        fontWeight="strong"
-                        color="font.title"
-                      >
-                        연면적
-                      </Text>
-                      <Text
-                        fontFamily="main"
-                        fontSize="0.5rem"
-                        fontWeight="regular"
-                        color="font.primary"
-                      >
-                        429.77 m
-                      </Text>
-                    </ListItem>
-                  </List>
+                        <Text
+                          fontFamily="main"
+                          fontSize="0.5rem"
+                          fontWeight="strong"
+                          color="font.title"
+                        >
+                          연면적
+                        </Text>
+                        <Text
+                          fontFamily="main"
+                          fontSize="0.5rem"
+                          fontWeight="regular"
+                          color="font.primary"
+                        >
+                          429.77 m
+                        </Text>
+                      </ListItem>
+                    </List>
+                  </Flex>
                 </AccordionPanel>
               </AccordionItem>
               <AccordionItem>
-                <AccordionButton>매물3</AccordionButton>
+                <AccordionButton>매물1</AccordionButton>
                 <AccordionPanel>
-                  <Image
-                    w="2.3125rem"
-                    h="2.3125rem"
-                    src="/src/assets/rentSample.png"
-                  />
-                  <List
-                    display="flex"
-                    flexDirection="column"
-                    w="100%"
-                    gap="0.375rem"
-                  >
-                    <ListItem
-                      w="100%"
+                  <Flex gap="0.75rem" alignItems="center">
+                    <Image w="2.3125rem" h="2.3125rem" src={sampleImg} />
+                    <List
                       display="flex"
-                      justifyContent={"space-between"}
-                      alignItems="center"
-                    >
-                      <Text
-                        fontFamily="main"
-                        fontSize="0.5rem"
-                        fontWeight="strong"
-                        color="font.title"
-                      >
-                        준공기간
-                      </Text>
-                      <Text
-                        fontFamily="main"
-                        fontSize="0.5rem"
-                        fontWeight="regular"
-                        color="font.primary"
-                      >
-                        89.11.03~94.10.25
-                      </Text>
-                    </ListItem>
-                    <ListItem
+                      flexDirection="column"
                       w="100%"
-                      display="flex"
-                      justifyContent={"space-between"}
-                      alignItems="center"
+                      gap="0.375rem"
                     >
-                      <Text
-                        fontFamily="main"
-                        fontSize="0.5rem"
-                        fontWeight="strong"
-                        color="font.title"
+                      <ListItem
+                        w="100%"
+                        display="flex"
+                        justifyContent={"space-between"}
+                        alignItems="center"
                       >
-                        대장종류
-                      </Text>
-                      <Text
-                        fontFamily="main"
-                        fontSize="0.5rem"
-                        fontWeight="regular"
-                        color="font.primary"
+                        <Text
+                          fontFamily="main"
+                          fontSize="0.5rem"
+                          fontWeight="strong"
+                          color="font.title"
+                        >
+                          준공기간
+                        </Text>
+                        <Text
+                          fontFamily="main"
+                          fontSize="0.5rem"
+                          fontWeight="regular"
+                          color="font.primary"
+                        >
+                          89.11.03~94.10.25
+                        </Text>
+                      </ListItem>
+                      <ListItem
+                        w="100%"
+                        display="flex"
+                        justifyContent={"space-between"}
+                        alignItems="center"
                       >
-                        건축물대장
-                      </Text>
-                    </ListItem>
-                    <ListItem
-                      w="100%"
-                      display="flex"
-                      justifyContent={"space-between"}
-                      alignItems="center"
-                    >
-                      <Text
-                        fontFamily="main"
-                        fontSize="0.5rem"
-                        fontWeight="strong"
-                        color="font.title"
+                        <Text
+                          fontFamily="main"
+                          fontSize="0.5rem"
+                          fontWeight="strong"
+                          color="font.title"
+                        >
+                          대장종류
+                        </Text>
+                        <Text
+                          fontFamily="main"
+                          fontSize="0.5rem"
+                          fontWeight="regular"
+                          color="font.primary"
+                        >
+                          건축물대장
+                        </Text>
+                      </ListItem>
+                      <ListItem
+                        w="100%"
+                        display="flex"
+                        justifyContent={"space-between"}
+                        alignItems="center"
                       >
-                        지붕
-                      </Text>
-                      <Text
-                        fontFamily="main"
-                        fontSize="0.5rem"
-                        fontWeight="regular"
-                        color="font.primary"
+                        <Text
+                          fontFamily="main"
+                          fontSize="0.5rem"
+                          fontWeight="strong"
+                          color="font.title"
+                        >
+                          지붕
+                        </Text>
+                        <Text
+                          fontFamily="main"
+                          fontSize="0.5rem"
+                          fontWeight="regular"
+                          color="font.primary"
+                        >
+                          시멘트
+                        </Text>
+                      </ListItem>
+                      <ListItem
+                        w="100%"
+                        display="flex"
+                        justifyContent={"space-between"}
+                        alignItems="center"
                       >
-                        시멘트
-                      </Text>
-                    </ListItem>
-                    <ListItem
-                      w="100%"
-                      display="flex"
-                      justifyContent={"space-between"}
-                      alignItems="center"
-                    >
-                      <Text
-                        fontFamily="main"
-                        fontSize="0.5rem"
-                        fontWeight="strong"
-                        color="font.title"
+                        <Text
+                          fontFamily="main"
+                          fontSize="0.5rem"
+                          fontWeight="strong"
+                          color="font.title"
+                        >
+                          용도
+                        </Text>
+                        <Text
+                          fontFamily="main"
+                          fontSize="0.5rem"
+                          fontWeight="regular"
+                          color="font.primary"
+                        >
+                          근린생활시설
+                        </Text>
+                      </ListItem>
+                      <ListItem
+                        w="100%"
+                        display="flex"
+                        justifyContent={"space-between"}
+                        alignItems="center"
                       >
-                        용도
-                      </Text>
-                      <Text
-                        fontFamily="main"
-                        fontSize="0.5rem"
-                        fontWeight="regular"
-                        color="font.primary"
+                        <Text
+                          fontFamily="main"
+                          fontSize="0.5rem"
+                          fontWeight="strong"
+                          color="font.title"
+                        >
+                          구조
+                        </Text>
+                        <Text
+                          fontFamily="main"
+                          fontSize="0.5rem"
+                          fontWeight="regular"
+                          color="font.primary"
+                        >
+                          철근콘크리트
+                        </Text>
+                      </ListItem>
+                      <ListItem
+                        w="100%"
+                        display="flex"
+                        justifyContent={"space-between"}
+                        alignItems="center"
                       >
-                        근린생활시설
-                      </Text>
-                    </ListItem>
-                    <ListItem
-                      w="100%"
-                      display="flex"
-                      justifyContent={"space-between"}
-                      alignItems="center"
-                    >
-                      <Text
-                        fontFamily="main"
-                        fontSize="0.5rem"
-                        fontWeight="strong"
-                        color="font.title"
-                      >
-                        구조
-                      </Text>
-                      <Text
-                        fontFamily="main"
-                        fontSize="0.5rem"
-                        fontWeight="regular"
-                        color="font.primary"
-                      >
-                        철근콘크리트
-                      </Text>
-                    </ListItem>
-                    <ListItem
-                      w="100%"
-                      display="flex"
-                      justifyContent={"space-between"}
-                      alignItems="center"
-                    >
-                      <Text
-                        fontFamily="main"
-                        fontSize="0.5rem"
-                        fontWeight="strong"
-                        color="font.title"
-                      >
-                        연면적
-                      </Text>
-                      <Text
-                        fontFamily="main"
-                        fontSize="0.5rem"
-                        fontWeight="regular"
-                        color="font.primary"
-                      >
-                        429.77 m
-                      </Text>
-                    </ListItem>
-                  </List>
+                        <Text
+                          fontFamily="main"
+                          fontSize="0.5rem"
+                          fontWeight="strong"
+                          color="font.title"
+                        >
+                          연면적
+                        </Text>
+                        <Text
+                          fontFamily="main"
+                          fontSize="0.5rem"
+                          fontWeight="regular"
+                          color="font.primary"
+                        >
+                          429.77 m
+                        </Text>
+                      </ListItem>
+                    </List>
+                  </Flex>
                 </AccordionPanel>
               </AccordionItem>
             </Accordion>
@@ -753,7 +746,7 @@ const ErpDashBoard = () => {
                 height: "100%",
               }}
             >
-              <SwiperSlide style={{ padding: "5%", width: "100%" }}>
+              <SwiperSlide style={{ width: "100%" }}>
                 <ChartPie
                   title="고객현황"
                   data={[35, 25, 15, 10]}
@@ -761,7 +754,7 @@ const ErpDashBoard = () => {
                   labelText="고객현황"
                 />
               </SwiperSlide>
-              <SwiperSlide style={{ padding: "5%", width: "100%" }}>
+              <SwiperSlide style={{ width: "100%" }}>
                 <ChartPie
                   title="인기희망지역"
                   data={[35, 25, 35, 20, 54]}
@@ -801,6 +794,9 @@ const ChartPie = ({
           padding: 10,
           boxWidth: 10,
           boxHeight: 10,
+          font: {
+            size: 8,
+          },
         },
       },
       title: {
@@ -816,13 +812,19 @@ const ChartPie = ({
       },
       layout: {
         padding: {
+          top: 0,
+          left: 0,
+          right: 0,
           bottom: 0,
         },
       },
     },
     layout: {
       padding: {
-        bottom: 5,
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
       },
     },
   };
@@ -1160,6 +1162,9 @@ const ChartBarHorizon = ({
         labels: {
           boxWidth: 10,
           boxHeight: 10,
+          font: {
+            size: 8,
+          },
         },
       },
       title: {
@@ -1168,7 +1173,7 @@ const ChartBarHorizon = ({
     },
     layout: {
       padding: {
-        bottom: 50,
+        bottom: 0,
       },
     },
     scales: {
@@ -1181,6 +1186,9 @@ const ChartBarHorizon = ({
         ticks: {
           // display: false,
           borderColor: "#F1F1F2",
+          font: {
+            size: 8,
+          },
         },
         grid: {
           drawBorder: false,
@@ -1196,6 +1204,9 @@ const ChartBarHorizon = ({
         },
         ticks: {
           beginAtZero: true,
+          font: {
+            size: 8,
+          },
         },
         grid: {
           drawBorder: true,

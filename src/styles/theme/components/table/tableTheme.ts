@@ -4,17 +4,21 @@ const themeTable = {
       borderColor: "font.primary",
       borderCollapse: "separate",
       borderSpacing: "0 0.5rem",
+      position: "relative",
+      top: "-0.5rem",
+      height: "100%",
     },
     thead: {
       zIndex: "2",
+      position: "relative",
       tr: {
         zIndex: "1",
         th: {
           // position: "sticky",
           zIndex: "1",
           top: "0.5rem",
-          p: "1.1875rem 0 0.6875rem",
-          bgColor: "inherit",
+          p: "0.875rem 0 0.9375rem",
+          bgColor: "#FFFFFF",
           borderBottom: "0",
           fontFamily: "main",
           fontSize: "xs",
@@ -39,6 +43,17 @@ const themeTable = {
           //   },
           // },
         },
+      },
+      _before: {
+        zIndex: -1,
+        content: '""',
+        display: "block",
+        position: "absolute",
+        top: 0,
+        left: "-0.375rem",
+        w: "calc(100% + 0.375rem)",
+        h: "100%",
+        bgColor: "#FFFFFF",
       },
     },
     tbody: {
@@ -80,8 +95,16 @@ const themeTable = {
     },
   },
   sizes: {},
-  variants: {},
-  defaultProps: {},
+  variants: {
+    base: {
+      table: {
+        height: "100%",
+      },
+    },
+  },
+  defaultProps: {
+    variant: "base",
+  },
 };
 
 export default themeTable;

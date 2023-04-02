@@ -1,8 +1,6 @@
 //  LIB
-import { useEffect, useRef, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { useRef, useMemo, useState, useEffect } from "react";
 import {
-  Button,
   Flex,
   Heading,
   Text,
@@ -11,14 +9,17 @@ import {
   TabPanels,
   Tab,
   TabPanel,
-  Stack,
-  Box,
+  Divider,
 } from "@chakra-ui/react";
+import { FormikValues } from "formik";
 import { useNavigate } from "react-router-dom";
 //  Components
+import Section from "@components/common/Section";
+import ErpHistory from "../history/ErpHistory";
 import ListTable from "@components/table/ListTable";
-import ApiTable from "@components/table/ApiTable";
 import ModalClientEditor from "@components/modal/erp/ModalClientEditor";
+import { IcoBtnBack, IcoBtnClose, IcoBtnUpdate } from "@components/common/Btn";
+import FormClientEditor from "@components/form/erp/FormClientEditor";
 //  Hook
 import useLocationState from "@hook/useLocationState";
 //  Api & URL
@@ -26,28 +27,50 @@ import { erpStoreApi } from "@api/bizApi/config";
 //  Form & Column
 import { formSearchStore } from "@page/erp/store/form";
 import { mainTable } from "@page/erp/store/column";
-import ErpHistory from "../history/ErpHistory";
+//  Icon
+import { IcoBars, IcoHistory } from "@src/assets/icons/icon";
+
+type ClientInfo = {
+  clientName: string;
+  clientPhone: string;
+  clientStatus: string;
+  clientPath: string;
+  age: number;
+  job: string;
+  resident: string;
+  exp: boolean;
+  hopeArea: string;
+  startFund: number;
+  favorRent: string;
+  manager: string;
+  createdAt: string;
+};
 
 const ErpClientDetail = () => {
   const navigate = useNavigate();
   const { location } = useLocationState();
   const state = location.state;
+  const [tabIdx, setTabIdx] = useState<number>(state?.tabIdx || 0);
+  const [activeUpdate, setActiveUpdate] = useState(false);
+  const [clientData, setClientData] = useState<ClientInfo | undefined>(
+    undefined
+  );
+  const submitRef = useRef<FormikValues>(null);
   const testKeys = {
     clientName: "고객명",
     clientPhone: "고객연락처",
-    clientStep: "고객상태",
-    path: "유입경로",
+    clientStatus: "고객상태",
+    clientPath: "유입경로",
     age: "나이",
     job: "직업",
     resident: "거주지",
-    exp: "창업경험",
-    address: "희망지역",
+    exp: true,
+    hopeArea: "희망지역",
     startFund: "창업자금",
     favorRent: "관심매물",
-    memberName: "담당자명",
+    manager: "담당자명",
     createdAt: "등록일",
   };
-
   const { column, initReq, form } = useMemo(
     () => ({
       column: mainTable,
@@ -57,66 +80,133 @@ const ErpClientDetail = () => {
     []
   );
 
+  const getClientInfo = () => {
+    console.log("click");
+  };
+
+  const updateClientInfo = (value: ClientInfo) => {
+    console.log("update click");
+  };
+
+  useEffect(() => {
+    // console.log(state);
+    if (state?.id) {
+      if (state.tabIdx) {
+        setTabIdx(state.tabIdx);
+      }
+
+      setClientData({
+        clientName: "김양일",
+        clientPhone: "010-8277-8260",
+        clientStatus: "statusReady",
+        clientPath: "path1",
+        age: 31,
+        job: "선생님",
+        resident: "경기도 김포시 풍무동",
+        exp: false,
+        hopeArea: "경기도 김포시 풍무동",
+        startFund: 10000000,
+        favorRent: "매물01",
+        manager: "임꺽정",
+        createdAt: "2023-03-30",
+      });
+    } else {
+      navigate("/erp/client");
+    }
+  }, []);
+
   return (
-    <Box
-      overflowY="scroll"
-      pl="1rem"
-      __css={{
-        "::-webkit-scrollbar": {
-          w: "5px",
-        },
-        "::-webkit-scrollbar-thumb": {
-          borderRadius: "5",
-          bg: `primary.reverse.bdColor`,
-        },
-      }}
+    <Section
+      p={tabIdx === 1 ? "1rem 0rem 3.75rem" : "1rem 0.75rem 3.75rem"}
+      borderRadius={tabIdx === 1 && "0"}
+      boxShadow={tabIdx === 1 && "none"}
+      bg={tabIdx === 1 && "none"}
+      overflow={tabIdx === 1 && "visible"}
     >
-      <Button
-        mb="1rem"
-        key={`link-prev`}
-        w="max-content"
-        onClick={() => navigate(-1)}
+      <Tabs
+        variant="detailPage"
+        index={tabIdx}
+        onChange={(index) => setTabIdx(index)}
       >
-        {"< 고객리스트"}
-      </Button>
-      <Heading mb="2rem">고객상세 : {state.name || "고객이름"}</Heading>
-      <Flex gap={5}>
-        <Flex gap={2}>
-          <Text textStyle="list.title">고객명 : </Text>
-          <Text textStyle="list.text">{state.name}</Text>
+        <Flex
+          pos="relative"
+          p={tabIdx === 1 ? "0 0.75rem" : "0"}
+          w="100%"
+          justify="center"
+          align="center"
+          direction="column"
+        >
+          <IcoBtnBack
+            style={{
+              position: "absolute",
+              top: 0,
+              left: tabIdx === 1 ? "0.75rem" : 0,
+              w: "max-content",
+            }}
+            w="max-content"
+          />
+          <TabList>
+            <Tab key="tab-info">
+              <IcoBars />
+              <Text>기본 정보</Text>
+            </Tab>
+            <Tab key="tab-history" isDisabled={activeUpdate}>
+              <IcoHistory />
+              <Text>히스토리 게시판</Text>
+            </Tab>
+          </TabList>
+          {activeUpdate && (
+            <IcoBtnClose
+              style={{
+                position: "absolute",
+                top: 0,
+                right: "2rem",
+                w: "max-content",
+              }}
+              onClick={() => {
+                setActiveUpdate(!activeUpdate);
+              }}
+            />
+          )}
+          {tabIdx === 0 && (
+            <IcoBtnUpdate
+              style={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                w: "max-content",
+              }}
+              isActive={activeUpdate}
+              onClick={() => {
+                if (activeUpdate) {
+                  submitRef?.current && submitRef.current.handleSubmit();
+                  setActiveUpdate(!activeUpdate);
+                } else {
+                  setActiveUpdate(!activeUpdate);
+                }
+              }}
+            />
+          )}
+          <Divider m="0 0 1.25rem" borderBottomWidth="2px" color="font.title" />
         </Flex>
-      </Flex>
-      <hr style={{ margin: "1rem 0" }} />
-      <Tabs>
-        <TabList justifyContent="left">
-          <Tab key="tab-info" flexDirection="column" w="20%">
-            <Text>기본정보</Text>
-          </Tab>
-          <Tab key="tab-history" flexDirection="column" w="20%">
-            <Text>히스토리</Text>
-          </Tab>
-        </TabList>
         <TabPanels>
           <TabPanel key="panel-pointer">
-            <Flex flexDirection="column" gap="1rem">
-              <Flex w="100%" justifyContent="flex-end" gap="1rem">
-                <ModalClientEditor update={true} info={state} />
-              </Flex>
-              <Flex flexDirection="row" w="100%" gap="3rem">
-                <ListTable
-                  tableProps={{ w: "50%" }}
-                  data={state}
-                  listKeys={testKeys}
-                />
-              </Flex>
+            <Flex p="0 3vw" h="100%" flexDirection="column" gap="1rem">
+              <FormClientEditor
+                initVal={clientData}
+                fixMode={activeUpdate}
+                setValues={updateClientInfo}
+                update={true}
+                ref={submitRef}
+              ></FormClientEditor>
             </Flex>
           </TabPanel>
-          <TabPanel key="panel-area">
-            <ErpHistory />
+          <TabPanel key="panel-area" overflow={"visible"}>
+            <ErpHistory id="test" title={clientData?.clientName} />
           </TabPanel>
         </TabPanels>
       </Tabs>
-    </Box>
+    </Section>
   );
 };
 

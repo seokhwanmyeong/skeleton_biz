@@ -31,7 +31,7 @@ const headingTheme = {
     },
     cardTitle: {
       fontWeight: "regular",
-      fontSize: "sm",
+      fontSize: "xs",
       lineHeight: "normal",
       color: "font.secondary",
     },
@@ -44,6 +44,14 @@ const headingTheme = {
       fontSize: "1.25rem",
       lineHeight: "1.375rem",
       color: "font.primary",
+    },
+    sigunguTitle: {
+      flexShrink: 0,
+      w: "fit-content",
+      fontSize: "xs",
+      lineHeight: "1.05rem",
+      letterSpacing: "2.66667px",
+      color: "rgba(38, 35, 35, 0.8)",
     },
   },
 };

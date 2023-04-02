@@ -95,6 +95,7 @@ const CheckboxGroup = ({
   variant,
   activeTotal = false,
   parseTotalTxt = "전체",
+  groupProps,
 }: {
   chkboxData: { text: string; value: string | number }[];
   chkValue: (string | number)[];
@@ -104,6 +105,7 @@ const CheckboxGroup = ({
   variant?: string;
   activeTotal?: boolean;
   parseTotalTxt?: string;
+  groupProps?: any;
 }) => {
   const originLength = chkboxData.length;
 
@@ -137,7 +139,7 @@ const CheckboxGroup = ({
       isDisabled={isDisabled}
       onChange={chkHandler}
     >
-      <Flex w="100%" gap="0.5rem">
+      <Flex w="100%" gap="0.5rem" {...groupProps}>
         {activeTotal && (
           <ChakraCheckbox
             variant={variant}

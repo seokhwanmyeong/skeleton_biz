@@ -9,6 +9,7 @@ import {
   IcoVisible,
   IcoHidden,
   IcoArrowBack,
+  IcoCloseCircle,
 } from "@assets/icons/icon";
 
 type Props = {};
@@ -16,6 +17,7 @@ type Props = {};
 type IcoBtnProps = {
   onClick: any;
   isDisabled?: boolean;
+  isActive?: boolean;
   style?: any;
 };
 
@@ -95,13 +97,52 @@ const IcoBtnDelete = ({ onClick, isDisabled, style, ...rest }: IcoBtnProps) => {
   );
 };
 
-const IcoBtnUpdate = ({ onClick, isDisabled, style, ...rest }: IcoBtnProps) => {
+const IcoBtnUpdate = ({
+  onClick,
+  isActive = false,
+  isDisabled,
+  style,
+  ...rest
+}: IcoBtnProps) => {
+  return (
+    <IconButton
+      onClick={onClick}
+      isActive={isActive}
+      isDisabled={isDisabled}
+      aria-label="수정"
+      icon={<IcoUpdate />}
+      w="1rem"
+      h="1rem"
+      bg="transparent"
+      color="font.title"
+      _hover={{
+        bg: "transparent",
+        color: "primary.type7",
+      }}
+      _active={{
+        bg: "transparent",
+        color: "primary.type7",
+      }}
+      {...style}
+      {...rest}
+    />
+  );
+};
+
+const IcoBtnClose = ({
+  onClick,
+  isActive = false,
+  isDisabled,
+  style,
+  ...rest
+}: IcoBtnProps) => {
   return (
     <IconButton
       onClick={onClick}
       isDisabled={isDisabled}
-      aria-label="수정"
-      icon={<IcoUpdate />}
+      isActive={isActive}
+      aria-label="취소"
+      icon={<IcoCloseCircle />}
       w="1rem"
       h="1rem"
       bg="transparent"
@@ -178,6 +219,52 @@ const IcoBtnBack = (props: any) => {
   );
 };
 
+const IcoBtnBsns = (props: any) => {
+  const navigate = useNavigate();
+
+  return (
+    <IconButton
+      onClick={() => {
+        navigate("/maps");
+      }}
+      aria-label="상권영역으로 가기"
+      icon={<IcoArrowBack />}
+      w="1rem"
+      h="1rem"
+      bg="transparent"
+      color="font.title"
+      _hover={{
+        bg: "transparent",
+        color: "primary.type7",
+      }}
+      {...props.style}
+    />
+  );
+};
+
+const IcoBtnBsnsFix = (props: any) => {
+  const navigate = useNavigate();
+
+  return (
+    <IconButton
+      onClick={() => {
+        navigate("/maps");
+      }}
+      aria-label="상권수정하러가기"
+      icon={<IcoArrowBack />}
+      w="1rem"
+      h="1rem"
+      bg="transparent"
+      color="font.title"
+      _hover={{
+        bg: "transparent",
+        color: "primary.type7",
+      }}
+      {...props.style}
+    />
+  );
+};
+
 export {
   Btn,
   IcoBtnEditor,
@@ -186,4 +273,7 @@ export {
   IcoBtnUpdate,
   IcoBtnEye,
   IcoBtnBack,
+  IcoBtnClose,
+  IcoBtnBsns,
+  IcoBtnBsnsFix,
 };

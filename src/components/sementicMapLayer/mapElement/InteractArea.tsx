@@ -11,6 +11,8 @@ interface InteractAreaProps {
     | naver.maps.ArrayOfCoordsLiteral[];
   style?: any;
   hoverStyle?: any;
+  onMouse?: any;
+  onMouseOut?: any;
 }
 
 const InteractArea = ({
@@ -20,6 +22,8 @@ const InteractArea = ({
   path,
   style,
   hoverStyle,
+  onMouse,
+  onMouseOut,
 }: InteractAreaProps) => {
   const { state, dispatch } = useContext(NaverMapContext);
   const [areaId] = useState("area" + num);
@@ -32,6 +36,7 @@ const InteractArea = ({
       zIndex: 1,
       ...hoverStyle,
     });
+    onMouse && onMouse();
   };
   const onMouseOutArea = (e: PointerEvent) => {
     // state.objects.get(areaId)?.set("fillColor", "#0305F2");
@@ -42,6 +47,7 @@ const InteractArea = ({
       zIndex: 0,
       ...style,
     });
+    onMouseOut && onMouseOut();
   };
   useEffect(() => {
     //const center = polylabel(path, 1.0);

@@ -26,17 +26,17 @@ import {
   Filler,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
+import { FormikValues } from "formik";
 //  Components
 import ErpHistory from "@page/erp/history/ErpHistory";
+import Table from "@components/table/Table";
 import Section from "@components/common/Section";
-import { IcoBtnBack, IcoBtnUpdate } from "@components/common/Btn";
+import { IcoBtnBack, IcoBtnUpdate, IcoBtnClose } from "@components/common/Btn";
 import FormStoreEditor from "@components/form/erp/FormStoreEditor";
 //  Hook
 import useLocationState from "@hook/useLocationState";
-//  Api & Query
-import Table from "@src/components/table/Table";
-import { columnStoreInfo } from "@src/components/table/column/erp";
-import { Input } from "@src/components/common/Input";
+//  Util
+import { columnStoreInfo } from "@components/table/column/erp";
 //  Icon
 import {
   IcoBars,
@@ -44,7 +44,9 @@ import {
   IcoHistory,
   IcoAudit,
 } from "@assets/icons/icon";
-import { FormikValues } from "formik";
+import { useNavigate } from "react-router-dom";
+import ErpDocs from "../docs/ErpDocs";
+import { Select } from "@src/components/common/Select";
 
 type StoreInfo = {
   storeName: string;
@@ -73,6 +75,7 @@ const ErpStoreDetail = ({
   activeBack?: boolean;
   side?: boolean;
 }) => {
+  const navigate = useNavigate();
   const { location } = useLocationState();
   const state = location.state;
   const mapRef = useRef<any>();
@@ -80,6 +83,8 @@ const ErpStoreDetail = ({
   const [tabIdx, setTabIdx] = useState<number>(state?.tabIdx || 0);
   const [storeData, setStoreData] = useState<StoreInfo | undefined>(undefined);
   const submitRef = useRef<FormikValues>(null);
+  const column = useMemo(() => columnStoreInfo, []);
+  const [brand, setBrand] = useState(null);
 
   const getStoreInfo = () => {
     console.log("click");
@@ -91,7 +96,11 @@ const ErpStoreDetail = ({
 
   useEffect(() => {
     // console.log(state);
-    if (state.id) {
+    if (state?.id) {
+      if (state.tabIdx) {
+        setTabIdx(state.tabIdx);
+      }
+
       setStoreData({
         storeName: "종로점",
         storeCode: "1234567",
@@ -112,6 +121,8 @@ const ErpStoreDetail = ({
           lng: 126.9784147,
         },
       });
+    } else {
+      navigate("/erp/store");
     }
   }, []);
 
@@ -148,10 +159,18 @@ const ErpStoreDetail = ({
     }
   }, [mapRef, storeData]);
 
-  const column = useMemo(() => columnStoreInfo, []);
-
   return (
-    <Section p="1rem 0.75rem 3.75rem">
+    <Section
+      p={
+        tabIdx === 2 || tabIdx === 3
+          ? "1rem 0rem 3.75rem"
+          : "1rem 0.75rem 3.75rem"
+      }
+      borderRadius={(tabIdx === 2 || tabIdx === 3) && "0"}
+      boxShadow={(tabIdx === 2 || tabIdx === 3) && "none"}
+      bg={(tabIdx === 2 || tabIdx === 3) && "none"}
+      overflow={(tabIdx === 2 || tabIdx === 3) && "visible"}
+    >
       <Tabs
         variant="detailPage"
         index={tabIdx}
@@ -159,6 +178,7 @@ const ErpStoreDetail = ({
       >
         <Flex
           pos="relative"
+          p={tabIdx === 2 || 3 ? "0 0.75rem" : "0"}
           w="100%"
           justify="center"
           align="center"
@@ -169,7 +189,7 @@ const ErpStoreDetail = ({
               style={{
                 position: "absolute",
                 top: 0,
-                left: 0,
+                left: tabIdx === 2 || tabIdx === 3 ? "1.25rem" : "0.5rem",
                 w: "max-content",
               }}
               w="max-content"
@@ -180,35 +200,51 @@ const ErpStoreDetail = ({
               <IcoBars />
               <Text>기본 정보</Text>
             </Tab>
-            <Tab key="tab-sale">
+            <Tab key="tab-sale" isDisabled={activeUpdate}>
               <IcoLineChart />
               <Text>매출</Text>
             </Tab>
-            <Tab key="tab-history">
+            <Tab key="tab-history" isDisabled={activeUpdate}>
               <IcoHistory />
               <Text>히스토리 게시판</Text>
             </Tab>
-            <Tab key="tab-doc">
+            <Tab key="tab-doc" isDisabled={activeUpdate}>
               <IcoAudit />
               <Text>문서보관함</Text>
             </Tab>
           </TabList>
-          <IcoBtnUpdate
-            style={{
-              position: "absolute",
-              top: 0,
-              right: 0,
-              w: "max-content",
-            }}
-            onClick={() => {
-              if (activeUpdate) {
-                submitRef?.current && submitRef.current.handleSubmit();
+          {activeUpdate && (
+            <IcoBtnClose
+              style={{
+                position: "absolute",
+                top: 0,
+                right: "2rem",
+                w: "max-content",
+              }}
+              onClick={() => {
                 setActiveUpdate(!activeUpdate);
-              } else {
-                setActiveUpdate(!activeUpdate);
-              }
-            }}
-          />
+              }}
+            />
+          )}
+          {tabIdx === 0 && (
+            <IcoBtnUpdate
+              style={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                w: "max-content",
+              }}
+              isActive={activeUpdate}
+              onClick={() => {
+                if (activeUpdate) {
+                  submitRef?.current && submitRef.current.handleSubmit();
+                  setActiveUpdate(!activeUpdate);
+                } else {
+                  setActiveUpdate(!activeUpdate);
+                }
+              }}
+            />
+          )}
           <Divider m="0 0 1.25rem" borderBottomWidth="2px" color="font.title" />
         </Flex>
         <TabPanels>
@@ -233,6 +269,26 @@ const ErpStoreDetail = ({
             </Flex>
           </TabPanel>
           <TabPanel key="panel-upjong">
+            <Flex p="0 1rem" w="100%" justify="flex-end">
+              <Select
+                data={[
+                  { text: "브랜드1", value: "1" },
+                  { text: "브랜드2", value: "2" },
+                  { text: "브랜드3", value: "3" },
+                  { text: "브랜드4", value: "4" },
+                ]}
+                // value={getFieldProps("clientStatus").value}
+                opBaseTxt="text"
+                opBaseId="value"
+                opBaseKey="value"
+                onChange={(val: any) => {
+                  setBrand(val);
+                }}
+                selectProps={{
+                  w: "auto",
+                }}
+              />
+            </Flex>
             <LineChart />
             <Swiper
               spaceBetween={50}
@@ -244,10 +300,16 @@ const ErpStoreDetail = ({
                 height: "100%",
               }}
             >
-              <SwiperSlide style={{ padding: "3rem", width: "100%" }}>
-                <Flex>
-                  <Table data={[]} divide={5} columns={column} />
-                  <Table data={[]} divide={5} columns={column} />
+              <SwiperSlide
+                style={{
+                  padding: "1rem 0 3rem",
+                  width: "100%",
+                  height: "100%",
+                }}
+              >
+                <Flex gap="1rem">
+                  <Sample />
+                  {brand && <Sample />}
                 </Flex>
               </SwiperSlide>
               <SwiperSlide style={{ padding: "3rem", width: "100%" }}>
@@ -255,10 +317,12 @@ const ErpStoreDetail = ({
               </SwiperSlide>
             </Swiper>
           </TabPanel>
-          <TabPanel key="panel-area">
+          <TabPanel key="panel-area" overflow={"visible"}>
             <ErpHistory id="test" title={storeData?.storeName} />
           </TabPanel>
-          <TabPanel key="panel-area">문서보관함</TabPanel>
+          <TabPanel key="panel-area" overflow={"visible"}>
+            <ErpDocs id="test" />
+          </TabPanel>
         </TabPanels>
       </Tabs>
     </Section>
@@ -291,18 +355,18 @@ const LineChart = () => {
     },
   };
   const labels = [
-    "202202",
-    "202203",
-    "202204",
-    "202205",
-    "202206",
-    "202207",
-    "202208",
-    "202209",
-    "202210",
-    "202211",
-    "202212",
-    "202301",
+    "02월",
+    "03월",
+    "04월",
+    "05월",
+    "06월",
+    "07월",
+    "08월",
+    "09월",
+    "10월",
+    "11월",
+    "12월",
+    "01월",
   ];
   const data = {
     labels,
@@ -310,15 +374,23 @@ const LineChart = () => {
       {
         label: "매출증가추이",
         data: [
-          1000000, 2000000, 3000000, 5000000, 3000000, 5000000, 10000000,
-          30000000, 2000000, 5000000, 3000000,
+          1000000, 20000000, 30000000, 5000000, 3000000, 5000000, 10000000,
+          30000000, 2000000, 5000000, 3000000, 2000000,
         ],
         fill: true,
         borderColor: "#D9D9D9",
-        backgroundColor: [
-          "rgba(235, 255, 5, 0.49) 10%",
-          "rgba(56, 59, 61, 0) 98.46%)",
+        backgroundColor: "#e4ff0080",
+        // "linear-gradient(178.56deg, rgba(235, 255, 5, 0.49) 10%, rgba(56, 59, 61, 0) 98.46%)",
+      },
+      {
+        label: "매출증가추이",
+        data: [
+          2000000, 80000000, 5000000, 5000000, 30000000, 8000000, 10000000,
+          30000000, 2000000, 5000000, 5000000, 2000000,
         ],
+        fill: true,
+        borderColor: "#D9D9D9",
+        backgroundColor: "#0037ff80",
         // "linear-gradient(178.56deg, rgba(235, 255, 5, 0.49) 10%, rgba(56, 59, 61, 0) 98.46%)",
       },
     ],
@@ -326,37 +398,99 @@ const LineChart = () => {
 
   return (
     <Flex w="100%" h="60%" justify="center">
-      <Flex
-        p="1rem"
-        w="auto"
-        minW="80%"
-        h="100%"
-        border="1px solid"
-        borderColor="font.primary"
-      >
-        <Line
-          options={options}
-          data={data}
-          style={{ width: "100%", height: "500px" }}
-        />
+      <Line
+        options={options}
+        data={data}
+        style={{ width: "100%", height: "500px" }}
+      />
+    </Flex>
+  );
+};
+
+const Sample = () => {
+  const initVal = [
+    { rank: 1, menu: "test1", sale: "1000000", ratio: "30%" },
+    { rank: 2, menu: "test2", sale: "900000", ratio: "28%" },
+    { rank: 3, menu: "test3", sale: "800000", ratio: "26%" },
+  ];
+  return (
+    <Flex pt="3rem" direction="column" w="100%" h="100%">
+      <Flex w="100%" mb="1rem">
+        <Text
+          w="25%"
+          textAlign="center"
+          fontWeight="strong"
+          fontSize="xs"
+          lineHeight="1.0625rem"
+        >
+          순위
+        </Text>
+        <Text
+          w="25%"
+          textAlign="center"
+          fontWeight="strong"
+          fontSize="xs"
+          lineHeight="1.0625rem"
+        >
+          메뉴
+        </Text>
+        <Text
+          w="25%"
+          textAlign="center"
+          fontWeight="strong"
+          fontSize="xs"
+          lineHeight="1.0625rem"
+        >
+          매출
+        </Text>
+        <Text
+          w="25%"
+          textAlign="center"
+          fontWeight="strong"
+          fontSize="xs"
+          lineHeight="1.0625rem"
+        >
+          비율
+        </Text>
+      </Flex>
+      <Flex h="100%" direction="column">
+        {initVal?.map((li: any, idx: number) => {
+          console.log(li);
+          return (
+            <Flex
+              mb="0.5rem"
+              h="2.5rem"
+              border="1px solid"
+              borderColor="#D8D8DC"
+              borderRadius="12px"
+              align="center"
+            >
+              <Flex w="25%" justify="center" fontWeight="regular" fontSize="xs">
+                <Flex fontWeight="regular" fontSize="xs">
+                  {li.rank}
+                </Flex>
+              </Flex>
+              <Flex w="25%" justify="center">
+                <Flex fontWeight="regular" fontSize="xs">
+                  {li.menu}
+                </Flex>
+              </Flex>
+              <Flex w="25%" justify="center">
+                <Flex fontWeight="regular" fontSize="xs">
+                  {li.sale}
+                </Flex>
+              </Flex>
+              <Flex w="25%" justify="center">
+                <Flex fontWeight="regular" fontSize="xs">
+                  {li.ratio}
+                </Flex>
+              </Flex>
+            </Flex>
+          );
+        })}
       </Flex>
     </Flex>
   );
 };
 
 export default ErpStoreDetail;
-
-// <Box
-//     w="100%"
-//     overflowY="scroll"
-//     pl="1rem"
-//     __css={{
-//       "::-webkit-scrollbar": {
-//         w: "5px",
-//       },
-//       "::-webkit-scrollbar-thumb": {
-//         borderRadius: "5",
-//         bg: `primary.reverse.bdColor`,
-//       },
-//     }}
-//   ></Box>

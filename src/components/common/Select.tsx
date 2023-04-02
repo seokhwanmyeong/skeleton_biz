@@ -25,6 +25,7 @@ type PropsSlct = {
 
 type PropSlctAddr = {
   selectProps?: {};
+  selectGroupProps?: {};
   variant?: string;
   value: string;
   onChange: any;
@@ -87,6 +88,7 @@ const Select = ({
 
 const SelectAddr = ({
   selectProps,
+  selectGroupProps,
   variant,
   value,
   onChange,
@@ -161,7 +163,7 @@ const SelectAddr = ({
   };
 
   return (
-    <Flex gap={"0.5rem"} w="100%">
+    <Flex gap={"0.5rem"} w="100%" {...selectGroupProps}>
       <Select
         selectProps={selectProps}
         variant={variant}

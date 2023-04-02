@@ -21,7 +21,7 @@ import {
 } from "@chakra-ui/react";
 import DaumPostcode from "react-daum-postcode";
 //  Icons
-import { IconDownload, IconFileAdd } from "@assets/icons/icon";
+import { IconDownload, IconFileAdd, IcoSearch } from "@assets/icons/icon";
 //  Util
 import {
   importFileXlsx,
@@ -97,7 +97,7 @@ const Input = ({
   type = "text",
   value,
   onChange,
-  variant,
+  variant = "base",
   inputProps,
   placeholder,
   _placeholder,
@@ -462,91 +462,122 @@ const InputFile = ({
   const [fileName, setFileName] = useState("");
 
   return (
-    <Flex
-      {...groupProps}
-      position="relative"
-      flexDirection="column"
-      justifyContent="center"
-      alignItems="center"
-      p="0"
-      w="100%"
-      h="30rem"
-      bgColor="primary.main.bg"
-      border="1px dashed"
-      borderColor="primary.main.bdColor"
-      borderRadius="base"
-    >
-      <ChakraInput
-        variant="fileHidden"
-        id={`${fieldKey}-hidden`}
-        type="file"
-        value={value}
-        onChange={(e: any) => {
-          form
-            ? importFileXlsx(e, form)
-                .then((res) => {
-                  if (res) {
-                    const { data, fileName } = res;
-
-                    onChange(data);
-                    setFileName(fileName);
-                  }
-                })
-                .catch((e) => {
-                  e.length > 0
-                    ? alert(e)
-                    : alert(
-                        "파일에 오류가 있습니다. 행/열/필수값을 확인해주세요"
-                      );
-                })
-            : importFileSave(e)
-                .then((res) => {
-                  if (res) {
-                    const { data, fileName } = res;
-
-                    onChange(data);
-                    setFileName(fileName);
-                  }
-                })
-                .catch((e) => {
-                  e.length > 0
-                    ? alert(e)
-                    : alert(
-                        "파일에 오류가 있습니다. 행/열/필수값을 확인해주세요"
-                      );
-                });
-        }}
-        isDisabled={isDisabled}
-        isInvalid={isInvalid}
-        isReadOnly={isReadOnly}
-        isRequired={isRequired}
-        aria-hidden="true"
-        accept={accept}
-        ref={fileRef}
-      />
-      <IconDownload boxSize="4rem" mb="1rem" />
-      {fileName ? (
-        <Text mb="0.5rem">{fileName}</Text>
-      ) : (
-        <Text mb="0.5rem">파일을 드래그 해보세요.</Text>
-      )}
-      <Text mb="2rem">파일 형식 제한없음 (최대 40MB)</Text>
-      <Button
-        onClick={(e) => {
-          e.stopPropagation();
-          fileRef.current?.click();
-        }}
-        zIndex="2"
-        gap="0.5rem"
+    <>
+      <Flex
+        {...groupProps}
+        position="relative"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+        mb="0.5rem"
+        p="0"
+        w="24.375rem"
+        h="9.375rem"
+        bgColor="#FAFAFA"
+        border="1px dashed"
+        borderColor="primary.main.bdColor"
+        borderRadius="8px"
       >
-        <IconFileAdd />
-        파일 등록하기
-      </Button>
-    </Flex>
+        <ChakraInput
+          variant="fileHidden"
+          id={`${fieldKey}-hidden`}
+          type="file"
+          value={value}
+          onChange={(e: any) => {
+            form
+              ? importFileXlsx(e, form)
+                  .then((res) => {
+                    if (res) {
+                      const { data, fileName } = res;
+
+                      onChange(data);
+                      setFileName(fileName);
+                    }
+                  })
+                  .catch((e) => {
+                    e.length > 0
+                      ? alert(e)
+                      : alert(
+                          "파일에 오류가 있습니다. 행/열/필수값을 확인해주세요"
+                        );
+                  })
+              : importFileSave(e)
+                  .then((res) => {
+                    if (res) {
+                      const { data, fileName } = res;
+
+                      onChange(data);
+                      setFileName(fileName);
+                    }
+                  })
+                  .catch((e) => {
+                    e.length > 0
+                      ? alert(e)
+                      : alert(
+                          "파일에 오류가 있습니다. 행/열/필수값을 확인해주세요"
+                        );
+                  });
+          }}
+          isDisabled={isDisabled}
+          isInvalid={isInvalid}
+          isReadOnly={isReadOnly}
+          isRequired={isRequired}
+          aria-hidden="true"
+          accept={accept}
+          ref={fileRef}
+        />
+        <IconDownload
+          w="3rem"
+          h="3rem"
+          boxSize="4rem"
+          mb="1rem"
+          color="primary.type7"
+        />
+        <Text
+          mb="0.5rem"
+          fontWeight="strong"
+          fontSize="md"
+          lineHeight="1.5rem"
+          color="font.secondary"
+        >
+          클릭 또는 드래그하여 파일을 업로드하세요.
+        </Text>
+        <Text
+          fontWeight="regular"
+          fontSize="xs"
+          lineHeight="1.375rem"
+          color="font.secondary"
+        >
+          파일 형식 제한없음 (최대 40MB)
+        </Text>
+        {/* <Button
+          onClick={(e) => {
+            e.stopPropagation();
+            fileRef.current?.click();
+          }}
+          zIndex="2"
+          gap="0.5rem"
+        >
+          <IconFileAdd />
+          파일 등록하기
+        </Button> */}
+      </Flex>
+      {fileName && (
+        <Text
+          mb="0.5rem"
+          fontSize="sm"
+          lineHeight="1.375rem"
+          color="primary.type7"
+        >
+          {fileName}
+        </Text>
+      )}
+    </>
   );
 };
 
 const InputImg = ({
+  isSimple = false,
   fieldKey,
   form,
   value,
@@ -561,7 +592,7 @@ const InputImg = ({
   isReadOnly = false,
   isRequired = false,
   ...rest
-}: InpFileProps) => {
+}: any) => {
   const fileRef = useRef<HTMLInputElement>(null);
   const [selectImg, setSelectImg] = useState<number>(0);
   const [imgList, setImgList] = useState<any[] | never[]>([]);
@@ -574,7 +605,15 @@ const InputImg = ({
   };
 
   return (
-    <Flex flexDirection="column" gap="1rem" w="100%">
+    <Flex
+      flexDirection="column"
+      gap="1rem"
+      w={isSimple ? "85px" : "100%"}
+      h={isSimple ? "85px" : "100%"}
+      borderRadius="base"
+      border="1px dashed #D9D9D9"
+      bgColor="#FAFAFA"
+    >
       <Flex
         {...groupProps}
         position="relative"
@@ -583,9 +622,9 @@ const InputImg = ({
         alignItems="center"
         p="0"
         w="100%"
-        h="30rem"
-        borderRadius="base"
-        bgColor="primary.main.bg"
+        h={isSimple ? "100%" : "auto"}
+        minH={isSimple ? "30%" : "13rem"}
+        border="0"
       >
         {imgList.length > 0 && (
           <Image
@@ -597,7 +636,7 @@ const InputImg = ({
             transform="translate(-50%, -50%)"
             w="100%"
             h="100%"
-            opacity={0.8}
+            opacity={1}
             borderRadius="base"
             border="none"
             transition="0.3s"
@@ -629,13 +668,23 @@ const InputImg = ({
           accept={".jpg, .png"}
           ref={fileRef}
         />
-        <IconDownload boxSize="4rem" mb="1rem" />
-        <Text mb="0.5rem">이미지를 드래그 해보세요.</Text>
-        <Text mb="2rem">이미지 형식: jpg/png (최대 500kb)</Text>
-        <Button onClick={uploadBtnHandler} zIndex="2" gap="0.5rem">
+        <IconDownload
+          width={isSimple ? "1rem" : "auto"}
+          height={isSimple ? "1rem" : "auto"}
+          mb={isSimple ? "0" : "1rem"}
+          color="font.title"
+          boxSize="4rem"
+        />
+        <Text mb="0.5rem" color="font.primary">
+          {isSimple ? "Upload" : "이미지를 드래그 해보세요."}
+        </Text>
+        {!isSimple && (
+          <Text color="font.primary">이미지 형식: jpg/png (최대 500kb)</Text>
+        )}
+        {/* <Button onClick={uploadBtnHandler} zIndex="2" gap="0.5rem">
           <IconFileAdd />
           이미지 등록하기
-        </Button>
+        </Button> */}
       </Flex>
       {imgList.length > 0 && (
         <List display="flex" w="100%" justifyContent="center" gap="3rem">
@@ -733,10 +782,17 @@ const InputAddr = ({
   // };
 
   return (
-    <Flex minW={0} w="100%" h="100%">
-      <Button variant="addrBtn" onClick={onOpen}>
-        {value}
+    <Flex minW={0} w="100%" h="100%" gap="0.25rem">
+      <Input isDisabled={true} value={value} onChange={() => {}} />
+      <Button variant="search" onClick={onOpen}>
+        <IcoSearch w="0.875rem" h="0.875rem" />
+        <Text variant="search" color="#ffffff">
+          검색
+        </Text>
       </Button>
+      {/* <Button variant="addrBtn" onClick={onOpen}>
+        {value}
+      </Button> */}
       <ChakraModal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent w="auto" maxW="auto">

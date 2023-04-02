@@ -1,8 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
 import { Box, Button, Flex, Text, useDisclosure } from "@chakra-ui/react";
-//  Api
-import cubejsApi from "@api/cubeApi/config";
+import { NaverMapContext } from "@src/lib/src";
 //  State
 import { atomFilterFlow } from "@states/sementicMap/filterState";
 import {
@@ -10,20 +9,19 @@ import {
   atomSidoLi,
   atomSigunguLi,
 } from "@states/sementicMap/mapState";
-import { NaverMapContext } from "@src/lib/src";
 //  Component
-import BtnReset from "@components/sementicMapLayer/mapElement/BtnReset";
-import BtnFlowCustom from "@components/sementicMapLayer/mapElement/BtnFlowCustom";
-import BtnBack from "@components/sementicMapLayer/mapElement/BtnBack";
-import DecoTop from "@components/sementicMapLayer/mapElement/DecoTop";
+import BtnReset from "@src/components/sementicMapLayer/sementicFilter/BtnReset";
+import BtnFlowCustom from "@components/sementicMapLayer/sementicFilter/BtnFlowCustom";
+import BtnBack from "@components/sementicMapLayer/sementicFilter/BtnBack";
+import DecoTop from "@components/sementicMapLayer/sementicFilter/DecoTop";
+import AreaListBox from "@components/sementicMapLayer/sementicFilter/AreaListBox";
+import NiceFilter from "@components/sementicMapLayer/sementicFilter/NiceFilter";
+import UpjonListBox from "@components/sementicMapLayer/sementicFilter/UpjonListBox";
 //  Icon
-import {
-  IcoAppStore,
-  IcoBarChart,
-  IcoErp,
-  IcoFilter,
-} from "@assets/icons/icon";
-import AreaListBox from "../mapElement/AreaListBox";
+import { IcoBarChart, IcoErp, IcoFilter } from "@assets/icons/icon";
+//  Sample
+import sidoData from "@util/data/area/sido.json";
+import sigunguData from "@util/data/area/sigungu.json";
 
 const FlowEnter = () => {
   const { state } = useContext(NaverMapContext);
@@ -34,6 +32,7 @@ const FlowEnter = () => {
   const [sigunguLi, setSigunguLi] = useRecoilState(atomSigunguLi);
   const [slctLi, setSlctLi] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [filterType, setType] = useState("");
 
   const pathTransHandler = (
     areaList: { code: string; name: string; path: string }[]
@@ -54,52 +53,34 @@ const FlowEnter = () => {
   };
 
   const getSidoList = () => {
-    cubejsApi
-      .load({
-        dimensions: ["AreaSido.code", "AreaSido.name", "AreaSido.polygon"],
-      })
-      .then((res) => {
-        const data = res.rawData().map((si: any) => {
-          return {
-            code: si["AreaSido.code"],
-            name: si["AreaSido.name"],
-            path: si["AreaSido.polygon"],
-          };
-        });
-        if (data) {
-          const transData = pathTransHandler(data);
+    const test = sidoData.map(({ code, name, polygon }) => {
+      return {
+        code: code,
+        name: name,
+        path: polygon,
+      };
+    });
 
-          setSidoLi(transData);
-        }
-      });
+    const transData = pathTransHandler(test);
+
+    setSidoLi(transData);
   };
 
   const getSigunguList = (slctCode: string) => {
-    cubejsApi
-      .load({
-        dimensions: ["AreaGungu.code", "AreaGungu.name", "AreaGungu.polygon"],
-        filters: [
-          {
-            member: "AreaGungu.parent",
-            operator: "equals",
-            values: [slctCode],
-          },
-        ],
+    const test = sigunguData
+      .map(({ code, name, polygon, parent }: any) => {
+        return {
+          code: code,
+          name: name,
+          path: polygon,
+          parent: parent,
+        };
       })
-      .then((res) => {
-        const data = res.rawData().map((sigungu: any) => {
-          return {
-            code: sigungu["AreaGungu.code"],
-            name: sigungu["AreaGungu.name"],
-            path: sigungu["AreaGungu.polygon"],
-          };
-        });
-        if (data) {
-          const transData = pathTransHandler(data);
+      .filter((li: any) => li.parent === slctCode);
 
-          setSigunguLi(transData);
-        }
-      });
+    const transData = pathTransHandler(test);
+
+    setSigunguLi(transData);
   };
 
   useEffect(() => {
@@ -125,31 +106,6 @@ const FlowEnter = () => {
     }
   }, [sigungu]);
 
-  const upjong = {
-    top: [
-      "생활서비스",
-      "소매/유통",
-      "여가/오락",
-      "음식",
-      "의료/건강",
-      "학문/교육",
-    ],
-    mid: {
-      F: [
-        "광고/인쇄/인화",
-        "미용서비스",
-        "법무세무회계",
-        "부동산",
-        "사우나/휴게시설",
-        "세탁/가사서비스",
-        "수리서비스",
-        "예식/의례",
-        "주유소/충전소",
-        "차량관리",
-      ],
-    },
-  };
-
   return (
     <>
       {/* ------------------------------ 상단 ------------------------------*/}
@@ -159,19 +115,9 @@ const FlowEnter = () => {
         left="50%"
         zIndex={999}
         transform="translateX(-50%)"
-        gap={sido?.slctName ? "3rem" : "2rem"}
+        gap="4rem"
       >
-        <Button
-          onClick={() => {
-            onClose();
-          }}
-          variant="filterTop"
-        >
-          <Box>
-            <IcoAppStore />
-          </Box>
-          업종
-        </Button>
+        <UpjonListBox />
         {sidoLi.length !== 0 && (
           <AreaListBox
             title="시/도 선택"
@@ -201,7 +147,7 @@ const FlowEnter = () => {
         )}
         <Flex
           pos="relative"
-          pt="0.6rem"
+          pt="0.3rem"
           direction="column"
           justify="flex-start"
           color="#000000"
@@ -212,6 +158,11 @@ const FlowEnter = () => {
               <BtnBack
                 onClick={() => {
                   resetSlct();
+                  state.map?.setOptions({
+                    minZoom: 0,
+                    maxZoom: 16,
+                    scrollWheel: false,
+                  });
                 }}
                 disabled={!sido?.slctName}
               />
@@ -224,7 +175,7 @@ const FlowEnter = () => {
             >
               {sido?.slctName ? "시군구를 선택하세요" : "지역을 선택하세요"}
             </Button>
-            <DecoTop width={sido?.slctName ? "13rem" : "10rem"} />
+            <DecoTop width={"13rem"} />
           </Flex>
           {sido?.slctName && (
             <Text variant="filterTopArea">{sido.slctName}</Text>
@@ -258,55 +209,6 @@ const FlowEnter = () => {
               }}
             />
           )}
-          {/* {sido?.slctCode
-            ? sigunguLi.length !== 0 && (
-                <AreaListBox
-                  title="시/군/구 선택"
-                  isOpen={isOpen}
-                  list={sigunguLi}
-                  setSlctArea={(val: {
-                    slctName: string;
-                    slctCode: string;
-                    slctIdx: string;
-                    slctPath: any;
-                  }) =>
-                    setSlctArea({
-                      sido,
-                      sigungu: val,
-                    })
-                  }
-                  onClick={() => {
-                    setFlow(1);
-                  }}
-                />
-              )
-            : sidoLi.length !== 0 && (
-                <AreaListBox
-                  title="시/도 선택"
-                  isOpen={isOpen}
-                  list={
-                    sido?.slctCode && sigunguLi.length !== 0
-                      ? sigunguLi
-                      : sidoLi
-                  }
-                  setSlctArea={(val: {
-                    slctName: string;
-                    slctCode: string;
-                    slctIdx: string;
-                    slctPath: any;
-                  }) =>
-                    sido?.slctCode && sigunguLi.length !== 0
-                      ? setSlctArea({
-                          sido,
-                          sigungu: val,
-                        })
-                      : setSlctArea({
-                          sido: val,
-                          sigungu,
-                        })
-                  }
-                />
-              )} */}
         </Flex>
         <BtnFlowCustom />
       </Flex>
@@ -319,13 +221,27 @@ const FlowEnter = () => {
         transform="translateX(-50%)"
         gap="1.25rem"
       >
-        <Button variant="filterTop" onClick={() => {}}>
+        <Button
+          variant="filterTop"
+          isActive={filterType === "anal"}
+          disabled
+          onClick={() => {
+            setType("anal");
+          }}
+        >
           <Box>
             <IcoFilter />
           </Box>
           분석필터
         </Button>
-        <Button variant="filterTop" onClick={() => {}}>
+        <Button
+          variant="filterTop"
+          isActive={filterType === "erp"}
+          disabled
+          onClick={() => {
+            setType("erp");
+          }}
+        >
           <Box>
             <IcoErp />
           </Box>
@@ -337,13 +253,50 @@ const FlowEnter = () => {
             resetSlct();
           }}
         />
-        <Button variant="filterTop" onClick={() => {}}>
+        <Button variant="filterTop" disabled onClick={() => {}}>
           <Box>
             <IcoBarChart />
           </Box>
           리포트
         </Button>
       </Flex>
+      {filterType === "anal" && <NiceFilter />}
+      {filterType === "erp" && (
+        <Flex
+          pos="absolute"
+          bottom="calc(1% + 4.5rem)"
+          left="50%"
+          zIndex={999}
+          transform="translateX(-50%)"
+          gap="1.25rem"
+        >
+          <Button variant="filterTop" onClick={() => {}}>
+            <Box>
+              <IcoErp />
+            </Box>
+          </Button>
+          <Button variant="filterTop" onClick={() => {}}>
+            <Box>
+              <IcoErp />
+            </Box>
+          </Button>
+          <Button variant="filterTop" onClick={() => {}}>
+            <Box>
+              <IcoErp />
+            </Box>
+          </Button>
+          <Button variant="filterTop" onClick={() => {}}>
+            <Box>
+              <IcoErp />
+            </Box>
+          </Button>
+          <Button variant="filterTop" onClick={() => {}}>
+            <Box>
+              <IcoErp />
+            </Box>
+          </Button>
+        </Flex>
+      )}
     </>
   );
 };

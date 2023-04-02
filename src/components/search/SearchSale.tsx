@@ -15,7 +15,7 @@ const SearchSale = ({
   setValues: any;
 }) => {
   return (
-    <Flex p="0rem 2rem">
+    <Flex p="0rem 0.8125rem">
       <Formik
         initialValues={initVal}
         onSubmit={(values) => {
@@ -28,8 +28,14 @@ const SearchSale = ({
         {({ handleSubmit, errors, touched, getFieldProps, setFieldValue }) => {
           return (
             <Form onSubmit={handleSubmit} style={{ width: "100%" }}>
-              <Flex w="100%" flexDirection="column" gap="1rem">
-                <FormControl variant="search" maxW="80%">
+              <Flex
+                w="100%"
+                justify="space-between"
+                direction="row"
+                wrap="wrap"
+                gap="1rem"
+              >
+                <FormControl variant="search" maxW="49%">
                   <FormLabel
                     display="flex"
                     alignItems="center"
@@ -38,7 +44,7 @@ const SearchSale = ({
                   >
                     검색어
                   </FormLabel>
-                  <Flex w="100%" gap="2rem">
+                  <Flex w="100%" gap="0.5rem">
                     <Select
                       data={[
                         { text: "평균월매출", value: "avgM" },
@@ -50,9 +56,9 @@ const SearchSale = ({
                       opBaseId="value"
                       opBaseKey="value"
                       onChange={(val: any) => setFieldValue("type", val)}
-                      selectProps={{ w: "32%" }}
+                      selectProps={{ w: "24%", lineHeight: "1.4rem" }}
                     />
-                    <Flex w="68%" gap="1rem">
+                    <Flex w="76%" gap="1rem">
                       <Input
                         inputProps={{ w: "100%" }}
                         onChange={(val: any) =>
@@ -69,7 +75,7 @@ const SearchSale = ({
                     </Flex>
                   </Flex>
                 </FormControl>
-                <FormControl variant="search" maxW="80%">
+                <FormControl variant="search" maxW="49%">
                   <FormLabel
                     display="flex"
                     alignItems="center"
@@ -81,9 +87,10 @@ const SearchSale = ({
                   <SelectAddr
                     value={getFieldProps("areaCode").value}
                     onChange={(val: any) => setFieldValue("areaCode", val)}
+                    selectProps={{ lineHeight: "1.4rem" }}
                   />
                 </FormControl>
-                <FormControl variant="search" maxW="80%">
+                <FormControl variant="search" maxW="49%">
                   <FormLabel
                     display="flex"
                     alignItems="center"
@@ -105,35 +112,44 @@ const SearchSale = ({
                     onChange={(val: any) => setFieldValue("storeRank", val)}
                   />
                 </FormControl>
-                <FormControl variant="search" maxW="80%">
-                  <FormLabel
-                    display="flex"
-                    alignItems="center"
-                    w="10%"
-                    flex="none"
-                  >
-                    기간
-                  </FormLabel>
-                  <InputTotalDate
-                    value={getFieldProps("rangeDate").value}
-                    onChange={(val: string) => setFieldValue("rangeDate", val)}
-                    _placeholder={{ color: "gray.500" }}
-                    focusBorderColor="black.100"
-                    errorBorderColor="red.300"
-                  />
-                </FormControl>
-              </Flex>
-              <Flex mt="1rem" justifyContent="center">
-                <Button
-                  type="submit"
+                <FormControl
                   variant="search"
-                  onClick={() => {
-                    handleSubmit();
-                  }}
+                  maxW="49%"
+                  justifyContent={"space-between"}
                 >
-                  <IcoSearch />
-                  <Text variant="search">검색</Text>
-                </Button>
+                  <Flex w="100%">
+                    <FormLabel
+                      display="flex"
+                      alignItems="center"
+                      w="10%"
+                      flex="none"
+                    >
+                      기간
+                    </FormLabel>
+                    <InputTotalDate
+                      value={getFieldProps("rangeDate").value}
+                      onChange={(val: string) =>
+                        setFieldValue("rangeDate", val)
+                      }
+                      _placeholder={{ color: "gray.500" }}
+                      focusBorderColor="black.100"
+                      errorBorderColor="red.300"
+                    />
+                  </Flex>
+                  <Flex justifyContent="flex-end" w="auto">
+                    <Button
+                      ml="4%"
+                      type="submit"
+                      variant="search"
+                      onClick={() => {
+                        handleSubmit();
+                      }}
+                    >
+                      <IcoSearch w="0.875rem" h="0.875rem" />
+                      <Text variant="search">검색</Text>
+                    </Button>
+                  </Flex>
+                </FormControl>
               </Flex>
             </Form>
           );

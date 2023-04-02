@@ -4,7 +4,7 @@ const inputTheme = {
     field: {
       px: "0.5rem",
       h: "1.5rem",
-      bgColor: "#FFFFFF",
+      background: "#FFFFFF",
       border: "1px solid",
       borderRadius: "base",
       textStyle: "input",
@@ -30,7 +30,11 @@ const inputTheme = {
     base: {},
   },
   variants: {
-    base: {},
+    base: {
+      field: {
+        background: "#FFFFFF",
+      },
+    },
     fileHidden: {
       field: {
         position: "absolute",
@@ -43,15 +47,10 @@ const inputTheme = {
         w: "100%",
         h: "100%",
         borderRadius: "base",
-        opacity: 0.5,
+        opacity: 0,
         zIndex: 1,
         cursor: "pointer",
-        border: "1px dashed",
-        borderColor: "primary.main.bdColor",
-        _hover: {
-          border: "1px dashed",
-          opacity: 1,
-        },
+        border: 0,
       },
     },
     form: {},

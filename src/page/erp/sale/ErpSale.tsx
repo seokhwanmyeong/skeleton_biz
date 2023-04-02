@@ -50,8 +50,9 @@ const ErpSale = () => {
     let sample = [];
     console.log("search start");
 
-    for (let i = 0; i < 200; i++) {
+    for (let i = 0; i < 10; i++) {
       sample.push({
+        id: String(i),
         storeName: "종로종로",
         storeCode: "12314515",
         storeRank: "B",
@@ -129,12 +130,20 @@ const ErpSale = () => {
           </Flex>
         </Flex>
       </Section>
-      <Section p="0.625rem 0rem 1rem" h="100%">
+      <Table
+        data={tableData}
+        actviePage={true}
+        divide={5}
+        columns={column}
+        totalPage={totalPage}
+        page={curPage}
+        getSelectData={setSelectData}
+        getPage={setCurPage}
+      >
         <Flex
           p="0rem 1.65625rem 0.5rem"
           w="100%"
           justify="flex-end"
-          align="center"
           gap="1.5rem"
         >
           <ModalSaleEditor />
@@ -149,17 +158,7 @@ const ErpSale = () => {
             isDisabled={selectData.length > 0 ? false : true}
           />
         </Flex>
-        <Table
-          data={tableData}
-          actviePage={true}
-          divide={5}
-          columns={column}
-          totalPage={totalPage}
-          page={curPage}
-          getSelectData={setSelectData}
-          getPage={setCurPage}
-        />
-      </Section>
+      </Table>
     </Flex>
   );
 };

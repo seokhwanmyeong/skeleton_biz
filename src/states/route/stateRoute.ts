@@ -11,11 +11,15 @@ import ErpStoreDetail from "@page/erp/store/ErpStoreDetail";
 import ErpStoreCreate from "@page/erp/store/ErpStoreCreate";
 import ErpSale from "@page/erp/sale/ErpSale";
 import ErpBsnsDis from "@page/erp/bsnsDis/ErpBsnsDis";
+import ErpBsnsDetail from "@page/erp/bsnsDis/ErpBsnsDetail";
 import ErpRent from "@page/erp/rent/ErpRent";
 import ErpRentDetail from "@page/erp/rent/ErpRentDetail";
+import ErpRentCreate from "@page/erp/rent/ErpRentCreate";
 import ErpClient from "@page/erp/client/ErpClient";
 import ErpClientDetail from "@page/erp/client/ErpClientDetail";
+import ErpClientCreate from "@page/erp/client/ErpClientCreate";
 import ErpBrand from "@page/erp/brand/ErpBrand";
+import ErpBrandCreate from "@page/erp/brand/ErpBrandCreate";
 import ErpSmart from "@page/erp/smart/ErpSmart";
 import ErpNotice from "@page/erp/notice/ErpNotice";
 
@@ -167,12 +171,19 @@ export const subRoute = atom<{
       {
         title: "상권",
         hasChild: false,
-        path: "bsnsDis",
+        path: "bsns",
         page: ErpBsnsDis,
         isMenu: true,
         icon: (color?: HEX) => {
           return SubMenu04(color);
         },
+      },
+      {
+        title: "상권상세보기",
+        hasChild: false,
+        path: "bsns/detail",
+        page: ErpBsnsDetail,
+        isMenu: false,
       },
       {
         title: "매물",
@@ -191,7 +202,13 @@ export const subRoute = atom<{
         page: ErpRentDetail,
         isMenu: false,
       },
-
+      {
+        title: "매물생성",
+        hasChild: false,
+        path: "rent/create",
+        page: ErpRentCreate,
+        isMenu: false,
+      },
       {
         title: "고객",
         hasChild: false,
@@ -210,6 +227,13 @@ export const subRoute = atom<{
         isMenu: false,
       },
       {
+        title: "고객생성",
+        hasChild: false,
+        path: "client/create",
+        page: ErpClientCreate,
+        isMenu: false,
+      },
+      {
         title: "브랜드",
         hasChild: false,
         path: "brand",
@@ -218,6 +242,13 @@ export const subRoute = atom<{
         icon: (color?: HEX) => {
           return SubMenu07(color);
         },
+      },
+      {
+        title: "브랜드생성",
+        hasChild: false,
+        path: "brand/create",
+        page: ErpBrandCreate,
+        isMenu: false,
       },
       {
         title: "Smart",

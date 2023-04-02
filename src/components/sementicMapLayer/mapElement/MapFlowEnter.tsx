@@ -50,18 +50,21 @@ const MapFlowEnter = (props: Props) => {
     if (sido?.slctCode && sido?.slctName && sido?.slctPath) {
       console.log("진입 1");
       state.map?.fitBounds(sido.slctPath);
+      let curZoom = state.map?.getZoom();
+      state.map?.setOptions({
+        minZoom: curZoom,
+        maxZoom: curZoom,
+        scrollWheel: false,
+      });
     } else if (sidoLi.length > 0) {
       console.log("진입 2");
+      state.map?.setZoom(8, false);
+      state.map?.setCenter(new naver.maps.LatLng(35.9223291, 127.9101228));
       state.map?.setOptions({
         minZoom: 8,
         maxZoom: 8,
-        center: [35.9223291, 127.9101228],
-        //zoom : false,
+        scrollWheel: false,
       });
-      state.map?.setZoom(8, false);
-      state.map?.setCenter(new naver.maps.LatLng(35.9223291, 127.9101228));
-      let curZoom = state.map?.getZoom();
-      console.log(curZoom);
     }
   }, [sido, sigungu]);
 
@@ -88,14 +91,14 @@ const MapFlowEnter = (props: Props) => {
                       minZoom: 0,
                       maxZoom: 16,
                     });
-                    state.map?.fitBounds(sido.path);
+                    // state.map?.fitBounds(sido.path);
 
-                    let curZoom = state.map?.getZoom();
+                    // let curZoom = state.map?.getZoom();
 
-                    state.map?.setOptions({
-                      minZoom: curZoom,
-                      maxZoom: curZoom,
-                    });
+                    // state.map?.setOptions({
+                    //   minZoom: curZoom,
+                    //   maxZoom: curZoom,
+                    // });
                   }}
                   name={sido.name}
                   num={Number(sido.code)}

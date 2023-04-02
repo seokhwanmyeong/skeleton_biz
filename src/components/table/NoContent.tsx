@@ -21,7 +21,7 @@ const NoContent = ({ text, noShadow }: NoContentProps) => {
       boxShadow={noShadow ? "unset" : "sm"}
       h="100%"
     >
-      <Text mt="4">{text}</Text>
+      <Text>{text}</Text>
     </Flex>
   );
 };

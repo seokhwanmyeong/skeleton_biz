@@ -14,6 +14,8 @@ interface InteractDongProps {
     | naver.maps.ArrayOfCoords[]
     | naver.maps.KVOArrayOfCoords[]
     | naver.maps.ArrayOfCoordsLiteral[];
+  style?: any;
+  hoverStyle?: any;
 }
 const InteractDong = ({
   onClick,
@@ -22,6 +24,8 @@ const InteractDong = ({
   selectDong,
   center,
   path,
+  style,
+  hoverStyle,
 }: InteractDongProps) => {
   const { state, dispatch } = useContext(NaverMapContext);
   const [areaId] = useState("dong" + num);
@@ -36,6 +40,7 @@ const InteractDong = ({
       fillColor: "#13BD68",
       strokeColor: "#E51D1A",
       zIndex: 1,
+      ...hoverStyle,
     });
   };
   const onMouseOutArea = () => {
@@ -49,6 +54,7 @@ const InteractDong = ({
       fillColor: "#0305F2",
       strokeColor: "#000000",
       zIndex: 0,
+      ...style,
     });
   };
   useEffect(() => {

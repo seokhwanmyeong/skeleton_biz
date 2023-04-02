@@ -12,7 +12,7 @@ import {
 
 type PropsModal = {
   variant?: string;
-  title: string;
+  title?: string;
   cancelText: string;
   botBtnComponent?: JSX.Element;
   children: JSX.Element;
@@ -33,7 +33,7 @@ const Modal = ({
     <ChakraModal variant={variant} isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent w="auto" maxW="auto">
-        <ModalHeader>{title}</ModalHeader>
+        {title && <ModalHeader>{title}</ModalHeader>}
         <ModalCloseButton />
         <ModalBody
           maxH="75vh"

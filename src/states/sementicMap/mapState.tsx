@@ -90,8 +90,8 @@ export const resetHandler = selector({
   get: () => {},
   set: ({ set, reset }) => {
     reset(atomFlowEnterArea);
-    // reset(atomSlctDong);
-    // reset(atomDongLi);
-    // reset(atomSigunguLi);
+    reset(atomSlctDong);
+    reset(atomDongLi);
+    reset(atomSigunguLi);
   },
 });

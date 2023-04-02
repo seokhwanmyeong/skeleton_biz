@@ -1,8 +1,30 @@
 //  Lib
-import { Text } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
-import { Button } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import FormHistoryEditor from "@src/components/form/erp/FormHistoryEditor";
+import {
+  Drawer,
+  DrawerBody,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+  Text,
+  Button,
+  useDisclosure,
+} from "@chakra-ui/react";
+import {
+  IcoBtnBsns,
+  IcoBtnBsnsFix,
+  IcoBtnClose,
+  IcoBtnDownload,
+  IcoBtnUpdate,
+} from "@src/components/common/Btn";
+import { useState } from "react";
+//  Util
+import { csvStoreSale } from "@util/data/fileCSV";
+import { exportFormCsv } from "@util/file/manageFile";
 
 const columnHelper = createColumnHelper();
 
@@ -143,17 +165,19 @@ const columnSaleInfo = [
   }),
   columnHelper.display({
     header: "매출상세",
-    cell: (info: any) => (
-      <Button
-        variant="linkBtn"
-        as={Link}
-        to={"/erp/store/detail"}
-        state={{ ...info.row.original, tabIdx: 1 }}
-        data-text={"상세보기"}
-      >
-        상세보기
-      </Button>
-    ),
+    cell: (info: any) => {
+      return (
+        <Button
+          variant="linkBtn"
+          as={Link}
+          to={"/erp/store/detail"}
+          state={{ ...info.row.original, tabIdx: 1 }}
+          data-text={"상세보기"}
+        >
+          상세보기
+        </Button>
+      );
+    },
     enableResizing: false,
     size: 100,
   }),
@@ -193,26 +217,31 @@ const columnBsnsInfo = [
     enableResizing: false,
     size: 100,
   }),
-  columnHelper.accessor((row: any) => row["bsnsAddress"], {
-    id: "bsnsAddress",
+  columnHelper.accessor((row: any) => row["bsnsAddr"], {
+    id: "bsnsAddr",
     header: "주소",
     cell: (info) => info.getValue(),
     enableResizing: false,
     size: 100,
   }),
   columnHelper.display({
-    header: "상세보기",
-    cell: (info: any) => (
-      <Button
-        variant="linkBtn"
-        as={Link}
-        to={"/maps"}
-        state={info.row.original}
-        data-text={"상세보기"}
-      >
-        상세보기
-      </Button>
-    ),
+    header: "마켓 데이터",
+    cell: (info: any) => <IcoBtnBsns propsData={info} />,
+    enableResizing: false,
+    size: 100,
+  }),
+  columnHelper.display({
+    header: "수정",
+    cell: (info: any) => {
+      const navigate = useNavigate();
+      return (
+        <IcoBtnUpdate
+          onClick={() => {
+            navigate("/maps");
+          }}
+        />
+      );
+    },
     enableResizing: false,
     size: 100,
   }),
@@ -223,12 +252,13 @@ const columnRentInfo = [
     header: "번호",
     cell: (info) => info.row.index + 1,
     enableResizing: false,
-    size: 80,
+    size: 100,
   }),
   columnHelper.accessor((row: any) => row["rentName"], {
     id: "rentName",
     header: "매물명",
     cell: (info) => <Text noOfLines={2}>{info.getValue()}</Text>,
+    enableResizing: false,
     size: 100,
   }),
   columnHelper.accessor((row: any) => row["rentCode"], {
@@ -250,7 +280,7 @@ const columnRentInfo = [
     header: "주소",
     cell: (info) => <Text noOfLines={2}>{info.getValue()}</Text>,
     enableResizing: true,
-    minSize: 180,
+    minSize: 160,
   }),
   columnHelper.accessor((row: any) => row["openDate"], {
     id: "openDate",
@@ -298,6 +328,36 @@ const columnRentInfo = [
   }),
 ];
 
+const columnRentNear = [
+  columnHelper.display({
+    header: "번호",
+    cell: (info) => info.row.index + 1,
+    enableResizing: false,
+    size: 100,
+  }),
+  columnHelper.accessor((row: any) => row["storeName"], {
+    id: "storeName",
+    header: "매장명",
+    cell: (info) => <Text noOfLines={2}>{info.getValue()}</Text>,
+    enableResizing: false,
+    size: 100,
+  }),
+  columnHelper.accessor((row: any) => row["addr"], {
+    id: "addr",
+    header: "주소",
+    cell: (info) => info.getValue(),
+    enableResizing: false,
+    size: 120,
+  }),
+  columnHelper.accessor((row: any) => row["distance"], {
+    id: "distance",
+    header: "거리",
+    cell: (info) => info.getValue(),
+    enableResizing: false,
+    size: 80,
+  }),
+];
+
 const columnClientInfo = [
   columnHelper.display({
     header: "번호",
@@ -325,15 +385,15 @@ const columnClientInfo = [
     enableResizing: false,
     size: 80,
   }),
-  columnHelper.accessor((row: any) => row["addr"], {
-    id: "addr",
+  columnHelper.accessor((row: any) => row["hopeArea"], {
+    id: "hopeArea",
     header: "희망지역",
     cell: (info) => <Text noOfLines={2}>{info.getValue()}</Text>,
     enableResizing: true,
     minSize: 180,
   }),
-  columnHelper.accessor((row: any) => row["openDate"], {
-    id: "openDate",
+  columnHelper.accessor((row: any) => row["createdAt"], {
+    id: "createdAt",
     header: "등록일",
     cell: (info) => info.getValue(),
     enableResizing: false,
@@ -398,17 +458,70 @@ const columnHistory = [
   }),
   columnHelper.display({
     header: "상세보기",
-    cell: (info: any) => (
-      <Button
-        variant="linkBtn"
-        as={Link}
-        to={"/erp"}
-        state={info.row.original}
-        data-text={"상세보기"}
-      >
-        상세보기
-      </Button>
-    ),
+    cell: (info: any) => {
+      const { isOpen, onClose, onOpen } = useDisclosure();
+      const [fixmode, setFixMode] = useState(false);
+      const test = (val: any) => {
+        console.log(val);
+      };
+
+      return (
+        <>
+          <Button variant="linkBtn" data-text={"상세보기"} onClick={onOpen}>
+            상세보기
+          </Button>
+          {isOpen && (
+            <Drawer isOpen={isOpen} onClose={onClose} placement="right">
+              <DrawerOverlay />
+              <DrawerContent maxW="fit-content">
+                <DrawerBody pos="relative" p="0" width="18.5rem">
+                  {fixmode && info?.row?.original.type !== "로그" && (
+                    <IcoBtnClose
+                      style={{
+                        position: "absolute",
+                        top: "0.2rem",
+                        right: "2rem",
+                        zIndex: 1,
+                        w: "max-content",
+                      }}
+                      onClick={() => {
+                        setFixMode(false);
+                      }}
+                    />
+                  )}
+                  {info?.row?.original.type !== "로그" && (
+                    <IcoBtnUpdate
+                      style={{
+                        position: "absolute",
+                        top: "0.2rem",
+                        right: 0,
+                        zIndex: 1,
+                        w: "max-content",
+                      }}
+                      isActive={fixmode}
+                      onClick={() => {
+                        if (fixmode) {
+                          console.log("submit");
+                          setFixMode(false);
+                          onClose();
+                        } else {
+                          setFixMode(true);
+                        }
+                      }}
+                    />
+                  )}
+                  <FormHistoryEditor
+                    fixMode={fixmode}
+                    initVal={info.row.original}
+                    setValues={test}
+                  />
+                </DrawerBody>
+              </DrawerContent>
+            </Drawer>
+          )}
+        </>
+      );
+    },
     enableResizing: false,
     size: 100,
   }),
@@ -443,6 +556,114 @@ const columnStoreSale = [
   }),
 ];
 
+const columnDocs = [
+  columnHelper.display({
+    header: "번호",
+    cell: (info) => info.row.index + 1,
+    enableResizing: false,
+    size: 80,
+  }),
+  columnHelper.accessor((row: any) => row["title"], {
+    id: "title",
+    header: "문서",
+    cell: (info) => info.getValue(),
+    minSize: 200,
+  }),
+  columnHelper.display({
+    header: "파일",
+    cell: (info: any) => {
+      return <IcoBtnDownload onClick={() => exportFormCsv(csvStoreSale)} />;
+    },
+    enableResizing: false,
+    size: 80,
+  }),
+  columnHelper.accessor((row: any) => row["createdAt"], {
+    id: "createdAt",
+    header: "등록일",
+    cell: (info) => info.getValue(),
+    size: 120,
+  }),
+];
+
+const columnNotice = [
+  columnHelper.display({
+    header: "번호",
+    cell: (info) => info.row.index + 1,
+    enableResizing: false,
+    size: 60,
+  }),
+  columnHelper.accessor((row: any) => row["title"], {
+    id: "title",
+    header: "제목",
+    cell: (info) => <Text noOfLines={2}>{info.getValue()}</Text>,
+    size: 150,
+  }),
+  columnHelper.display({
+    header: "첨부파일",
+    cell: (info: any) => <IcoBtnDownload onClick={() => {}} />,
+    enableResizing: false,
+    size: 100,
+  }),
+  columnHelper.accessor((row: any) => row["manager"], {
+    id: "manager",
+    header: "담당자",
+    cell: (info) => info.getValue(),
+    enableResizing: false,
+    size: 80,
+  }),
+  columnHelper.accessor((row: any) => row["createdAt"], {
+    id: "createdAt",
+    header: "등록일",
+    cell: (info) => info.getValue(),
+    enableResizing: false,
+    size: 120,
+  }),
+];
+
+const columnBrand = [
+  columnHelper.display({
+    header: "번호",
+    cell: (info) => info.row.index + 1,
+    enableResizing: false,
+    size: 60,
+  }),
+  columnHelper.accessor((row: any) => row["title"], {
+    id: "title",
+    header: "제목",
+    cell: (info) => <Text noOfLines={2}>{info.getValue()}</Text>,
+    size: 150,
+  }),
+  columnHelper.accessor((row: any) => row["represent"], {
+    id: "represent",
+    header: "대표여부",
+    cell: (info) => <Text noOfLines={2}>{info.getValue() ? "O" : "X"}</Text>,
+    size: 150,
+  }),
+  columnHelper.accessor((row: any) => row["createdAt"], {
+    id: "createdAt",
+    header: "등록일",
+    cell: (info) => info.getValue(),
+    enableResizing: false,
+    size: 120,
+  }),
+  columnHelper.display({
+    header: "브랜드상세",
+    cell: (info: any) => (
+      <Button
+        variant="linkBtn"
+        as={Link}
+        to={"/erp/brand/detail"}
+        state={info.row.original}
+        data-text={"상세보기"}
+      >
+        상세보기
+      </Button>
+    ),
+    enableResizing: false,
+    size: 100,
+  }),
+];
+
 export {
   columnStoreInfo,
   columnSaleInfo,
@@ -450,4 +671,8 @@ export {
   columnRentInfo,
   columnClientInfo,
   columnHistory,
+  columnDocs,
+  columnNotice,
+  columnRentNear,
+  columnBrand,
 };

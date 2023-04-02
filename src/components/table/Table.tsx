@@ -40,6 +40,8 @@ type PropsTable = {
   selectRowData?: any;
   getPage?: React.Dispatch<React.SetStateAction<number>>;
   children?: any;
+  flowHeight?: boolean;
+  height?: any;
 };
 
 const Table = ({
@@ -59,6 +61,8 @@ const Table = ({
   selectRowData,
   getPage,
   children,
+  flowHeight = true,
+  height,
 }: PropsTable) => {
   const pagenation = useMemo(() => {
     return usePagination({
@@ -100,9 +104,17 @@ const Table = ({
     <>
       <Section
         p="0rem 0rem 1.25rem"
-        h={pagingH ? `calc(100% - ${pagingH}px - 2rem)` : "100%"}
+        h={
+          height
+            ? height
+            : flowHeight
+            ? pagingH
+              ? `calc(100% - ${pagingH}px - 11rem)`
+              : "100%"
+            : "100%"
+        }
         gap="1.25rem"
-        overflow="hidden"
+        // overflow="hidden"
       >
         <Flex
           p="0 0 0 0.375rem"
@@ -110,6 +122,7 @@ const Table = ({
           flex="1"
           // h={pagingH ? `calc(100% - ${pagingH}px)` : "100%"}
           borderRadius="inherit"
+          overflowX="hidden"
           overflowY="scroll"
           __css={{
             "::-webkit-scrollbar": {
@@ -127,7 +140,7 @@ const Table = ({
                 return (
                   <Tr key={`thead-${headerGroup.id}`}>
                     {activeCheck && (
-                      <Th key={"thead-th-chk-total"}>
+                      <Th key={"thead-th-chk-total"} w="5rem">
                         <TableCheckBox
                           checked={getIsAllRowsSelected()}
                           indeterminate={getIsSomeRowsSelected()}
@@ -217,7 +230,6 @@ const Table = ({
                       <Td key={cell.id}>
                         {flexRender(cell.column.columnDef.cell, {
                           ...cell.getContext(),
-                          selectRowData: selectRowData,
                         })}
                       </Td>
                     ))}

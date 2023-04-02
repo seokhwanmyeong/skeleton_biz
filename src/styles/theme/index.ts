@@ -18,6 +18,8 @@ import formTheme from "@styles/theme/components/form/formTheme";
 import switchTheme from "@styles/theme/components/common/switchTheme";
 import radioTheme from "@styles/theme/components/common/radioTheme";
 import textTheme from "@styles/theme/components/common/textTheme";
+import textAreaTheme from "@styles/theme/components/common/textAreaTheme";
+import drawerTheme from "@styles/theme/components/modal/drawerTheme";
 
 const createTheme = (name: string) => {
   const config: ThemeConfig = {
@@ -185,6 +187,8 @@ const createTheme = (name: string) => {
       Input: inputTheme,
       Tag: tagTheme,
       Switch: switchTheme,
+      Drawer: drawerTheme,
+      TextArea: textAreaTheme,
       Tabs: {
         variants: {
           detailPage: {
@@ -259,6 +263,81 @@ const createTheme = (name: string) => {
               p: "0",
               w: "100%",
               h: "100%",
+            },
+          },
+          upjongBox: {
+            root: {
+              w: "100%",
+              h: "100%",
+            },
+            tablist: {
+              w: "100%",
+            },
+            tab: {
+              position: "relative",
+              padding: "0rem 0rem 0.375rem",
+              w: "100%",
+              gap: "0.4rem",
+              transition: "0.3s",
+              p: {
+                fontFamily: "main",
+                fontSize: "xs",
+                fontStyle: "normal",
+                fontWeight: "regular",
+                lineHeight: "1rem",
+                color: "font.disabled",
+              },
+              _selected: {
+                fontWeight: "strong",
+                color: "font.primary",
+                p: {
+                  fontWeight: "strong",
+                  color: "font.primary",
+                },
+                _after: {
+                  content: '""',
+                  position: "absolute",
+                  bottom: "0px",
+                  display: "inline-block",
+                  w: "100%",
+                  h: "1px",
+                  bgColor: "primary.type7",
+                },
+              },
+              _disabled: {
+                p: {
+                  fontWeight: "strong",
+                  color: "font.primary",
+                },
+                _after: {
+                  display: "none",
+                },
+              },
+              _hover: {
+                p: {
+                  fontWeight: "strong",
+                  color: "font.primary",
+                },
+                _after: {
+                  content: '""',
+                  position: "absolute",
+                  bottom: "0px",
+                  display: "inline-block",
+                  w: "100%",
+                  h: "1px",
+                  bgColor: "primary.type7",
+                },
+              },
+            },
+            tabpanels: { w: "100%", h: "100%" },
+            tabpanel: {
+              overflow: "hidden",
+              p: "1.3125rem 1.1875rem 0.875rem",
+              // w: "100%",
+              w: "29.5rem",
+              minW: "20rem",
+              h: "100%",
+              minH: "9.375rem",
             },
           },
         },

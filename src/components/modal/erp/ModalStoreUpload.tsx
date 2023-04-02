@@ -1,6 +1,5 @@
 //  LIB
 import { useState, Fragment } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   Modal,
   ModalOverlay,
@@ -8,33 +7,49 @@ import {
   ModalFooter,
   ModalBody,
   Button,
-  Flex,
   useDisclosure,
   Tabs,
-  TabList,
-  Tab,
-  Text,
-  Divider,
   TabPanels,
   TabPanel,
+  Flex,
+  TabList,
+  Text,
+  Tab,
+  Divider,
 } from "@chakra-ui/react";
-//  Component
-import { InputFile } from "@src/components/common/Input";
-import { IcoBtnEditor } from "@src/components/common/Btn";
+//  Components
+import { InputFile } from "@components/common/Input";
 //  Util
 import { csvStoreSale } from "@util/data/fileCSV";
 import { exportFormCsv } from "@util/file/manageFile";
 //  Icon
-import { IcoDownload } from "@assets/icons/icon";
+import { IcoDownload } from "@src/assets/icons/icon";
+import { useNavigate } from "react-router-dom";
 
-const ModalSaleEditor = () => {
+const ModalStoreUpload = () => {
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [fileData, setFileData] = useState([]);
 
   return (
     <Fragment>
-      <IcoBtnEditor onClick={onOpen} />
+      <Button
+        w="100px"
+        variant="search"
+        bgColor="#ffffff"
+        borderColor="primary.type7"
+        border="1px solid"
+        color="primary.type7"
+        sx={{
+          p: {
+            color: "primary.type7",
+            fontWeight: "strong",
+          },
+        }}
+        onClick={onOpen}
+      >
+        <Text variant="search">엑셀 업로드</Text>
+      </Button>
       {isOpen && (
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
@@ -52,7 +67,7 @@ const ModalSaleEditor = () => {
                   <TabList>
                     <Tab key="tab-create">
                       <IcoDownload />
-                      <Text>매출 등록</Text>
+                      <Text>매장 등록</Text>
                     </Tab>
                   </TabList>
                   <Divider
@@ -76,7 +91,7 @@ const ModalSaleEditor = () => {
                         color="#1890FF"
                         textDecoration="underline"
                       >
-                        매출 등록 양식 다운로드 (CSV)
+                        매장 등록 양식 다운로드 (CSV)
                       </Button>
                     </Flex>
                     <InputFile
@@ -125,20 +140,6 @@ const ModalSaleEditor = () => {
       )}
     </Fragment>
   );
-  // <Fragment>
-  //   <IcoBtnEditor onClick={onOpen} />
-  //   <Modal
-  //     title={"매출추가"}
-  //     cancelText={"취소"}
-  //     botBtnComponent={bottomBtn(fileData)}
-  //     isOpen={isOpen}
-  //     onClose={onClose}
-  //   >
-  //     <Flex flexDirection="column" minW="50rem">
-  //       <XlsxController csvInfo={csvStoreSale} onChange={setFileData} />
-  //     </Flex>
-  //   </Modal>
-  // </Fragment>
 };
 
-export default ModalSaleEditor;
+export default ModalStoreUpload;

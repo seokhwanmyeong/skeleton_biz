@@ -43,6 +43,29 @@ const formTheme = {
         },
       },
     },
+    modal: {
+      container: {
+        display: "flex",
+        alignItems: "flex-start",
+        flex: "none",
+        fontFamily: "main",
+        fontWeight: "strong",
+        fontSize: "xs",
+        lineHeight: "1.5rem",
+        label: {
+          fontSize: "xs",
+          fontWeight: "strong",
+          color: "font.title",
+          lineHeight: "1.5rem",
+        },
+        p: {
+          fontSize: "xs",
+          fontWeight: "medium",
+          color: "font.title",
+          lineHeight: "1.5rem",
+        },
+      },
+    },
   },
   defaultProps: {},
 };

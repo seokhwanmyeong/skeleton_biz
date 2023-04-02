@@ -36,16 +36,9 @@ const MapFlowDong = (props: Props) => {
         key={dong.name}
         onClick={(val) => {
           console.log("click");
-          setDong({
-            slctName: dong.slctName,
-            slctCode: dong.slctCode,
-            slctIdx: `area${dong.slctCode}`,
-            slctPath: dong.path,
-          });
-          setFlow(2);
         }}
         name={dong.slctName}
-        num={Number(dong.slctCode)}
+        num={dong.num}
         path={dong.slctPath}
         style={{
           fillColor: "#fadb14",

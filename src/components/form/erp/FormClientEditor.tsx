@@ -12,28 +12,27 @@ import {
   Heading,
 } from "@chakra-ui/react";
 //  Component
-import { Select } from "@components/common/Select";
+import { Select, SelectAddr } from "@components/common/Select";
 import { Input, InputAddr } from "@components/common/Input";
 import { RadioBox } from "@components/common/RadioBox";
 import { IcoClose, IcoSearch } from "@assets/icons/icon";
 import { forwardRef, useEffect, useState } from "react";
 
-const storeStatusText: any = {
-  statusOpen: "입점",
-  statusClose: "폐점",
-  statusRest: "휴점",
-  statusReady: "대기",
-  statusEtc: "기타",
+const clientStatusText: any = {
+  statusReady: "상담대기",
+  statusCur: "상담중",
+  statusCom: "상담완료",
+  statusEnd: "종료",
 };
-const storeRankText: any = {
-  rankA: "A타입",
-  rankB: "B타입",
-  rankC: "C타입",
-  rankD: "D타입",
-  rankE: "E타입",
+const clientPathText: any = {
+  path1: "지인소개",
+  path2: "온라인광고",
+  path3: "TV,지면광고",
+  path4: "박람회",
+  path5: "포털검색",
 };
 
-const FormStoreEditor = forwardRef(
+const FormClientEditor = forwardRef(
   (
     props: {
       initVal: any;
@@ -60,7 +59,7 @@ const FormStoreEditor = forwardRef(
     return (
       <Flex h="100%">
         <Formik
-          key="storeEditor"
+          key="clientEditor"
           innerRef={ref}
           initialValues={initVal}
           enableReinitialize={true}
@@ -88,38 +87,24 @@ const FormStoreEditor = forwardRef(
               >
                 <Flex
                   position="relative"
-                  mb="1.25rem"
+                  mb="5rem"
                   w="100%"
                   justify="center"
                   align="center"
                   direction="column"
                   gap="0.75rem"
                 >
-                  <Flex align="center">
-                    {fixMode ? (
-                      <Input
-                        value={getFieldProps("storeName").value}
-                        inputProps={{ w: "10rem" }}
-                        onChange={(val: any) => setFieldValue("storeName", val)}
-                        placeholder="매장명을 입력하세요."
-                      />
-                    ) : (
-                      <Heading as="h3" mb="2rem" variant="detailTitle">
-                        {initVal?.storeName}
-                      </Heading>
-                    )}
-                  </Flex>
                   {fixMode ? (
                     <Input
-                      value={getFieldProps("storeCode").value}
+                      value={getFieldProps("clientName").value}
                       inputProps={{ w: "10rem" }}
-                      onChange={(val: any) => setFieldValue("storeCode", val)}
-                      placeholder="매장코드를 입력하세요."
+                      onChange={(val: any) => setFieldValue("clientName", val)}
+                      placeholder="고객명을 입력하세요."
                     />
                   ) : (
-                    <Text variant="detailSub">
-                      매장코드 : {initVal?.storeCode}
-                    </Text>
+                    <Heading as="h3" mb="2rem" variant="detailTitle">
+                      {initVal?.clientName}
+                    </Heading>
                   )}
                 </Flex>
                 {children}
@@ -138,16 +123,139 @@ const FormStoreEditor = forwardRef(
                         w="30%"
                         flex="none"
                       >
-                        매장상태
+                        연락처
+                      </FormLabel>
+                      {!update || fixMode ? (
+                        <Input
+                          value={getFieldProps("clientPhone").value}
+                          inputProps={{ w: "100%" }}
+                          onChange={(val: any) =>
+                            setFieldValue("clientPhone", val)
+                          }
+                          placeholder="연락처를 입력하세요."
+                        />
+                      ) : (
+                        <Text>{initVal?.clientPhone}</Text>
+                      )}
+                    </FormControl>
+                    <FormControl variant="create">
+                      <FormLabel
+                        display="flex"
+                        alignItems="center"
+                        minW="4.4rem"
+                        w="30%"
+                        flex="none"
+                      >
+                        고객상태
                       </FormLabel>
                       {!update || fixMode ? (
                         <Select
                           data={[
-                            { text: "입점", value: "statusOpen" },
-                            { text: "폐점", value: "statusClose" },
-                            { text: "휴점", value: "statusRest" },
-                            { text: "대기", value: "statusReady" },
-                            { text: "기타", value: "statusEtc" },
+                            { text: "상담대기", value: "statusReady" },
+                            { text: "상담중", value: "statusCur" },
+                            { text: "상담완료", value: "statusCom" },
+                            { text: "종료", value: "statusEnd" },
+                          ]}
+                          value={getFieldProps("clientStatus").value}
+                          opBaseTxt="text"
+                          opBaseId="value"
+                          opBaseKey="value"
+                          onChange={(val: any) =>
+                            setFieldValue("clientStatus", val)
+                          }
+                        />
+                      ) : (
+                        <Text>{clientStatusText[initVal?.clientStatus]}</Text>
+                      )}
+                    </FormControl>
+                    <FormControl variant="create">
+                      <FormLabel
+                        display="flex"
+                        alignItems="center"
+                        minW="4.4rem"
+                        w="30%"
+                        flex="none"
+                      >
+                        유입경로
+                      </FormLabel>
+                      {!update || fixMode ? (
+                        <Select
+                          data={[
+                            { text: "지인소개", value: "path1" },
+                            { text: "온라인광고", value: "path2" },
+                            { text: "TV,지면광고", value: "path3" },
+                            { text: "박람회", value: "path4" },
+                            { text: "포털검색", value: "path5" },
+                          ]}
+                          value={getFieldProps("clientPath").value}
+                          opBaseTxt="text"
+                          opBaseId="value"
+                          opBaseKey="value"
+                          onChange={(val: any) =>
+                            setFieldValue("clientPath", val)
+                          }
+                        />
+                      ) : (
+                        <Text>{clientPathText[initVal?.clientPath]}</Text>
+                      )}
+                    </FormControl>
+                    <FormControl variant="create">
+                      <FormLabel
+                        display="flex"
+                        alignItems="center"
+                        minW="4.4rem"
+                        w="30%"
+                        flex="none"
+                      >
+                        나이
+                      </FormLabel>
+                      {!update || fixMode ? (
+                        <Input
+                          value={getFieldProps("age").value}
+                          inputProps={{ w: "100%" }}
+                          onChange={(val: any) => setFieldValue("age", val)}
+                          placeholder="나이를 입력하세요."
+                        />
+                      ) : (
+                        <Text>{initVal?.age}</Text>
+                      )}
+                    </FormControl>
+                    <FormControl variant="create">
+                      <FormLabel
+                        display="flex"
+                        alignItems="center"
+                        minW="4.4rem"
+                        w="30%"
+                        flex="none"
+                      >
+                        직업
+                      </FormLabel>
+                      {!update || fixMode ? (
+                        <Input
+                          value={getFieldProps("job").value}
+                          inputProps={{ w: "100%" }}
+                          onChange={(val: any) => setFieldValue("job", val)}
+                          placeholder="직업을 입력하세요."
+                        />
+                      ) : (
+                        <Text>{initVal?.job}</Text>
+                      )}
+                    </FormControl>
+                    <FormControl variant="create">
+                      <FormLabel
+                        display="flex"
+                        alignItems="center"
+                        minW="4.4rem"
+                        w="30%"
+                        flex="none"
+                      >
+                        창업경혐
+                      </FormLabel>
+                      {!update || fixMode ? (
+                        <Select
+                          data={[
+                            { text: "예", value: true },
+                            { text: "아니오", value: false },
                           ]}
                           value={getFieldProps("storeStatus").value}
                           opBaseTxt="text"
@@ -158,38 +266,9 @@ const FormStoreEditor = forwardRef(
                           }
                         />
                       ) : (
-                        <Text>{storeStatusText[initVal?.storeStatus]}</Text>
-                      )}
-                    </FormControl>
-                    <FormControl variant="create">
-                      <FormLabel
-                        display="flex"
-                        alignItems="center"
-                        minW="2rem"
-                        w="30%"
-                        flex="none"
-                      >
-                        매장타입
-                      </FormLabel>
-                      {!update || fixMode ? (
-                        <Select
-                          data={[
-                            { text: "A타입", value: "rankA" },
-                            { text: "B타입", value: "rankB" },
-                            { text: "C타입", value: "rankC" },
-                            { text: "D타입", value: "rankD" },
-                            { text: "E타입", value: "rankE" },
-                          ]}
-                          value={getFieldProps("storeRank").value}
-                          opBaseTxt="text"
-                          opBaseId="value"
-                          opBaseKey="value"
-                          onChange={(val: any) =>
-                            setFieldValue("storeRank", val)
-                          }
-                        />
-                      ) : (
-                        <Text>{storeRankText[initVal?.storeRank]}</Text>
+                        <Text>
+                          {getFieldProps("exp").value ? "예" : " 아니오"}
+                        </Text>
                       )}
                     </FormControl>
                     <FormControl variant="create">
@@ -200,40 +279,19 @@ const FormStoreEditor = forwardRef(
                         w="30%"
                         flex="none"
                       >
-                        매장연락처
+                        창업자금
                       </FormLabel>
                       {!update || fixMode ? (
                         <Input
-                          value={getFieldProps("phone").value}
-                          inputProps={{ w: "100%" }}
-                          onChange={(val: any) => setFieldValue("phone", val)}
-                          placeholder="매장연락처를 입력하세요."
-                        />
-                      ) : (
-                        <Text>{initVal?.phone}</Text>
-                      )}
-                    </FormControl>
-                    <FormControl variant="create">
-                      <FormLabel
-                        display="flex"
-                        alignItems="center"
-                        minW="4.4rem"
-                        w="30%"
-                        flex="none"
-                      >
-                        사업자등록번호
-                      </FormLabel>
-                      {!update || fixMode ? (
-                        <Input
-                          value={getFieldProps("biz_number").value}
+                          value={getFieldProps("startFund").value}
                           inputProps={{ w: "100%" }}
                           onChange={(val: any) =>
-                            setFieldValue("biz_number", val)
+                            setFieldValue("startFund", val)
                           }
-                          placeholder="사업자 등록번호를 입력하세요."
+                          placeholder="창업자금을 입력하세요."
                         />
                       ) : (
-                        <Text>{initVal?.biz_number}</Text>
+                        <Text>{initVal?.startFund}</Text>
                       )}
                     </FormControl>
                   </Flex>
@@ -241,8 +299,8 @@ const FormStoreEditor = forwardRef(
                     orientation="vertical"
                     m="0.5rem 1.4rem"
                     h="auto"
-                    borderColor="font.primary"
-                    borderLeftWidth="0"
+                    borderColor="#D8D8DC"
+                    borderLeftWidth="1px"
                   />
                   <Flex
                     p="0 1.4rem"
@@ -258,19 +316,20 @@ const FormStoreEditor = forwardRef(
                         w="30%"
                         flex="none"
                       >
-                        대표자
+                        거주지
                       </FormLabel>
                       {!update || fixMode ? (
-                        <Input
-                          value={getFieldProps("owner_name").value}
-                          inputProps={{ w: "100%" }}
+                        <SelectAddr
+                          value={getFieldProps("hopeArea").value}
                           onChange={(val: any) =>
-                            setFieldValue("owner_name", val)
+                            setFieldValue("hopeArea", val)
                           }
-                          placeholder="대표자 이름을 입력하세요."
+                          selectGroupProps={{
+                            flexDirection: "column",
+                          }}
                         />
                       ) : (
-                        <Text>{initVal?.owner_name}</Text>
+                        <Text>{initVal?.resident}</Text>
                       )}
                     </FormControl>
                     <FormControl variant="create">
@@ -281,19 +340,20 @@ const FormStoreEditor = forwardRef(
                         w="30%"
                         flex="none"
                       >
-                        대표자 연락처
+                        희망지역
                       </FormLabel>
                       {!update || fixMode ? (
-                        <Input
-                          value={getFieldProps("owner_phone").value}
-                          inputProps={{ w: "100%" }}
+                        <SelectAddr
+                          value={getFieldProps("hopeArea").value}
                           onChange={(val: any) =>
-                            setFieldValue("owner_phone", val)
+                            setFieldValue("hopeArea", val)
                           }
-                          placeholder="대표자 연락처를 입력하세요."
+                          selectGroupProps={{
+                            flexDirection: "column",
+                          }}
                         />
                       ) : (
-                        <Text>{initVal?.owner_phone}</Text>
+                        <Text>{initVal?.hopeArea}</Text>
                       )}
                     </FormControl>
                     <FormControl variant="create">
@@ -304,39 +364,7 @@ const FormStoreEditor = forwardRef(
                         w="30%"
                         flex="none"
                       >
-                        주소
-                      </FormLabel>
-                      {!update || fixMode ? (
-                        <Flex w="100%" direction="column" gap="0.5rem">
-                          <InputAddr
-                            fieldKey={"addr"}
-                            value={getFieldProps("addr").value}
-                            onChange={(val: any) => setFieldValue("addr", val)}
-                          />
-                          <Input
-                            value={getFieldProps("addrDetail").value}
-                            onChange={(val: any) =>
-                              setFieldValue("addrDetail", val)
-                            }
-                            placeholder="상세주소를 입력하세요."
-                          />
-                        </Flex>
-                      ) : (
-                        <Text>
-                          {initVal?.addr}
-                          {initVal?.addrDetail}
-                        </Text>
-                      )}
-                    </FormControl>
-                    <FormControl variant="create">
-                      <FormLabel
-                        display="flex"
-                        alignItems="center"
-                        minW="4.4rem"
-                        w="30%"
-                        flex="none"
-                      >
-                        연동상권
+                        관심매물
                       </FormLabel>
                       {!update || fixMode ? (
                         <Flex position="relative" w="100%" direction="column">
@@ -416,6 +444,39 @@ const FormStoreEditor = forwardRef(
                         </Flex>
                       )}
                     </FormControl>
+                    <FormControl variant="create">
+                      <FormLabel
+                        display="flex"
+                        alignItems="center"
+                        minW="4.4rem"
+                        w="30%"
+                        flex="none"
+                      >
+                        담당자
+                      </FormLabel>
+                      {!update || fixMode ? (
+                        <Input
+                          value={getFieldProps("manager").value}
+                          inputProps={{ w: "100%" }}
+                          onChange={(val: any) => setFieldValue("manager", val)}
+                          placeholder="매니저를 입력하세요."
+                        />
+                      ) : (
+                        <Text>{initVal?.manager}</Text>
+                      )}
+                    </FormControl>
+                    <FormControl variant="create">
+                      <FormLabel
+                        display="flex"
+                        alignItems="center"
+                        minW="4.4rem"
+                        w="30%"
+                        flex="none"
+                      >
+                        등록일
+                      </FormLabel>
+                      <Text>{initVal?.createdAt}</Text>
+                    </FormControl>
                   </Flex>
                 </Flex>
                 {/* {(!update || fixMode) && (
@@ -441,4 +502,4 @@ const FormStoreEditor = forwardRef(
   }
 );
 
-export default FormStoreEditor;
+export default FormClientEditor;

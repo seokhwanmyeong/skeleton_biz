@@ -1,38 +1,72 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useRef,
+  useCallback,
+} from "react";
 import { Marker, NaverMapContext, Polyline } from "@src/lib/src";
 import OverlayView from "@src/lib/src/components/Overlay/OverlayView";
 import Polygon from "@src/lib/src/components/Overlay/Polygon";
+import { Box, Flex, Heading, Text } from "@chakra-ui/react";
+import { Deco01 } from "@src/assets/deco/DecoSvg";
+import {
+  IcoFood,
+  IcoHousehold,
+  IcoHuman,
+  IcoMoney,
+  IcoPeople,
+  IcoResi,
+} from "@src/assets/icons/icon";
 
 interface GuMarkerProps {
   name: string;
   num: number;
   selectDong: number;
+  range: any;
+  direction?: {
+    direct: "left" | "right";
+    idx: number;
+  };
   position:
     | naver.maps.PointLiteral
     | naver.maps.CoordLiteral
-    | naver.maps.LatLngLiteral;
+    | naver.maps.LatLngLiteral
+    | any;
   onClickArea: (num: number) => any;
+  rightIdx: number;
+  leftIdx: number;
+  data?: any;
 }
 const GuMarker = ({
   name,
   num,
+  direction,
+  range,
   selectDong,
   position,
   onClickArea,
+  rightIdx,
+  leftIdx,
+  data,
 }: GuMarkerProps) => {
   const { state, dispatch } = useContext(NaverMapContext);
   const [cont, setCont] = useState(0);
-  const boxRef = useRef(null);
-  const [mapCenter, SetMapCenter] = useState<
-    naver.maps.Coord | naver.maps.PointLiteral
-  >();
+  const [contY, setConstY] = useState(0);
+  const boxRef = useRef<any>(null);
+  const [mapCenter, SetMapCenter] = useState<any>();
   const [onleft, SetOnLeft] = useState(false);
   const [onsetMap, setOnsetMap] = useState(false);
+  const [active, setActive] = useState(false);
+  const [over, setOver] = useState(-1);
+
   useEffect(() => {
     if (state.map === undefined) return;
+    const curCenter = state.map.getCenter();
+
     const mapcent = {
-      x: 126.99188199999999,
-      y: 37.5991103,
+      x: curCenter.x,
+      y: curCenter.y,
     };
     SetMapCenter(mapcent);
     if (mapcent?.x > position.x) {
@@ -41,12 +75,18 @@ const GuMarker = ({
       SetOnLeft(false);
     }
     setOnsetMap(true);
-    //console.log(state.objects);
   }, [state.map]);
+
   useEffect(() => {
-    let setnum = 0.0101 * num;
-    setCont(parseFloat(setnum.toString()));
+    if (direction) {
+      let setnum = 0.014 * direction.idx;
+      setCont(parseFloat(setnum.toString()));
+    } else {
+      let setnum = 0.0101 * num;
+      setCont(parseFloat(setnum.toString()));
+    }
   }, [num]);
+
   useEffect(() => {
     if (selectDong === -1) {
       OnOut();
@@ -59,176 +99,565 @@ const GuMarker = ({
       OnOut();
     }
   }, [selectDong]);
-  const OnOver = () => {
-    const poly = state.objects.get("dong" + num) as naver.maps.Polygon;
+
+  const OnOver = useCallback(() => {
+    const poly = state.objects?.get("area" + num) as naver.maps.Polygon;
+
     if (poly === null) return;
+
     poly.setOptions({
-      fillColor: "#13BD68",
-      strokeColor: "#E51D1A",
+      fillColor: "#FF7A45",
+      fillOpacity: 0.5,
+      strokeWeight: 1,
+      strokeColor: "#FFFFFF",
       zIndex: 6,
     });
 
-    const polyline = state.objects.get(
+    const polyline = state.objects?.get(
       "polyline_" + num
     ) as naver.maps.Polyline;
-    polyline.setOptions({
+
+    if (polyline === undefined) return;
+
+    polyline?.setOptions({
       clickable: true,
-      strokeColor: "#FF00DA",
-      strokeStyle: "solid",
-      strokeOpacity: 0,
-      strokeWeight: 3,
-    });
-    polyline.setOptions({
-      clickable: true,
-      strokeColor: "#FF00DA",
+      strokeColor: "#BFBFBF",
       strokeStyle: "solid",
       strokeOpacity: 1,
-      strokeWeight: 5,
+      strokeWeight: 2,
     });
 
-    boxRef.current.style.backgroundColor = "salmon";
-  };
-  const OnOut = () => {
-    const poly = state.objects.get("dong" + num) as naver.maps.Polygon;
+    // if (boxRef?.current?.style) {
+    //   boxRef.current.style.backgroundColor = "salmon";
+    // }
+
+    setOver(num);
+  }, [state.objects]);
+
+  const OnOut = useCallback(() => {
+    const poly = state.objects.get("area" + num) as naver.maps.Polygon;
+
     if (poly === null) return;
+
     poly?.setOptions({
-      fillColor: "#0305F2",
-      strokeColor: "#000000",
+      fillColor: "#FF7A45",
+      fillOpacity: 0.35,
+      strokeWeight: 1,
+      strokeColor: "#FFFFFF",
       zIndex: 0,
     });
+
     const polyline = state.objects.get(
       "polyline_" + num
     ) as naver.maps.Polyline;
+
     if (polyline === undefined) return;
+
     polyline.setOptions({
       strokeColor: "#194D33",
       strokeStyle: "solid",
       strokeOpacity: 0.3,
       strokeWeight: 1,
     });
-    boxRef.current.style.backgroundColor = "#56CE92";
-  };
+
+    // if (boxRef?.current?.style) {
+    //   boxRef.current.style.backgroundColor = "#56CE92";
+    // }
+
+    setOver(-1);
+  }, [state.objects]);
+
   const OnClcikArea = () => {
     onClickArea(num);
   };
+
+  useEffect(() => {
+    console.log(data);
+    if (data) {
+      const { flow, resi, job, house, sale, upjong } = data;
+      console.log(data);
+      if (
+        flow.active ||
+        resi.active ||
+        job.active ||
+        house.active ||
+        sale.active ||
+        upjong.active
+      ) {
+        setActive(true);
+      } else {
+        setActive(false);
+      }
+    }
+  }, [data]);
+
   return (
     <>
-      {onsetMap ? (
+      {onsetMap && active ? (
         <div>
-          {/* <Marker
-            id={`markers-center`}
-            opts={{ position: { x: mapCenter?.x, y: mapCenter?.y }, zIndex: 1 }}
-          /> */}
           <Polyline
             id={"polyline_" + num}
             opts={{
               path: onleft
                 ? [
                     {
-                      lat: Number(position.y),
-                      lng: Number(position.x),
+                      lat: Number(position.y) - 0.0012,
+                      lng: Number(position.x) + 0.0013,
                     },
+                    // {
+                    //   y: (range.yMax + range.yMin) / 2 + cont - 0.034,
+                    //   x: range.xMin - 0.014,
+                    // },
                     {
-                      y: mapCenter?.y + cont - 0.034,
-                      x: mapCenter?.x - 0.05,
-                    },
-                    {
-                      y: mapCenter?.y + cont - 0.034,
-                      x: mapCenter?.x - 0.08,
+                      y: (range.yMax + range.yMin) / 2 + cont - 0.034,
+                      x: range.xMin - 0.036,
                     },
                   ]
                 : [
                     {
-                      lat: Number(position.y),
-                      lng: Number(position.x),
+                      lat: Number(position.y) - 0.0012,
+                      lng: Number(position.x) + 0.0013,
                     },
+                    // {
+                    //   y: (range.yMax + range.yMin) / 2 + cont - 0.034,
+                    //   x: range.xMax + 0.0075,
+                    // },
                     {
-                      y: mapCenter?.y + cont - 0.12,
-                      x: mapCenter?.x + 0.04,
-                    },
-                    {
-                      y: mapCenter?.y + cont - 0.12,
-                      x: mapCenter?.x + 0.05,
+                      y: (range.yMax + range.yMin) / 2 + cont - 0.034,
+                      x: range.xMax + 0.036,
                     },
                   ],
-              strokeColor: "#194D33",
+              strokeColor: "#BFBFBF",
               strokeStyle: "solid",
-              strokeOpacity: 0.3,
+              strokeOpacity: 1,
               strokeWeight: 1,
               zIndex: 2,
             }}
           />
           <OverlayView
             id={`box${num}`}
+            // position={
+            //   onleft
+            //     ? {
+            //         y: mapCenter?.y + cont - 0.034,
+            //         x: mapCenter?.x - 0.08,
+            //       }
+            //     : {
+            //         y: mapCenter?.y + cont - 0.034,
+            //         x: mapCenter?.x + 0.06,
+            //       }
+            // }
             position={
               onleft
                 ? {
-                    y: mapCenter?.y + cont - 0.034,
-                    x: mapCenter?.x - 0.08,
+                    y: (range.yMax + range.yMin) / 2 + cont - 0.037,
+                    x: range.xMin - 0.07,
                   }
                 : {
-                    y: mapCenter?.y + cont - 0.12,
-                    x: mapCenter?.x + 0.05,
+                    y: (range.yMax + range.yMin) / 2 + cont - 0.037,
+                    x: range.xMax + 0.04,
                   }
             }
             onClick={OnClcikArea}
             onMouseOver={OnOver}
             onMouseOut={OnOut}
           >
-            <div
+            <Flex
               ref={boxRef}
               className="box"
-              style={{
-                position: "absolute",
-                left: 0,
-                top: -15,
-                width: "124px",
-                height: "60px",
-                backgroundColor: "#56CE92",
-                textAlign: "center",
-                border: "2px solid #6C483B",
-                zIndex: 5,
-              }}
+              pos="absolute"
+              left={0}
+              top={-15}
+              w="11.25rem"
+              zIndex={5}
+              direction="column"
             >
-              <span style={{ fontWeight: "bold" }}>
-                {" "}
-                {name.replace("서울특별시 종로구 ", "")}{" "}
-              </span>
-            </div>
+              <Flex
+                align="center"
+                mb="1px"
+                ml="0.875rem"
+                gap="3px"
+                bgColor="rgba(255, 255, 255, 0.75)"
+                border="1px solid #BFBFBF"
+                _before={{
+                  content: '""',
+                  display: "block",
+                  w: "0.625rem",
+                  h: "100%",
+                  flex: "none",
+                  borderRight: "1px solid",
+                  borderColor: "#BFBFBF",
+                }}
+              >
+                <Heading variant="sigunguTitle">
+                  {name.replace("서울특별시 종로구 ", "")}
+                </Heading>
+                <Deco01 margin="0" width="100%" height="4px" flexShrink="1" />
+              </Flex>
+              <Flex>
+                <Flex
+                  p="0.875rem 0 0 0.625rem"
+                  justify="center"
+                  align="center"
+                  flexGrow={1}
+                  direction="column"
+                  background="linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%)"
+                  // filter="blur(3.33333px)"
+                  backdropFilter="blur(1.21212px)"
+                >
+                  <Flex w="100%" justify="space-between" gap="3px">
+                    <Flex w="50%">
+                      <Flex
+                        pl="0.875rem"
+                        h="1rem"
+                        pos="relative"
+                        align="flex-end"
+                        border="1px solid #BFBFBF"
+                        boxSizing="border-box"
+                      >
+                        <IcoHuman
+                          position="absolute"
+                          top="0"
+                          left="0"
+                          width="0.7rem"
+                          height="auto"
+                        />
+                        <Text
+                          fontWeight="strong"
+                          fontSize="0.6875rem"
+                          color="rgba(38, 35, 35, 0.8)"
+                        >
+                          01
+                        </Text>
+                      </Flex>
+                      <Text
+                        w="100%"
+                        textAlign="center"
+                        fontWeight="medium"
+                        fontSize="xs"
+                      >
+                        {data.flow.data.inflowCustCnt ?? "-"}
+                      </Text>
+                    </Flex>
+                    <Flex w="50%">
+                      <Flex
+                        pl="0.875rem"
+                        h="1rem"
+                        pos="relative"
+                        align="flex-end"
+                        border="1px solid #BFBFBF"
+                        boxSizing="border-box"
+                      >
+                        <IcoFood
+                          position="absolute"
+                          top="0"
+                          left="0"
+                          width="0.7rem"
+                          height="auto"
+                        />
+                        <Text
+                          fontWeight="strong"
+                          fontSize="0.6875rem"
+                          color="rgba(38, 35, 35, 0.8)"
+                        >
+                          01
+                        </Text>
+                      </Flex>
+                      <Text
+                        w="100%"
+                        textAlign="center"
+                        fontWeight="medium"
+                        fontSize="xs"
+                      >
+                        {data.upjong.data.storeCnt ?? "-"}
+                      </Text>
+                    </Flex>
+                  </Flex>
+                  <svg
+                    width="110"
+                    height="2"
+                    viewBox="0 0 127 2"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g opacity="0.5">
+                      <path
+                        d="M0.666626 1.00049H126.333"
+                        stroke="#262323"
+                        stroke-opacity="0.8"
+                      />
+                      <path
+                        d="M0.666626 1.00049H6.66663"
+                        stroke="#262323"
+                        stroke-width="2"
+                      />
+                      <path
+                        d="M120.667 1.00049H126.667"
+                        stroke="#262323"
+                        stroke-width="2"
+                      />
+                    </g>
+                  </svg>
+                  <Flex w="100%" justify="space-between" gap="3px">
+                    <Flex w="50%">
+                      <Flex
+                        pl="0.875rem"
+                        h="1rem"
+                        pos="relative"
+                        align="flex-end"
+                        border="1px solid #BFBFBF"
+                        boxSizing="border-box"
+                      >
+                        <IcoResi
+                          position="absolute"
+                          top="0"
+                          left="0"
+                          width="0.7rem"
+                          height="auto"
+                        />
+                        <Text
+                          fontWeight="strong"
+                          fontSize="0.6875rem"
+                          color="rgba(38, 35, 35, 0.8)"
+                        >
+                          01
+                        </Text>
+                      </Flex>
+                      <Text
+                        w="100%"
+                        textAlign="center"
+                        fontWeight="medium"
+                        fontSize="xs"
+                      >
+                        {data.resi.data.jobCustCnt ?? "-"}
+                      </Text>
+                    </Flex>
+                    <Flex w="50%">
+                      <Flex
+                        pl="0.875rem"
+                        h="1rem"
+                        pos="relative"
+                        align="flex-end"
+                        border="1px solid #BFBFBF"
+                        boxSizing="border-box"
+                      >
+                        <IcoMoney
+                          position="absolute"
+                          top="0"
+                          left="0"
+                          width="0.7rem"
+                          height="auto"
+                        />
+                        <Text
+                          fontWeight="strong"
+                          fontSize="0.6875rem"
+                          color="rgba(38, 35, 35, 0.8)"
+                        >
+                          01
+                        </Text>
+                      </Flex>
+                      <Text
+                        w="100%"
+                        textAlign="center"
+                        fontWeight="medium"
+                        fontSize="xs"
+                      >
+                        {data.sale.data.avgSalesAmt ?? "-"}
+                      </Text>
+                    </Flex>
+                  </Flex>
+                  <svg
+                    width="110"
+                    height="2"
+                    viewBox="0 0 127 2"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g opacity="0.5">
+                      <path
+                        d="M0.666626 1.00049H126.333"
+                        stroke="#262323"
+                        stroke-opacity="0.8"
+                      />
+                      <path
+                        d="M0.666626 1.00049H6.66663"
+                        stroke="#262323"
+                        stroke-width="2"
+                      />
+                      <path
+                        d="M120.667 1.00049H126.667"
+                        stroke="#262323"
+                        stroke-width="2"
+                      />
+                    </g>
+                  </svg>
+                  <Flex w="100%" justify="space-between" gap="3px">
+                    <Flex w="50%">
+                      <Flex
+                        pl="0.875rem"
+                        h="1rem"
+                        pos="relative"
+                        align="flex-end"
+                        border="1px solid #BFBFBF"
+                        boxSizing="border-box"
+                      >
+                        <IcoPeople
+                          position="absolute"
+                          top="0"
+                          left="0"
+                          width="0.7rem"
+                          height="auto"
+                        />
+                        <Text
+                          fontWeight="strong"
+                          fontSize="0.6875rem"
+                          color="rgba(38, 35, 35, 0.8)"
+                        >
+                          01
+                        </Text>
+                      </Flex>
+                      <Text
+                        w="100%"
+                        textAlign="center"
+                        fontWeight="medium"
+                        fontSize="xs"
+                      >
+                        {data.job.data.housCustcnt ?? "-"}
+                      </Text>
+                    </Flex>
+                    <Flex w="50%">
+                      <Flex
+                        pl="0.875rem"
+                        h="1rem"
+                        pos="relative"
+                        align="flex-end"
+                        border="1px solid #BFBFBF"
+                        boxSizing="border-box"
+                      >
+                        <IcoHousehold
+                          position="absolute"
+                          top="0"
+                          left="0"
+                          width="0.7rem"
+                          height="auto"
+                        />
+                        <Text
+                          fontWeight="strong"
+                          fontSize="0.6875rem"
+                          color="rgba(38, 35, 35, 0.8)"
+                        >
+                          01
+                        </Text>
+                      </Flex>
+                      <Text
+                        w="100%"
+                        textAlign="center"
+                        fontWeight="medium"
+                        fontSize="xs"
+                      >
+                        {data.house.data.hous ?? "-"}
+                      </Text>
+                    </Flex>
+                  </Flex>
+                </Flex>
+                <Flex
+                  p="0.25rem 0.4375rem"
+                  align="center"
+                  direction="column"
+                  bgColor="rgba(255, 255, 255, 0.75)"
+                  border="1px solid #BFBFBF"
+                >
+                  <Text
+                    fontWeight={300}
+                    fontSize="0.6875rem"
+                    lineHeight="0.875rem"
+                    color="#262323"
+                  >
+                    total
+                  </Text>
+                  <Text
+                    fontWeight="medium"
+                    fontSize="0.8125rem"
+                    lineHeight="1.125rem"
+                    color="#262323"
+                    letterSpacing={0}
+                  >
+                    RANK
+                  </Text>
+                  <Text
+                    fontWeight="strong"
+                    fontSize="1.6875rem"
+                    lineHeight="2.1875rem"
+                    color="#262323"
+                    letterSpacing="-3px"
+                  >
+                    {String(num + 1).length === 1 ? `0${num + 1}` : num + 1}
+                  </Text>
+                </Flex>
+              </Flex>
+            </Flex>
           </OverlayView>
-          <OverlayView id={`marker${num}`} position={position}>
+          <OverlayView id={`marker01_${num}`} position={position}>
             <svg
-              width="20px"
-              height="20px"
-              viewBox="0 0 16 16"
-              style={{
-                position: "absolute",
-                //left: "50%",
-                //top: "50%",
-                transform: "translate(-50%, -50%)",
-                //zIndex: 80
-              }}
+              width="17"
+              height="17"
+              viewBox="0 0 17 17"
+              fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              xmlnsXlink="http://www.w3.org/1999/xlink"
             >
-              <path
-                fill="#444"
-                d="M8 4c-2.2 0-4 1.8-4 4s1.8 4 4 4 4-1.8 4-4-1.8-4-4-4z"
+              <rect
+                x="8.48523"
+                y="16.2636"
+                width="11"
+                height="11"
+                transform="rotate(-135 8.48523 16.2636)"
+                fill="white"
+                fill-opacity="0.5"
+                stroke="#BFBFBF"
               />
-              <path
-                fill="#444"
-                d="M8 1c3.9 0 7 3.1 7 7s-3.1 7-7 7-7-3.1-7-7 3.1-7 7-7zM8 0c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8v0z"
+              <rect
+                x="8.48523"
+                y="13.435"
+                width="7"
+                height="7"
+                transform="rotate(-135 8.48523 13.435)"
+                fill={over === num ? "#FADB14" : "transparent"}
+                stroke="#8C8C8C"
               />
             </svg>
-            {/* <div
-                  style={{
-                    position: "relative",
-                    //top: "4px",
-                    color: "blue",
-                    fontWeight: "bold",
-                  }}>
-                  {num}
-                </div> */}
+          </OverlayView>
+          <OverlayView
+            id={`marker02_${num}`}
+            position={
+              onleft
+                ? {
+                    y: (range.yMax + range.yMin) / 2 + cont - 0.03345,
+                    x: range.xMin - 0.037,
+                  }
+                : {
+                    y: (range.yMax + range.yMin) / 2 + cont - 0.03345,
+                    x: range.xMax + 0.035,
+                  }
+            }
+          >
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 12 12"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                x="0.707107"
+                y="5.65674"
+                width="7"
+                height="7"
+                transform="rotate(-45 0.707107 5.65674)"
+                fill="white"
+                fill-opacity="0.5"
+                stroke="#595959"
+              />
+            </svg>
           </OverlayView>
         </div>
       ) : null}

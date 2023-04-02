@@ -4,7 +4,7 @@ import { Flex, useColorMode } from "@chakra-ui/react";
 
 type Props = {};
 
-const Section = ({ children, ...props }: any) => {
+const Section = ({ children, bg, boxShadow, borderRadius, ...props }: any) => {
   const { colorMode } = useColorMode();
 
   return (
@@ -13,12 +13,13 @@ const Section = ({ children, ...props }: any) => {
       h="auto"
       direction="column"
       bg={
-        colorMode === "light"
+        bg ||
+        (colorMode === "light"
           ? "linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 100%)"
-          : "bg.primary"
+          : "bg.primary")
       }
-      boxShadow="0px 2.85px 7.12px rgba(0, 0, 0, 0.25)"
-      borderRadius="Box"
+      boxShadow={boxShadow || "0px 2.85px 7.12px rgba(0, 0, 0, 0.25)"}
+      borderRadius={borderRadius || "Box"}
       overflow="hidden"
       {...props}
     >

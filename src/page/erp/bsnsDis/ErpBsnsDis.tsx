@@ -1,6 +1,6 @@
 //  LIB
-import { useMemo, useState } from "react";
-import { Button, Divider, Flex, Heading } from "@chakra-ui/react";
+import { useEffect, useMemo, useState } from "react";
+import { Button, Divider, Flex, Heading, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 //  Components
 import Section from "@components/common/Section";
@@ -22,18 +22,13 @@ const ErpBsnsDis = () => {
   const [selectData, setSelectData] = useState<any>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [curPage, setCurPage] = useState<number>(1);
-  const { column, initVal } = useMemo(
-    () => ({
-      initVal: {
-        type: "bsnsName",
-        text: "",
-        areaCode: "",
-        bsnsType: ["total"],
-      },
-      column: columnBsnsInfo,
-    }),
-    []
-  );
+  const [initVal, setInitVal] = useState<any>({
+    type: "bsnsName",
+    text: "",
+    areaCode: "",
+    bsnsType: ["total"],
+  });
+  const column = useMemo(() => columnBsnsInfo, []);
 
   const searchHandler = () => {};
 
@@ -41,16 +36,46 @@ const ErpBsnsDis = () => {
     setSelectData([]);
   };
 
+  useEffect(() => {
+    let sample = [];
+    console.log("search start");
+
+    for (let i = 0; i < 10; i++) {
+      sample.push({
+        id: "test",
+        bsnsName: "종로상권",
+        bsnsCode: "12314515",
+        bsnsStatus: "상권1",
+        bsnsAddr: "경기도 김포시 풍무로 69번길 51",
+        linkStore: "",
+      });
+    }
+    setTableData(sample);
+    setTotalPage(sample.length);
+  }, [initVal, curPage]);
+
   return (
     <Flex w="100%" flexDirection="column" gap="0.5rem">
-      <Section p="1.25rem 0.75rem 1rem" flex="none">
-        <Heading as={"h3"} variant="outlet">
-          상권
-        </Heading>
-        <Divider m="1rem 0 1.25rem" color="font.title" />
+      <Section p="1rem 0.75rem 1.125rem" flex="none">
+        <Flex pl="0.8125rem" align="flex-end" gap="0.25rem">
+          <Heading as={"h3"} variant="outlet">
+            상권
+          </Heading>
+          <Text variant="outlet">Bsns</Text>
+        </Flex>
+        <Divider m="0.5rem 0 1rem" color="font.title" />
         <SearchBsns initVal={initVal} setValues={setTableData} />
       </Section>
-      <Section p="0.625rem 0rem 1rem" h="100%">
+      <Table
+        data={tableData}
+        actviePage={true}
+        divide={5}
+        columns={column}
+        totalPage={totalPage}
+        page={curPage}
+        getPage={setCurPage}
+        getSelectData={setSelectData}
+      >
         <Flex
           p="0rem 1.65625rem 0.5rem"
           w="100%"
@@ -59,9 +84,11 @@ const ErpBsnsDis = () => {
           gap="1.5rem"
         >
           <Button
-            variant={"upload"}
+            variant="upload"
+            h="1.4rem"
+            fontSize="xs"
             onClick={() => {
-              navigate("/bsns/detail");
+              navigate("/erp/bsns/detail");
             }}
           >
             상권레이어 설정
@@ -80,17 +107,7 @@ const ErpBsnsDis = () => {
             isDisabled={selectData.length > 0 ? false : true}
           />
         </Flex>
-        <Table
-          data={tableData}
-          actviePage={true}
-          divide={5}
-          columns={column}
-          totalPage={totalPage}
-          page={curPage}
-          getSelectData={setSelectData}
-          getPage={setCurPage}
-        />
-      </Section>
+      </Table>
     </Flex>
   );
 };

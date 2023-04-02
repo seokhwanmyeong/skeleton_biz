@@ -5,7 +5,6 @@ import { Divider, Flex, Heading, Text } from "@chakra-ui/react";
 import Section from "@components/common/Section";
 import SearchStore from "@components/search/SearchStore";
 import Table from "@components/table/Table";
-import ModalStoreEditor from "@components/modal/erp/ModalStoreEditor";
 import {
   IcoBtnDownload,
   IcoBtnDelete,

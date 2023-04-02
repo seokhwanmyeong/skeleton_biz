@@ -7,7 +7,7 @@ import { CheckboxGroup } from "@components/common/CheckBox";
 import { IcoSearch } from "@assets/icons/icon";
 import { Input, InputTotalDate } from "@components/common/Input";
 
-const SearchHistory = ({
+const SearchDocs = ({
   initVal,
   setValues,
 }: {
@@ -26,7 +26,7 @@ const SearchHistory = ({
       {({ handleSubmit, errors, touched, getFieldProps, setFieldValue }) => {
         return (
           <Form onSubmit={handleSubmit} style={{ width: "100%" }}>
-            <Flex w="100%" direction="row" gap="1rem">
+            <Flex w="40%" direction="row" gap="1rem">
               <FormControl variant="search">
                 <Flex align="center" w="100%" gap="0.5rem">
                   <FormLabel
@@ -37,31 +37,6 @@ const SearchHistory = ({
                   >
                     검색어
                   </FormLabel>
-                  <Select
-                    data={[
-                      { text: "전체", value: "total" },
-                      { text: "로그", value: "write" },
-                      { text: "작성", value: "log" },
-                    ]}
-                    defalutValue="total"
-                    opBaseTxt="text"
-                    opBaseId="value"
-                    opBaseKey="value"
-                    onChange={(val: any) => setFieldValue("dataType", val)}
-                    selectProps={{ w: "5rem", flex: "none" }}
-                  />
-                  <Select
-                    data={[
-                      { text: "제목", value: "title" },
-                      { text: "작성자", value: "writer" },
-                    ]}
-                    defalutValue="title"
-                    opBaseTxt="text"
-                    opBaseId="value"
-                    opBaseKey="value"
-                    onChange={(val: any) => setFieldValue("searchType", val)}
-                    selectProps={{ w: "5rem", flex: "none" }}
-                  />
                   <Input
                     inputProps={{
                       w: "100%",
@@ -93,4 +68,4 @@ const SearchHistory = ({
   );
 };
 
-export default SearchHistory;
+export default SearchDocs;

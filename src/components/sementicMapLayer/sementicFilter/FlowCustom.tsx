@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Flex } from "@chakra-ui/react";
 //  Component
-import BtnReset from "@components/sementicMapLayer/mapElement/BtnReset";
+import BtnReset from "@src/components/sementicMapLayer/sementicFilter/BtnReset";
 
 type Props = {};
 
