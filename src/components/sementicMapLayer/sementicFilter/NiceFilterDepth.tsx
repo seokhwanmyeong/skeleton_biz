@@ -33,9 +33,10 @@ import {
 
 type Props = {
   areaCode?: string;
+  path?: any;
 };
 
-const NiceFilterDepth = ({ areaCode }: Props) => {
+const NiceFilterDepth = ({ areaCode, path }: Props) => {
   const [openIdx, setOpenIdx] = useState(0);
   const { bot } = useRecoilValue(atomUpjongState);
   const [flowPop, setFlowPop] = useRecoilState(infoComFlowDepth);

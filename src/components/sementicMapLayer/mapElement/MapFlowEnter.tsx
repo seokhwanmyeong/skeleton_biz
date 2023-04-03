@@ -7,6 +7,7 @@ import InteractArea from "./InteractArea";
 //  Atom
 import { atomFilterFlow } from "@states/sementicMap/filterState";
 import {
+  atomCurrentMapOption,
   atomFlowEnterArea,
   atomSidoLi,
   atomSigunguLi,
@@ -20,44 +21,37 @@ const MapFlowEnter = (props: Props) => {
   const sidoLi = useRecoilValue(atomSidoLi);
   const sigunguLi = useRecoilValue(atomSigunguLi);
   const setFlow = useSetRecoilState(atomFilterFlow);
-
-  const getCenterPolygon = (polygons: any[]) => {
-    const centers = polygons.map((polygon, idx: number) => {
-      const bounds = polygon.getPath();
-      const arr = bounds._array;
-      const length = arr.length;
-      let xcos = 0;
-      let ycos = 0;
-      let area = 0;
-
-      for (let i = 0, len = length, j = length - 1; i < len; j = i++) {
-        let p1 = arr[i];
-        let p2 = arr[j];
-
-        let f = p1.y * p2.x - p2.y * p1.x;
-        xcos += (p1.x + p2.x) * f;
-        ycos += (p1.y + p2.y) * f;
-        area += f * 3;
-      }
-
-      return [xcos / area, ycos / area];
-    });
-
-    return centers;
-  };
+  const setCurrent = useSetRecoilState(atomCurrentMapOption);
 
   useEffect(() => {
     if (sido?.slctCode && sido?.slctName && sido?.slctPath) {
       console.log("진입 1");
       state.map?.fitBounds(sido.slctPath);
+
       let curZoom = state.map?.getZoom();
-      state.map?.setOptions({
-        minZoom: curZoom,
-        maxZoom: curZoom,
-        scrollWheel: false,
-      });
+      let center = state.map?.getCenter();
+      console.log(center);
+      if (curZoom && center) {
+        state.map?.setOptions({
+          minZoom: curZoom,
+          maxZoom: curZoom,
+          scrollWheel: false,
+        });
+
+        setCurrent({
+          zoom: {
+            minZoom: curZoom,
+            maxZoom: curZoom,
+          },
+          center: {
+            lat: center.y,
+            lng: center.x,
+          },
+        });
+      }
     } else if (sidoLi.length > 0) {
       console.log("진입 2");
+
       state.map?.setZoom(8, false);
       state.map?.setCenter(new naver.maps.LatLng(35.9223291, 127.9101228));
       state.map?.setOptions({

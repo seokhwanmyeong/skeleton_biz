@@ -18,6 +18,7 @@ import { atomFlowEnterArea, atomDongLi } from "@states/sementicMap/mapState";
 import { IcoBarChart, IcoErp, IcoFilter } from "@src/assets/icons/icon";
 //  Sample
 import dongListData from "@util/data/area/dong.json";
+import MapFlowFind from "../mapElement/MapFlowFind";
 
 type Props = {};
 
@@ -27,6 +28,7 @@ const FlowSigungu = (props: Props) => {
   const [{ sido, sigungu }, setSlctArea] = useRecoilState(atomFlowEnterArea);
   const [dongLi, setDongLi] = useRecoilState(atomDongLi);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isToolOpen, toolOpen] = useState(false);
   const [filterType, setType] = useState("");
 
   const pathTransHandler = (
@@ -87,59 +89,61 @@ const FlowSigungu = (props: Props) => {
   return (
     <>
       {/* ------------------------------ 상단 ------------------------------*/}
-      <Flex
-        pos="absolute"
-        top="1%"
-        left="50%"
-        zIndex={999}
-        transform="translateX(-50%)"
-        gap={"4rem"}
-      >
-        <UpjongListBox />
+      {!isToolOpen && (
         <Flex
-          pos="relative"
-          pt="0.3rem"
-          direction="column"
-          justify="flex-start"
-          color="#000000"
-          gap="0.5rem"
+          pos="absolute"
+          top="1%"
+          left="50%"
+          zIndex={999}
+          transform="translateX(-50%)"
+          gap={"4rem"}
         >
-          <Flex pos="relative" direction="column">
-            <BtnBack
-              onClick={() => {
-                state.map?.setOptions({
-                  minZoom: 0,
-                  maxZoom: 16,
-                  scrollWheel: false,
-                });
-                setSlctArea({
-                  sido,
-                  sigungu: {
-                    slctName: "",
-                    slctCode: "",
-                    slctIdx: "",
-                    slctPath: [],
-                  },
-                });
-                setFlow(0);
-              }}
-            />
-            <Button
-              variant="filterTopMain"
-              onClick={() => {
-                isOpen ? onClose() : onOpen();
-              }}
-            >
-              {sigungu?.slctName.replace(sido?.slctName || "", "")}
-            </Button>
-            <DecoTop width="13rem" />
+          <UpjongListBox />
+          <Flex
+            pos="relative"
+            pt="0.3rem"
+            direction="column"
+            justify="flex-start"
+            color="#000000"
+            gap="0.5rem"
+          >
+            <Flex pos="relative" direction="column">
+              <BtnBack
+                onClick={() => {
+                  state.map?.setOptions({
+                    minZoom: 0,
+                    maxZoom: 16,
+                    scrollWheel: false,
+                  });
+                  setSlctArea({
+                    sido,
+                    sigungu: {
+                      slctName: "",
+                      slctCode: "",
+                      slctIdx: "",
+                      slctPath: [],
+                    },
+                  });
+                  setFlow(0);
+                }}
+              />
+              <Button
+                variant="filterTopMain"
+                onClick={() => {
+                  isOpen ? onClose() : onOpen();
+                }}
+              >
+                {sigungu?.slctName.replace(sido?.slctName || "", "")}
+              </Button>
+              <DecoTop width="13rem" />
+            </Flex>
+            {sido?.slctName && (
+              <Text variant="filterTopArea">{sido.slctName}</Text>
+            )}
           </Flex>
-          {sido?.slctName && (
-            <Text variant="filterTopArea">{sido.slctName}</Text>
-          )}
+          <BtnFlowCustom />
         </Flex>
-        <BtnFlowCustom />
-      </Flex>
+      )}
       {/* ------------------------------ 하단 ------------------------------*/}
       <Flex
         pos="absolute"
@@ -190,7 +194,10 @@ const FlowSigungu = (props: Props) => {
         </Button>
       </Flex>
       {filterType === "anal" && <NiceFilter areaCode={sigungu?.slctCode} />}
-      {filterType === "erp" && <ErpFilter areaCode={sigungu?.slctCode} />}
+      {filterType === "erp" && (
+        <ErpFilter toolOpen={toolOpen} areaCode={sigungu?.slctCode} />
+      )}
+      {isToolOpen && <MapFlowFind />}
     </>
   );
 };

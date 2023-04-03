@@ -32,6 +32,7 @@ import {
   atomFlowEnterArea,
   atomSidoLi,
   atomSigunguLi,
+  atomCurrentMapOption,
 } from "@states/sementicMap/mapState";
 import { atomFilterFlow } from "@src/states/sementicMap/filterState";
 
@@ -43,7 +44,7 @@ const SementicMap = (props: Props) => {
   const [sigungu, setSigungu] = useState(false);
   const [selectDong, setSelectDong] = useState(-1);
   const [dongnum, setDongnum] = useState(-1);
-  const [mapOption, setMapOption] = useState({
+  const [mapOption, setMapOption] = useState<any>({
     zoom: {
       minZoom: 8,
       maxZoom: 8,
@@ -53,6 +54,7 @@ const SementicMap = (props: Props) => {
       lng: 127.9101228,
     },
   });
+  const currentOption = useRecoilValue(atomCurrentMapOption);
 
   const onSigungu = (sido: boolean) => {
     setSigungu(sido);
@@ -90,6 +92,7 @@ const SementicMap = (props: Props) => {
           maxZoom: mapOption.zoom.maxZoom,
         }}
         style={{
+          position: "relative",
           width: "inherit",
           height: "inherit",
         }}

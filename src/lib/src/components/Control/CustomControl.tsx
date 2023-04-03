@@ -28,7 +28,7 @@ const CustomControl = ({
         {}
       );
       containerRef.current = document.createElement("div");
-      containerRef.current.style.zIndex = "10";
+      containerRef.current.style.zIndex = "999";
       control.getElement().appendChild(containerRef.current);
       control.setOptions({ position: naver.maps.Position[bindingPosition] });
       control.setMap(state.map);

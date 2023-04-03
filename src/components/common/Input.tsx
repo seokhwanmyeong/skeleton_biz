@@ -669,8 +669,9 @@ const InputImg = ({
           ref={fileRef}
         />
         <IconDownload
-          width={isSimple ? "1rem" : "auto"}
-          height={isSimple ? "1rem" : "auto"}
+          pt="1rem"
+          width={isSimple ? "1rem" : "50%"}
+          height={isSimple ? "1rem" : "50%"}
           mb={isSimple ? "0" : "1rem"}
           color="font.title"
           boxSize="4rem"
@@ -784,7 +785,7 @@ const InputAddr = ({
   return (
     <Flex minW={0} w="100%" h="100%" gap="0.25rem">
       <Input isDisabled={true} value={value} onChange={() => {}} />
-      <Button variant="search" onClick={onOpen}>
+      <Button isDisabled={isDisabled} variant="search" onClick={onOpen}>
         <IcoSearch w="0.875rem" h="0.875rem" />
         <Text variant="search" color="#ffffff">
           검색

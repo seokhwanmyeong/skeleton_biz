@@ -12,8 +12,11 @@ import BtnFlowCustom from "@components/sementicMapLayer/sementicFilter/BtnFlowCu
 import BtnBack from "@components/sementicMapLayer/sementicFilter/BtnBack";
 import DecoTop from "@components/sementicMapLayer/sementicFilter/DecoTop";
 //  State
-import { atomFilterFlow } from "@states/sementicMap/filterState";
-import { atomFlowEnterArea, atomSlctDong } from "@states/sementicMap/mapState";
+import {
+  atomFlowEnterArea,
+  atomSlctCustom,
+  atomSlctDong,
+} from "@states/sementicMap/mapState";
 //  Icon
 import { IcoBarChart, IcoErp, IcoFilter } from "@src/assets/icons/icon";
 
@@ -21,9 +24,7 @@ type Props = {};
 
 const FlowCustom = (props: Props) => {
   const { state } = useContext(NaverMapContext);
-  const setFlow = useSetRecoilState(atomFilterFlow);
-  const { sigungu } = useRecoilValue(atomFlowEnterArea);
-  const [dong, setDong] = useRecoilState(atomSlctDong);
+  const cutomArea = useRecoilValue(atomSlctCustom);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [filterType, setType] = useState("");
 
@@ -47,29 +48,16 @@ const FlowCustom = (props: Props) => {
           gap="0.5rem"
         >
           <Flex pos="relative" direction="column">
-            <BtnBack
-              onClick={() => {
-                state.map?.setOptions({
-                  minZoom: 0,
-                  maxZoom: 16,
-                  scrollWheel: false,
-                });
-                setFlow(1);
-              }}
-            />
             <Button
               variant="filterTopMain"
               onClick={() => {
                 isOpen ? onClose() : onOpen();
               }}
             >
-              {dong.slctName.replace(sigungu?.slctName, "")}
+              {cutomArea.slctName}
             </Button>
             <DecoTop width={"13rem"} />
           </Flex>
-          {sigungu?.slctName && (
-            <Text variant="filterTopArea">{sigungu?.slctName}</Text>
-          )}
         </Flex>
         <BtnFlowCustom />
       </Flex>
@@ -122,8 +110,8 @@ const FlowCustom = (props: Props) => {
           리포트
         </Button>
       </Flex>
-      {filterType === "anal" && <NiceFilterDepth areaCode={dong?.slctCode} />}
-      {filterType === "erp" && <ErpFilter areaCode={dong?.slctCode} />}
+      {filterType === "anal" && <NiceFilterDepth path={cutomArea.slctPath} />}
+      {filterType === "erp" && <ErpFilter path={cutomArea.slctPath} />}
     </>
   );
 };

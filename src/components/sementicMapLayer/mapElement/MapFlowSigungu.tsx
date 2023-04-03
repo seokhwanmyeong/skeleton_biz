@@ -10,6 +10,7 @@ import InteractArea from "./InteractArea";
 //  Atom
 import { atomFilterFlow, dataCollector } from "@states/sementicMap/filterState";
 import {
+  atomCurrentMapOption,
   atomDongLi,
   atomFlowEnterArea,
   atomSlctDong,
@@ -28,6 +29,7 @@ const MapFlowSigungu = (props: Props) => {
   const [slctDong, setSlctDong] = useState(-1);
   const filterData = useRecoilValue(dataCollector);
   const [center, setCenter] = useState<any>(null);
+  const setCurrent = useSetRecoilState(atomCurrentMapOption);
   const [range, setRange] = useState({
     xMax: 0,
     xMin: 0,
@@ -64,6 +66,11 @@ const MapFlowSigungu = (props: Props) => {
       state.map?.fitBounds(sigungu.slctPath);
 
       let curZoom = state.map?.getZoom();
+      let curCenter = state.map?.getCenter();
+
+      if (curCenter) {
+        setCenter([curCenter.x, curCenter.y]);
+      }
 
       if (curZoom) {
         state.map?.setZoom(curZoom);
@@ -71,6 +78,19 @@ const MapFlowSigungu = (props: Props) => {
         state.map?.setOptions({
           minZoom: curZoom,
           maxZoom: curZoom,
+        });
+      }
+
+      if (curCenter && curZoom) {
+        setCurrent({
+          zoom: {
+            minZoom: curZoom,
+            maxZoom: curZoom,
+          },
+          center: {
+            lat: curCenter.x,
+            lng: curCenter.y,
+          },
         });
       }
 
@@ -95,13 +115,6 @@ const MapFlowSigungu = (props: Props) => {
         }
       });
       setRange(xyRange);
-
-      const { center } = getCenterPath(sigungu.slctPath);
-      const curCenter = state.map?.getCenter();
-
-      if (curCenter) {
-        setCenter([curCenter.x, curCenter.y]);
-      }
     }
   }, [sigungu]);
 

@@ -9,6 +9,7 @@ import {
   Heading,
   Switch,
   Text,
+  useDisclosure,
 } from "@chakra-ui/react";
 //  Component
 import { CheckboxGroup } from "@components/common/CheckBox";
@@ -33,13 +34,20 @@ import {
 import { RadioBox } from "@src/components/common/RadioBox";
 import { Select } from "@src/components/common/Select";
 import { Input } from "@src/components/common/Input";
+import ModalStoreEditor from "@src/components/modal/map/ModalStoreEditor";
+import ModalRentEditor from "@src/components/modal/map/ModalRentEditor";
+import ModalBsnsDEditor from "@src/components/modal/map/ModalBsnsDEditor";
 
 type Props = {
+  toolOpen: any;
   areaCode?: string;
+  path?: any;
 };
 
-const ErpFilter = ({ areaCode }: Props) => {
+const ErpFilter = ({ toolOpen, areaCode, path }: Props) => {
+  const { isOpen, onClose, onOpen } = useDisclosure();
   const [openIdx, setOpenIdx] = useState(0);
+  const [modalIdx, setModalIdx] = useState(1);
   const [createType, setCreateType] = useState("");
   const [erpStore, setErpStore] = useRecoilState(infoComErpStore);
   const resetStore = useResetRecoilState(infoComErpStore);
@@ -103,6 +111,14 @@ const ErpFilter = ({ areaCode }: Props) => {
       resetRent();
     }
   }, [erpRent.filter]);
+
+  useEffect(() => {
+    if (isOpen && modalIdx === 2) {
+      toolOpen(true);
+    } else {
+      toolOpen(false);
+    }
+  }, [isOpen]);
 
   return (
     <Flex
@@ -726,24 +742,57 @@ const ErpFilter = ({ areaCode }: Props) => {
               <RadioBox
                 variant="search"
                 values={[
-                  { text: "매장", value: "store" },
-                  { text: "상권", value: "bsnsD" },
-                  { text: "매물", value: "rent" },
-                  { text: "고객", value: "client" },
+                  { text: "매장", value: 1 },
+                  { text: "상권", value: 2 },
+                  { text: "매물", value: 3 },
+                  // { text: "고객", value: 4 },
                 ]}
                 fieldKey="value"
-                value={createType}
-                onChange={(val: any) => setCreateType(val)}
+                value={modalIdx}
+                onChange={(val: any) => {
+                  setModalIdx(Number(val));
+                }}
                 radioProps={{
                   w: "max-content",
                   justifyContent: "space-between",
                 }}
               />
             </Flex>
-            <Button w="6rem" variant="search" onClick={() => {}}>
+            <Button
+              w="6rem"
+              variant="search"
+              onClick={() => {
+                onOpen();
+              }}
+            >
               생성하기
             </Button>
           </Flex>
+          {modalIdx === 1 ? (
+            <Flex mt="1rem">
+              <ModalStoreEditor
+                onOpen={onOpen}
+                onClose={onClose}
+                isOpen={isOpen}
+              />
+            </Flex>
+          ) : modalIdx === 2 ? (
+            <Flex mt="1rem">
+              <ModalBsnsDEditor
+                onOpen={onOpen}
+                onClose={onClose}
+                isOpen={isOpen}
+              />
+            </Flex>
+          ) : modalIdx === 3 ? (
+            <Flex mt="1rem">
+              <ModalRentEditor
+                onOpen={onOpen}
+                onClose={onClose}
+                isOpen={isOpen}
+              />
+            </Flex>
+          ) : null}
           <Box
             zIndex={-1}
             position="absolute"
