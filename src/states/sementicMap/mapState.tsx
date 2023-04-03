@@ -21,6 +21,8 @@ type SlctAreaProps = {
   };
 };
 
+// ==================== 지역선택 Flow ====================
+
 export const atomAreaState = atom<{ [key: string]: any }>({
   key: "sementicAreaState",
   default: {
@@ -82,9 +84,12 @@ export const atomSlctDong = atom<{ [key: string]: any }>({
     slctCode: "",
     slctIdx: "",
     slctPath: [],
+    slctData: [],
+    slctRank: null,
   },
 });
 
+// 전체 Reset 컨트롤
 export const resetHandler = selector({
   key: "resetMapState",
   get: () => {},
@@ -95,3 +100,5 @@ export const resetHandler = selector({
     reset(atomSigunguLi);
   },
 });
+
+// ==================== 영역선택 Flow ====================

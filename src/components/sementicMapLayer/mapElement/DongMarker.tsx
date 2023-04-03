@@ -19,7 +19,7 @@ import {
   IcoResi,
 } from "@src/assets/icons/icon";
 
-interface GuMarkerProps {
+interface DongMarkerProps {
   name: string;
   num: number;
   selectDong: number;
@@ -38,7 +38,7 @@ interface GuMarkerProps {
   leftIdx: number;
   data?: any;
 }
-const GuMarker = ({
+const DongMarker = ({
   name,
   num,
   direction,
@@ -49,7 +49,7 @@ const GuMarker = ({
   rightIdx,
   leftIdx,
   data,
-}: GuMarkerProps) => {
+}: DongMarkerProps) => {
   const { state, dispatch } = useContext(NaverMapContext);
   const [cont, setCont] = useState(0);
   const [contY, setConstY] = useState(0);
@@ -663,4 +663,4 @@ const GuMarker = ({
   );
 };
 
-export default GuMarker;
+export default DongMarker;

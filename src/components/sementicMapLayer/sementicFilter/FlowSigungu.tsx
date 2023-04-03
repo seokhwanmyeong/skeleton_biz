@@ -3,24 +3,21 @@ import { useContext, useEffect, useState } from "react";
 import { Box, Button, Flex, Text, useDisclosure } from "@chakra-ui/react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { NaverMapContext } from "@src/lib/src";
-//  State
-import { atomFilterFlow } from "@states/sementicMap/filterState";
-import { atomFlowEnterArea, atomDongLi } from "@states/sementicMap/mapState";
 //  Component
+import UpjongListBox from "@components/sementicMapLayer/sementicFilter/UpjongListBox";
+import NiceFilter from "@components/sementicMapLayer/sementicFilter/NiceFilter";
+import ErpFilter from "@components/sementicMapLayer/sementicFilter/ErpFilter";
 import BtnReset from "@components/sementicMapLayer/sementicFilter/BtnReset";
 import BtnFlowCustom from "@components/sementicMapLayer/sementicFilter/BtnFlowCustom";
 import BtnBack from "@components/sementicMapLayer/sementicFilter/BtnBack";
 import DecoTop from "@components/sementicMapLayer/sementicFilter/DecoTop";
-import NiceFilter from "@components/sementicMapLayer/sementicFilter/NiceFilter";
-import UpjonListBox from "@components/sementicMapLayer/sementicFilter/UpjonListBox";
+//  State
+import { atomFilterFlow } from "@states/sementicMap/filterState";
+import { atomFlowEnterArea, atomDongLi } from "@states/sementicMap/mapState";
+//  Icon
+import { IcoBarChart, IcoErp, IcoFilter } from "@src/assets/icons/icon";
 //  Sample
-import dongData from "@util/data/area/dong.json";
-import {
-  IcoAppStore,
-  IcoBarChart,
-  IcoErp,
-  IcoFilter,
-} from "@src/assets/icons/icon";
+import dongListData from "@util/data/area/dong.json";
 
 type Props = {};
 
@@ -52,7 +49,9 @@ const FlowSigungu = (props: Props) => {
 
   const getDongList = () => {
     if (sigungu?.slctName) {
-      const test = dongData
+      let dongData: any = dongListData;
+
+      const tmp = dongData
         .map(
           (
             {
@@ -60,9 +59,9 @@ const FlowSigungu = (props: Props) => {
               name,
               polygon,
             }: {
-              code?: number;
-              name?: string;
-              polygon?: string;
+              code: number;
+              name: string;
+              polygon: string;
             },
             idx: number
           ) => {
@@ -75,7 +74,7 @@ const FlowSigungu = (props: Props) => {
           }
         )
         .filter((li: any) => li.code.slice(0, 4) === sigungu.slctCode);
-      const transData = pathTransHandler(test);
+      const transData = pathTransHandler(tmp);
 
       setDongLi(transData);
     }
@@ -96,7 +95,7 @@ const FlowSigungu = (props: Props) => {
         transform="translateX(-50%)"
         gap={"4rem"}
       >
-        <UpjonListBox />
+        <UpjongListBox />
         <Flex
           pos="relative"
           pt="0.3rem"
@@ -131,7 +130,7 @@ const FlowSigungu = (props: Props) => {
                 isOpen ? onClose() : onOpen();
               }}
             >
-              {sigungu?.slctName}
+              {sigungu?.slctName.replace(sido?.slctName || "", "")}
             </Button>
             <DecoTop width="13rem" />
           </Flex>
@@ -154,7 +153,7 @@ const FlowSigungu = (props: Props) => {
           variant="filterTop"
           isActive={filterType === "anal"}
           onClick={() => {
-            if (filterType) {
+            if (filterType === "anal") {
               setType("");
             } else {
               setType("anal");
@@ -170,7 +169,7 @@ const FlowSigungu = (props: Props) => {
           variant="filterTop"
           isActive={filterType === "erp"}
           onClick={() => {
-            if (filterType) {
+            if (filterType === "erp") {
               setType("");
             } else {
               setType("erp");
@@ -191,42 +190,7 @@ const FlowSigungu = (props: Props) => {
         </Button>
       </Flex>
       {filterType === "anal" && <NiceFilter areaCode={sigungu?.slctCode} />}
-      {filterType === "erp" && (
-        <Flex
-          pos="absolute"
-          bottom="calc(1% + 4.5rem)"
-          left="50%"
-          zIndex={999}
-          transform="translateX(-50%)"
-          gap="1.25rem"
-        >
-          <Button variant="filterTop" onClick={() => {}}>
-            <Box>
-              <IcoErp />
-            </Box>
-          </Button>
-          <Button variant="filterTop" onClick={() => {}}>
-            <Box>
-              <IcoErp />
-            </Box>
-          </Button>
-          <Button variant="filterTop" onClick={() => {}}>
-            <Box>
-              <IcoErp />
-            </Box>
-          </Button>
-          <Button variant="filterTop" onClick={() => {}}>
-            <Box>
-              <IcoErp />
-            </Box>
-          </Button>
-          <Button variant="filterTop" onClick={() => {}}>
-            <Box>
-              <IcoErp />
-            </Box>
-          </Button>
-        </Flex>
-      )}
+      {filterType === "erp" && <ErpFilter areaCode={sigungu?.slctCode} />}
     </>
   );
 };

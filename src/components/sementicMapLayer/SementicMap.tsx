@@ -25,6 +25,7 @@ import MapFlowEnter from "@components/sementicMapLayer/mapElement/MapFlowEnter";
 import MapFlowSigungu from "@components/sementicMapLayer/mapElement/MapFlowSigungu";
 import MapFlowDong from "@components/sementicMapLayer/mapElement/MapFlowDong";
 import MapFlowCustom from "@components/sementicMapLayer/mapElement/MapFlowCustom";
+import MapFlowFind from "@components/sementicMapLayer/mapElement/MapFlowFind";
 //  Atom
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
@@ -42,6 +43,16 @@ const SementicMap = (props: Props) => {
   const [sigungu, setSigungu] = useState(false);
   const [selectDong, setSelectDong] = useState(-1);
   const [dongnum, setDongnum] = useState(-1);
+  const [mapOption, setMapOption] = useState({
+    zoom: {
+      minZoom: 8,
+      maxZoom: 8,
+    },
+    center: {
+      lat: 35.9223291,
+      lng: 127.9101228,
+    },
+  });
 
   const onSigungu = (sido: boolean) => {
     setSigungu(sido);
@@ -74,12 +85,9 @@ const SementicMap = (props: Props) => {
         ncpClientId="ypiwp561ux"
         className="map"
         opts={{
-          center: {
-            lat: 35.9223291,
-            lng: 127.9101228,
-          },
-          minZoom: 8,
-          maxZoom: 8,
+          center: mapOption.center,
+          minZoom: mapOption.zoom.minZoom,
+          maxZoom: mapOption.zoom.maxZoom,
         }}
         style={{
           width: "inherit",
@@ -108,6 +116,8 @@ const SementicMap = (props: Props) => {
         ) : flow === 2 ? (
           <MapFlowDong />
         ) : flow === 3 ? (
+          <MapFlowFind />
+        ) : flow === 4 ? (
           <MapFlowCustom />
         ) : null}
       </Map>

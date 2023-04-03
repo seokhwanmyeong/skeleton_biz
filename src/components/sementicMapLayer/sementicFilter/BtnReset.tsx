@@ -3,7 +3,12 @@ import React from "react";
 import { useSetRecoilState } from "recoil";
 import { Box, Button } from "@chakra-ui/react";
 //  State
-import { atomFilterFlow } from "@states/sementicMap/filterState";
+import {
+  atomFilterFlow,
+  resetNice,
+  resetNiceDepth,
+  resetErp,
+} from "@states/sementicMap/filterState";
 import { resetHandler } from "@states/sementicMap/mapState";
 import { IcoReset } from "@assets/icons/icon";
 
@@ -14,14 +19,20 @@ type Props = {
 
 const BtnReset = ({ activeReset = true, onClick }: Props) => {
   const setFlow = useSetRecoilState(atomFilterFlow);
-  const reset = useSetRecoilState(resetHandler);
+  const resetSlctArea = useSetRecoilState(resetHandler);
+  const resetNiceFilter = useSetRecoilState(resetNice);
+  const resetNiceDepthFilter = useSetRecoilState(resetNiceDepth);
+  const resetErpFilter = useSetRecoilState(resetErp);
 
   return (
     <Button
       variant="filterTop"
       onClick={() => {
         if (activeReset) {
-          reset();
+          resetSlctArea();
+          resetNiceFilter();
+          resetNiceDepthFilter();
+          resetErpFilter();
           setFlow(0);
         }
         onClick && onClick();

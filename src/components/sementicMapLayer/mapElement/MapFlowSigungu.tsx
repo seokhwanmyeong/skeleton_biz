@@ -2,19 +2,20 @@
 import { useContext, useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { NaverMapContext } from "@src/lib/src";
+import { Image } from "@chakra-ui/react";
+import OverlayView from "@src/lib/src/components/Overlay/OverlayView";
 //  Components
 import GuPanel from "./GuPanel";
 import InteractArea from "./InteractArea";
 //  Atom
-import { atomFilterFlow } from "@states/sementicMap/filterState";
+import { atomFilterFlow, dataCollector } from "@states/sementicMap/filterState";
 import {
   atomDongLi,
   atomFlowEnterArea,
   atomSlctDong,
 } from "@states/sementicMap/mapState";
-import OverlayView from "@src/lib/src/components/Overlay/OverlayView";
+//  Deco
 import Rounding from "@assets/rounding.svg";
-import { Image } from "@chakra-ui/react";
 
 type Props = {};
 
@@ -25,6 +26,7 @@ const MapFlowSigungu = (props: Props) => {
   const dongli = useRecoilValue(atomDongLi);
   const setDong = useSetRecoilState(atomSlctDong);
   const [slctDong, setSlctDong] = useState(-1);
+  const filterData = useRecoilValue(dataCollector);
   const [center, setCenter] = useState<any>(null);
   const [range, setRange] = useState({
     xMax: 0,
@@ -60,7 +62,9 @@ const MapFlowSigungu = (props: Props) => {
         maxZoom: 16,
       });
       state.map?.fitBounds(sigungu.slctPath);
+
       let curZoom = state.map?.getZoom();
+
       if (curZoom) {
         state.map?.setZoom(curZoom);
 
@@ -101,18 +105,31 @@ const MapFlowSigungu = (props: Props) => {
     }
   }, [sigungu]);
 
-  const test = () => {};
+  const onClickArea = (areaIdx: number) => {
+    setDong({
+      slctName: dongli[areaIdx].name,
+      slctCode: dongli[areaIdx].code,
+      slctIdx: `area${dongli[areaIdx].code}`,
+      slctPath: dongli[areaIdx].path,
+      slctData: filterData || [],
+      slctRank: areaIdx,
+    });
+    setFlow(2);
+  };
 
   return (
     <>
       {dongli.length !== 0 &&
         dongli.map(
-          (dong: {
-            name: string;
-            code: string;
-            num: number;
-            path: never[];
-          }) => {
+          (
+            dong: {
+              name: string;
+              code: string;
+              num: number;
+              path: never[];
+            },
+            idx: number
+          ) => {
             return (
               <InteractArea
                 key={dong.name}
@@ -122,18 +139,21 @@ const MapFlowSigungu = (props: Props) => {
                     slctName: dong.name,
                     slctCode: dong.code,
                     slctIdx: `area${dong.code}`,
+                    slctNum: idx,
                     slctPath: dong.path,
+                    slctData: filterData || [],
+                    slctRank: idx,
                   });
                   setFlow(2);
                 }}
                 onMouse={() => {
-                  setSlctDong(dong.num);
+                  setSlctDong(idx);
                 }}
                 onMouseOut={() => {
                   setSlctDong(-1);
                 }}
                 name={dong.name}
-                num={dong.num}
+                num={idx}
                 path={dong.path}
                 style={{
                   fillColor: "#FF7A45",
@@ -155,26 +175,22 @@ const MapFlowSigungu = (props: Props) => {
         <GuPanel
           range={range}
           dongList={dongli}
-          onClickArea={test}
+          onClickArea={onClickArea}
           selectDong={slctDong}
         />
       ) : null}
       {center && (
         <OverlayView
           id={"Over1"}
-          // position={{
-          //   y: 37.6460103,
-          //   x: 126.927882,
-          // }}
           position={{
-            y: center[1] + 0.055,
-            x: center[0] - 0.07,
+            y: center[1],
+            x: center[0],
           }}
           pointerevent={false}
         >
           <Image
             src={Rounding}
-            transform={"translateXY(-50%, -50%)"}
+            transform={"translate(-50%, -50%)"}
             width={"800px"}
             height={"800px"}
             alt="testB"

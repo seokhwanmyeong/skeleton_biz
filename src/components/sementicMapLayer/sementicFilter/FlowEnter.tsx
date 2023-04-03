@@ -2,6 +2,15 @@ import { useContext, useEffect, useState } from "react";
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
 import { Box, Button, Flex, Text, useDisclosure } from "@chakra-ui/react";
 import { NaverMapContext } from "@src/lib/src";
+//  Component
+import BtnReset from "@src/components/sementicMapLayer/sementicFilter/BtnReset";
+import BtnFlowCustom from "@components/sementicMapLayer/sementicFilter/BtnFlowCustom";
+import BtnBack from "@components/sementicMapLayer/sementicFilter/BtnBack";
+import DecoTop from "@components/sementicMapLayer/sementicFilter/DecoTop";
+import AreaListBox from "@components/sementicMapLayer/sementicFilter/AreaListBox";
+import UpjongListBox from "@components/sementicMapLayer/sementicFilter/UpjongListBox";
+import NiceFilter from "@components/sementicMapLayer/sementicFilter/NiceFilter";
+import ErpFilter from "@components/sementicMapLayer/sementicFilter/ErpFilter";
 //  State
 import { atomFilterFlow } from "@states/sementicMap/filterState";
 import {
@@ -9,19 +18,11 @@ import {
   atomSidoLi,
   atomSigunguLi,
 } from "@states/sementicMap/mapState";
-//  Component
-import BtnReset from "@src/components/sementicMapLayer/sementicFilter/BtnReset";
-import BtnFlowCustom from "@components/sementicMapLayer/sementicFilter/BtnFlowCustom";
-import BtnBack from "@components/sementicMapLayer/sementicFilter/BtnBack";
-import DecoTop from "@components/sementicMapLayer/sementicFilter/DecoTop";
-import AreaListBox from "@components/sementicMapLayer/sementicFilter/AreaListBox";
-import NiceFilter from "@components/sementicMapLayer/sementicFilter/NiceFilter";
-import UpjonListBox from "@components/sementicMapLayer/sementicFilter/UpjonListBox";
 //  Icon
 import { IcoBarChart, IcoErp, IcoFilter } from "@assets/icons/icon";
 //  Sample
 import sidoData from "@util/data/area/sido.json";
-import sigunguData from "@util/data/area/sigungu.json";
+import sigunguListData from "@util/data/area/sigungu.json";
 
 const FlowEnter = () => {
   const { state } = useContext(NaverMapContext);
@@ -67,7 +68,9 @@ const FlowEnter = () => {
   };
 
   const getSigunguList = (slctCode: string) => {
-    const test = sigunguData
+    let sigunguData: any = sigunguListData;
+
+    const tmp = sigunguData
       .map(({ code, name, polygon, parent }: any) => {
         return {
           code: code,
@@ -78,7 +81,7 @@ const FlowEnter = () => {
       })
       .filter((li: any) => li.parent === slctCode);
 
-    const transData = pathTransHandler(test);
+    const transData = pathTransHandler(tmp);
 
     setSigunguLi(transData);
   };
@@ -117,7 +120,7 @@ const FlowEnter = () => {
         transform="translateX(-50%)"
         gap="4rem"
       >
-        <UpjonListBox />
+        <UpjongListBox />
         {sidoLi.length !== 0 && (
           <AreaListBox
             title="시/도 선택"
@@ -261,42 +264,7 @@ const FlowEnter = () => {
         </Button>
       </Flex>
       {filterType === "anal" && <NiceFilter />}
-      {filterType === "erp" && (
-        <Flex
-          pos="absolute"
-          bottom="calc(1% + 4.5rem)"
-          left="50%"
-          zIndex={999}
-          transform="translateX(-50%)"
-          gap="1.25rem"
-        >
-          <Button variant="filterTop" onClick={() => {}}>
-            <Box>
-              <IcoErp />
-            </Box>
-          </Button>
-          <Button variant="filterTop" onClick={() => {}}>
-            <Box>
-              <IcoErp />
-            </Box>
-          </Button>
-          <Button variant="filterTop" onClick={() => {}}>
-            <Box>
-              <IcoErp />
-            </Box>
-          </Button>
-          <Button variant="filterTop" onClick={() => {}}>
-            <Box>
-              <IcoErp />
-            </Box>
-          </Button>
-          <Button variant="filterTop" onClick={() => {}}>
-            <Box>
-              <IcoErp />
-            </Box>
-          </Button>
-        </Flex>
-      )}
+      {filterType === "erp" && <ErpFilter />}
     </>
   );
 };

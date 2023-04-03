@@ -210,11 +210,13 @@ const btnTheme = {
         backdropFilter: "blur(5px)",
         bg: "linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%)",
         filter: "drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25))",
+        transition: "0.3s",
       },
       _active: {
         bg: "none",
         fontWeight: "strong",
         div: {
+          bg: "linear-gradient(0deg, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%)",
           bgColor: "primary.type7",
         },
       },
@@ -222,7 +224,53 @@ const btnTheme = {
         bg: "none",
         fontWeight: "strong",
         div: {
+          bg: "linear-gradient(0deg, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%)",
           bgColor: "primary.type7",
+        },
+      },
+    },
+    filterTop02: {
+      p: 0,
+      bg: "none",
+      flexDirection: "column",
+      justifyContent: "center",
+      gap: "0.25rem",
+      fontWeight: "regular",
+      fontSize: "xs",
+      lineHeight: "1.0625rem",
+      color: "font.primary",
+      div: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        w: "2.5rem",
+        h: "2.5rem",
+        boxSizing: "border-box",
+        borderRadius: "70px",
+        backdropFilter: "blur(5px)",
+        bg: "linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%)",
+        filter: "drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25))",
+      },
+      _active: {
+        bg: "none",
+        fontWeight: "strong",
+        div: {
+          border: "1px solid #857A7A",
+          bg: "linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, rgba(255, 255, 255, 0) 60%, rgba(255, 255, 255, 0) 100%)",
+          svg: {
+            color: "#FFFFFF",
+          },
+        },
+      },
+      _hover: {
+        bg: "none",
+        fontWeight: "strong",
+        div: {
+          border: "1px solid #857A7A",
+          bg: "linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, rgba(255, 255, 255, 0) 60%, rgba(255, 255, 255, 0) 100%)",
+          svg: {
+            color: "#FFFFFF",
+          },
         },
       },
     },

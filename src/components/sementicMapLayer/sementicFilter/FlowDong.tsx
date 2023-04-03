@@ -1,30 +1,31 @@
 //  Lib
-import React, { useContext, useEffect } from "react";
+import { useContext, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { Box, Button, Flex, useDisclosure } from "@chakra-ui/react";
+import { Box, Button, Flex, Text, useDisclosure } from "@chakra-ui/react";
 import { NaverMapContext } from "@src/lib/src";
-//  Atom
-import { atomFilterFlow } from "@states/sementicMap/filterState";
-import { atomSlctDong } from "@states/sementicMap/mapState";
 //  Component
+import UpjonListBox from "@components/sementicMapLayer/sementicFilter/UpjongListBox";
+import NiceFilterDepth from "@components/sementicMapLayer/sementicFilter/NiceFilterDepth";
+import ErpFilter from "@components/sementicMapLayer/sementicFilter/ErpFilter";
 import BtnReset from "@components/sementicMapLayer/sementicFilter/BtnReset";
 import BtnFlowCustom from "@components/sementicMapLayer/sementicFilter/BtnFlowCustom";
 import BtnBack from "@components/sementicMapLayer/sementicFilter/BtnBack";
-import {
-  IcoAppStore,
-  IcoBarChart,
-  IcoErp,
-  IcoFilter,
-} from "@src/assets/icons/icon";
-import DecoTop from "./DecoTop";
+import DecoTop from "@components/sementicMapLayer/sementicFilter/DecoTop";
+//  State
+import { atomFilterFlow } from "@states/sementicMap/filterState";
+import { atomFlowEnterArea, atomSlctDong } from "@states/sementicMap/mapState";
+//  Icon
+import { IcoBarChart, IcoErp, IcoFilter } from "@src/assets/icons/icon";
 
 type Props = {};
 
 const FlowDong = (props: Props) => {
   const { state } = useContext(NaverMapContext);
   const setFlow = useSetRecoilState(atomFilterFlow);
+  const { sigungu } = useRecoilValue(atomFlowEnterArea);
   const [dong, setDong] = useRecoilState(atomSlctDong);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [filterType, setType] = useState("");
 
   return (
     <>
@@ -34,21 +35,18 @@ const FlowDong = (props: Props) => {
         left="50%"
         zIndex={999}
         transform="translateX(-50%)"
-        gap={"3rem"}
+        gap={"4rem"}
       >
-        <Button
-          onClick={() => {
-            onClose();
-          }}
-          variant="filterTop"
+        <UpjonListBox />
+        <Flex
+          pos="relative"
+          pt="0.3rem"
+          direction="column"
+          justify="flex-start"
+          color="#000000"
+          gap="0.5rem"
         >
-          <Box>
-            <IcoAppStore />
-          </Box>
-          업종
-        </Button>
-        <Flex pos="relative" direction="column">
-          <Flex pos="relative">
+          <Flex pos="relative" direction="column">
             <BtnBack
               onClick={() => {
                 state.map?.setOptions({
@@ -65,10 +63,13 @@ const FlowDong = (props: Props) => {
                 isOpen ? onClose() : onOpen();
               }}
             >
-              {dong.slctName}
+              {dong.slctName.replace(sigungu?.slctName, "")}
             </Button>
             <DecoTop width={"13rem"} />
           </Flex>
+          {sigungu?.slctName && (
+            <Text variant="filterTopArea">{sigungu?.slctName}</Text>
+          )}
         </Flex>
         <BtnFlowCustom />
       </Flex>
@@ -81,13 +82,33 @@ const FlowDong = (props: Props) => {
         transform="translateX(-50%)"
         gap="1.25rem"
       >
-        <Button variant="filterTop" onClick={() => {}}>
+        <Button
+          variant="filterTop"
+          isActive={filterType === "anal"}
+          onClick={() => {
+            if (filterType === "anal") {
+              setType("");
+            } else {
+              setType("anal");
+            }
+          }}
+        >
           <Box>
             <IcoFilter />
           </Box>
           분석필터
         </Button>
-        <Button variant="filterTop" onClick={() => {}}>
+        <Button
+          variant="filterTop"
+          isActive={filterType === "erp"}
+          onClick={() => {
+            if (filterType === "erp") {
+              setType("");
+            } else {
+              setType("erp");
+            }
+          }}
+        >
           <Box>
             <IcoErp />
           </Box>
@@ -101,6 +122,8 @@ const FlowDong = (props: Props) => {
           리포트
         </Button>
       </Flex>
+      {filterType === "anal" && <NiceFilterDepth areaCode={dong?.slctCode} />}
+      {filterType === "erp" && <ErpFilter areaCode={dong?.slctCode} />}
     </>
   );
 };
