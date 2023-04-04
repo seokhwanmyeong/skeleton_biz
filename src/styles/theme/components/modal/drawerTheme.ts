@@ -8,7 +8,9 @@ const drawerTheme = {
       p: 0,
     },
   },
-  variants: {},
+  variants: {
+    mapModal: {},
+  },
   defaultProps: {},
 };
 

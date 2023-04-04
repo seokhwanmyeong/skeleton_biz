@@ -1,5 +1,6 @@
 //  LIB
 import { useState } from "react";
+import { useRecoilValue } from "recoil";
 import {
   Drawer,
   DrawerBody,
@@ -12,19 +13,15 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 //  Components
-import Form from "@components/form/Form";
-import {
-  IcoBtnClose,
-  IcoBtnEditor,
-  IcoBtnUpdate,
-} from "@components/common/Btn";
-//  Form
-import FormStoreEditor from "@src/components/form/map/FormStoreEditor";
-import DaumPostcodeEmbed from "react-daum-postcode";
+import FormBsnsD from "@components/form/map/FormBsnsD";
+//  State
+import { atomCreateArea } from "@states/sementicMap/mapState";
 
 type Props = {};
 
 const ModalBsnsDEditor = ({ isOpen, onOpen, onClose }: any) => {
+  const { pathType, path, center } = useRecoilValue(atomCreateArea);
+
   const [initData, setInitData] = useState({
     storeName: "",
     storeCode: "",
@@ -46,9 +43,9 @@ const ModalBsnsDEditor = ({ isOpen, onOpen, onClose }: any) => {
 
   return (
     <>
-      {isOpen && (
+      {isOpen && pathType && path && (
         <Drawer isOpen={isOpen} onClose={onClose} placement="right">
-          {/* <DrawerOverlay /> */}
+          <DrawerOverlay />
           <DrawerContent maxW="fit-content">
             <DrawerBody pos="relative" p="0" width="18.5rem">
               <Button
@@ -61,7 +58,7 @@ const ModalBsnsDEditor = ({ isOpen, onOpen, onClose }: any) => {
               >
                 상권 등록
               </Button>
-              <FormStoreEditor
+              <FormBsnsD
                 fixMode={true}
                 initVal={initData}
                 setValues={submitHandler}

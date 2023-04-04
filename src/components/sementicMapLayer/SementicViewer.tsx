@@ -95,19 +95,22 @@ const SementicViewer = (props: Props) => {
       position="absolute"
       right={toggle ? "0" : -ref.current.clientWidth}
       top="0"
-      zIndex="100"
+      zIndex="9999"
       h="100%"
-      transition="0.3s"
+      transition="0.2s"
       ref={ref}
     >
       <Button
+        variant="search"
         position="absolute"
-        left="-76px"
+        left="-3rem"
         top="0"
         borderRadius="0px 0px 0px 5px"
+        w="3rem"
+        lineHeight="3rem"
         onClick={onToggle}
       >
-        toggle
+        {toggle ? "FOLD" : "OPEN"}
       </Button>
       <Content />
     </Flex>
@@ -122,29 +125,36 @@ const Report = () => {
   return (
     <Flex
       p="3rem 3rem"
-      w="820px"
+      w="1000px"
       borderLeft="1px solid #ededed"
       bgColor="primary.main.bg"
       overflow="hidden"
       transition="0.3s"
       flexDirection="column"
+      zIndex={100}
     >
       <Heading mb="2rem" variant="outlet">
         Report
       </Heading>
-      <List display="flex" gap="10rem" mb="2rem">
+      <List display="flex" justifyContent="space-between" mb="2rem">
         <ListItem display="flex" gap="3rem">
-          <Text textStyle="list.title">영역</Text>
-          <Text textStyle="list.text">다각형</Text>
+          <Text textStyle="list.title" fontSize="md">
+            영역
+          </Text>
+          <Text textStyle="list.text" fontSize="md">
+            다각형
+          </Text>
         </ListItem>
         <ListItem display="flex" gap="3rem">
-          <Text textStyle="list.title">업종</Text>
-          <Text textStyle="list.text">
+          <Text textStyle="list.title" fontSize="md">
+            업종
+          </Text>
+          <Text textStyle="list.text" fontSize="md">
             대분류{">"}중분류{">"}소분류
           </Text>
         </ListItem>
         <ListItem display="flex" gap="3rem">
-          <Text textStyle="list.title" w="-webkit-fill-available">
+          <Text textStyle="list.title" fontSize="md" w="-webkit-fill-available">
             비교기준
           </Text>
           <Select
@@ -164,7 +174,6 @@ const Report = () => {
       </List>
       <Tabs variant="unstyled" w="100%">
         <TabList
-          mb="2rem"
           display="grid"
           gridTemplateColumns="1fr 1fr 1fr 1fr 1fr"
           gridTemplateRows="1fr 1fr"
@@ -238,7 +247,7 @@ const Report = () => {
         </TabList>
         <TabPanels>
           <TabPanel>
-            <Flex>
+            <Flex gap="2rem">
               <ListTmp />
               {double && <ListTmp />}
             </Flex>
@@ -253,7 +262,12 @@ const Report = () => {
             >
               <List>
                 <ListItem w="100%" m={"1rem 0"} display="flex" gap="4rem">
-                  <Text w="100%" textAlign="center" textStyle="list.text">
+                  <Text
+                    w="100%"
+                    textAlign="center"
+                    textStyle="list.text"
+                    fontSize="md"
+                  >
                     <Highlight
                       query={["2,032", "남성", "40대", "화요일", "14시~18시"]}
                       styles={{
@@ -266,7 +280,12 @@ const Report = () => {
                   </Text>
                 </ListItem>
                 <ListItem w="100%" m={"1rem 0"} display="flex" gap="1rem">
-                  <Text w="100%" textAlign="center" textStyle="list.text">
+                  <Text
+                    w="100%"
+                    textAlign="center"
+                    textStyle="list.text"
+                    fontSize="md"
+                  >
                     <Highlight
                       query={["454점"]}
                       styles={{
@@ -285,7 +304,7 @@ const Report = () => {
                   display="flex"
                   gap="1rem"
                 >
-                  <Text w="100%" textStyle="list.text">
+                  <Text w="100%" textStyle="list.text" fontSize="md">
                     요일/시간대별 유동인구수는 화요일, 14시~18시 입니다.
                   </Text>
                 </ListItem>
@@ -421,7 +440,12 @@ const Report = () => {
             >
               <List>
                 <ListItem w="100%" m={"1rem 0"} display="flex" gap="4rem">
-                  <Text w="100%" textAlign="center" textStyle="list.text">
+                  <Text
+                    w="100%"
+                    textAlign="center"
+                    textStyle="list.text"
+                    fontSize="md"
+                  >
                     <Highlight
                       query={["2,032", "남성", "40대", "화요일", "14시~18시"]}
                       styles={{
@@ -434,7 +458,12 @@ const Report = () => {
                   </Text>
                 </ListItem>
                 <ListItem w="100%" m={"1rem 0"} display="flex" gap="1rem">
-                  <Text w="100%" textAlign="center" textStyle="list.text">
+                  <Text
+                    w="100%"
+                    textAlign="center"
+                    textStyle="list.text"
+                    fontSize="md"
+                  >
                     <Highlight
                       query={["454점"]}
                       styles={{
@@ -508,7 +537,12 @@ const Report = () => {
             >
               <List>
                 <ListItem w="100%" m={"1rem 0"} display="flex" gap="4rem">
-                  <Text w="100%" textAlign="center" textStyle="list.text">
+                  <Text
+                    w="100%"
+                    textAlign="center"
+                    textStyle="list.text"
+                    fontSize="md"
+                  >
                     <Highlight
                       query={["2,032", "남성", "40대", "화요일", "14시~18시"]}
                       styles={{
@@ -521,7 +555,12 @@ const Report = () => {
                   </Text>
                 </ListItem>
                 <ListItem w="100%" m={"1rem 0"} display="flex" gap="1rem">
-                  <Text w="100%" textAlign="center" textStyle="list.text">
+                  <Text
+                    w="100%"
+                    textAlign="center"
+                    textStyle="list.text"
+                    fontSize="md"
+                  >
                     <Highlight
                       query={["454점"]}
                       styles={{
@@ -595,7 +634,12 @@ const Report = () => {
             >
               <List>
                 <ListItem w="100%" m={"1rem 0"} display="flex" gap="4rem">
-                  <Text w="100%" textAlign="center" textStyle="list.text">
+                  <Text
+                    w="100%"
+                    textAlign="center"
+                    textStyle="list.text"
+                    fontSize="md"
+                  >
                     <Highlight
                       query={["2,032", "남성", "40대", "화요일", "14시~18시"]}
                       styles={{
@@ -608,7 +652,12 @@ const Report = () => {
                   </Text>
                 </ListItem>
                 <ListItem w="100%" m={"1rem 0"} display="flex" gap="1rem">
-                  <Text w="100%" textAlign="center" textStyle="list.text">
+                  <Text
+                    w="100%"
+                    textAlign="center"
+                    textStyle="list.text"
+                    fontSize="md"
+                  >
                     <Highlight
                       query={["아파트- 9,736", "비아파트- 7,832"]}
                       styles={{
@@ -680,7 +729,12 @@ const Report = () => {
             >
               <List>
                 <ListItem w="100%" m={"1rem 0"} display="flex" gap="4rem">
-                  <Text w="100%" textAlign="center" textStyle="list.text">
+                  <Text
+                    w="100%"
+                    textAlign="center"
+                    textStyle="list.text"
+                    fontSize="md"
+                  >
                     <Highlight
                       query={["2,032", "남성", "40대", "화요일", "14시~18시"]}
                       styles={{
@@ -693,7 +747,12 @@ const Report = () => {
                   </Text>
                 </ListItem>
                 <ListItem w="100%" m={"1rem 0"} display="flex" gap="1rem">
-                  <Text w="100%" textAlign="center" textStyle="list.text">
+                  <Text
+                    w="100%"
+                    textAlign="center"
+                    textStyle="list.text"
+                    fontSize="md"
+                  >
                     <Highlight
                       query={["3.5", "분식/떡볶이"]}
                       styles={{
@@ -730,7 +789,12 @@ const Report = () => {
             >
               <List>
                 <ListItem w="100%" m={"1rem 0"} display="flex" gap="4rem">
-                  <Text w="100%" textAlign="center" textStyle="list.text">
+                  <Text
+                    w="100%"
+                    textAlign="center"
+                    textStyle="list.text"
+                    fontSize="md"
+                  >
                     <Highlight
                       query={["3,032"]}
                       styles={{
@@ -743,7 +807,12 @@ const Report = () => {
                   </Text>
                 </ListItem>
                 <ListItem w="100%" m={"1rem 0"} display="flex" gap="1rem">
-                  <Text w="100%" textAlign="center" textStyle="list.text">
+                  <Text
+                    w="100%"
+                    textAlign="center"
+                    textStyle="list.text"
+                    fontSize="md"
+                  >
                     <Highlight
                       query={["4,736", "1,736", "2,987"]}
                       styles={{
@@ -763,7 +832,7 @@ const Report = () => {
                   display="flex"
                   gap="1rem"
                 >
-                  <Text w="100%" textStyle="list.text">
+                  <Text w="100%" textStyle="list.text" fontSize="md">
                     <Highlight
                       query={["남성", "40대", "화요일", "14시~18시"]}
                       styles={{
@@ -1017,7 +1086,12 @@ const Report = () => {
             >
               <List>
                 <ListItem w="100%" m={"1rem 0"} display="flex" gap="4rem">
-                  <Text w="100%" textAlign="center" textStyle="list.text">
+                  <Text
+                    w="100%"
+                    textAlign="center"
+                    textStyle="list.text"
+                    fontSize="md"
+                  >
                     <Highlight
                       query={["13,000"]}
                       styles={{
@@ -1030,7 +1104,12 @@ const Report = () => {
                   </Text>
                 </ListItem>
                 <ListItem w="100%" m={"1rem 0"} display="flex" gap="1rem">
-                  <Text w="100%" textAlign="center" textStyle="list.text">
+                  <Text
+                    w="100%"
+                    textAlign="center"
+                    textStyle="list.text"
+                    fontSize="md"
+                  >
                     <Highlight
                       query={["313"]}
                       styles={{
@@ -1066,7 +1145,12 @@ const Report = () => {
             >
               <List>
                 <ListItem w="100%" m={"1rem 0"} display="flex" gap="4rem">
-                  <Text w="100%" textAlign="center" textStyle="list.text">
+                  <Text
+                    w="100%"
+                    textAlign="center"
+                    textStyle="list.text"
+                    fontSize="md"
+                  >
                     <Highlight
                       query={["(2)", "(23)", "(1)", "(12)"]}
                       styles={{
@@ -1165,12 +1249,12 @@ const Report = () => {
 
 const ListTmp = () => {
   return (
-    <List>
+    <List width="100%">
       <ListItem w="100%" m={"1rem 0"} display="flex" gap="1rem">
-        <Text w="50%" textStyle="list.title">
+        <Text w="50%" textStyle="list.title" fontSize="md">
           상권유형
         </Text>
-        <Text w="100%" textStyle="list.text">
+        <Text w="100%" textStyle="list.text" fontSize="md">
           <Highlight
             query={["34%", "31%", "28%", "3%", "4"]}
             styles={{
@@ -1183,10 +1267,10 @@ const ListTmp = () => {
         </Text>
       </ListItem>
       <ListItem w="100%" m={"1rem 0"} display="flex" gap="1rem">
-        <Text w="50%" textStyle="list.title">
+        <Text w="50%" textStyle="list.title" fontSize="md">
           상권점수
         </Text>
-        <Text w="100%" textStyle="list.text">
+        <Text w="100%" textStyle="list.text" fontSize="md">
           <Highlight
             query={["454점"]}
             styles={{
@@ -1199,10 +1283,10 @@ const ListTmp = () => {
         </Text>
       </ListItem>
       <ListItem w="100%" m={"1rem 0"} display="flex" gap="1rem">
-        <Text w="50%" textStyle="list.title">
+        <Text w="50%" textStyle="list.title" fontSize="md">
           상권등급
         </Text>
-        <Text w="100%" textStyle="list.text">
+        <Text w="100%" textStyle="list.text" fontSize="md">
           <Highlight
             query={["3"]}
             styles={{
@@ -1215,10 +1299,10 @@ const ListTmp = () => {
         </Text>
       </ListItem>
       <ListItem w="100%" m={"1rem 0"} display="flex" gap="1rem">
-        <Text w="50%" textStyle="list.title">
+        <Text w="50%" textStyle="list.title" fontSize="md">
           유동인구수
         </Text>
-        <Text w="100%" textStyle="list.text">
+        <Text w="100%" textStyle="list.text" fontSize="md">
           <Highlight
             query={["12,394"]}
             styles={{
@@ -1231,10 +1315,10 @@ const ListTmp = () => {
         </Text>
       </ListItem>
       <ListItem w="100%" m={"1rem 0"} display="flex" gap="1rem">
-        <Text w="50%" textStyle="list.title">
+        <Text w="50%" textStyle="list.title" fontSize="md">
           주거인구수
         </Text>
-        <Text w="100%" textStyle="list.text">
+        <Text w="100%" textStyle="list.text" fontSize="md">
           <Highlight
             query={["56,631"]}
             styles={{
@@ -1247,10 +1331,10 @@ const ListTmp = () => {
         </Text>
       </ListItem>
       <ListItem w="100%" m={"1rem 0"} display="flex" gap="1rem">
-        <Text w="50%" textStyle="list.title">
+        <Text w="50%" textStyle="list.title" fontSize="md">
           직장인구수
         </Text>
-        <Text w="100%" textStyle="list.text">
+        <Text w="100%" textStyle="list.text" fontSize="md">
           <Highlight
             query={["8,328"]}
             styles={{
@@ -1263,10 +1347,10 @@ const ListTmp = () => {
         </Text>
       </ListItem>
       <ListItem w="100%" m={"1rem 0"} display="flex" gap="1rem">
-        <Text w="50%" textStyle="list.title">
+        <Text w="50%" textStyle="list.title" fontSize="md">
           세대수
         </Text>
-        <Text w="100%" textStyle="list.text">
+        <Text w="100%" textStyle="list.text" fontSize="md">
           <Highlight
             query={["28,683", "9,736", "18,947"]}
             styles={{
@@ -1279,10 +1363,10 @@ const ListTmp = () => {
         </Text>
       </ListItem>
       <ListItem w="100%" m={"1rem 0"} display="flex" gap="1rem">
-        <Text w="50%" textStyle="list.title">
+        <Text w="50%" textStyle="list.title" fontSize="md">
           동종 업종수
         </Text>
-        <Text w="100%" textStyle="list.text">
+        <Text w="100%" textStyle="list.text" fontSize="md">
           <Highlight
             query={["7"]}
             styles={{
@@ -1295,10 +1379,10 @@ const ListTmp = () => {
         </Text>
       </ListItem>
       <ListItem w="100%" m={"1rem 0"} display="flex" gap="1rem">
-        <Text w="50%" textStyle="list.title">
+        <Text w="50%" textStyle="list.title" fontSize="md">
           평균 결제 금액
         </Text>
-        <Text w="100%" textStyle="list.text">
+        <Text w="100%" textStyle="list.text" fontSize="md">
           <Highlight
             query={["23,823"]}
             styles={{
@@ -1311,10 +1395,10 @@ const ListTmp = () => {
         </Text>
       </ListItem>
       <ListItem w="100%" m={"1rem 0"} display="flex" gap="1rem">
-        <Text w="50%" textStyle="list.title">
+        <Text w="50%" textStyle="list.title" fontSize="md">
           월 평균 매출
         </Text>
-        <Text w="100%" textStyle="list.text">
+        <Text w="100%" textStyle="list.text" fontSize="md">
           <Highlight
             query={["2,294"]}
             styles={{
@@ -1327,10 +1411,10 @@ const ListTmp = () => {
         </Text>
       </ListItem>
       <ListItem w="100%" m={"1rem 0"} display="flex" gap="1rem">
-        <Text w="50%" textStyle="list.title">
+        <Text w="50%" textStyle="list.title" fontSize="md">
           지역정보
         </Text>
-        <Text w="100%" textStyle="list.text">
+        <Text w="100%" textStyle="list.text" fontSize="md">
           학교수(2), 직장수(2), 지하철(1), 버스정류장(12)
         </Text>
       </ListItem>
@@ -1387,7 +1471,7 @@ const LineChart = () => {
   };
 
   return (
-    <Flex flexDirection="column" gap="1rem">
+    <Flex>
       <Line options={options} data={data} />
     </Flex>
   );
@@ -1485,7 +1569,12 @@ const SummaryBox = ({
       {text.map(() => {
         return (
           <ListItem w="100%" m={"1rem 0"} display="flex" gap="4rem">
-            <Text w="100%" textAlign="center" textStyle="list.text">
+            <Text
+              w="100%"
+              textAlign="center"
+              textStyle="list.text"
+              fontSize="md"
+            >
               <Highlight
                 query={["2,032", "남성", "40대", "화요일", "14시~18시"]}
                 styles={{
@@ -1500,7 +1589,7 @@ const SummaryBox = ({
         );
       })}
       <ListItem w="100%" m={"1rem 0"} display="flex" gap="4rem">
-        <Text w="100%" textAlign="center" textStyle="list.text">
+        <Text w="100%" textAlign="center" textStyle="list.text" fontSize="md">
           <Highlight
             query={["2,032", "남성", "40대", "화요일", "14시~18시"]}
             styles={{
@@ -1513,7 +1602,7 @@ const SummaryBox = ({
         </Text>
       </ListItem>
       <ListItem w="100%" m={"1rem 0"} display="flex" gap="1rem">
-        <Text w="100%" textAlign="center" textStyle="list.text">
+        <Text w="100%" textAlign="center" textStyle="list.text" fontSize="md">
           <Highlight
             query={["454점"]}
             styles={{
@@ -1532,7 +1621,7 @@ const SummaryBox = ({
         display="flex"
         gap="1rem"
       >
-        <Text w="100%" textStyle="list.text">
+        <Text w="100%" textStyle="list.text" fontSize="md">
           요일/시간대별 유동인구수는 화요일, 14시~18시 입니다.
         </Text>
       </ListItem>

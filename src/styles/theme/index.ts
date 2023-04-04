@@ -40,8 +40,6 @@ const createTheme = (name: string) => {
     },
     fonts: {
       main: "Roboto, sans-serif",
-      // main: "Noto Sans KR, sans-serif;",
-      // main: "Roboto, sans-serif",
     },
     fontSizes: {
       xs: "0.75rem",

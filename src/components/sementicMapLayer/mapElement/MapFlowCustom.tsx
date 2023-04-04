@@ -65,9 +65,7 @@ const MapFlowCustom = (props: Props) => {
       ) : (
         <InteractArea
           key={"customArea"}
-          onClick={(val) => {
-            console.log("click");
-          }}
+          setClickable={false}
           name={cutomArea.slctName}
           num={0}
           path={cutomArea.slctPath}

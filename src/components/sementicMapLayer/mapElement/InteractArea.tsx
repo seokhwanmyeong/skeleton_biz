@@ -13,6 +13,7 @@ interface InteractAreaProps {
   hoverStyle?: any;
   onMouse?: any;
   onMouseOut?: any;
+  setClickable?: boolean;
 }
 
 const InteractArea = ({
@@ -24,6 +25,7 @@ const InteractArea = ({
   hoverStyle,
   onMouse,
   onMouseOut,
+  setClickable = true,
 }: InteractAreaProps) => {
   const { state, dispatch } = useContext(NaverMapContext);
   const [areaId] = useState("area" + num);
@@ -31,6 +33,7 @@ const InteractArea = ({
     //console.log(name);
     const poly = state.objects.get(areaId) as naver.maps.Polygon;
     poly.setOptions({
+      clickable: setClickable,
       fillColor: "#0088ff",
       strokeColor: "#007afe",
       zIndex: 1,

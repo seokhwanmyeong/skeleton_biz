@@ -78,7 +78,12 @@ const ErpDashBoard = () => {
 
   return (
     <Flex w="100%" h="100%" direction="column" gap="0.5rem">
-      <Flex w="100%" h="auto" gap="0.75rem">
+      <Flex
+        w="100%"
+        h="auto"
+        direction={{ pc: "row", tablet: "column", mobile: "column" }}
+        gap="0.75rem"
+      >
         <Section p="0.75rem" w="100%">
           <Flex mb="1rem" w="100%" align="flex-end" gap="4px">
             <Heading variant={"sectionTitle"}>공지</Heading>
@@ -111,14 +116,25 @@ const ErpDashBoard = () => {
           />
         </Section>
       </Flex>
-      <Flex gap="0.75rem" w="100%" h="30%" flexBasis="30%" flexGrow={1}>
+      <Flex
+        gap="0.75rem"
+        w="100%"
+        h="30%"
+        direction={{ pc: "row", tablet: "column", mobile: "column" }}
+        flexBasis="30%"
+        flexGrow={1}
+      >
         <Section p="0.75rem" w="55%" h="100%">
           <Flex mb="1rem" w="100%" align="flex-end" gap="4px">
             <Heading variant={"sectionTitle"}>매장</Heading>
             <Text variant="sectionSub">Store</Text>
           </Flex>
           <Flex w="100%" h="inherit">
-            <Flex direction="column" w="60%" h="100%">
+            <Flex
+              direction="column"
+              w={{ pc: "60%", tablet: "100%", mobile: "100%" }}
+              h="100%"
+            >
               <ChartBar
                 title="매장수"
                 data={[35, 25, 15, 10, 4]}
@@ -132,7 +148,11 @@ const ErpDashBoard = () => {
               orientation="vertical"
               borderColor="#26232380"
             />
-            <Flex w="40%" h="100%" flex="none">
+            <Flex
+              w={{ pc: "40%", tablet: "100%", mobile: "100%" }}
+              h="100%"
+              flex="none"
+            >
               <Swiper
                 modules={[Navigation]}
                 spaceBetween={50}

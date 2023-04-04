@@ -126,3 +126,12 @@ export const atomSlctCustom = atom<{ [key: string]: any }>({
     center: null,
   },
 });
+
+export const atomCreateArea = atom({
+  key: "createArea",
+  default: {
+    pathType: "",
+    path: [],
+    center: null,
+  },
+});

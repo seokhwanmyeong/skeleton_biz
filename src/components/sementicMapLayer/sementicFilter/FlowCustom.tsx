@@ -1,66 +1,63 @@
 //  Lib
-import { useContext, useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { Box, Button, Flex, Text, useDisclosure } from "@chakra-ui/react";
-import { NaverMapContext } from "@src/lib/src";
+import { useState } from "react";
+import { useRecoilValue } from "recoil";
+import { Box, Button, Flex, useDisclosure } from "@chakra-ui/react";
 //  Component
 import UpjonListBox from "@components/sementicMapLayer/sementicFilter/UpjongListBox";
 import NiceFilterDepth from "@components/sementicMapLayer/sementicFilter/NiceFilterDepth";
 import ErpFilter from "@components/sementicMapLayer/sementicFilter/ErpFilter";
 import BtnReset from "@components/sementicMapLayer/sementicFilter/BtnReset";
 import BtnFlowCustom from "@components/sementicMapLayer/sementicFilter/BtnFlowCustom";
-import BtnBack from "@components/sementicMapLayer/sementicFilter/BtnBack";
 import DecoTop from "@components/sementicMapLayer/sementicFilter/DecoTop";
+import DrawTools from "@components/sementicMapLayer/sementicFilter/DrawTools";
 //  State
-import {
-  atomFlowEnterArea,
-  atomSlctCustom,
-  atomSlctDong,
-} from "@states/sementicMap/mapState";
+import { atomSlctCustom } from "@states/sementicMap/mapState";
 //  Icon
 import { IcoBarChart, IcoErp, IcoFilter } from "@src/assets/icons/icon";
 
 type Props = {};
 
 const FlowCustom = (props: Props) => {
-  const { state } = useContext(NaverMapContext);
   const cutomArea = useRecoilValue(atomSlctCustom);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [filterType, setType] = useState("");
+  const [isToolOpen, toolOpen] = useState(false);
 
   return (
     <>
-      <Flex
-        pos="absolute"
-        top="1%"
-        left="50%"
-        zIndex={999}
-        transform="translateX(-50%)"
-        gap={"4rem"}
-      >
-        <UpjonListBox />
+      {!isToolOpen && (
         <Flex
-          pos="relative"
-          pt="0.3rem"
-          direction="column"
-          justify="flex-start"
-          color="#000000"
-          gap="0.5rem"
+          pos="absolute"
+          top="1%"
+          left="50%"
+          zIndex={999}
+          transform="translateX(-50%)"
+          gap={"4rem"}
         >
-          <Flex pos="relative" direction="column">
-            <Button
-              variant="filterTopMain"
-              onClick={() => {
-                isOpen ? onClose() : onOpen();
-              }}
-            >
-              {cutomArea.slctName}
-            </Button>
-            <DecoTop width={"13rem"} />
+          <UpjonListBox />
+          <Flex
+            pos="relative"
+            pt="0.3rem"
+            direction="column"
+            justify="flex-start"
+            color="#000000"
+            gap="0.5rem"
+          >
+            <Flex pos="relative" direction="column">
+              <Button
+                variant="filterTopMain"
+                onClick={() => {
+                  isOpen ? onClose() : onOpen();
+                }}
+              >
+                {cutomArea.slctName}
+              </Button>
+              <DecoTop width={"13rem"} />
+            </Flex>
           </Flex>
+          <BtnFlowCustom />
         </Flex>
-        <BtnFlowCustom />
-      </Flex>
+      )}
       {/* ------------------------------ 하단 ------------------------------*/}
       <Flex
         pos="absolute"
@@ -111,7 +108,8 @@ const FlowCustom = (props: Props) => {
         </Button>
       </Flex>
       {filterType === "anal" && <NiceFilterDepth path={cutomArea.slctPath} />}
-      {filterType === "erp" && <ErpFilter path={cutomArea.slctPath} />}
+      {filterType === "erp" && <ErpFilter toolOpen={toolOpen} />}
+      {isToolOpen && <DrawTools />}
     </>
   );
 };

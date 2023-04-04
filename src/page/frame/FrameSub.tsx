@@ -10,13 +10,15 @@ const FrameSub = () => {
   return (
     <Flex
       pos="relative"
+      direction={{ pc: "row", tablet: "column", mobile: "column" }}
       p="8px 16px 11px 5px"
       w="100%"
       gap="13px"
       bgSize="cover"
       bgPosition="center"
       bgRepeat="no-repeat"
-      bgImage={bgImg}
+      bgImage={{ pc: bgImg, tablet: "none", mobile: "none" }}
+      overflow={{ pc: "hidden", tablet: "auto", mobile: "auto" }}
       _before={{
         content: '""',
         bgSize: "cover",
@@ -33,7 +35,11 @@ const FrameSub = () => {
       }}
     >
       <MenuSide />
-      <Flex zIndex={1} w="calc(100% - 13px - 4.5rem)" h="100%">
+      <Flex
+        zIndex={1}
+        w={{ pc: "calc(100% - 13px - 4.5rem)", tablet: "100%", mobile: "100%" }}
+        h="100%"
+      >
         <Outlet />
       </Flex>
     </Flex>

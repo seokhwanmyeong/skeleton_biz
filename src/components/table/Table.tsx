@@ -104,17 +104,19 @@ const Table = ({
     <>
       <Section
         p="0rem 0rem 1.25rem"
-        h={
-          height
+        h={{
+          pc: height
             ? height
             : flowHeight
             ? pagingH
               ? `calc(100% - ${pagingH}px - 11rem)`
               : "100%"
-            : "100%"
-        }
+            : "100%",
+          tablet: "auto",
+          mobile: "auto",
+        }}
         gap="1.25rem"
-        // overflow="hidden"
+        overflow={{ pc: "hidden", tablet: "visible", mobile: "visible" }}
       >
         <Flex
           p="0 0 0 0.375rem"
@@ -122,7 +124,7 @@ const Table = ({
           flex="1"
           // h={pagingH ? `calc(100% - ${pagingH}px)` : "100%"}
           borderRadius="inherit"
-          overflowX="hidden"
+          overflowX={{ pc: "hidden", tablet: "auto", mobile: "auto" }}
           overflowY="scroll"
           __css={{
             "::-webkit-scrollbar": {

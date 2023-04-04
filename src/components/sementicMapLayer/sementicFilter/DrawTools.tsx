@@ -13,21 +13,20 @@ import {
 } from "@chakra-ui/react";
 import DaumPostcodeEmbed from "react-daum-postcode";
 import { NaverMapContext } from "@src/lib/src";
-import { NaverMapShape } from "@src/lib/src/common/types";
 //  Components
 import DecoTop from "@components/sementicMapLayer/sementicFilter/DecoTop";
 //  State
 import { atomFilterFlow } from "@states/sementicMap/filterState";
-import { atomSlctCustom } from "@src/states/sementicMap/mapState";
+import { atomCreateArea } from "@states/sementicMap/mapState";
 //  Icons
 import { IcoAppStore } from "@assets/icons/icon";
 import markerIcon from "@assets/icons/marker.png";
 
-const ToggleButtonGroup = () => {
+const ToggleButtonGroup = ({ toolOpen }: any) => {
   const { state } = useContext(NaverMapContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const setFlow = useSetRecoilState(atomFilterFlow);
-  const setSlceCustom = useSetRecoilState(atomSlctCustom);
+  const setCreateArea = useSetRecoilState(atomCreateArea);
   const [activeIdx, setActiveIdx] = useState(-1);
   const [event, setEvent] = useState<any>(null);
   const [moveEvent, setMoveEvent] = useState<any>(null);
@@ -424,71 +423,49 @@ const ToggleButtonGroup = () => {
               const path: any = poly?.getPath();
               const bounds: any = poly?.getBounds();
               const center: any = bounds?.getCenter();
-              const geocoder = new kakao.maps.services.Geocoder();
 
               if (!path || path.length - 1 <= 2) {
                 alert("영역을 제대로 설정해주세요");
                 return;
               }
 
-              geocoder.coord2RegionCode(
-                center?._lng,
-                center?._lat,
-                (result: any) => {
-                  setSlceCustom({
-                    slctName: result[0].address_name || "",
-                    slctPath: path._array,
-                    range: undefined,
-                    center: center,
-                    pathType: "bounds",
-                  });
-                  resetAllElement();
-                  setFlow(4);
-                }
-              );
+              setCreateArea({
+                path: path._array,
+                center: center,
+                pathType: "bounds",
+              });
+              resetAllElement();
+              toolOpen(false);
             } else if (activeIdx === 1) {
               if (!circleRef.current) {
                 alert("범위를 설정해주세요");
                 return;
               }
               const bounds: any = circleRef.current?.getBounds();
-              const range = circleRef.current?.getRadius();
               const center: any = circleRef.current?.getCenter();
-              const geocoder = new kakao.maps.services.Geocoder();
 
-              geocoder.coord2RegionCode(
-                center?._lng,
-                center?._lat,
-                (result: any) => {
-                  setSlceCustom({
-                    slctName: result[0].address_name || "",
-                    slctPath: bounds,
-                    range: range,
-                    center: center,
-                    pathType: "circle",
-                  });
-                  resetAllElement();
-                  setFlow(4);
-                }
-              );
+              setCreateArea({
+                path: bounds,
+                center: center,
+                pathType: "circle",
+              });
+              resetAllElement();
+              toolOpen(false);
             } else if (activeIdx === 2) {
               if (!circleRef.current) {
                 alert("범위를 설정해주세요");
                 return;
               }
               const bounds: any = circleRef.current?.getBounds();
-              const range = circleRef.current?.getRadius();
               const center: any = circleRef.current?.getCenter();
 
-              setSlceCustom({
-                slctName: addr.address,
-                slctPath: bounds,
-                range: range,
+              setCreateArea({
+                path: bounds,
                 center: center,
                 pathType: "circle",
               });
               resetAllElement();
-              setFlow(4);
+              toolOpen(false);
             }
           }}
         >
@@ -514,33 +491,8 @@ const ToggleButtonGroup = () => {
   );
 };
 
-const MapFlowFind = () => {
+const DrawTools = ({ toolOpen }: any) => {
   const { state, dispatch } = useContext(NaverMapContext);
-  const drawingPolyId = "drawingPoly-manager";
-  const [shapeCount, setShapeCount] = useState(0);
-  const shapeCountRef = useRef(0);
-  const [values, setValues] = useState<string[]>([]);
-
-  const handleToggle = (values: string[]) => {
-    setValues(values);
-  };
-
-  const addShape = (shape: NaverMapShape) => {
-    setShapeCount((shapeCount) => {
-      dispatch({
-        type: "add_object",
-        object: shape,
-        id: `${drawingPolyId}-${shapeCount}`,
-      });
-      return shapeCount + 1;
-    });
-  };
-
-  const removeShapes = () => {
-    for (let i = 0; i < shapeCountRef.current; i++) {
-      dispatch({ type: "remove_object", id: `${drawingPolyId}-${i}` });
-    }
-  };
 
   useEffect(() => {
     state.map?.setOptions({
@@ -549,14 +501,7 @@ const MapFlowFind = () => {
     });
   }, []);
 
-  return (
-    <ToggleButtonGroup />
-    // <CustomControl id={"draw"} bindingPosition="TOP_CENTER">
-    //   <div>
-    //     <ToggleButtonGroup />
-    //   </div>
-    // </CustomControl>
-  );
+  return <ToggleButtonGroup toolOpen={toolOpen} />;
 };
 
-export default MapFlowFind;
+export default DrawTools;

@@ -11,68 +11,74 @@ import BtnReset from "@components/sementicMapLayer/sementicFilter/BtnReset";
 import BtnFlowCustom from "@components/sementicMapLayer/sementicFilter/BtnFlowCustom";
 import BtnBack from "@components/sementicMapLayer/sementicFilter/BtnBack";
 import DecoTop from "@components/sementicMapLayer/sementicFilter/DecoTop";
+import DrawTools from "@components/sementicMapLayer/sementicFilter/DrawTools";
 //  State
 import { atomFilterFlow } from "@states/sementicMap/filterState";
 import { atomFlowEnterArea, atomSlctDong } from "@states/sementicMap/mapState";
+import { sementicViewState } from "@states/searchState/stateSearch";
 //  Icon
-import { IcoBarChart, IcoErp, IcoFilter } from "@src/assets/icons/icon";
+import { IcoBarChart, IcoErp, IcoFilter } from "@assets/icons/icon";
 
 type Props = {};
 
 const FlowDong = (props: Props) => {
   const { state } = useContext(NaverMapContext);
   const setFlow = useSetRecoilState(atomFilterFlow);
+  const setSv = useSetRecoilState(sementicViewState);
   const { sigungu } = useRecoilValue(atomFlowEnterArea);
-  const [dong, setDong] = useRecoilState(atomSlctDong);
+  const dong = useRecoilValue(atomSlctDong);
+  const [isToolOpen, toolOpen] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [filterType, setType] = useState("");
 
   return (
     <>
-      <Flex
-        pos="absolute"
-        top="1%"
-        left="50%"
-        zIndex={999}
-        transform="translateX(-50%)"
-        gap={"4rem"}
-      >
-        <UpjonListBox />
+      {!isToolOpen && (
         <Flex
-          pos="relative"
-          pt="0.3rem"
-          direction="column"
-          justify="flex-start"
-          color="#000000"
-          gap="0.5rem"
+          pos="absolute"
+          top="1%"
+          left="50%"
+          zIndex={999}
+          transform="translateX(-50%)"
+          gap={"4rem"}
         >
-          <Flex pos="relative" direction="column">
-            <BtnBack
-              onClick={() => {
-                state.map?.setOptions({
-                  minZoom: 0,
-                  maxZoom: 16,
-                  scrollWheel: false,
-                });
-                setFlow(1);
-              }}
-            />
-            <Button
-              variant="filterTopMain"
-              onClick={() => {
-                isOpen ? onClose() : onOpen();
-              }}
-            >
-              {dong.slctName.replace(sigungu?.slctName, "")}
-            </Button>
-            <DecoTop width={"13rem"} />
+          <UpjonListBox />
+          <Flex
+            pos="relative"
+            pt="0.3rem"
+            direction="column"
+            justify="flex-start"
+            color="#000000"
+            gap="0.5rem"
+          >
+            <Flex pos="relative" direction="column">
+              <BtnBack
+                onClick={() => {
+                  state.map?.setOptions({
+                    minZoom: 0,
+                    maxZoom: 16,
+                    scrollWheel: false,
+                  });
+                  setFlow(1);
+                }}
+              />
+              <Button
+                variant="filterTopMain"
+                onClick={() => {
+                  isOpen ? onClose() : onOpen();
+                }}
+              >
+                {dong.slctName.replace(sigungu?.slctName, "")}
+              </Button>
+              <DecoTop width={"13rem"} />
+            </Flex>
+            {sigungu?.slctName && (
+              <Text variant="filterTopArea">{sigungu?.slctName}</Text>
+            )}
           </Flex>
-          {sigungu?.slctName && (
-            <Text variant="filterTopArea">{sigungu?.slctName}</Text>
-          )}
+          <BtnFlowCustom />
         </Flex>
-        <BtnFlowCustom />
-      </Flex>
+      )}
       {/* ------------------------------ 하단 ------------------------------*/}
       <Flex
         pos="absolute"
@@ -115,7 +121,12 @@ const FlowDong = (props: Props) => {
           ERP 필터
         </Button>
         <BtnReset />
-        <Button variant="filterTop" onClick={() => {}}>
+        <Button
+          variant="filterTop"
+          onClick={() => {
+            setSv({ props: null, viewId: "eval" });
+          }}
+        >
           <Box>
             <IcoBarChart />
           </Box>
@@ -123,7 +134,10 @@ const FlowDong = (props: Props) => {
         </Button>
       </Flex>
       {filterType === "anal" && <NiceFilterDepth areaCode={dong?.slctCode} />}
-      {filterType === "erp" && <ErpFilter areaCode={dong?.slctCode} />}
+      {filterType === "erp" && (
+        <ErpFilter toolOpen={toolOpen} areaCode={sigungu?.slctCode} />
+      )}
+      {isToolOpen && <DrawTools />}
     </>
   );
 };

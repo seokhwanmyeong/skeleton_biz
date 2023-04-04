@@ -55,7 +55,10 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
 
   //  세부 유동인구 필터 변화 및 액티브
   useEffect(() => {
-    if (flowPop.filter.gender.length !== 0 || flowPop.filter.age.length !== 0) {
+    if (
+      flowPop?.filter?.gender?.length !== 0 ||
+      flowPop?.filter?.age?.length !== 0
+    ) {
       setFlowPop({
         ...flowPop,
         active: true,
@@ -82,7 +85,7 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
   }, [bot]);
 
   useEffect(() => {
-    if (brandFilter.filter.brand.length !== 0) {
+    if (brandFilter?.filter?.brand?.length !== 0) {
       setBrandFilter({
         ...brandFilter,
         active: true,
@@ -95,11 +98,14 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
     } else {
       resetBrandFilter();
     }
-  }, [brandFilter.filter]);
+  }, [brandFilter?.filter]);
 
   //  건물조회 필터 변화 및 액티브
   useEffect(() => {
-    if (jobPop.filter.gender.length !== 0 || jobPop.filter.age.length !== 0) {
+    if (
+      jobPop?.filter?.gender?.length !== 0 ||
+      jobPop?.filter?.age?.length !== 0
+    ) {
       setJobPop({
         ...jobPop,
         active: true,
@@ -112,7 +118,7 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
     } else {
       resetJobop();
     }
-  }, [jobPop.filter]);
+  }, [jobPop?.filter]);
 
   return (
     <Flex
@@ -126,7 +132,7 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
       {/* ============================== infoCom의 필터 버튼 ============================== */}
       <Button
         variant="filterTop02"
-        isActive={flowPop.active}
+        isActive={flowPop?.active}
         onClick={() => {
           if (openIdx === 1) {
             setOpenIdx(0);
@@ -142,7 +148,7 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
       <Button
         variant="filterTop02"
         isDisabled={bot ? false : true}
-        isActive={brandFilter.active}
+        isActive={brandFilter?.active}
         onClick={() => {
           if (openIdx === 2) {
             setOpenIdx(0);
@@ -157,7 +163,7 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
       </Button>
       <Button
         variant="filterTop02"
-        isActive={jobPop.active}
+        isActive={jobPop?.active}
         onClick={() => {
           if (openIdx === 3) {
             setOpenIdx(0);
@@ -212,9 +218,9 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
               <IcoMy />
             </Flex>
             <Switch
-              isChecked={flowPop.active}
+              isChecked={flowPop?.active}
               onChange={() => {
-                setFlowPop({ ...flowPop, active: !flowPop.active });
+                setFlowPop({ ...flowPop, active: !flowPop?.active });
               }}
               variant="filterControl"
               spacing="5rem"
@@ -240,13 +246,13 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
                   { text: "남자", value: "man" },
                   { text: "여자", value: "woman" },
                 ]}
-                chkValue={flowPop.filter.gender}
+                chkValue={flowPop?.filter?.gender}
                 activeTotal={true}
                 onChange={(val: any) =>
                   // setInitPop({ ...initFlowPop, gender: val })
                   setFlowPop({
                     ...flowPop,
-                    filter: { ...flowPop.filter, gender: val },
+                    filter: { ...flowPop?.filter, gender: val },
                   })
                 }
                 groupProps={{
@@ -275,13 +281,13 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
                   { text: "50대", value: "gen50" },
                   { text: "60대 이상", value: "gen60" },
                 ]}
-                chkValue={flowPop.filter.age}
+                chkValue={flowPop?.filter?.age}
                 activeTotal={true}
                 onChange={(val: any) =>
                   // setInitPop({ ...initFlowPop, age: val })
                   setFlowPop({
                     ...flowPop,
-                    filter: { ...flowPop.filter, age: val },
+                    filter: { ...flowPop?.filter, age: val },
                   })
                 }
                 groupProps={{
@@ -333,9 +339,12 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
               <IcoMy />
             </Flex>
             <Switch
-              isChecked={brandFilter.active}
+              isChecked={brandFilter?.active}
               onChange={() => {
-                setBrandFilter({ ...brandFilter, active: !brandFilter.active });
+                setBrandFilter({
+                  ...brandFilter,
+                  active: !brandFilter?.active,
+                });
               }}
               variant="filterControl"
               spacing="5rem"
@@ -358,13 +367,13 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
               </FormLabel>
               <CheckboxGroup
                 chkboxData={brandList}
-                chkValue={brandFilter.filter.brand}
+                chkValue={brandFilter?.filter?.brand}
                 activeTotal={true}
                 onChange={(val: any) =>
                   // setInitPop({ ...initFlowPop, age: val })
                   setBrandFilter({
                     ...brandFilter,
-                    filter: { ...brandFilter.filter, brand: val },
+                    filter: { ...brandFilter?.filter, brand: val },
                   })
                 }
                 groupProps={{
@@ -416,9 +425,9 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
               <IcoBank />
             </Flex>
             <Switch
-              isChecked={jobPop.active}
+              isChecked={jobPop?.active}
               onChange={() => {
-                setJobPop({ ...jobPop, active: !jobPop.active });
+                setJobPop({ ...jobPop, active: !jobPop?.active });
               }}
               variant="filterControl"
               spacing="5rem"
@@ -444,12 +453,12 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
                   { text: "남자", value: "man" },
                   { text: "여자", value: "woman" },
                 ]}
-                chkValue={jobPop.filter.gender}
+                chkValue={jobPop?.filter?.gender}
                 activeTotal={true}
                 onChange={(val: any) =>
                   setJobPop({
                     ...jobPop,
-                    filter: { ...jobPop.filter, gender: val },
+                    filter: { ...jobPop?.filter, gender: val },
                   })
                 }
                 groupProps={{
@@ -477,13 +486,13 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
                   { text: "50대", value: "gen50" },
                   { text: "60대 이상", value: "gen60" },
                 ]}
-                chkValue={jobPop.filter.age}
+                chkValue={jobPop?.filter?.age}
                 activeTotal={true}
                 onChange={(val: any) =>
                   // setInitPop({ ...initFlowPop, age: val })
                   setJobPop({
                     ...jobPop,
-                    filter: { ...jobPop.filter, age: val },
+                    filter: { ...jobPop?.filter, age: val },
                   })
                 }
                 groupProps={{

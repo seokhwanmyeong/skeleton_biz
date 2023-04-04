@@ -43,8 +43,8 @@ const MenuSide = () => {
     <Flex
       zIndex={1}
       p="1rem 0"
-      w="4.5rem"
-      h="100%"
+      w={{ pc: "4.5rem", tablet: "100%", mobile: "100%" }}
+      h={{ pc: "100%", tablet: "fit-content", mobile: "fit-content" }}
       flex="none"
       direction="column"
       bgColor="bg.primary"
@@ -52,35 +52,11 @@ const MenuSide = () => {
       borderColor="neutral.gray1"
       boxShadow="0px 2.84664px 2.84664px rgba(0, 0, 0, 0.25)"
       borderRadius="10.6749px"
+      overflow={{ pc: "hidden", tablet: "auto", mobile: "auto" }}
     >
-      {/* <Flex mb="26px" direction="column" align="center" gap="6px">
-        <Flex
-          w="1.5rem"
-          h="1.5rem"
-          align="center"
-          justify="center"
-          borderRadius="50%"
-          boxShadow="0px 0px 2.84664px rgba(0, 0, 0, 0.4)"
-          bgColor="#FFFFFF"
-        >
-          <Image src="/src/assets/clientSampleLogo.png" alt="브랜드 로고" />
-        </Flex>
-        <Heading variant="subMenu">BBQ</Heading>
-        <Text
-          fontSize="0.534rem"
-          fontFamily="main"
-          fontWeight="medium"
-          textAlign="center"
-          lineHeight="0.625rem"
-          color="font.primary"
-          opacity="0.8"
-        >
-          admin
-        </Text>
-      </Flex> */}
       <Flex
         position="relative"
-        direction="column"
+        direction={{ pc: "column", tablet: "row", mobile: "row" }}
         align="center"
         gap="0.8125rem"
       >

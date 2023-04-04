@@ -83,7 +83,10 @@ const NiceFilter = ({ areaCode }: Props) => {
 
   //  유동인구 필터 변화 및 액티브
   useEffect(() => {
-    if (flowPop.filter.gender.length !== 0 || flowPop.filter.age.length !== 0) {
+    if (
+      flowPop?.filter?.gender?.length !== 0 ||
+      flowPop?.filter?.age?.length !== 0
+    ) {
       setFlowPop({
         ...flowPop,
         active: true,
@@ -100,7 +103,10 @@ const NiceFilter = ({ areaCode }: Props) => {
 
   //  거주인구 필터 변화 및 액티브
   useEffect(() => {
-    if (resiPop.filter.gender.length !== 0 || resiPop.filter.age.length !== 0) {
+    if (
+      resiPop?.filter?.gender?.length !== 0 ||
+      resiPop?.filter?.age?.length !== 0
+    ) {
       setResiPop({
         ...resiPop,
         active: true,
@@ -117,7 +123,10 @@ const NiceFilter = ({ areaCode }: Props) => {
 
   //  직장인구 필터 변화 및 액티브
   useEffect(() => {
-    if (jobPop.filter.gender.length !== 0 || jobPop.filter.age.length !== 0) {
+    if (
+      jobPop?.filter?.gender?.length !== 0 ||
+      jobPop?.filter?.age?.length !== 0
+    ) {
       setJobPop({
         ...jobPop,
         active: true,
@@ -318,13 +327,13 @@ const NiceFilter = ({ areaCode }: Props) => {
                   { text: "남자", value: "man" },
                   { text: "여자", value: "woman" },
                 ]}
-                chkValue={flowPop.filter.gender}
+                chkValue={flowPop?.filter?.gender}
                 activeTotal={true}
                 onChange={(val: any) =>
                   // setInitPop({ ...initFlowPop, gender: val })
                   setFlowPop({
                     ...flowPop,
-                    filter: { ...flowPop.filter, gender: val },
+                    filter: { ...flowPop?.filter, gender: val },
                   })
                 }
                 groupProps={{
@@ -353,13 +362,13 @@ const NiceFilter = ({ areaCode }: Props) => {
                   { text: "50대", value: "gen50" },
                   { text: "60대 이상", value: "gen60" },
                 ]}
-                chkValue={flowPop.filter.age}
+                chkValue={flowPop?.filter?.age}
                 activeTotal={true}
                 onChange={(val: any) =>
                   // setInitPop({ ...initFlowPop, age: val })
                   setFlowPop({
                     ...flowPop,
-                    filter: { ...flowPop.filter, age: val },
+                    filter: { ...flowPop?.filter, age: val },
                   })
                 }
                 groupProps={{
@@ -411,9 +420,9 @@ const NiceFilter = ({ areaCode }: Props) => {
               <IcoMy />
             </Flex>
             <Switch
-              isChecked={resiPop.active}
+              isChecked={resiPop?.active}
               onChange={() => {
-                setResiPop({ ...resiPop, active: !resiPop.active });
+                setResiPop({ ...resiPop, active: !resiPop?.active });
               }}
               variant="filterControl"
               spacing="5rem"
@@ -439,13 +448,13 @@ const NiceFilter = ({ areaCode }: Props) => {
                   { text: "남자", value: "man" },
                   { text: "여자", value: "woman" },
                 ]}
-                chkValue={resiPop.filter.gender}
+                chkValue={resiPop?.filter?.gender}
                 activeTotal={true}
                 onChange={(val: any) =>
                   // setInitPop({ ...initFlowPop, age: val })
                   setResiPop({
                     ...resiPop,
-                    filter: { ...resiPop.filter, gender: val },
+                    filter: { ...resiPop?.filter, gender: val },
                   })
                 }
                 groupProps={{
@@ -473,13 +482,13 @@ const NiceFilter = ({ areaCode }: Props) => {
                   { text: "50대", value: "gen50" },
                   { text: "60대 이상", value: "gen60" },
                 ]}
-                chkValue={resiPop.filter.age}
+                chkValue={resiPop?.filter?.age}
                 activeTotal={true}
                 onChange={(val: any) =>
                   // setInitPop({ ...initFlowPop, age: val })
                   setResiPop({
                     ...resiPop,
-                    filter: { ...resiPop.filter, age: val },
+                    filter: { ...resiPop?.filter, age: val },
                   })
                 }
                 groupProps={{
@@ -559,12 +568,12 @@ const NiceFilter = ({ areaCode }: Props) => {
                   { text: "남자", value: "man" },
                   { text: "여자", value: "woman" },
                 ]}
-                chkValue={jobPop.filter.gender}
+                chkValue={jobPop?.filter?.gender}
                 activeTotal={true}
                 onChange={(val: any) =>
                   setJobPop({
                     ...jobPop,
-                    filter: { ...jobPop.filter, gender: val },
+                    filter: { ...jobPop?.filter, gender: val },
                   })
                 }
                 groupProps={{
@@ -592,13 +601,13 @@ const NiceFilter = ({ areaCode }: Props) => {
                   { text: "50대", value: "gen50" },
                   { text: "60대 이상", value: "gen60" },
                 ]}
-                chkValue={jobPop.filter.age}
+                chkValue={jobPop?.filter?.age}
                 activeTotal={true}
                 onChange={(val: any) =>
                   // setInitPop({ ...initFlowPop, age: val })
                   setJobPop({
                     ...jobPop,
-                    filter: { ...jobPop.filter, age: val },
+                    filter: { ...jobPop?.filter, age: val },
                   })
                 }
                 groupProps={{
@@ -650,9 +659,9 @@ const NiceFilter = ({ areaCode }: Props) => {
               <IcoResident width="0.875rem" height="0.875rem" />
             </Flex>
             <Switch
-              isChecked={household.active}
+              isChecked={household?.active}
               onChange={() => {
-                setHouse({ ...household, active: !household.active });
+                setHouse({ ...household, active: !household?.active });
               }}
               variant="filterControl"
               spacing="5rem"
@@ -678,9 +687,9 @@ const NiceFilter = ({ areaCode }: Props) => {
             </Flex>
             <Switch
               isDisabled={bot ? false : true}
-              isChecked={filterSale.active}
+              isChecked={filterSale?.active}
               onChange={() => {
-                setSale({ ...filterSale, active: !filterSale.active });
+                setSale({ ...filterSale, active: !filterSale?.active });
               }}
               variant="filterControl"
               spacing="5rem"
@@ -711,9 +720,9 @@ const NiceFilter = ({ areaCode }: Props) => {
             </Flex>
             <Switch
               isDisabled={bot ? false : true}
-              isChecked={upjongCnt.active}
+              isChecked={upjongCnt?.active}
               onChange={() => {
-                setUpjong({ ...upjongCnt, active: !upjongCnt.active });
+                setUpjong({ ...upjongCnt, active: !upjongCnt?.active });
               }}
               variant="filterControl"
               spacing="5rem"

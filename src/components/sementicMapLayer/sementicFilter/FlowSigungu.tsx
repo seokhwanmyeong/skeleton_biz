@@ -11,6 +11,7 @@ import BtnReset from "@components/sementicMapLayer/sementicFilter/BtnReset";
 import BtnFlowCustom from "@components/sementicMapLayer/sementicFilter/BtnFlowCustom";
 import BtnBack from "@components/sementicMapLayer/sementicFilter/BtnBack";
 import DecoTop from "@components/sementicMapLayer/sementicFilter/DecoTop";
+import DrawTools from "@components/sementicMapLayer/sementicFilter/DrawTools";
 //  State
 import { atomFilterFlow } from "@states/sementicMap/filterState";
 import { atomFlowEnterArea, atomDongLi } from "@states/sementicMap/mapState";
@@ -18,7 +19,6 @@ import { atomFlowEnterArea, atomDongLi } from "@states/sementicMap/mapState";
 import { IcoBarChart, IcoErp, IcoFilter } from "@src/assets/icons/icon";
 //  Sample
 import dongListData from "@util/data/area/dong.json";
-import MapFlowFind from "../mapElement/MapFlowFind";
 
 type Props = {};
 
@@ -186,7 +186,7 @@ const FlowSigungu = (props: Props) => {
           ERP 필터
         </Button>
         <BtnReset />
-        <Button variant="filterTop" onClick={() => {}}>
+        <Button variant="filterTop" disabled onClick={() => {}}>
           <Box>
             <IcoBarChart />
           </Box>
@@ -197,7 +197,7 @@ const FlowSigungu = (props: Props) => {
       {filterType === "erp" && (
         <ErpFilter toolOpen={toolOpen} areaCode={sigungu?.slctCode} />
       )}
-      {isToolOpen && <MapFlowFind />}
+      {isToolOpen && <DrawTools toolOpen={toolOpen} />}
     </>
   );
 };

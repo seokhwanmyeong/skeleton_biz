@@ -36,6 +36,7 @@ const Header = () => {
           pr={{ base: "10rem", mobile: 0, tablet: "8rem", pc: "10rem" }}
           h="100%"
           gap="2rem"
+          display={{ pc: "display", tablet: "none", mobile: "none" }}
         >
           <ThemeBox />
           <Link
