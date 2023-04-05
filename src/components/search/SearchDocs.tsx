@@ -26,18 +26,12 @@ const SearchDocs = ({
       {({ handleSubmit, errors, touched, getFieldProps, setFieldValue }) => {
         return (
           <Form onSubmit={handleSubmit} style={{ width: "100%" }}>
-            <Flex w="40%" direction="row" gap="1rem">
+            <Flex w="100%" direction="row" gap="1rem">
               <FormControl variant="search">
                 <Flex align="center" w="100%" gap="0.5rem">
-                  <FormLabel
-                    display="flex"
-                    alignItems="center"
-                    w="3rem"
-                    flex="none"
-                  >
-                    검색어
-                  </FormLabel>
+                  <FormLabel w="3rem">검색어</FormLabel>
                   <Input
+                    variant="search"
                     inputProps={{
                       w: "100%",
                       h: "100%",

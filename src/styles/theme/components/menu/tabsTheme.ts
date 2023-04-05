@@ -10,7 +10,7 @@ const tabsTheme = {
       },
       tab: {
         position: "relative",
-        padding: "0 0.5rem 1rem",
+        padding: "0 1rem 1rem",
         gap: "0.8125rem",
         textStyle: "base",
         fontSize: "md",

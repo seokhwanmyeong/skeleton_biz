@@ -38,7 +38,7 @@ const ModalSaleEditor = () => {
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
           <ModalContent w="auto" maxW="auto">
-            <ModalBody maxH="75vh">
+            <ModalBody maxH="75vh" pt="1.2rem">
               <Tabs variant="detailPage" index={0}>
                 <Flex
                   pos="relative"
@@ -68,22 +68,9 @@ const ModalSaleEditor = () => {
                       flexDirection="column"
                       gap="0.5rem"
                     >
-                      <FormLabel
-                        display="flex"
-                        alignItems="center"
-                        w="5rem"
-                        flex="none"
-                        fontWeight="strong"
-                        fontSize="15px"
-                      >
-                        문서 이름
-                      </FormLabel>
+                      <FormLabel w="5rem">문서 이름</FormLabel>
                       <Input
-                        inputProps={{
-                          w: "100%",
-                          h: "1.375rem",
-                          fontSize: "sm",
-                        }}
+                        variant="editor"
                         placeholder="문서 이름을 입력하세요"
                         _placeholder={{
                           color: "#D9D9D9",
@@ -105,26 +92,30 @@ const ModalSaleEditor = () => {
             <ModalFooter w="100%" justifyContent="center" gap="1rem">
               <Button
                 w="6.25rem"
+                h="2rem"
                 bg="#ffffff"
                 border="1px solid"
                 borderColor="neutral.gray5"
+                borderRadius="8px"
                 color="font.title"
                 fontWeight="regular"
                 fontSize="sm"
-                lineHeight="1.375rem"
+                lineHeight="1px"
                 onClick={onClose}
               >
                 취소
               </Button>
               <Button
                 w="6.25rem"
+                h="2rem"
                 bg="primary.type7"
                 border="1px solid"
                 borderColor="primary.type7"
+                borderRadius="8px"
                 color="#ffffff"
                 fontWeight="strong"
                 fontSize="sm"
-                lineHeight="1.375rem"
+                lineHeight="1px"
                 onClick={onClose}
               >
                 업로드

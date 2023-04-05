@@ -67,6 +67,17 @@ const inputTheme = {
         },
       },
     },
+    editor: {
+      field: {
+        h: "2rem",
+        fontSize: "md",
+        lineHeight: "2rem",
+        _placeholder: {
+          fontSize: "sm",
+          lineHeight: "2rem",
+        },
+      },
+    },
     form: {},
     pwd: {
       field: {},

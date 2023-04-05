@@ -535,6 +535,7 @@ const InputFile = ({
         />
         <Text
           mb="0.5rem"
+          textStyle="base"
           fontWeight="strong"
           fontSize="md"
           lineHeight="1.5rem"
@@ -543,6 +544,7 @@ const InputFile = ({
           클릭 또는 드래그하여 파일을 업로드하세요.
         </Text>
         <Text
+          textStyle="base"
           fontWeight="regular"
           fontSize="xs"
           lineHeight="1.375rem"
@@ -784,12 +786,15 @@ const InputAddr = ({
 
   return (
     <Flex minW={0} w="100%" h="100%" gap="0.25rem">
-      <Input isDisabled={true} value={value} onChange={() => {}} />
+      <Input
+        variant={variant}
+        isDisabled={true}
+        value={value}
+        onChange={() => {}}
+      />
       <Button isDisabled={isDisabled} variant="search" onClick={onOpen}>
         <IcoSearch w="0.875rem" h="0.875rem" />
-        <Text variant="search" color="#ffffff">
-          검색
-        </Text>
+        검색
       </Button>
       {/* <Button variant="addrBtn" onClick={onOpen}>
         {value}

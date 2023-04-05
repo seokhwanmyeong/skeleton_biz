@@ -1,7 +1,7 @@
 const headingTheme = {
   baseStyle: {
     mb: 0,
-    fontFamily: "main",
+    textStyle: "base",
     fontWeight: "strong",
     fontStyle: "normal",
     color: "font.primary",
@@ -33,8 +33,10 @@ const headingTheme = {
       color: "font.primary",
     },
     cardTitle: {
+      w: "auto",
+      textAlign: "center",
       fontWeight: "regular",
-      fontSize: "xs",
+      fontSize: "md",
       lineHeight: "normal",
       color: "font.secondary",
     },
@@ -44,7 +46,7 @@ const headingTheme = {
     },
     detailTitle: {
       m: 0,
-      fontSize: "1.25rem",
+      fontSize: "1.5rem",
       lineHeight: "1.375rem",
       color: "font.primary",
     },

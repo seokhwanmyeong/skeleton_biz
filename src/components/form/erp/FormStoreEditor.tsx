@@ -1,21 +1,18 @@
 //  Lib
-import { Formik, Form, FormikProps } from "formik";
+import { useRef } from "react";
+import { Formik, Form } from "formik";
 import {
   Flex,
   FormControl,
   FormLabel,
   Text,
-  Button,
-  Divider,
   IconButton,
-  Box,
   Heading,
 } from "@chakra-ui/react";
 //  Component
 import { Select } from "@components/common/Select";
 import { Input, InputAddr } from "@components/common/Input";
-import { RadioBox } from "@components/common/RadioBox";
-import { IcoClose, IcoSearch } from "@assets/icons/icon";
+import { IcoClose } from "@assets/icons/icon";
 import { forwardRef, useEffect, useState } from "react";
 
 const storeStatusText: any = {
@@ -52,11 +49,42 @@ const FormStoreEditor = forwardRef(
       children,
     } = props;
     const [form, setForm] = useState(initVal);
-    console.log(form);
+    const mapRef = useRef<any>();
+    const markerRef = useRef<any>();
+
     useEffect(() => {
       setForm(initVal);
     }, [update]);
 
+    useEffect(() => {
+      if (!mapRef.current) {
+        mapRef.current = new naver.maps.Map("map", {
+          center: new naver.maps.LatLng(
+            initVal?.lat || 37.5666805,
+            initVal?.lng || 126.9784147
+          ),
+          zoom: 13,
+        });
+      }
+
+      if (initVal?.lat && initVal?.lng) {
+        console.log("진입");
+        console.log(initVal?.lat, initVal?.lng);
+        mapRef.current.setCenter(
+          new naver.maps.LatLng(initVal.lat, initVal.lng)
+        );
+
+        if (initVal?.lat && initVal?.lng) {
+          const marker = new naver.maps.Marker({
+            position: { lat: initVal.lat, lng: initVal.lng },
+            map: mapRef.current,
+          });
+
+          markerRef.current = marker;
+        }
+      }
+    }, [mapRef, initVal, fixMode]);
+    console.log(initVal);
     return (
       <Flex h="100%">
         <Formik
@@ -88,48 +116,59 @@ const FormStoreEditor = forwardRef(
               >
                 <Flex
                   position="relative"
-                  mb="1.25rem"
+                  mb="0.75rem"
                   w="100%"
                   justify="center"
                   align="center"
                   direction="column"
-                  gap="0.75rem"
+                  gap={fixMode ? "0.25rem" : "0.75rem"}
                 >
-                  <Flex align="center">
-                    {fixMode ? (
+                  {fixMode ? (
+                    <FormControl variant="create" w="auto">
+                      <FormLabel>매장명</FormLabel>
                       <Input
+                        variant="editor"
                         value={getFieldProps("storeName").value}
-                        inputProps={{ w: "10rem" }}
+                        inputProps={{ w: "13.5rem" }}
                         onChange={(val: any) => setFieldValue("storeName", val)}
                         placeholder="매장명을 입력하세요."
                       />
-                    ) : (
-                      <Heading as="h3" mb="2rem" variant="detailTitle">
-                        {initVal?.storeName}
-                      </Heading>
-                    )}
-                  </Flex>
+                    </FormControl>
+                  ) : (
+                    <Heading as="h3" variant="detailTitle">
+                      {initVal?.storeName}
+                    </Heading>
+                  )}
                   {fixMode ? (
-                    <Input
-                      value={getFieldProps("storeCode").value}
-                      inputProps={{ w: "10rem" }}
-                      onChange={(val: any) => setFieldValue("storeCode", val)}
-                      placeholder="매장코드를 입력하세요."
-                    />
+                    <FormControl variant="create" w="auto">
+                      <FormLabel>매장상태</FormLabel>
+                      <Input
+                        variant="editor"
+                        value={getFieldProps("storeCode").value}
+                        inputProps={{ w: "13.5rem" }}
+                        onChange={(val: any) => setFieldValue("storeCode", val)}
+                        placeholder="매장코드를 입력하세요."
+                      />
+                    </FormControl>
                   ) : (
                     <Text variant="detailSub">
                       매장코드 : {initVal?.storeCode}
                     </Text>
                   )}
                 </Flex>
-                {children}
+                {/* {children} */}
+                <div
+                  id="map"
+                  style={{
+                    marginBottom: "4vw",
+                    width: "100%",
+                    height: "40%",
+                    border: "1px solid #D9D9D9",
+                    borderRadius: "12PX",
+                  }}
+                ></div>
                 <Flex>
-                  <Flex
-                    p="0 1.4rem"
-                    w="50%"
-                    flexDirection="column"
-                    gap="1.625rem"
-                  >
+                  <Flex pl="1.4rem" w="50%" flexDirection="column" gap="1.5rem">
                     <FormControl variant="create">
                       <FormLabel
                         display="flex"
@@ -142,6 +181,7 @@ const FormStoreEditor = forwardRef(
                       </FormLabel>
                       {!update || fixMode ? (
                         <Select
+                          variant="editor"
                           data={[
                             { text: "입점", value: "statusOpen" },
                             { text: "폐점", value: "statusClose" },
@@ -173,6 +213,7 @@ const FormStoreEditor = forwardRef(
                       </FormLabel>
                       {!update || fixMode ? (
                         <Select
+                          variant="editor"
                           data={[
                             { text: "A타입", value: "rankA" },
                             { text: "B타입", value: "rankB" },
@@ -204,6 +245,7 @@ const FormStoreEditor = forwardRef(
                       </FormLabel>
                       {!update || fixMode ? (
                         <Input
+                          variant="editor"
                           value={getFieldProps("phone").value}
                           inputProps={{ w: "100%" }}
                           onChange={(val: any) => setFieldValue("phone", val)}
@@ -225,6 +267,7 @@ const FormStoreEditor = forwardRef(
                       </FormLabel>
                       {!update || fixMode ? (
                         <Input
+                          variant="editor"
                           value={getFieldProps("biz_number").value}
                           inputProps={{ w: "100%" }}
                           onChange={(val: any) =>
@@ -237,13 +280,6 @@ const FormStoreEditor = forwardRef(
                       )}
                     </FormControl>
                   </Flex>
-                  <Divider
-                    orientation="vertical"
-                    m="0.5rem 1.4rem"
-                    h="auto"
-                    borderColor="font.primary"
-                    borderLeftWidth="0"
-                  />
                   <Flex
                     p="0 1.4rem"
                     w="50%"
@@ -251,17 +287,10 @@ const FormStoreEditor = forwardRef(
                     gap="1.625rem"
                   >
                     <FormControl variant="create">
-                      <FormLabel
-                        display="flex"
-                        alignItems="center"
-                        minW="4.4rem"
-                        w="30%"
-                        flex="none"
-                      >
-                        대표자
-                      </FormLabel>
+                      <FormLabel w="30%">대표자</FormLabel>
                       {!update || fixMode ? (
                         <Input
+                          variant="editor"
                           value={getFieldProps("owner_name").value}
                           inputProps={{ w: "100%" }}
                           onChange={(val: any) =>
@@ -274,17 +303,10 @@ const FormStoreEditor = forwardRef(
                       )}
                     </FormControl>
                     <FormControl variant="create">
-                      <FormLabel
-                        display="flex"
-                        alignItems="center"
-                        minW="4.4rem"
-                        w="30%"
-                        flex="none"
-                      >
-                        대표자 연락처
-                      </FormLabel>
+                      <FormLabel w="30%">대표자 연락처</FormLabel>
                       {!update || fixMode ? (
                         <Input
+                          variant="editor"
                           value={getFieldProps("owner_phone").value}
                           inputProps={{ w: "100%" }}
                           onChange={(val: any) =>
@@ -296,24 +318,57 @@ const FormStoreEditor = forwardRef(
                         <Text>{initVal?.owner_phone}</Text>
                       )}
                     </FormControl>
-                    <FormControl variant="create">
-                      <FormLabel
-                        display="flex"
-                        alignItems="center"
-                        minW="4.4rem"
-                        w="30%"
-                        flex="none"
-                      >
-                        주소
-                      </FormLabel>
+                    <FormControl variant="create" alignItems="flex-start">
+                      <FormLabel w="30%">주소</FormLabel>
                       {!update || fixMode ? (
                         <Flex w="100%" direction="column" gap="0.5rem">
                           <InputAddr
+                            variant="editor"
                             fieldKey={"addr"}
                             value={getFieldProps("addr").value}
-                            onChange={(val: any) => setFieldValue("addr", val)}
+                            onChange={(val: any) => {
+                              const geocoder =
+                                new kakao.maps.services.Geocoder();
+                              geocoder.addressSearch(
+                                val,
+                                (result: any, status: any) => {
+                                  if (
+                                    status === kakao.maps.services.Status.OK
+                                  ) {
+                                    const { x, y } = result[0];
+
+                                    mapRef.current.setCenter({
+                                      lat: y,
+                                      lng: x,
+                                    });
+
+                                    if (markerRef.current) {
+                                      console.log(y, x);
+                                      markerRef.current.setPosition(
+                                        new naver.maps.LatLng(y, x)
+                                      );
+                                    } else {
+                                      const marker = new naver.maps.Marker({
+                                        position: {
+                                          lat: initVal.lat,
+                                          lng: initVal.lng,
+                                        },
+                                        map: mapRef.current,
+                                      });
+
+                                      markerRef.current = marker;
+                                    }
+
+                                    setFieldValue("lat", y);
+                                    setFieldValue("lng", x);
+                                    setFieldValue("addr", val);
+                                  }
+                                }
+                              );
+                            }}
                           />
                           <Input
+                            variant="editor"
                             value={getFieldProps("addrDetail").value}
                             onChange={(val: any) =>
                               setFieldValue("addrDetail", val)
@@ -328,19 +383,12 @@ const FormStoreEditor = forwardRef(
                         </Text>
                       )}
                     </FormControl>
-                    <FormControl variant="create">
-                      <FormLabel
-                        display="flex"
-                        alignItems="center"
-                        minW="4.4rem"
-                        w="30%"
-                        flex="none"
-                      >
-                        연동상권
-                      </FormLabel>
+                    <FormControl variant="create" alignItems="flex-start">
+                      <FormLabel w="30%">연동상권</FormLabel>
                       {!update || fixMode ? (
                         <Flex position="relative" w="100%" direction="column">
                           <Input
+                            variant="editor"
                             inputProps={{
                               w: "100%",
                               zIndex: 2,
@@ -353,6 +401,7 @@ const FormStoreEditor = forwardRef(
                             placeholder="상권을 검색하세요"
                           />
                           <Select
+                            variant="editor"
                             data={[
                               { text: "매장명", value: "storeName" },
                               { text: "매장코드", value: "storeCode" },
@@ -372,10 +421,9 @@ const FormStoreEditor = forwardRef(
                             }}
                           />
                           {getFieldProps("linkBsns").value && (
-                            <Flex gap="0.5rem">
+                            <Flex mt="0.5rem" gap="0.5rem">
                               {getFieldProps("linkBsns").value?.map(
                                 (link: any) => {
-                                  console.log(link);
                                   return (
                                     <Flex
                                       position="relative"
@@ -407,31 +455,27 @@ const FormStoreEditor = forwardRef(
                           )}
                         </Flex>
                       ) : (
-                        <Flex>
+                        <Flex mt="0.5rem" gap="1rem">
                           {initVal?.linkBsns?.map((li: any) => (
-                            <Text key={li.code} mr="1rem">
+                            <Flex
+                              position="relative"
+                              p="1px 0.5rem 0"
+                              display="flex"
+                              align="center"
+                              bgColor="primary.type2"
+                              fontFamily="main"
+                              fontSize="xs"
+                              lineHeight="1.5rem"
+                              color="primary.type7"
+                            >
                               {li.name}
-                            </Text>
+                            </Flex>
                           ))}
                         </Flex>
                       )}
                     </FormControl>
                   </Flex>
                 </Flex>
-                {/* {(!update || fixMode) && (
-                  <Flex mt="1rem" justifyContent="center">
-                    <Button
-                      type="submit"
-                      variant="search"
-                      onClick={() => {
-                        handleSubmit();
-                      }}
-                    >
-                      <IcoSearch />
-                      <Text variant="search">저장하기</Text>
-                    </Button>
-                  </Flex>
-                )} */}
               </Form>
             );
           }}

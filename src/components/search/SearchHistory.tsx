@@ -29,15 +29,9 @@ const SearchHistory = ({
             <Flex w="100%" direction="row" gap="1rem">
               <FormControl variant="search">
                 <Flex align="center" w="100%" gap="0.5rem">
-                  <FormLabel
-                    display="flex"
-                    alignItems="center"
-                    w="3rem"
-                    flex="none"
-                  >
-                    검색어
-                  </FormLabel>
+                  <FormLabel w="3rem">검색어</FormLabel>
                   <Select
+                    variant="search"
                     data={[
                       { text: "전체", value: "total" },
                       { text: "로그", value: "write" },
@@ -51,6 +45,7 @@ const SearchHistory = ({
                     selectProps={{ w: "5rem", flex: "none" }}
                   />
                   <Select
+                    variant="search"
                     data={[
                       { text: "제목", value: "title" },
                       { text: "작성자", value: "writer" },
@@ -63,11 +58,12 @@ const SearchHistory = ({
                     selectProps={{ w: "5rem", flex: "none" }}
                   />
                   <Input
+                    variant="search"
                     inputProps={{
                       w: "100%",
                       h: "100%",
                     }}
-                    placeholder="Input Search Text"
+                    placeholder="검색어를 입력하세요"
                     _placeholder={{
                       color: "#D9D9D9",
                     }}

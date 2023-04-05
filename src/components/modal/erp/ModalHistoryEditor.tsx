@@ -18,6 +18,7 @@ import { IcoBtnClose, BtnEditor, IcoBtnUpdate } from "@components/common/Btn";
 //  Form
 import { formHistoryInfo } from "@page/erp/history/form";
 import FormHistoryEditor from "@components/form/erp/FormHistoryEditor";
+import { IcoCheckCircle, IcoCloseCircle } from "@src/assets/icons/icon";
 
 const ModalHistoryEditor = ({
   initVal,
@@ -42,56 +43,55 @@ const ModalHistoryEditor = ({
     console.log(val);
   };
 
-  // const bottomBtn = () => {
-  //   const RentInfoHandler = (val: any) => {
-  //     console.log(val);
-  //   };
-
-  //   return (
-  //     <Button colorScheme="blue" onClick={() => RentInfoHandler(formData)}>
-  //       {update ? "수정하기" : "등록하기"}
-  //     </Button>
-  //   );
-  // };
-
   return (
     <>
-      <BtnEditor onClick={onOpen} />
+      <BtnEditor onClick={onOpen} text="히스토리 추가하기" />
       {isOpen && (
         <Drawer isOpen={isOpen} onClose={onClose} placement="right">
-          <DrawerOverlay />
-          <DrawerContent maxW="fit-content">
+          <DrawerOverlay
+            top="auto"
+            bottom="0"
+            h="calc(100vh - 2.875rem - 1px)"
+          />
+          <DrawerContent
+            maxW="fit-content"
+            borderRadius="12px 0 0 12px"
+            sx={{
+              top: "auto!important",
+              bottom: "0!important",
+              h: "calc(100% - 2.875rem - 2px)",
+            }}
+          >
             <DrawerBody pos="relative" p="0" width="18.5rem">
-              <IcoBtnClose
-                style={{
-                  position: "absolute",
-                  top: "0.2rem",
-                  right: "2rem",
-                  zIndex: 1,
-                  w: "max-content",
-                }}
-                onClick={() => {
-                  onClose();
-                }}
-              />
-              <IcoBtnUpdate
-                style={{
-                  position: "absolute",
-                  top: "0.2rem",
-                  right: "0rem",
-                  zIndex: 1,
-                  w: "max-content",
-                }}
-                onClick={() => {
-                  onClose();
-                }}
-              />
               <FormHistoryEditor
                 fixMode={true}
                 initVal={initData}
                 setValues={submitHandler}
               />
             </DrawerBody>
+            <DrawerFooter justifyContent="center" alignItems="center">
+              <Flex w="100%" justify="space-around">
+                <Button
+                  variant="editor"
+                  onClick={() => {
+                    onClose();
+                  }}
+                >
+                  <IcoCloseCircle w="0.875rem" h="0.875rem" />
+                  취소
+                </Button>
+                <Button
+                  variant="editor"
+                  onClick={() => {
+                    console.log("submit");
+                    onClose();
+                  }}
+                >
+                  <IcoCheckCircle w="0.875rem" h="0.875rem" />
+                  완료
+                </Button>
+              </Flex>
+            </DrawerFooter>
           </DrawerContent>
         </Drawer>
       )}

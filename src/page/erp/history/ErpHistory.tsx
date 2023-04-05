@@ -1,19 +1,20 @@
 //  LIB
 import { useMemo, useState, useEffect } from "react";
-import { Flex, Heading } from "@chakra-ui/react";
+import { Flex, Heading, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 //  Components
 import SearchHistory from "@components/search/SearchHistory";
 import Table from "@components/table/Table";
 //  Form & Column
 import { columnHistory } from "@components/table/column/erp";
-import { IcoBtnDelete } from "@components/common/Btn";
+import { BtnDelete, IcoBtnDelete } from "@components/common/Btn";
 import ModalHistoryEditor from "@src/components/modal/erp/ModalHistoryEditor";
+import Divider from "@src/components/common/Divider";
 
 const ErpHistory = ({ id, title }: { id: string | number; title?: string }) => {
   const navigate = useNavigate();
   const [tableData, setTableData] = useState<any[]>([]);
-  const [samplePageData, setSample] = useState<any[]>([]);
+  const [sampleData, setSampleData] = useState<any[]>([]);
   const [selectData, setSelectData] = useState<any>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [curPage, setCurPage] = useState<number>(1);
@@ -23,18 +24,31 @@ const ErpHistory = ({ id, title }: { id: string | number; title?: string }) => {
     text: "",
   });
   const column = useMemo(() => columnHistory, []);
+
   const searchHandler = (values: any) => {
     console.log(values);
     // setValues(values);
-    setInitVal({ ...values, page: curPage });
   };
 
-  const removeStoreHandler = () => {
+  const removeHistoryHandler = () => {
     setSelectData([]);
   };
 
   useEffect(() => {
-    console.log("search start");
+    if (tableData.length === 0) {
+      searchHandler({ ...initVal, page: curPage });
+    }
+  }, []);
+
+  useEffect(() => {
+    const current = sampleData.slice(
+      Math.floor(curPage / 10),
+      Math.floor(curPage / 10) + 10
+    );
+    setTableData(current);
+  }, [initVal, curPage, sampleData]);
+
+  useEffect(() => {
     let sample = [];
 
     for (let i = 0; i < 10; i++) {
@@ -59,29 +73,14 @@ const ErpHistory = ({ id, title }: { id: string | number; title?: string }) => {
         content: "testsetdsgtstsetestsdsdsdfsssffffff",
       });
     }
-    setTableData(sample);
-    setTotalPage(sample.length);
-  }, [initVal, curPage]);
 
-  useEffect(() => {
-    if (tableData) {
-      setSample(
-        tableData.slice(Math.floor(curPage / 10), Math.floor(curPage / 10) + 10)
-      );
-    }
+    setSampleData(sample);
+    setTotalPage(sample.length);
   }, []);
 
-  useEffect(() => {
-    if (tableData) {
-      setSample(
-        tableData.slice(Math.floor(curPage / 10), Math.floor(curPage / 10) + 10)
-      );
-    }
-  }, [curPage]);
-
   return (
-    <Flex w="100%" h="100%" flexDirection="column" gap="0.5rem">
-      <Flex mb="2.5rem" p="0rem 1.65625rem 0rem" w="100%" direction="column">
+    <Flex w="100%" h="100%" flexDirection="column">
+      <Flex mb="2.5rem" pl="0.875rem" w="100%" direction="column">
         {title && (
           <Flex
             position="relative"
@@ -96,8 +95,24 @@ const ErpHistory = ({ id, title }: { id: string | number; title?: string }) => {
             </Heading>
           </Flex>
         )}
-        <SearchHistory initVal={initVal} setValues={setTableData} />
+        <SearchHistory initVal={initVal} setValues={setInitVal} />
       </Flex>
+      <Flex pl="0.875rem" justify="space-between">
+        <Flex align="flex-end" gap="0.25rem">
+          <Heading as={"h3"} variant="outlet">
+            검색 결과
+          </Heading>
+          <Text variant="outlet">Result</Text>
+        </Flex>
+        <Flex gap="0.5rem">
+          <ModalHistoryEditor />
+          <BtnDelete
+            onClick={removeHistoryHandler}
+            isDisabled={selectData.length > 0 ? false : true}
+          />
+        </Flex>
+      </Flex>
+      <Divider m="0.4375rem 0 0" />
       <Table
         data={tableData}
         actviePage={true}
@@ -107,20 +122,7 @@ const ErpHistory = ({ id, title }: { id: string | number; title?: string }) => {
         page={curPage}
         getPage={setCurPage}
         getSelectData={setSelectData}
-      >
-        <Flex
-          p="0rem 1.65625rem 0.5rem"
-          w="100%"
-          justify="flex-end"
-          gap="1.5rem"
-        >
-          <ModalHistoryEditor />
-          <IcoBtnDelete
-            onClick={removeStoreHandler}
-            isDisabled={selectData.length > 0 ? false : true}
-          />
-        </Flex>
-      </Table>
+      />
     </Flex>
   );
 };

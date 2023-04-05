@@ -10,6 +10,9 @@ import {
   Tab,
   TabPanel,
   useTheme,
+  Button,
+  Heading,
+  Box,
 } from "@chakra-ui/react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import {
@@ -25,13 +28,12 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { FormikValues } from "formik";
-import { motion } from "framer-motion";
 //  Components
 import Section from "@components/common/Section";
 import ErpHistory from "@page/erp/history/ErpHistory";
 import ErpDocs from "@page/erp/docs/ErpDocs";
 import FormStoreEditor from "@components/form/erp/FormStoreEditor";
-import { IcoBtnBack, IcoBtnUpdate, IcoBtnClose } from "@components/common/Btn";
+import { IcoBtnBack } from "@components/common/Btn";
 import { Select } from "@components/common/Select";
 import Divider from "@components/common/Divider";
 //  Hook
@@ -44,25 +46,13 @@ import {
   IcoLineChart,
   IcoHistory,
   IcoAudit,
+  IcoCloseCircle,
+  IcoUpdate,
+  IcoUpdateChk,
+  IcoHome,
 } from "@assets/icons/icon";
-
-type StoreInfo = {
-  storeName: string;
-  storeCode: string;
-  storeStatus: string;
-  storeRank?: string;
-  phone?: string;
-  biz_number?: string;
-  owner_name?: string;
-  owner_phone?: string;
-  addr: string;
-  addrDetail?: string;
-  linkBsns?: any[];
-  center: {
-    lat: number;
-    lng: number;
-  };
-};
+//  Type
+import type { StoreInfo } from "@page/erp/store/ErpStoreCreate";
 
 const ErpStoreDetail = ({
   id,
@@ -114,61 +104,16 @@ const ErpStoreDetail = ({
           { name: "종로상권1", code: "1234" },
           { name: "종로상권2", code: "12345" },
         ],
-        center: {
-          lat: 37.5666805,
-          lng: 126.9784147,
-        },
+        lat: 37.5666805,
+        lng: 126.9784147,
       });
     } else {
       navigate("/erp/store");
     }
   }, []);
 
-  useEffect(() => {
-    if (!mapRef.current) {
-      mapRef.current = new naver.maps.Map("map", {
-        center: new naver.maps.LatLng(
-          storeData?.center.lat || 37.5666805,
-          storeData?.center.lng || 126.9784147
-        ),
-        zoom: 13,
-      });
-
-      if (storeData?.center.lat && storeData?.center.lng) {
-        const marker = new naver.maps.Marker({
-          position: { lat: storeData.center.lat, lng: storeData.center.lng },
-          map: mapRef.current,
-        });
-      }
-    } else if (storeData?.center) {
-      mapRef.current.setCenter(
-        new naver.maps.LatLng(
-          storeData.center.lat || 37.5666805,
-          storeData.center.lng || 126.9784147
-        )
-      );
-
-      if (storeData?.center.lat && storeData?.center.lng) {
-        const marker = new naver.maps.Marker({
-          position: { lat: storeData.center.lat, lng: storeData.center.lng },
-          map: mapRef.current,
-        });
-      }
-    }
-  }, [mapRef, storeData]);
-
   return (
-    <Section
-      p={
-        tabIdx === 2 || tabIdx === 3
-          ? "1rem 0rem 3.75rem"
-          : "1rem 0.75rem 3.75rem"
-      }
-      borderRadius={(tabIdx === 2 || tabIdx === 3) && "0"}
-      boxShadow={(tabIdx === 2 || tabIdx === 3) && "none"}
-      bg={(tabIdx === 2 || tabIdx === 3) && "none"}
-      overflow={(tabIdx === 2 || tabIdx === 3) && "visible"}
-    >
+    <Section p="1rem 0.75rem 3.75rem">
       <Tabs
         variant="detailPage"
         index={tabIdx}
@@ -176,7 +121,7 @@ const ErpStoreDetail = ({
       >
         <Flex
           pos="relative"
-          p={tabIdx === 2 || 3 ? "0 0.75rem" : "0"}
+          p="0"
           w="100%"
           justify="center"
           align="center"
@@ -187,7 +132,7 @@ const ErpStoreDetail = ({
               style={{
                 position: "absolute",
                 top: 0,
-                left: tabIdx === 2 || tabIdx === 3 ? "1.25rem" : "0.5rem",
+                left: 0,
                 w: "max-content",
               }}
               w="max-content"
@@ -211,115 +156,316 @@ const ErpStoreDetail = ({
               <Text>문서보관함</Text>
             </Tab>
           </TabList>
-          {activeUpdate && (
-            <IcoBtnClose
-              style={{
-                position: "absolute",
-                top: 0,
-                right: "2rem",
-                w: "max-content",
-              }}
-              onClick={() => {
-                setActiveUpdate(!activeUpdate);
-              }}
-            />
-          )}
-          {tabIdx === 0 && (
-            <IcoBtnUpdate
-              style={{
-                position: "absolute",
-                top: 0,
-                right: 0,
-                w: "max-content",
-              }}
-              isActive={activeUpdate}
-              onClick={() => {
-                if (activeUpdate) {
-                  submitRef?.current && submitRef.current.handleSubmit();
+          <Flex pos="absolute" top="-0.5rem" right="0.75rem" gap="0.25rem">
+            {tabIdx === 0 && (
+              <Button
+                variant="editor"
+                onClick={() => {
+                  if (activeUpdate) {
+                    submitRef?.current && submitRef.current.handleSubmit();
+                    setActiveUpdate(!activeUpdate);
+                  } else {
+                    setActiveUpdate(!activeUpdate);
+                  }
+                }}
+              >
+                {activeUpdate ? (
+                  <IcoUpdateChk w="0.875rem" h="0.875rem" />
+                ) : (
+                  <IcoUpdate w="0.875rem" h="0.875rem" />
+                )}
+                {activeUpdate ? "완료" : "수정"}
+              </Button>
+            )}
+            {activeUpdate && (
+              <Button
+                variant="editor"
+                onClick={() => {
                   setActiveUpdate(!activeUpdate);
-                } else {
-                  setActiveUpdate(!activeUpdate);
-                }
-              }}
-            />
-          )}
+                }}
+              >
+                <IcoCloseCircle w="0.875rem" h="0.875rem" />
+                취소
+              </Button>
+            )}
+          </Flex>
           <Divider m="0 0 1.25rem" />
         </Flex>
         <TabPanels>
           <TabPanel key="panel-pointer">
-            <Flex p="0 3vw" h="100%" flexDirection="column" gap="1rem">
-              <FormStoreEditor
-                initVal={storeData}
-                fixMode={activeUpdate}
-                setValues={updateStoreInfo}
-                update={true}
-                ref={submitRef}
-              >
-                <div
-                  id="map"
-                  style={{
-                    marginBottom: "4vw",
-                    width: "100%",
-                    height: "40%",
-                  }}
-                ></div>
-              </FormStoreEditor>
-            </Flex>
+            {tabIdx === 0 && (
+              <Flex p="0 3vw" h="100%" flexDirection="column" gap="1rem">
+                <FormStoreEditor
+                  initVal={storeData}
+                  fixMode={activeUpdate}
+                  setValues={updateStoreInfo}
+                  update={true}
+                  ref={submitRef}
+                />
+              </Flex>
+            )}
           </TabPanel>
           <TabPanel key="panel-upjong">
-            <Flex p="0 1rem" w="100%" justify="flex-end">
-              <Select
-                data={[
-                  { text: "브랜드1", value: "1" },
-                  { text: "브랜드2", value: "2" },
-                  { text: "브랜드3", value: "3" },
-                  { text: "브랜드4", value: "4" },
-                ]}
-                // value={getFieldProps("clientStatus").value}
-                opBaseTxt="text"
-                opBaseId="value"
-                opBaseKey="value"
-                onChange={(val: any) => {
-                  setBrand(val);
-                }}
-                selectProps={{
-                  w: "auto",
-                }}
-              />
-            </Flex>
-            <LineChart />
-            <Swiper
-              spaceBetween={50}
-              slidesPerView={1}
-              // onSlideChange={() => console.log("slide change")}
-              // onSwiper={(swiper) => console.log(swiper)}
-              style={{
-                width: "100%",
-                height: "100%",
-              }}
-            >
-              <SwiperSlide
-                style={{
-                  padding: "1rem 0 3rem",
-                  width: "100%",
-                  height: "100%",
-                }}
-              >
-                <Flex gap="1rem">
-                  <Sample />
-                  {brand && <Sample />}
+            {tabIdx === 1 && (
+              <>
+                <Flex
+                  position="relative"
+                  mb="1.5rem"
+                  w="100%"
+                  justify="center"
+                  align="center"
+                >
+                  <Heading as="h3" mb="2rem" variant="detailTitle">
+                    {storeData?.storeName}
+                  </Heading>
+                  <Flex pos="absolute" top="0" right="1rem">
+                    <Select
+                      variant="search"
+                      data={[
+                        { text: "선택안함", value: "0" },
+                        { text: "브랜드1", value: "1" },
+                        { text: "브랜드2", value: "2" },
+                        { text: "브랜드3", value: "3" },
+                        { text: "브랜드4", value: "4" },
+                      ]}
+                      // value={getFieldProps("clientStatus").value}
+                      opBaseTxt="text"
+                      opBaseId="value"
+                      opBaseKey="value"
+                      onChange={(val: any) => {
+                        if (val === "0") {
+                          setBrand(null);
+                        } else {
+                          setBrand(val);
+                        }
+                      }}
+                      selectProps={{
+                        w: "auto",
+                      }}
+                    />
+                  </Flex>
                 </Flex>
-              </SwiperSlide>
-              <SwiperSlide style={{ padding: "3rem", width: "100%" }}>
-                test1
-              </SwiperSlide>
-            </Swiper>
+                <Flex
+                  mb="1.875rem"
+                  flex="none"
+                  justify="space-between"
+                  alignItems="center"
+                  direction="row"
+                >
+                  <Flex
+                    direction="column"
+                    w="33.33%"
+                    justify="center"
+                    gap="0.5rem"
+                  >
+                    <Heading as={"h4"} variant="cardTitle">
+                      이번 달 월 누적 매출
+                    </Heading>
+                    <Flex justify="center" gap="1.75rem">
+                      <Flex direction="column" align="center">
+                        <Flex
+                          position="relative"
+                          p="0 0.5rem"
+                          display="flex"
+                          w="fit-content"
+                          h="1.375rem"
+                          align="center"
+                          bgColor="primary.type2"
+                          border="1px solid"
+                          borderColor="primary.type4"
+                          fontFamily="main"
+                          fontSize="xs"
+                          lineHeight="1px"
+                          color="primary.type7"
+                        >
+                          매장
+                        </Flex>
+                        <Text variant="cardContent">
+                          {`\u{20A9}`} 10,230,000
+                        </Text>
+                      </Flex>
+                      {brand && (
+                        <Flex direction="column" align="center">
+                          <Flex
+                            position="relative"
+                            p="0 0.5rem"
+                            display="flex"
+                            w="fit-content"
+                            h="1.375rem"
+                            align="center"
+                            bgColor="secondary.second1.type1"
+                            border="1px solid"
+                            borderColor="secondary.second1.type3"
+                            fontFamily="main"
+                            fontSize="xs"
+                            lineHeight="1px"
+                            color="secondary.second1.type6"
+                          >
+                            브랜드
+                          </Flex>
+                          <Text variant="cardContent">
+                            {`\u{20A9}`} 10,230,000
+                          </Text>
+                        </Flex>
+                      )}
+                    </Flex>
+                  </Flex>
+                  <Divider orientation="vertical" h="5rem" />
+                  <Flex
+                    direction="column"
+                    w="33.33%"
+                    justify="center"
+                    gap="0.5rem"
+                  >
+                    <Heading as={"h4"} variant="cardTitle">
+                      최근 3개월 월 평균 매출
+                    </Heading>
+                    <Flex justify="center" gap="1.75rem">
+                      <Flex direction="column" align="center">
+                        <Flex
+                          position="relative"
+                          p="0 0.5rem"
+                          display="flex"
+                          w="fit-content"
+                          h="1.375rem"
+                          align="center"
+                          bgColor="primary.type2"
+                          border="1px solid"
+                          borderColor="primary.type4"
+                          fontFamily="main"
+                          fontSize="xs"
+                          lineHeight="1px"
+                          color="primary.type7"
+                        >
+                          매장
+                        </Flex>
+                        <Text variant="cardContent">
+                          {`\u{20A9}`} 10,230,000
+                        </Text>
+                      </Flex>
+                      {brand && (
+                        <Flex direction="column" align="center">
+                          <Flex
+                            position="relative"
+                            p="0 0.5rem"
+                            display="flex"
+                            w="fit-content"
+                            h="1.375rem"
+                            align="center"
+                            bgColor="secondary.second1.type1"
+                            border="1px solid"
+                            borderColor="secondary.second1.type3"
+                            fontFamily="main"
+                            fontSize="xs"
+                            lineHeight="1px"
+                            color="secondary.second1.type6"
+                          >
+                            브랜드
+                          </Flex>
+                          <Text variant="cardContent">
+                            {`\u{20A9}`} 13,910,000
+                          </Text>
+                        </Flex>
+                      )}
+                    </Flex>
+                  </Flex>
+                  <Divider orientation="vertical" h="5rem" />
+                  <Flex
+                    direction="column"
+                    w="33.33%"
+                    justify="center"
+                    gap="0.5rem"
+                  >
+                    <Heading as={"h4"} variant="cardTitle">
+                      최근 3개월 일 평균 매출
+                    </Heading>
+                    <Flex justify="center" gap="1.75rem">
+                      <Flex direction="column" align="center">
+                        <Flex
+                          position="relative"
+                          p="0 0.5rem"
+                          display="flex"
+                          w="fit-content"
+                          h="1.375rem"
+                          align="center"
+                          bgColor="primary.type2"
+                          border="1px solid"
+                          borderColor="primary.type4"
+                          fontFamily="main"
+                          fontSize="xs"
+                          lineHeight="1px"
+                          color="primary.type7"
+                        >
+                          매장
+                        </Flex>
+                        <Text variant="cardContent">
+                          {`\u{20A9}`} 10,230,000
+                        </Text>
+                      </Flex>
+                      {brand && (
+                        <Flex direction="column" align="center">
+                          <Flex
+                            position="relative"
+                            p="0 0.5rem"
+                            display="flex"
+                            w="fit-content"
+                            h="1.375rem"
+                            align="center"
+                            bgColor="secondary.second1.type1"
+                            border="1px solid"
+                            borderColor="secondary.second1.type3"
+                            fontFamily="main"
+                            fontSize="xs"
+                            lineHeight="1px"
+                            color="secondary.second1.type6"
+                          >
+                            브랜드
+                          </Flex>
+                          <Text variant="cardContent">
+                            {`\u{20A9}`} 890,000
+                          </Text>
+                        </Flex>
+                      )}
+                    </Flex>
+                  </Flex>
+                </Flex>
+                <LineChart />
+                <Swiper
+                  spaceBetween={50}
+                  slidesPerView={1}
+                  // onSlideChange={() => console.log("slide change")}
+                  // onSwiper={(swiper) => console.log(swiper)}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                  }}
+                >
+                  <SwiperSlide
+                    style={{
+                      padding: "1rem 0 3rem",
+                      width: "100%",
+                      height: "100%",
+                    }}
+                  >
+                    <Flex gap="1rem">
+                      <Sample />
+                      {brand && <Sample />}
+                    </Flex>
+                  </SwiperSlide>
+                  <SwiperSlide style={{ padding: "3rem", width: "100%" }}>
+                    test1
+                  </SwiperSlide>
+                </Swiper>
+              </>
+            )}
           </TabPanel>
           <TabPanel key="panel-area" overflow={"visible"}>
-            <ErpHistory id="test" title={storeData?.storeName} />
+            {tabIdx === 2 && (
+              <ErpHistory id="test" title={storeData?.storeName} />
+            )}
           </TabPanel>
           <TabPanel key="panel-area" overflow={"visible"}>
-            <ErpDocs id="test" />
+            {tabIdx === 3 && <ErpDocs id="test" title={storeData?.storeName} />}
           </TabPanel>
         </TabPanels>
       </Tabs>
@@ -395,7 +541,7 @@ const LineChart = () => {
   };
 
   return (
-    <Flex w="100%" h="60%" justify="center">
+    <Flex w="100%" h="40%" justify="center">
       <Line
         options={options}
         data={data}

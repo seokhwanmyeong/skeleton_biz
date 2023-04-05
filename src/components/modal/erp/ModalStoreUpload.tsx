@@ -1,5 +1,6 @@
 //  LIB
 import { useState, Fragment } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Modal,
   ModalOverlay,
@@ -23,8 +24,7 @@ import { InputFile } from "@components/common/Input";
 import { csvStoreSale } from "@util/data/fileCSV";
 import { exportFormCsv } from "@util/file/manageFile";
 //  Icon
-import { IcoDownload } from "@src/assets/icons/icon";
-import { useNavigate } from "react-router-dom";
+import { IcoDownload, IcoUpdateChk } from "@assets/icons/icon";
 
 const ModalStoreUpload = () => {
   const navigate = useNavigate();
@@ -33,22 +33,9 @@ const ModalStoreUpload = () => {
 
   return (
     <Fragment>
-      <Button
-        w="100px"
-        variant="search"
-        bgColor="#ffffff"
-        borderColor="primary.type7"
-        border="1px solid"
-        color="primary.type7"
-        sx={{
-          p: {
-            color: "primary.type7",
-            fontWeight: "strong",
-          },
-        }}
-        onClick={onOpen}
-      >
-        <Text variant="search">엑셀 업로드</Text>
+      <Button variant="editor" onClick={onOpen}>
+        <IcoUpdateChk />
+        엑셀 업로드
       </Button>
       {isOpen && (
         <Modal isOpen={isOpen} onClose={onClose}>

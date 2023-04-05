@@ -11,6 +11,7 @@ import {
   IcoArrowBack,
   IcoCloseCircle,
   IcoDetail,
+  IcoPlusSquare02,
 } from "@assets/icons/icon";
 
 type Props = {};
@@ -52,7 +53,7 @@ const BtnEditor = ({
       aria-label="생성하기"
       {...rest}
     >
-      <IcoPlusSquare w="0.875rem" h="0.875rem" />
+      <IcoPlusSquare02 w="0.875rem" h="0.875rem" />
       {text}
     </Button>
   );

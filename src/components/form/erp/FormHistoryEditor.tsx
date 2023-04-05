@@ -76,13 +76,17 @@ const FormHistoryEditor = forwardRef(
                   align="center"
                   direction="column"
                 >
-                  <Flex mb="1.5rem" pr="2rem" w="100%" align="left">
+                  <Flex mb="1.5rem" w="100%" align="left">
                     {fixMode ? (
-                      <Input
-                        value={getFieldProps("title").value}
-                        inputProps={{ w: "10rem" }}
-                        onChange={(val: any) => setFieldValue("title", val)}
-                      />
+                      <FormControl variant="create">
+                        <FormLabel w="auto">제목</FormLabel>
+                        <Input
+                          variant="editor"
+                          value={getFieldProps("title").value}
+                          inputProps={{ w: "100%" }}
+                          onChange={(val: any) => setFieldValue("title", val)}
+                        />
+                      </FormControl>
                     ) : (
                       <Heading as="h3" mb="2rem" variant="detailTitle">
                         {initVal?.title}
@@ -90,7 +94,7 @@ const FormHistoryEditor = forwardRef(
                     )}
                   </Flex>
                   <Flex mb="2rem" w="100%" flexDirection="column" gap="0.25rem">
-                    <FormControl mb="1rem" variant="modal">
+                    <FormControl mb="1rem">
                       {fixMode ? (
                         <InputImg
                           accept="image/jpg,impge/png,image/jpeg,image/gif"
@@ -103,32 +107,32 @@ const FormHistoryEditor = forwardRef(
                         <Text>{getFieldProps("writer").value}</Text>
                       )}
                     </FormControl>
-                    <FormControl variant="modal">
-                      <FormLabel w="40%">작성자</FormLabel>
+                    <FormControl variant="create">
+                      <FormLabel w="auto">작성자</FormLabel>
                       {fixMode ? (
                         <Text>{getFieldProps("writer").value}</Text>
                       ) : (
                         <Text>{getFieldProps("writer").value}</Text>
                       )}
                     </FormControl>
-                    <FormControl variant="modal">
-                      <FormLabel w="40%">구분</FormLabel>
+                    <FormControl variant="create">
+                      <FormLabel w="auto">구분</FormLabel>
                       {fixMode ? (
                         <Text>작성</Text>
                       ) : (
                         <Text>{initVal.type}</Text>
                       )}
                     </FormControl>
-                    <FormControl variant="modal">
-                      <FormLabel w="40%">작성일</FormLabel>
+                    <FormControl variant="create">
+                      <FormLabel w="auto">작성일</FormLabel>
                       {fixMode ? (
                         <Text>2023-03-31</Text>
                       ) : (
                         <Text>{initVal.createdAt}</Text>
                       )}
                     </FormControl>
-                    <FormControl variant="modal">
-                      <FormLabel w="40%">작성위치</FormLabel>
+                    <FormControl variant="create" alignItems="flex-start">
+                      <FormLabel w="auto">작성위치</FormLabel>
                       {fixMode ? (
                         <Text>서울특별시 용산구 한강대로 405</Text>
                       ) : (
