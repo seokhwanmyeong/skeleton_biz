@@ -15,7 +15,7 @@ import {
 import Modal from "@components/modal/modal";
 import Form from "@components/form/Form";
 import XlsxController from "@components/modal/XlsxController";
-import { IcoBtnEditor } from "@components/common/Btn";
+import { BtnEditor } from "@components/common/Btn";
 //  Form
 import { formStoreInfo } from "@page/erp/store/form";
 //  Util
@@ -47,7 +47,7 @@ const ModalStoreEditor = ({
 
   return (
     <Fragment>
-      <IcoBtnEditor update={update} onClick={onOpen} />
+      <BtnEditor update={update} onClick={onOpen} />
       <Modal
         title={update ? "매장수정" : "매장생성"}
         cancelText={"취소"}

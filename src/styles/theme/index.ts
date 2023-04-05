@@ -3,8 +3,8 @@ import { extendTheme, type ThemeConfig } from "@chakra-ui/react";
 //  Default
 import resetTheme from "@styles/theme/reset";
 //  color
-import { selectColorScheme } from "@src/styles/theme/colors";
-//  Common
+import { selectColorScheme } from "@styles/theme/colors";
+//  Component Theme
 import headingTheme from "@styles/theme/components/common/headingTheme";
 import inputTheme from "@styles/theme/components/common/inputTheme";
 import { btnTheme } from "@styles/theme/components/common/btnTheme";
@@ -20,10 +20,11 @@ import radioTheme from "@styles/theme/components/common/radioTheme";
 import textTheme from "@styles/theme/components/common/textTheme";
 import textAreaTheme from "@styles/theme/components/common/textAreaTheme";
 import drawerTheme from "@styles/theme/components/modal/drawerTheme";
+import tabsTheme from "@styles/theme/components/menu/tabsTheme";
 
 const createTheme = (name: string) => {
   const config: ThemeConfig = {
-    // initialColorMode: "light",
+    initialColorMode: "light",
     useSystemColorMode: false,
   };
   const theme = extendTheme({
@@ -77,7 +78,8 @@ const createTheme = (name: string) => {
     },
     textStyles: {
       base: {
-        fontSize: "md",
+        fontFamily: "main",
+        fontStyle: "normal",
       },
       list: {
         title: {
@@ -94,7 +96,7 @@ const createTheme = (name: string) => {
         fontFamily: "main",
         fontStyle: "normal",
         fontWeight: "regular",
-        color: "font.primary",
+        color: "font.title",
       },
       chkBox: {
         fontFamily: "main",
@@ -137,7 +139,23 @@ const createTheme = (name: string) => {
         lineHeight: "taller",
         letterSpacing: "normal",
       },
+      header: {
+        menu: {
+          fontFamily: "main",
+          fontSize: "md",
+          fontWeight: "strong",
+          lineHeight: "body",
+          letterSpacing: "normal",
+        },
+      },
       body: {
+        title: {
+          fontFamily: "main",
+          fontSize: "lg",
+          fontWeight: "strong",
+          lineHeight: "1.4375rem",
+          letterSpacing: "normal",
+        },
         regular: {
           fontFamily: "main",
           fontSize: "sm",
@@ -187,159 +205,7 @@ const createTheme = (name: string) => {
       Switch: switchTheme,
       Drawer: drawerTheme,
       TextArea: textAreaTheme,
-      Tabs: {
-        variants: {
-          detailPage: {
-            root: {
-              w: "100%",
-              h: "100%",
-            },
-            tablist: {
-              w: "fit-content",
-              gap: "1.5rem",
-            },
-            tab: {
-              position: "relative",
-              padding: "0 0.5rem 1rem",
-              gap: "0.8125rem",
-              transition: "0.3s",
-              p: {
-                fontFamily: "main",
-                fontSize: "xs",
-                fontStyle: "normal",
-                fontWeight: "regular",
-                lineHeight: "1rem",
-                color: "font.secondary",
-              },
-              svg: {
-                color: "font.secondary",
-                transition: "0.5s",
-              },
-              _selected: {
-                fontWeight: "strong",
-                color: "font.primary",
-                p: {
-                  fontWeight: "strong",
-                  color: "font.primary",
-                },
-                svg: {
-                  color: "primary.type7",
-                },
-                _after: {
-                  content: '""',
-                  position: "absolute",
-                  bottom: "0px",
-                  display: "inline-block",
-                  w: "100%",
-                  h: "4px",
-                  bgColor: "primary.type7",
-                },
-              },
-              _hover: {
-                p: {
-                  fontWeight: "strong",
-                  color: "font.primary",
-                },
-                svg: {
-                  color: "primary.type7",
-                  transition: "0.5s",
-                },
-                _after: {
-                  content: '""',
-                  position: "absolute",
-                  bottom: "0px",
-                  display: "inline-block",
-                  w: "100%",
-                  h: "4px",
-                  bgColor: "primary.type7",
-                },
-              },
-            },
-            tabpanels: { w: "100%", h: "100%" },
-            tabpanel: {
-              overflow: "hidden",
-              p: "0",
-              w: "100%",
-              h: "100%",
-            },
-          },
-          upjongBox: {
-            root: {
-              w: "100%",
-              h: "100%",
-            },
-            tablist: {
-              w: "100%",
-            },
-            tab: {
-              position: "relative",
-              padding: "0rem 0rem 0.375rem",
-              w: "100%",
-              gap: "0.4rem",
-              transition: "0.3s",
-              p: {
-                fontFamily: "main",
-                fontSize: "xs",
-                fontStyle: "normal",
-                fontWeight: "regular",
-                lineHeight: "1rem",
-                color: "font.disabled",
-              },
-              _selected: {
-                fontWeight: "strong",
-                color: "font.primary",
-                p: {
-                  fontWeight: "strong",
-                  color: "font.primary",
-                },
-                _after: {
-                  content: '""',
-                  position: "absolute",
-                  bottom: "0px",
-                  display: "inline-block",
-                  w: "100%",
-                  h: "1px",
-                  bgColor: "primary.type7",
-                },
-              },
-              _disabled: {
-                p: {
-                  fontWeight: "strong",
-                  color: "font.primary",
-                },
-                _after: {
-                  display: "none",
-                },
-              },
-              _hover: {
-                p: {
-                  fontWeight: "strong",
-                  color: "font.primary",
-                },
-                _after: {
-                  content: '""',
-                  position: "absolute",
-                  bottom: "0px",
-                  display: "inline-block",
-                  w: "100%",
-                  h: "1px",
-                  bgColor: "primary.type7",
-                },
-              },
-            },
-            tabpanels: { w: "100%", h: "100%" },
-            tabpanel: {
-              overflow: "hidden",
-              p: "1.3125rem 1.1875rem 0.875rem",
-              // w: "100%",
-              w: "29.5rem",
-              minW: "20rem",
-              h: "100%",
-              minH: "9.375rem",
-            },
-          },
-        },
-      },
+      Tabs: tabsTheme,
       Text: textTheme,
     },
   });

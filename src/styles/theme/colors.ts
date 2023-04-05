@@ -86,7 +86,6 @@ export const selectColorScheme = (type: string) => {
         thead: "#FAFAFA",
       },
       border: {
-        input: "#D9D9D9",
         chkBox: "#D9D9D9",
         radio: "#D9D9D9",
       },

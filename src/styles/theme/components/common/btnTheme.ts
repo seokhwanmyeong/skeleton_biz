@@ -4,7 +4,7 @@ const btnTheme = {
       p: "0.25rem 1rem",
       w: "auto",
       h: "fit-content",
-      bg: "primary.type7",
+      bg: "primary.type8",
       fontFamily: "main",
       fontStyle: "normal",
       fontSize: "md",
@@ -32,20 +32,19 @@ const btnTheme = {
       justifyContent: "center",
       alignItems: "center",
       gap: "0.25rem",
-      lineHeight: "1.125rem",
-      fontFamily: "main",
-      fontSize: "xs",
-      fontStyle: "normal",
+      lineHeight: "1.4375rem",
+      textStyle: "base",
+      fontSize: "md",
       fontWeight: "regular",
-      color: "font.primary",
+      color: "font.secondary",
       bgColor: "transparent",
+      svg: {
+        color: "font.primary",
+      },
       _active: {
         fontWeight: "strong",
         div: {
           bg: "linear-gradient(180deg, #D4B106 0%, rgba(212, 177, 6, 0) 100%)",
-        },
-        svg: {
-          color: "#FFFFFF",
         },
       },
       _hover: {
@@ -53,9 +52,6 @@ const btnTheme = {
         fontWeight: "strong",
         div: {
           bg: "linear-gradient(180deg, #D4B106 0%, rgba(212, 177, 6, 0) 100%)",
-        },
-        svg: {
-          color: "#FFFFFF",
         },
       },
     },
@@ -95,15 +91,39 @@ const btnTheme = {
       },
     },
     search: {
-      padding: "0 0.4375rem",
+      padding: "0 0.984375rem",
       w: "auto",
-      h: "1.375rem",
-      gap: "0.625rem",
-      fontSize: "xs",
-      fontWeight: "medium",
-      lineHeight: "1.375rem",
-      p: {
-        color: "#ffffff",
+      h: "2rem",
+      gap: "0.5rem",
+      textStyle: "base",
+      fontSize: "sm",
+      fontWeight: "regular",
+      lineHeight: "1px",
+      _hover: {
+        bgColor: "primary.type9",
+      },
+    },
+    editor: {
+      padding: "0 0.984375rem",
+      w: "auto",
+      h: "2rem",
+      gap: "0.5rem",
+      bgColor: "transparent",
+      border: "1px solid",
+      borderColor: "primary.type8",
+      textStyle: "base",
+      fontSize: "sm",
+      fontWeight: "regular",
+      lineHeight: "1px",
+      color: "primary.type8",
+      _hover: {
+        bgColor: "primary.type8",
+        color: "font.inverse",
+      },
+      _disabled: {
+        _hover: {
+          color: "primary.type8",
+        },
       },
     },
     linkBtn: {

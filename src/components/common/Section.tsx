@@ -15,8 +15,9 @@ const Section = ({ children, bg, boxShadow, borderRadius, ...props }: any) => {
       bg={
         bg ||
         (colorMode === "light"
-          ? "linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 100%)"
-          : "bg.primary")
+          ? "#ffffffcc"
+          : // ? "linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 100%)"
+            "bg.primary")
       }
       boxShadow={boxShadow || "0px 2.85px 7.12px rgba(0, 0, 0, 0.25)"}
       borderRadius={borderRadius || "Box"}

@@ -28,7 +28,7 @@ const linkTheme = {
       alignItems: "center",
       gap: "0.75rem",
       h: "100%",
-      textStyle: "body.strong",
+      textStyle: "header.menu",
       color: "font.placeholder",
       transition: "all 0.3s",
       _hover: {
@@ -57,7 +57,7 @@ const linkTheme = {
       alignItems: "center",
       gap: "0.75rem",
       h: "100%",
-      textStyle: "body.strong",
+      textStyle: "header.menu",
       color: "primary.type7",
       transition: "all 0.3s",
       _after: {

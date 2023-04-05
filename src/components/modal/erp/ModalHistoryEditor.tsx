@@ -14,11 +14,7 @@ import {
 } from "@chakra-ui/react";
 //  Components
 import Form from "@components/form/Form";
-import {
-  IcoBtnClose,
-  IcoBtnEditor,
-  IcoBtnUpdate,
-} from "@components/common/Btn";
+import { IcoBtnClose, BtnEditor, IcoBtnUpdate } from "@components/common/Btn";
 //  Form
 import { formHistoryInfo } from "@page/erp/history/form";
 import FormHistoryEditor from "@components/form/erp/FormHistoryEditor";
@@ -60,7 +56,7 @@ const ModalHistoryEditor = ({
 
   return (
     <>
-      <IcoBtnEditor onClick={onOpen} />
+      <BtnEditor onClick={onOpen} />
       {isOpen && (
         <Drawer isOpen={isOpen} onClose={onClose} placement="right">
           <DrawerOverlay />

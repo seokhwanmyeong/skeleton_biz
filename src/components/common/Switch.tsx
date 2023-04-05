@@ -4,10 +4,9 @@ import {
   Flex,
   ResponsiveValue,
   Switch as ChakraSwitch,
-  Text,
 } from "@chakra-ui/react";
 //  Icon
-import { IcoLight } from "@assets/icons/icon";
+import { IcoLight, IcoDark } from "@assets/icons/icon";
 
 type SwitchProps = {
   variant?: string;
@@ -87,7 +86,6 @@ const ThemeSwitch = ({
       h="22px"
       cursor="pointer"
       onChange={() => {
-        console.log("click");
         onChange();
       }}
     >
@@ -105,6 +103,10 @@ const ThemeSwitch = ({
             fontSize="sm"
             fontWeight="strong"
             color="font.primary"
+            onClick={(e) => {
+              e.stopPropagation();
+              onChange();
+            }}
           >
             <IcoLight color="font.inverse" />
           </Flex>
@@ -119,8 +121,12 @@ const ThemeSwitch = ({
             visibility={isChecked ? "hidden" : "visible"}
             fontSize="sm"
             fontWeight="strong"
+            onClick={(e) => {
+              e.stopPropagation();
+              onChange();
+            }}
           >
-            <IcoLight color="font.inverse" />
+            <IcoDark color="system.accessible.gray.type6" />
           </Flex>
         </>
       )}
@@ -129,9 +135,9 @@ const ThemeSwitch = ({
         spacing="5rem"
         size={size}
         isChecked={isChecked}
-        onChange={() => {
+        onChange={(e) => {
+          e.stopPropagation();
           onChange();
-          console.log("click");
         }}
       />
     </Flex>

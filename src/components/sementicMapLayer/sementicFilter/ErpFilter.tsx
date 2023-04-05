@@ -48,7 +48,6 @@ const ErpFilter = ({ toolOpen, areaCode, path }: Props) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [openIdx, setOpenIdx] = useState(0);
   const [modalIdx, setModalIdx] = useState(1);
-  const [createType, setCreateType] = useState("");
   const [erpStore, setErpStore] = useRecoilState(infoComErpStore);
   const resetStore = useResetRecoilState(infoComErpStore);
   const [erpBsnsD, setErpBsnsD] = useRecoilState(infoComErpBsnsD);

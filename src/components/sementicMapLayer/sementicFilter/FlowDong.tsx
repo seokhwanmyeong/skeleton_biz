@@ -1,6 +1,6 @@
 //  Lib
 import { useContext, useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { Box, Button, Flex, Text, useDisclosure } from "@chakra-ui/react";
 import { NaverMapContext } from "@src/lib/src";
 //  Component
@@ -15,7 +15,7 @@ import DrawTools from "@components/sementicMapLayer/sementicFilter/DrawTools";
 //  State
 import { atomFilterFlow } from "@states/sementicMap/filterState";
 import { atomFlowEnterArea, atomSlctDong } from "@states/sementicMap/mapState";
-import { sementicViewState } from "@states/searchState/stateSearch";
+import { sementicViewState } from "@states/sementicMap/viewState";
 //  Icon
 import { IcoBarChart, IcoErp, IcoFilter } from "@assets/icons/icon";
 

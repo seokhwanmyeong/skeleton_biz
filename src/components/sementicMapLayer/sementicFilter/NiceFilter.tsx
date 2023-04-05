@@ -35,7 +35,6 @@ import {
   infoComSale,
   resetNice,
 } from "@states/sementicMap/filterState";
-import { active } from "d3";
 
 type Props = {
   areaCode?: string;

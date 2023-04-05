@@ -9,7 +9,7 @@ import ModalRentEditor from "@components/modal/erp/ModalRentEditor";
 import {
   IcoBtnDownload,
   IcoBtnDelete,
-  IcoBtnEditor,
+  BtnEditor,
 } from "@components/common/Btn";
 //  Form & Column
 import { columnRentInfo } from "@components/table/column/erp";
@@ -88,7 +88,7 @@ const ErpRent = () => {
           gap="1.5rem"
         >
           <ModalRentEditor update={false} />
-          <IcoBtnEditor
+          <BtnEditor
             onClick={() => {
               navigate("/erp/rent/create");
             }}

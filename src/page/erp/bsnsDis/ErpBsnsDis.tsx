@@ -9,7 +9,7 @@ import Table from "@components/table/Table";
 import {
   IcoBtnDownload,
   IcoBtnDelete,
-  IcoBtnEditor,
+  BtnEditor,
 } from "@components/common/Btn";
 //  Form & Column
 import { columnBsnsInfo } from "@components/table/column/erp";
@@ -93,7 +93,7 @@ const ErpBsnsDis = () => {
           >
             상권레이어 설정
           </Button>
-          <IcoBtnEditor
+          <BtnEditor
             onClick={() => {
               navigate("/maps");
             }}

@@ -5,7 +5,6 @@ const radioTheme = {
       position: "relative",
       top: "-1px",
       fontSize: "xs",
-      div: { position: "relative", top: "1px" },
     },
     control: {
       w: "1rem",
@@ -60,6 +59,14 @@ const radioTheme = {
             bgColor: "primary.type7",
           },
         },
+      },
+      label: {
+        top: "1px",
+        textStyle: "base",
+        fontSize: "sm",
+        fontWeight: "medium",
+        lineHeight: "2rem",
+        // div: { position: "relative", top: "0px" },
       },
     },
     withTag: {

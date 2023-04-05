@@ -1,27 +1,25 @@
 //  Lib
-import { createColumnHelper } from "@tanstack/react-table";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import FormHistoryEditor from "@src/components/form/erp/FormHistoryEditor";
+import { createColumnHelper } from "@tanstack/react-table";
 import {
   Drawer,
   DrawerBody,
-  DrawerFooter,
-  DrawerHeader,
   DrawerOverlay,
   DrawerContent,
-  DrawerCloseButton,
   Text,
   Button,
   useDisclosure,
 } from "@chakra-ui/react";
+//  Component
+import FormHistoryEditor from "@components/form/erp/FormHistoryEditor";
 import {
   IcoBtnBsns,
-  IcoBtnBsnsFix,
   IcoBtnClose,
   IcoBtnDownload,
   IcoBtnUpdate,
-} from "@src/components/common/Btn";
-import { useState } from "react";
+  IcoBtnDetail,
+} from "@components/common/Btn";
 //  Util
 import { csvStoreSale } from "@util/data/fileCSV";
 import { exportFormCsv } from "@util/file/manageFile";
@@ -84,18 +82,18 @@ const columnStoreInfo = [
     minSize: 200,
   }),
   columnHelper.display({
-    header: "매장상세",
-    cell: (info: any) => (
-      <Button
-        variant="linkBtn"
-        as={Link}
-        to={"/erp/store/detail"}
-        state={info.row.original}
-        data-text={"상세보기"}
-      >
-        상세보기
-      </Button>
-    ),
+    header: "상세보기",
+    cell: (info: any) => {
+      const navigate = useNavigate();
+
+      return (
+        <IcoBtnDetail
+          onClick={() => {
+            navigate("/erp/store/detail", { state: info.row.original });
+          }}
+        />
+      );
+    },
     enableResizing: false,
     size: 100,
   }),

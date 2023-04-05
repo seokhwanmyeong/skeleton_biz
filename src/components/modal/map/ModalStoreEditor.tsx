@@ -13,11 +13,7 @@ import {
 } from "@chakra-ui/react";
 //  Components
 import Form from "@components/form/Form";
-import {
-  IcoBtnClose,
-  IcoBtnEditor,
-  IcoBtnUpdate,
-} from "@components/common/Btn";
+import { IcoBtnClose, BtnEditor, IcoBtnUpdate } from "@components/common/Btn";
 //  Form
 import FormStoreEditor from "@src/components/form/map/FormStoreEditor";
 import DaumPostcodeEmbed from "react-daum-postcode";

@@ -1,18 +1,12 @@
 //  Lib
-import { useContext, useState, useEffect } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useState } from "react";
 import { Box, Button, Flex } from "@chakra-ui/react";
-import { NaverMapContext } from "@src/lib/src";
 //  Component
 import BtnReset from "@components/sementicMapLayer/sementicFilter/BtnReset";
-//  State
-import { atomFilterFlow } from "@states/sementicMap/filterState";
 //  Icon
 import { IcoBarChart, IcoErp, IcoFilter } from "@assets/icons/icon";
 
 const FlowFind = () => {
-  const { state } = useContext(NaverMapContext);
-  const setFlow = useSetRecoilState(atomFilterFlow);
   const [filterType, setType] = useState("");
 
   return (

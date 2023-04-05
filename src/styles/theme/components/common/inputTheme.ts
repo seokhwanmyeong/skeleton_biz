@@ -6,6 +6,7 @@ const inputTheme = {
       h: "1.5rem",
       background: "#FFFFFF",
       border: "1px solid",
+      borderColor: "neutral.gray5",
       borderRadius: "base",
       textStyle: "input",
       fontSize: "xs",
@@ -24,15 +25,17 @@ const inputTheme = {
         bgColor: "bg.primary",
       },
     },
-    // element: {},
   },
   sizes: {
-    base: {},
+    base: {
+      textStyle: "base",
+    },
   },
   variants: {
     base: {
       field: {
         background: "#FFFFFF",
+        borderColor: "neutral.gray5",
       },
     },
     fileHidden: {
@@ -51,6 +54,17 @@ const inputTheme = {
         zIndex: 1,
         cursor: "pointer",
         border: 0,
+      },
+    },
+    search: {
+      field: {
+        h: "2rem",
+        fontSize: "md",
+        lineHeight: "2rem",
+        _placeholder: {
+          fontSize: "sm",
+          lineHeight: "2rem",
+        },
       },
     },
     form: {},

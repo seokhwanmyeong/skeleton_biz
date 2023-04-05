@@ -2,12 +2,11 @@ const textTheme = {
   sizes: {},
   variants: {
     outlet: {
-      fontFamily: "main",
-      fontStyle: "normal",
+      textStyle: "base",
       fontWeight: "regular",
-      fontSize: "xs",
-      lineHeight: "0.875rem",
-      color: "#26232380",
+      fontSize: "md",
+      // lineHeight: "0.875rem",
+      color: "font.secondary",
     },
     search: {
       fontWeight: "regular",

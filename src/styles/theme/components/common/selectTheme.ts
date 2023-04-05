@@ -21,6 +21,23 @@ const selectTheme = {
         color: "border.input",
       },
     },
+    search: {
+      field: {
+        px: "0.5rem",
+        h: "2rem",
+        bgColor: "bg.primary",
+        border: "1px solid",
+        borderColor: "neutral.gray5",
+        borderRadius: "base",
+        textStyle: "input",
+        fontSize: "md",
+        lineHeight: "2rem",
+        options: {},
+      },
+      icon: {
+        color: "font.placeholder",
+      },
+    },
   },
   defaultProps: {
     variant: "base",

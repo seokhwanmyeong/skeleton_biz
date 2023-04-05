@@ -23,20 +23,19 @@ const Header = () => {
       bgColor="bg.primary"
       boxShadow="0px 4px 4px rgba(0, 0, 0, 0.25)"
     >
-      <Flex h="100%" gap="2rem">
+      <Flex h="100%">
         <Flex alignItems="center" gap="0.5rem">
           <Logo w="36px" h="36px" color={theme.colors.bg.inverse} />
           <Heading variant="serviceName">ON THE MAP</Heading>
         </Flex>
-        {pathState !== "/" && <MenuHeader />}
       </Flex>
+      {pathState !== "/" && <MenuHeader />}
       {pathState !== "/" && (
         <Flex
           alignItems="center"
-          pr={{ base: "10rem", mobile: 0, tablet: "8rem", pc: "10rem" }}
           h="100%"
           gap="2rem"
-          display={{ pc: "display", tablet: "none", mobile: "none" }}
+          display={{ pc: "flex", tablet: "none", mobile: "none" }}
         >
           <ThemeBox />
           <Link

@@ -73,7 +73,6 @@ const Table = ({
       registersPerPage,
     });
   }, [page, data, totalPage]);
-
   const {
     reset,
     getHeaderGroups,
@@ -99,10 +98,10 @@ const Table = ({
     getSelectData &&
       getSelectData(selectedData.map((list: any) => list._valuesCache));
   }, [selectedData]);
-
+  console.log("test");
   return (
     <>
-      <Section
+      {/* <Section
         p="0rem 0rem 1.25rem"
         h={{
           pc: height
@@ -117,132 +116,144 @@ const Table = ({
         }}
         gap="1.25rem"
         overflow={{ pc: "hidden", tablet: "visible", mobile: "visible" }}
+      > */}
+      <Flex
+        w="100%"
+        h={{
+          pc: "100%",
+          tablet: "auto",
+          mobile: "auto",
+        }}
+        flex="1"
+        gap="0.75rem"
+        borderRadius="inherit"
+        overflowX={{ pc: "hidden", tablet: "auto", mobile: "auto" }}
+        overflowY={{ pc: "auto", tablet: "visible", mobile: "visible" }}
+        __css={{
+          "::-webkit-scrollbar": {
+            w: "0px",
+          },
+          "::-webkit-scrollbar-thumb": {
+            borderRadius: "5",
+            bg: `#ededed`,
+          },
+          "::-webkit-scrollbar-track-piece:end": {
+            bg: "transparent",
+            mb: "1rem",
+          },
+          "::-webkit-scrollbar-track-piece:start": {
+            bg: "transparent",
+            mt: "3rem",
+          },
+        }}
       >
-        <Flex
-          p="0 0 0 0.375rem"
-          w="100%"
-          flex="1"
-          // h={pagingH ? `calc(100% - ${pagingH}px)` : "100%"}
-          borderRadius="inherit"
-          overflowX={{ pc: "hidden", tablet: "auto", mobile: "auto" }}
-          overflowY="scroll"
-          __css={{
-            "::-webkit-scrollbar": {
-              w: "5px",
-            },
-            "::-webkit-scrollbar-thumb": {
-              borderRadius: "5",
-              bg: `font.primary`,
-            },
-          }}
-        >
-          <ChakraTable h="inherit" variant={variant} aria-label={caption}>
-            <Thead>
-              {getHeaderGroups().map((headerGroup) => {
-                return (
-                  <Tr key={`thead-${headerGroup.id}`}>
-                    {activeCheck && (
-                      <Th key={"thead-th-chk-total"} w="5rem">
-                        <TableCheckBox
-                          checked={getIsAllRowsSelected()}
-                          indeterminate={getIsSomeRowsSelected()}
-                          onChange={getToggleAllRowsSelectedHandler()}
-                        />
-                      </Th>
-                    )}
-                    {headerGroup.headers.map((header) => {
-                      const size = header.getSize();
-                      const canResize = header.column.getCanResize();
-                      let children;
-                      let rowSpan = 1;
+        <ChakraTable h="inherit" variant={variant} aria-label={caption}>
+          <Thead>
+            {getHeaderGroups().map((headerGroup) => {
+              return (
+                <Tr key={`thead-${headerGroup.id}`}>
+                  {activeCheck && (
+                    <Th key={"thead-th-chk-total"} w="5rem">
+                      <TableCheckBox
+                        checked={getIsAllRowsSelected()}
+                        indeterminate={getIsSomeRowsSelected()}
+                        onChange={getToggleAllRowsSelectedHandler()}
+                      />
+                    </Th>
+                  )}
+                  {headerGroup.headers.map((header) => {
+                    const size = header.getSize();
+                    const canResize = header.column.getCanResize();
+                    let children;
+                    let rowSpan = 1;
 
-                      if (
-                        header.depth > 1 &&
-                        header.column.parent === undefined
-                      ) {
-                        return null;
-                      } else if (header.isPlaceholder) {
-                        if (header.subHeaders) {
-                          const newHead = header.subHeaders[0];
+                    if (
+                      header.depth > 1 &&
+                      header.column.parent === undefined
+                    ) {
+                      return null;
+                    } else if (header.isPlaceholder) {
+                      if (header.subHeaders) {
+                        const newHead = header.subHeaders[0];
 
-                          children = flexRender(
-                            newHead.column.columnDef.header,
-                            newHead.getContext()
-                          );
-
-                          rowSpan = 2;
-                        } else {
-                          children = null;
-                        }
-                      } else {
                         children = flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
+                          newHead.column.columnDef.header,
+                          newHead.getContext()
                         );
-                      }
 
-                      return (
-                        <Th
-                          key={`thead-th-${header.id}`}
-                          rowSpan={rowSpan}
-                          colSpan={header.subHeaders.length || 1}
-                          minW={canResize ? `${size / 10}rem` : ""}
-                          w={canResize ? "auto" : `${size / 10}rem`}
-                        >
-                          {children}
-                        </Th>
+                        rowSpan = 2;
+                      } else {
+                        children = null;
+                      }
+                    } else {
+                      children = flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
                       );
-                    })}
-                  </Tr>
-                );
-              })}
-            </Thead>
-            <Tbody>
-              {data.length === 0 ? (
-                <Tr key="table-no-content">
-                  <Td
-                    colSpan={
-                      (activeCheck && getHeaderGroups().at(-1)?.headers.length
-                        ? (getHeaderGroups().at(-1)?.headers.length || 0) + 1
-                        : getHeaderGroups().at(-1)?.headers.length) || 1
                     }
-                  >
-                    <NoContent
-                      {...emptyData}
-                      text={emptyData?.text ?? "No Contents"}
-                    />
-                  </Td>
-                </Tr>
-              ) : (
-                getRowModel().rows.map((row, rowIdx) => (
-                  <Tr key={row.id}>
-                    {activeCheck && (
-                      <Td
-                        key={`table-td-chk-${rowIdx + 1}`}
-                        onClick={(e: any) => e.stopPropagation()}
+
+                    return (
+                      <Th
+                        key={`thead-th-${header.id}`}
+                        rowSpan={rowSpan}
+                        colSpan={header.subHeaders.length || 1}
+                        minW={canResize ? `${size / 10}rem` : "0"}
+                        w={canResize ? "auto" : `${size / 10}rem`}
                       >
-                        <TableCheckBox
-                          checked={row.getIsSelected()}
-                          indeterminate={row.getIsSomeSelected()}
-                          onChange={row.getToggleSelectedHandler()}
-                        />
-                      </Td>
-                    )}
-                    {row.getVisibleCells().map((cell) => (
-                      <Td key={cell.id}>
+                        {children}
+                      </Th>
+                    );
+                  })}
+                </Tr>
+              );
+            })}
+          </Thead>
+          <Tbody>
+            {data.length === 0 ? (
+              <Tr key="table-no-content">
+                <Td
+                  colSpan={
+                    (activeCheck && getHeaderGroups().at(-1)?.headers.length
+                      ? (getHeaderGroups().at(-1)?.headers.length || 0) + 1
+                      : getHeaderGroups().at(-1)?.headers.length) || 1
+                  }
+                >
+                  <NoContent
+                    {...emptyData}
+                    text={emptyData?.text ?? "No Contents"}
+                  />
+                </Td>
+              </Tr>
+            ) : (
+              getRowModel().rows.map((row, rowIdx) => (
+                <Tr key={row.id}>
+                  {activeCheck && (
+                    <Td
+                      key={`table-td-chk-${rowIdx + 1}`}
+                      onClick={(e: any) => e.stopPropagation()}
+                    >
+                      <TableCheckBox
+                        checked={row.getIsSelected()}
+                        indeterminate={row.getIsSomeSelected()}
+                        onChange={row.getToggleSelectedHandler()}
+                      />
+                    </Td>
+                  )}
+                  {row.getVisibleCells().map((cell) => (
+                    <Td key={cell.id}>
+                      <Flex minH="2.5rem" justify="center" align="center">
                         {flexRender(cell.column.columnDef.cell, {
                           ...cell.getContext(),
                         })}
-                      </Td>
-                    ))}
-                  </Tr>
-                ))
-              )}
-            </Tbody>
-          </ChakraTable>
-        </Flex>
-        {children}
-      </Section>
+                      </Flex>
+                    </Td>
+                  ))}
+                </Tr>
+              ))
+            )}
+          </Tbody>
+        </ChakraTable>
+      </Flex>
       {actviePage && data.length !== 0 && (
         <Pagination
           ref={pagingRef}

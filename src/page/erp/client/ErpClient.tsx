@@ -9,7 +9,7 @@ import ModalRentEditor from "@components/modal/erp/ModalRentEditor";
 import {
   IcoBtnDownload,
   IcoBtnDelete,
-  IcoBtnEditor,
+  BtnEditor,
 } from "@components/common/Btn";
 //  Form & Column
 import { columnClientInfo } from "@components/table/column/erp";
@@ -92,7 +92,7 @@ const ErpClient = () => {
           justify="flex-end"
           gap="1.5rem"
         >
-          <IcoBtnEditor onClick={() => navigate("/erp/client/create")} />
+          <BtnEditor onClick={() => navigate("/erp/client/create")} />
           <IcoBtnDelete
             onClick={removeStoreHandler}
             isDisabled={selectData.length > 0 ? false : true}

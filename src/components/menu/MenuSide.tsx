@@ -1,7 +1,7 @@
 //  Lib
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { Flex, Image, Heading, Text, Button } from "@chakra-ui/react";
+import { Flex, Button } from "@chakra-ui/react";
 //  State
 import {
   subMenuSelector,
@@ -26,6 +26,7 @@ const MenuSide = () => {
       );
     } else {
       alert("path missing");
+      return;
     }
   };
 
@@ -75,11 +76,11 @@ const MenuSide = () => {
                     h="2.5rem"
                     align="center"
                     justify="center"
-                    bgColor="#FFFFFF"
+                    // bg="#FFFFFF"
                     borderRadius="70px"
                     boxShadow="0px 0px 4px 0px #00000040"
                     border="1px solid #FFFFFF"
-                    bg="linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0))"
+                    bg="linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%)"
                   >
                     {menuLi.icon()}
                   </Flex>
@@ -90,49 +91,6 @@ const MenuSide = () => {
           })}
       </Flex>
     </Flex>
-    // <Accordion variant="menuSide" allowMultiple>
-    //   {subMenu &&
-    //     subMenu.map((menuLi: SubRouteType) =>
-    //       menuLi.isMenu ? (
-    //         <AccordionItem key={menuLi.title}>
-    //           <AccordionButton
-    //             onClick={() => {
-    //               menuLi.hasChild ? null : navigator(menuLi.path);
-    //             }}
-    //             style={{
-    //               fontWeight: pathChecker(menuLi.path) ? "bold" : "",
-    //             }}
-    //           >
-    //             {menuLi.title}
-    //             {menuLi.hasChild && <AccordionIcon />}
-    //           </AccordionButton>
-    //           {menuLi.hasChild && (
-    //             <AccordionPanel>
-    //               <Accordion allowMultiple>
-    //                 {menuLi.children &&
-    //                   menuLi.children.map((depthLi: DepthRouteType) =>
-    //                     depthLi.isMenu ? (
-    //                       <AccordionItem key={depthLi.title}>
-    //                         <AccordionButton
-    //                           onClick={() => navigator(depthLi.path)}
-    //                           style={{
-    //                             fontWeight: pathChecker(depthLi.path)
-    //                               ? "bold"
-    //                               : "",
-    //                           }}
-    //                         >
-    //                           {depthLi.title}
-    //                         </AccordionButton>
-    //                       </AccordionItem>
-    //                     ) : null
-    //                   )}
-    //               </Accordion>
-    //             </AccordionPanel>
-    //           )}
-    //         </AccordionItem>
-    //       ) : null
-    //     )}
-    // </Accordion>
   );
 };
 

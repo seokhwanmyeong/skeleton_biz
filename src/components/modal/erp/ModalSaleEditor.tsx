@@ -20,7 +20,7 @@ import {
 } from "@chakra-ui/react";
 //  Component
 import { InputFile } from "@src/components/common/Input";
-import { IcoBtnEditor } from "@src/components/common/Btn";
+import { BtnEditor } from "@src/components/common/Btn";
 //  Util
 import { csvStoreSale } from "@util/data/fileCSV";
 import { exportFormCsv } from "@util/file/manageFile";
@@ -34,7 +34,7 @@ const ModalSaleEditor = () => {
 
   return (
     <Fragment>
-      <IcoBtnEditor onClick={onOpen} />
+      <BtnEditor onClick={onOpen} />
       {isOpen && (
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
@@ -125,20 +125,6 @@ const ModalSaleEditor = () => {
       )}
     </Fragment>
   );
-  // <Fragment>
-  //   <IcoBtnEditor onClick={onOpen} />
-  //   <Modal
-  //     title={"매출추가"}
-  //     cancelText={"취소"}
-  //     botBtnComponent={bottomBtn(fileData)}
-  //     isOpen={isOpen}
-  //     onClose={onClose}
-  //   >
-  //     <Flex flexDirection="column" minW="50rem">
-  //       <XlsxController csvInfo={csvStoreSale} onChange={setFileData} />
-  //     </Flex>
-  //   </Modal>
-  // </Fragment>
 };
 
 export default ModalSaleEditor;

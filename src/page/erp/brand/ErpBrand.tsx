@@ -10,7 +10,7 @@ import { mainTable } from "@page/erp/brand/column";
 import { erpSaleApi } from "@api/bizApi/config";
 import Table from "@src/components/table/Table";
 import { columnBrand } from "@src/components/table/column/erp";
-import { IcoBtnDelete, IcoBtnEditor } from "@src/components/common/Btn";
+import { IcoBtnDelete, BtnEditor } from "@src/components/common/Btn";
 import { useNavigate } from "react-router-dom";
 
 const ErpBrand = () => {
@@ -46,7 +46,7 @@ const ErpBrand = () => {
           justify="flex-end"
           gap="1.5rem"
         >
-          <IcoBtnEditor onClick={() => navigate("/erp/brand/create")} />
+          <BtnEditor onClick={() => navigate("/erp/brand/create")} />
           <IcoBtnDelete
             onClick={removeStoreHandler}
             isDisabled={selectData.length > 0 ? false : true}

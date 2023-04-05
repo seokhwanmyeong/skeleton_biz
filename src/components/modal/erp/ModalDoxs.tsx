@@ -24,7 +24,7 @@ import { Input, InputFile } from "@components/common/Input";
 //  Util
 import { csvStoreSale } from "@util/data/fileCSV";
 //  Icon
-import { IcoBtnEditor } from "@src/components/common/Btn";
+import { BtnEditor } from "@src/components/common/Btn";
 import { IcoDownload } from "@src/assets/icons/icon";
 
 const ModalSaleEditor = () => {
@@ -33,7 +33,7 @@ const ModalSaleEditor = () => {
 
   return (
     <Fragment>
-      <IcoBtnEditor onClick={onOpen} />
+      <BtnEditor onClick={onOpen} />
       {isOpen && (
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />

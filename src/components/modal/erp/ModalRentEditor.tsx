@@ -4,7 +4,6 @@ import { Flex, Button } from "@chakra-ui/react";
 import { FormikProps } from "formik";
 //  Components
 import Modal from "@components/modal/Modal";
-import { IcoBtnEditor } from "@components/common/Btn";
 import Form from "@components/form/Form";
 //  Form
 import { formRentInfo } from "@page/erp/rent/form";

@@ -3,14 +3,12 @@ import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
 import { Box, Button, Flex, Text, useDisclosure } from "@chakra-ui/react";
 import { NaverMapContext } from "@src/lib/src";
 //  Component
-import BtnReset from "@src/components/sementicMapLayer/sementicFilter/BtnReset";
+import BtnReset from "@components/sementicMapLayer/sementicFilter/BtnReset";
 import BtnFlowCustom from "@components/sementicMapLayer/sementicFilter/BtnFlowCustom";
 import BtnBack from "@components/sementicMapLayer/sementicFilter/BtnBack";
 import DecoTop from "@components/sementicMapLayer/sementicFilter/DecoTop";
 import AreaListBox from "@components/sementicMapLayer/sementicFilter/AreaListBox";
 import UpjongListBox from "@components/sementicMapLayer/sementicFilter/UpjongListBox";
-import NiceFilter from "@components/sementicMapLayer/sementicFilter/NiceFilter";
-import ErpFilter from "@components/sementicMapLayer/sementicFilter/ErpFilter";
 //  State
 import { atomFilterFlow } from "@states/sementicMap/filterState";
 import {
@@ -263,8 +261,8 @@ const FlowEnter = () => {
           리포트
         </Button>
       </Flex>
-      {filterType === "anal" && <NiceFilter />}
-      {filterType === "erp" && <ErpFilter />}
+      {/* {filterType === "anal" && <NiceFilter />} */}
+      {/* {filterType === "erp" && <ErpFilter />} */}
     </>
   );
 };

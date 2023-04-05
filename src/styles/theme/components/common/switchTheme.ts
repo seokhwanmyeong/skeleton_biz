@@ -21,14 +21,14 @@ const switchTheme = {
       thumb: {
         // transform: "translateX(3.5rem - 1.5rem)",
         _checked: {
-          transform: "translateX(130%)",
+          transform: "translateX(110%)",
         },
         w: "18px",
         h: "18px",
       },
       track: {
-        p: 0,
-        w: "42px",
+        p: "0 2px",
+        w: "38px",
         h: "22px",
         alignItems: "center",
         bgColor: "primary.type7",

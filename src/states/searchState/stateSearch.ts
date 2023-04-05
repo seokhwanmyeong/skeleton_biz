@@ -102,7 +102,6 @@ export const resetSementicAtom = selector({
     reset(atomSementicUpjong);
     reset(atomInfoCom);
 
-    reset(infoComFloatPop);
     reset(infoComHousehold);
     reset(infoComUpjong);
     reset(infoComSale);
@@ -248,16 +247,6 @@ export const atomArea = atom<any>({
     slctAreaName: null,
     slctAreaCode: null,
     eventName: "selectAreaHandler",
-  },
-});
-
-// 필터 공통 그룹옵션
-
-export const infoComFloatPop = atom<any>({
-  key: "infoComFloatPop",
-  default: {
-    data: {},
-    active: false,
   },
 });
 

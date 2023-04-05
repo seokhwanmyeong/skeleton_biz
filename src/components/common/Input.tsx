@@ -123,7 +123,6 @@ const Input = ({
       isInvalid={isInvalid}
       isReadOnly={isReadOnly}
       isRequired={isRequired}
-      borderColor="border.input"
       {...inputProps}
     />
   );
@@ -258,7 +257,6 @@ const InputDate = ({
           }
           isReadOnly={isReadOnly}
           isRequired={isRequired}
-          borderColor="border.input"
           {...inputProps}
         />
       </Flex>
@@ -280,7 +278,6 @@ const InputDate = ({
               isInvalid={validate(date.start, date.end)}
               isReadOnly={isReadOnly}
               isRequired={isRequired}
-              borderColor="border.input"
               {...inputProps}
             />
           </Flex>
@@ -292,8 +289,10 @@ const InputDate = ({
 
 const InputTotalDate = ({
   fieldKey,
+  variant = "search",
   value,
   onChange,
+  groupProps,
   inputProps,
   _placeholder,
   focusBorderColor,
@@ -304,10 +303,10 @@ const InputTotalDate = ({
   isRequired = false,
 }: any) => {
   return (
-    <Flex gap="1rem">
+    <Flex gap="1rem" {...groupProps}>
       <Radio
         key={`radio-date-total`}
-        variant="search"
+        variant={variant}
         value={"total"}
         isChecked={value === "total"}
         onChange={() => {
@@ -322,7 +321,7 @@ const InputTotalDate = ({
       </Radio>
       <Radio
         key={`radio-date-duration`}
-        variant="search"
+        variant={variant}
         onChange={() => {
           onChange(
             value !== "total"
@@ -342,6 +341,7 @@ const InputTotalDate = ({
         <InputDate
           type="double"
           fieldKey={fieldKey}
+          variant={variant}
           value={
             value !== "total"
               ? value

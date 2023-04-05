@@ -1,4 +1,4 @@
-import { Button, IconButton } from "@chakra-ui/react";
+import { Button, IconButton, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 //  Icon
 import {
@@ -10,22 +10,24 @@ import {
   IcoHidden,
   IcoArrowBack,
   IcoCloseCircle,
+  IcoDetail,
 } from "@assets/icons/icon";
 
 type Props = {};
 
-type IcoBtnProps = {
+type BtnProps = {
   onClick: any;
   isDisabled?: boolean;
   isActive?: boolean;
+  text?: string;
   style?: any;
 };
 
-interface IcoBtnEditProps extends IcoBtnProps {
+interface BtnEditProps extends BtnProps {
   update?: boolean;
 }
 
-interface IcoBtnEyeProps extends IcoBtnProps {
+interface IcoBtnEyeProps extends BtnProps {
   isShow?: boolean;
 }
 
@@ -35,31 +37,49 @@ const Btn = (props: any) => {
   return <Button {...btnProps}>{text}</Button>;
 };
 
-const IcoBtnEditor = ({
+const BtnEditor = ({
   onClick,
   isDisabled,
   update,
+  text = "생성하기",
   ...rest
-}: IcoBtnEditProps) => {
+}: BtnEditProps) => {
   return (
-    <IconButton
+    <Button
+      variant="editor"
       onClick={onClick}
       isDisabled={isDisabled}
       aria-label="생성하기"
-      icon={<IcoPlusSquare />}
-      w="1rem"
-      h="1rem"
-      bg="transparent"
-      color="font.main"
-      _hover={{
-        bg: "transparent",
-      }}
       {...rest}
-    />
+    >
+      <IcoPlusSquare w="0.875rem" h="0.875rem" />
+      {text}
+    </Button>
   );
 };
 
-const IcoBtnDownload = ({ onClick, isDisabled, ...rest }: IcoBtnProps) => {
+const BtnDownload = ({
+  onClick,
+  isDisabled,
+  update,
+  text = "다운로드",
+  ...rest
+}: BtnEditProps) => {
+  return (
+    <Button
+      variant="editor"
+      onClick={onClick}
+      isDisabled={isDisabled}
+      aria-label="다운로드"
+      {...rest}
+    >
+      <IcoDownload w="0.75rem" h="0.75rem" />
+      {text}
+    </Button>
+  );
+};
+
+const IcoBtnDownload = ({ onClick, isDisabled, ...rest }: BtnProps) => {
   return (
     <IconButton
       onClick={onClick}
@@ -78,7 +98,28 @@ const IcoBtnDownload = ({ onClick, isDisabled, ...rest }: IcoBtnProps) => {
   );
 };
 
-const IcoBtnDelete = ({ onClick, isDisabled, style, ...rest }: IcoBtnProps) => {
+const BtnDelete = ({
+  onClick,
+  isDisabled,
+  update,
+  text = "삭제",
+  ...rest
+}: BtnEditProps) => {
+  return (
+    <Button
+      variant="editor"
+      onClick={onClick}
+      isDisabled={isDisabled}
+      aria-label="다운로드"
+      {...rest}
+    >
+      <IcoDelete w="0.75rem" h="0.75rem" />
+      {text}
+    </Button>
+  );
+};
+
+const IcoBtnDelete = ({ onClick, isDisabled, style, ...rest }: BtnProps) => {
   return (
     <IconButton
       onClick={onClick}
@@ -103,7 +144,7 @@ const IcoBtnUpdate = ({
   isDisabled,
   style,
   ...rest
-}: IcoBtnProps) => {
+}: BtnProps) => {
   return (
     <IconButton
       onClick={onClick}
@@ -135,7 +176,7 @@ const IcoBtnClose = ({
   isDisabled,
   style,
   ...rest
-}: IcoBtnProps) => {
+}: BtnProps) => {
   return (
     <IconButton
       onClick={onClick}
@@ -265,10 +306,31 @@ const IcoBtnBsnsFix = (props: any) => {
   );
 };
 
+const IcoBtnDetail = ({ onClick, isDisabled, ...rest }: BtnProps) => {
+  return (
+    <IconButton
+      onClick={onClick}
+      isDisabled={isDisabled}
+      aria-label="상세보기"
+      icon={<IcoDetail />}
+      w="1rem"
+      h="1rem"
+      bg="transparent"
+      color="font.main"
+      _hover={{
+        bg: "transparent",
+      }}
+      {...rest}
+    />
+  );
+};
+
 export {
   Btn,
-  IcoBtnEditor,
+  BtnEditor,
+  BtnDownload,
   IcoBtnDownload,
+  BtnDelete,
   IcoBtnDelete,
   IcoBtnUpdate,
   IcoBtnEye,
@@ -276,4 +338,5 @@ export {
   IcoBtnClose,
   IcoBtnBsns,
   IcoBtnBsnsFix,
+  IcoBtnDetail,
 };

@@ -3,8 +3,7 @@ const formTheme = {
     container: {
       label: {
         m: 0,
-        fontFamily: "main",
-        fontStyle: "normal",
+        textStyle: "base",
         color: "font.primary",
       },
     },
@@ -16,7 +15,10 @@ const formTheme = {
         display: "flex",
         flexDirection: "row",
         label: {
-          fontSize: "xs",
+          display: "flex",
+          alignItems: "center",
+          flex: "none",
+          fontSize: "md",
           fontWeight: "strong",
           color: "font.secondary",
           lineHeight: 1,

@@ -1,16 +1,14 @@
 //  LIB
 import { useEffect, useRef, useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import {
-  Button,
   Flex,
-  Heading,
   Text,
   Tabs,
   TabList,
   TabPanels,
   Tab,
   TabPanel,
-  Divider,
   useTheme,
 } from "@chakra-ui/react";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -27,12 +25,15 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { FormikValues } from "formik";
+import { motion } from "framer-motion";
 //  Components
-import ErpHistory from "@page/erp/history/ErpHistory";
-import Table from "@components/table/Table";
 import Section from "@components/common/Section";
-import { IcoBtnBack, IcoBtnUpdate, IcoBtnClose } from "@components/common/Btn";
+import ErpHistory from "@page/erp/history/ErpHistory";
+import ErpDocs from "@page/erp/docs/ErpDocs";
 import FormStoreEditor from "@components/form/erp/FormStoreEditor";
+import { IcoBtnBack, IcoBtnUpdate, IcoBtnClose } from "@components/common/Btn";
+import { Select } from "@components/common/Select";
+import Divider from "@components/common/Divider";
 //  Hook
 import useLocationState from "@hook/useLocationState";
 //  Util
@@ -44,9 +45,6 @@ import {
   IcoHistory,
   IcoAudit,
 } from "@assets/icons/icon";
-import { useNavigate } from "react-router-dom";
-import ErpDocs from "../docs/ErpDocs";
-import { Select } from "@src/components/common/Select";
 
 type StoreInfo = {
   storeName: string;
@@ -245,7 +243,7 @@ const ErpStoreDetail = ({
               }}
             />
           )}
-          <Divider m="0 0 1.25rem" borderBottomWidth="2px" color="font.title" />
+          <Divider m="0 0 1.25rem" />
         </Flex>
         <TabPanels>
           <TabPanel key="panel-pointer">

@@ -25,9 +25,12 @@ const headingTheme = {
       opacity: 0.8,
     },
     outlet: {
-      fontSize: "md",
-      lineHeight: "1.1875rem",
-      color: "#262323cc",
+      textStyle: {
+        pc: "body.title",
+        tablet: "body.title",
+        mobile: "body.title",
+      },
+      color: "font.primary",
     },
     cardTitle: {
       fontWeight: "regular",

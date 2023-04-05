@@ -33,7 +33,7 @@ import { Line, Bar } from "react-chartjs-2";
 import ErpStoreDetail from "@src/page/erp/store/ErpStoreDetail";
 import ErpRentDetail from "@src/page/erp/rent/ErpRentDetail";
 //  States
-import { sementicViewState } from "@states/searchState/stateSearch";
+import { sementicViewState } from "@states/sementicMap/viewState";
 import { Select } from "../common/Select";
 
 type Props = {};
