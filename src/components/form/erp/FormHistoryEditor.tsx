@@ -94,26 +94,9 @@ const FormHistoryEditor = forwardRef(
                     )}
                   </Flex>
                   <Flex mb="2rem" w="100%" flexDirection="column" gap="0.25rem">
-                    <FormControl mb="1rem">
-                      {fixMode ? (
-                        <InputImg
-                          accept="image/jpg,impge/png,image/jpeg,image/gif"
-                          onChange={(val: any) => {
-                            setFieldValue("img", val);
-                          }}
-                        />
-                      ) : (
-                        // <Text>{getFieldProps("writer").value}</Text>
-                        <Text>{getFieldProps("writer").value}</Text>
-                      )}
-                    </FormControl>
                     <FormControl variant="create">
                       <FormLabel w="auto">작성자</FormLabel>
-                      {fixMode ? (
-                        <Text>{getFieldProps("writer").value}</Text>
-                      ) : (
-                        <Text>{getFieldProps("writer").value}</Text>
-                      )}
+                      <Text>{getFieldProps("writer").value}</Text>
                     </FormControl>
                     <FormControl variant="create">
                       <FormLabel w="auto">구분</FormLabel>

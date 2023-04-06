@@ -45,7 +45,7 @@ const ModalStoreUpload = () => {
               <Tabs variant="detailPage" index={0}>
                 <Flex
                   pos="relative"
-                  p={0}
+                  p="0.75rem 0 0"
                   w="100%"
                   justify="center"
                   align="center"

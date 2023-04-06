@@ -96,6 +96,7 @@ const ErpStoreCreate = () => {
             gap="1rem"
             direction="column"
             align="flex-end"
+            zIndex={2}
           >
             <Button
               variant="editor"

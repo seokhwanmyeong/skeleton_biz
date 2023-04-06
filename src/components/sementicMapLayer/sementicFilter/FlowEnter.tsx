@@ -29,7 +29,6 @@ const FlowEnter = () => {
   const [{ sido, sigungu }, setSlctArea] = useRecoilState(atomFlowEnterArea);
   const [sidoLi, setSidoLi] = useRecoilState(atomSidoLi);
   const [sigunguLi, setSigunguLi] = useRecoilState(atomSigunguLi);
-  const [slctLi, setSlctLi] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [filterType, setType] = useState("");
 

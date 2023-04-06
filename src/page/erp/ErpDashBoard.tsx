@@ -1,8 +1,9 @@
 //  LIB
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import { useCubeQuery } from "@cubejs-client/react";
 import {
   Flex,
-  Box,
   Heading,
   Text,
   Divider,
@@ -13,9 +14,7 @@ import {
   Image,
   List,
   ListItem,
-  useTheme,
 } from "@chakra-ui/react";
-import { useCubeQuery } from "@cubejs-client/react";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -29,26 +28,26 @@ import {
   LineElement,
   Filler,
   registerables,
-  scales,
 } from "chart.js";
 import { Pie, Bar, Line } from "react-chartjs-2";
-import { Navigation } from "swiper";
+// Import Swiper styles
 import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
 //  Components
 import Section from "@components/common/Section";
 import { DashboardLi } from "@components/common/List";
+import { Select } from "@components/common/Select";
+import { IcoBtnNext, IcoBtnPrev } from "@components/common/Btn";
 //  API & Query
 import { querySaleDashboard } from "@api/cubeApi/query";
-//  Util
-import { cubeChartHandler } from "@services/cube/transformer";
-import { transMarginData } from "@util/data/testData";
-// Import Swiper styles
-import "swiper/css";
-import "swiper/css/navigation";
-import { useNavigate } from "react-router-dom";
 import sampleImg from "@assets/rentSample.png";
 
 const ErpDashBoard = () => {
+  const sliderStoreRef = useRef(null);
+  const sliderSaleRef = useRef(null);
+  const sliderClientRef = useRef(null);
+  const sliderRentRef = useRef(null);
   const [notice, setNotic] = useState<any[]>([]);
   const [doc, setDoc] = useState<any[]>([]);
   const navigate = useNavigate();
@@ -57,6 +56,46 @@ const ErpDashBoard = () => {
   );
 
   const swiper = useSwiper();
+
+  const handlePrev = useCallback((num: number) => {
+    if (num === 0) {
+      if (!sliderStoreRef.current) return;
+      // @ts-ignore
+      sliderStoreRef.current.swiper.slidePrev();
+    } else if (num === 1) {
+      if (!sliderSaleRef.current) return;
+      // @ts-ignore
+      sliderSaleRef.current.swiper.slidePrev();
+    } else if (num === 2) {
+      if (!sliderClientRef.current) return;
+      // @ts-ignore
+      sliderClientRef.current.swiper.slidePrev();
+    } else if (num === 3) {
+      if (!sliderRentRef.current) return;
+      // @ts-ignore
+      sliderRentRef.current.swiper.slidePrev();
+    }
+  }, []);
+
+  const handleNext = useCallback((num: number) => {
+    if (num === 0) {
+      if (!sliderStoreRef.current) return;
+      // @ts-ignore
+      sliderStoreRef.current.swiper.slideNext();
+    } else if (num === 1) {
+      if (!sliderSaleRef.current) return;
+      // @ts-ignore
+      sliderSaleRef.current.swiper.slideNext();
+    } else if (num === 2) {
+      if (!sliderClientRef.current) return;
+      // @ts-ignore
+      sliderClientRef.current.swiper.slideNext();
+    } else if (num === 3) {
+      if (!sliderRentRef.current) return;
+      // @ts-ignore
+      sliderRentRef.current.swiper.slideNext();
+    }
+  }, []);
 
   useEffect(() => {
     setNotic([
@@ -84,10 +123,12 @@ const ErpDashBoard = () => {
         direction={{ pc: "row", tablet: "column", mobile: "column" }}
         gap="0.75rem"
       >
-        <Section p="0.75rem" w="100%">
-          <Flex mb="1rem" w="100%" align="flex-end" gap="4px">
-            <Heading variant={"sectionTitle"}>공지</Heading>
-            <Text variant="sectionSub">Notice</Text>
+        <Section p="0.75rem" w="100%" gap="0.5rem">
+          <Flex align="flex-end" gap="0.25rem">
+            <Heading as={"h3"} variant="outlet">
+              공지
+            </Heading>
+            <Text variant="outlet">Notice</Text>
           </Flex>
           <DashboardLi
             cate="notice"
@@ -100,10 +141,12 @@ const ErpDashBoard = () => {
             }}
           />
         </Section>
-        <Section p="0.75rem" w="100%">
-          <Flex mb="1rem" w="100%" align="flex-end" gap="4px">
-            <Heading variant={"sectionTitle"}>전자문서</Heading>
-            <Text variant="sectionSub">Doc</Text>
+        <Section p="0.75rem" w="100%" gap="0.5rem">
+          <Flex align="flex-end" gap="0.25rem">
+            <Heading as={"h3"} variant="outlet">
+              전자문서
+            </Heading>
+            <Text variant="outlet">Doc</Text>
           </Flex>
           <DashboardLi
             cate="docs"
@@ -125,22 +168,28 @@ const ErpDashBoard = () => {
         flexGrow={1}
       >
         <Section p="0.75rem" w="55%" h="100%">
-          <Flex mb="1rem" w="100%" align="flex-end" gap="4px">
-            <Heading variant={"sectionTitle"}>매장</Heading>
-            <Text variant="sectionSub">Store</Text>
+          <Flex align="flex-end" gap="0.25rem">
+            <Heading as={"h3"} variant="outlet">
+              매장
+            </Heading>
+            <Text variant="outlet">Store</Text>
           </Flex>
           <Flex w="100%" h="inherit">
             <Flex
               direction="column"
-              w={{ pc: "60%", tablet: "100%", mobile: "100%" }}
+              w={{ pc: "50%", tablet: "100%", mobile: "100%" }}
               h="100%"
             >
-              <ChartBar
-                title="매장수"
-                data={[35, 25, 15, 10, 4]}
-                labels={["A", "B", "C", "D", "E"]}
-                labelText="매장수"
-              />
+              <Flex w="100%" h="100%" justify="center" align="center">
+                <ChartBar
+                  title="매장수"
+                  data={[35, 25, 15, 10, 4]}
+                  labels={["A", "B", "C", "D", "E"]}
+                  labelText="매장수"
+                  width="90%"
+                  height="90%"
+                />
+              </Flex>
             </Flex>
             <Divider
               m="0 1.25rem"
@@ -149,52 +198,79 @@ const ErpDashBoard = () => {
               borderColor="#26232380"
             />
             <Flex
-              w={{ pc: "40%", tablet: "100%", mobile: "100%" }}
+              pos="relative"
+              w={{ pc: "50%", tablet: "100%", mobile: "100%" }}
               h="100%"
               flex="none"
             >
+              <Flex
+                pos="absolute"
+                top="40%"
+                left="0"
+                right="0"
+                w="100%"
+                justify="space-between"
+                zIndex={2}
+              >
+                <IcoBtnPrev onClick={() => handlePrev(0)} />
+                <IcoBtnNext
+                  onClick={() => handleNext(0)}
+                  style={{ top: "1px", transform: "rotate(180deg)" }}
+                />
+              </Flex>
               <Swiper
-                modules={[Navigation]}
-                spaceBetween={50}
+                loop={true}
+                ref={sliderStoreRef}
+                spaceBetween={0}
                 slidesPerView={1}
-                navigation
-                onSlideChange={() => console.log("slide change")}
-                onSwiper={(swiper) => console.log(swiper)}
                 style={{
                   width: "100%",
                   height: "100%",
                 }}
               >
-                <button onClick={() => swiper.slideNext()}>
-                  Slide to the next slide
-                </button>
-                <SwiperSlide style={{ paddingBottom: "12%", width: "100%" }}>
-                  <ChartPie
-                    title="매장타입"
-                    data={[35, 25, 15, 10, 4]}
-                    labels={["A", "B", "C", "D", "E"]}
-                    labelText="매장타입"
-                  />
+                <SwiperSlide>
+                  <Flex w="100%" h="100%" justify="center" align="center">
+                    <ChartPie
+                      title="매장타입"
+                      data={[35, 25, 15, 10, 4]}
+                      labels={["A", "B", "C", "D", "E"]}
+                      labelText="매장타입"
+                      width="80%"
+                      height="90%"
+                    />
+                  </Flex>
                 </SwiperSlide>
-                <SwiperSlide style={{ paddingBottom: "12%", width: "100%" }}>
-                  <ChartPie
-                    title="매장상태"
-                    data={[35, 25, 15, 10, 4]}
-                    labels={["입점", "휴점", "대기", "폐점", "기타"]}
-                    labelText="매장상태"
-                  />
+                <SwiperSlide>
+                  <Flex w="100%" h="100%" justify="center" align="center">
+                    <ChartPie
+                      title="매장상태"
+                      data={[35, 25, 15, 10, 4]}
+                      labels={["입점", "휴점", "대기", "폐점", "기타"]}
+                      labelText="매장상태"
+                      width="80%"
+                      height="90%"
+                    />
+                  </Flex>
                 </SwiperSlide>
               </Swiper>
             </Flex>
           </Flex>
         </Section>
         <Section p="0.75rem" w="45%" h="100%">
-          <Flex mb="1rem" align="flex-end" gap="4px">
-            <Heading variant={"sectionTitle"}>상권</Heading>
-            <Text variant="sectionSub">Area</Text>
+          <Flex align="flex-end" gap="0.25rem">
+            <Heading as={"h3"} variant="outlet">
+              상권
+            </Heading>
+            <Text variant="outlet">BsnsD</Text>
           </Flex>
           <Flex w="100%" h="inherit">
-            <Flex direction="column" w="50%" h="100%">
+            <Flex
+              direction="column"
+              w="50%"
+              h="100%"
+              justify="center"
+              align="center"
+            >
               <ChartPie
                 title="상권타입"
                 data={[35, 25, 15, 10, 4]}
@@ -208,7 +284,13 @@ const ErpDashBoard = () => {
               orientation="vertical"
               borderColor="#26232380"
             />
-            <Flex direction="column" w="50%" h="100%">
+            <Flex
+              direction="column"
+              w="50%"
+              h="100%"
+              justify="center"
+              align="center"
+            >
               <ChartPie
                 title="상권타입"
                 data={[35, 25, 15, 10, 4]}
@@ -221,13 +303,17 @@ const ErpDashBoard = () => {
       </Flex>
       <Flex gap="0.75rem" w="100%" h="30%" flexBasis="30%" flexGrow={1}>
         <Section p="0.75rem" w="55%" h="100%">
-          <Flex mb="1rem" align="flex-end" gap="4px">
-            <Heading variant={"sectionTitle"}>매출</Heading>
-            <Text variant="sectionSub">Sale</Text>
+          <Flex align="flex-end" gap="0.25rem">
+            <Heading as={"h3"} variant="outlet">
+              매출
+            </Heading>
+            <Text variant="outlet">Sale</Text>
           </Flex>
           <Flex w="100%" h="100%" direction={"row"}>
-            <Flex p="0 0 1rem" w="50%">
-              <ChartBarHorizon />
+            <Flex w="50%" h="100%" pos="relative">
+              <Flex w="100%" h="100%" justify="center" align="center">
+                <ChartBarHorizon width="100%" height="90%" />
+              </Flex>
             </Flex>
             <Divider
               m="0 1rem"
@@ -235,552 +321,177 @@ const ErpDashBoard = () => {
               orientation="vertical"
               borderColor="#26232380"
             />
-            <Flex w="50%">
+            <Flex w="50%" h="100%" pos="relative" flex="none">
+              <Flex
+                pos="absolute"
+                top="40%"
+                left="0"
+                right="0"
+                w="100%"
+                justify="space-between"
+                zIndex={2}
+              >
+                <IcoBtnPrev onClick={() => handlePrev(1)} />
+                <IcoBtnNext
+                  onClick={() => handleNext(1)}
+                  style={{ top: "1px", transform: "rotate(180deg)" }}
+                />
+              </Flex>
               <Swiper
-                modules={[Navigation]}
-                spaceBetween={50}
+                ref={sliderSaleRef}
+                spaceBetween={0}
                 slidesPerView={1}
-                navigation
-                onSlideChange={() => console.log("slide change")}
-                onSwiper={(swiper) => console.log(swiper)}
                 style={{
                   width: "100%",
                   height: "100%",
                 }}
               >
-                <SwiperSlide style={{ width: "100%" }}>
-                  <ChartPie
-                    title="인기메뉴별"
-                    data={[35, 25, 15, 10, 4]}
-                    labels={["A", "B", "C", "D", "E"]}
-                    labelText="인기메뉴"
-                  />
+                <SwiperSlide style={{ width: "100%", height: "100%" }}>
+                  <Flex w="100%" h="100%" justify="center" align="center">
+                    <ChartPie
+                      title="인기메뉴별"
+                      data={[35, 25, 15, 10, 4]}
+                      labels={["A", "B", "C", "D", "E"]}
+                      labelText="인기메뉴"
+                    />
+                  </Flex>
                 </SwiperSlide>
-                <SwiperSlide style={{ width: "100%" }}>
-                  <ChartPie
-                    title="주문방식별"
-                    data={[55, 15, 3]}
-                    labels={["배달", "포장", "테이블"]}
-                    labelText="주문방식"
-                  />
+                <SwiperSlide style={{ width: "100%", height: "100%" }}>
+                  <Flex w="100%" h="100%" justify="center" align="center">
+                    <ChartPie
+                      title="주문방식별"
+                      data={[55, 15, 3]}
+                      labels={["배달", "포장", "테이블"]}
+                      labelText="주문방식"
+                    />
+                  </Flex>
                 </SwiperSlide>
                 <SwiperSlide>
-                  <LineChart />
+                  <Flex w="100%" h="100%" justify="center" align="center">
+                    <LineChart width="90%" height="90%" />
+                  </Flex>
                 </SwiperSlide>
                 <SwiperSlide>
-                  <LineChart />
+                  <Flex w="100%" h="100%" justify="center" align="center">
+                    <LineChart width="90%" height="90%" />
+                  </Flex>
                 </SwiperSlide>
               </Swiper>
             </Flex>
           </Flex>
         </Section>
         <Section p="0.75rem" w="calc(22.5% - 0.375rem)" h="100%">
-          <Flex mb="1rem" align="flex-end" gap="4px">
-            <Heading variant={"sectionTitle"}>매물</Heading>
-            <Text variant="sectionSub">Rent</Text>
+          <Flex align="flex-end" gap="0.25rem">
+            <Heading as={"h3"} variant="outlet">
+              매물
+            </Heading>
+            <Text variant="outlet">Rent</Text>
           </Flex>
-          <Flex w="100%">
-            <Accordion
-              variant="dashboardRent"
-              allowMultiple={false}
-              defaultIndex={[0]}
+          <Flex w="100%" h="100%" pos="relative">
+            <Flex
+              pos="absolute"
+              top="40%"
+              left="0"
+              right="0"
               w="100%"
+              justify="space-between"
+              zIndex={2}
             >
-              <AccordionItem>
-                <AccordionButton>매물1</AccordionButton>
-                <AccordionPanel>
-                  <Flex gap="0.75rem" alignItems="center">
-                    <Image w="2.3125rem" h="2.3125rem" src={sampleImg} />
-                    <List
-                      display="flex"
-                      flexDirection="column"
-                      w="100%"
-                      gap="0.375rem"
-                    >
-                      <ListItem
-                        w="100%"
-                        display="flex"
-                        justifyContent={"space-between"}
-                        alignItems="center"
-                      >
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="strong"
-                          color="font.title"
-                        >
-                          준공기간
-                        </Text>
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="regular"
-                          color="font.primary"
-                        >
-                          89.11.03~94.10.25
-                        </Text>
-                      </ListItem>
-                      <ListItem
-                        w="100%"
-                        display="flex"
-                        justifyContent={"space-between"}
-                        alignItems="center"
-                      >
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="strong"
-                          color="font.title"
-                        >
-                          대장종류
-                        </Text>
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="regular"
-                          color="font.primary"
-                        >
-                          건축물대장
-                        </Text>
-                      </ListItem>
-                      <ListItem
-                        w="100%"
-                        display="flex"
-                        justifyContent={"space-between"}
-                        alignItems="center"
-                      >
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="strong"
-                          color="font.title"
-                        >
-                          지붕
-                        </Text>
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="regular"
-                          color="font.primary"
-                        >
-                          시멘트
-                        </Text>
-                      </ListItem>
-                      <ListItem
-                        w="100%"
-                        display="flex"
-                        justifyContent={"space-between"}
-                        alignItems="center"
-                      >
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="strong"
-                          color="font.title"
-                        >
-                          용도
-                        </Text>
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="regular"
-                          color="font.primary"
-                        >
-                          근린생활시설
-                        </Text>
-                      </ListItem>
-                      <ListItem
-                        w="100%"
-                        display="flex"
-                        justifyContent={"space-between"}
-                        alignItems="center"
-                      >
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="strong"
-                          color="font.title"
-                        >
-                          구조
-                        </Text>
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="regular"
-                          color="font.primary"
-                        >
-                          철근콘크리트
-                        </Text>
-                      </ListItem>
-                      <ListItem
-                        w="100%"
-                        display="flex"
-                        justifyContent={"space-between"}
-                        alignItems="center"
-                      >
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="strong"
-                          color="font.title"
-                        >
-                          연면적
-                        </Text>
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="regular"
-                          color="font.primary"
-                        >
-                          429.77 m
-                        </Text>
-                      </ListItem>
-                    </List>
-                  </Flex>
-                </AccordionPanel>
-              </AccordionItem>
-              <AccordionItem>
-                <AccordionButton>매물1</AccordionButton>
-                <AccordionPanel>
-                  <Flex gap="0.75rem" alignItems="center">
-                    <Image w="2.3125rem" h="2.3125rem" src={sampleImg} />
-                    <List
-                      display="flex"
-                      flexDirection="column"
-                      w="100%"
-                      gap="0.375rem"
-                    >
-                      <ListItem
-                        w="100%"
-                        display="flex"
-                        justifyContent={"space-between"}
-                        alignItems="center"
-                      >
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="strong"
-                          color="font.title"
-                        >
-                          준공기간
-                        </Text>
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="regular"
-                          color="font.primary"
-                        >
-                          89.11.03~94.10.25
-                        </Text>
-                      </ListItem>
-                      <ListItem
-                        w="100%"
-                        display="flex"
-                        justifyContent={"space-between"}
-                        alignItems="center"
-                      >
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="strong"
-                          color="font.title"
-                        >
-                          대장종류
-                        </Text>
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="regular"
-                          color="font.primary"
-                        >
-                          건축물대장
-                        </Text>
-                      </ListItem>
-                      <ListItem
-                        w="100%"
-                        display="flex"
-                        justifyContent={"space-between"}
-                        alignItems="center"
-                      >
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="strong"
-                          color="font.title"
-                        >
-                          지붕
-                        </Text>
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="regular"
-                          color="font.primary"
-                        >
-                          시멘트
-                        </Text>
-                      </ListItem>
-                      <ListItem
-                        w="100%"
-                        display="flex"
-                        justifyContent={"space-between"}
-                        alignItems="center"
-                      >
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="strong"
-                          color="font.title"
-                        >
-                          용도
-                        </Text>
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="regular"
-                          color="font.primary"
-                        >
-                          근린생활시설
-                        </Text>
-                      </ListItem>
-                      <ListItem
-                        w="100%"
-                        display="flex"
-                        justifyContent={"space-between"}
-                        alignItems="center"
-                      >
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="strong"
-                          color="font.title"
-                        >
-                          구조
-                        </Text>
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="regular"
-                          color="font.primary"
-                        >
-                          철근콘크리트
-                        </Text>
-                      </ListItem>
-                      <ListItem
-                        w="100%"
-                        display="flex"
-                        justifyContent={"space-between"}
-                        alignItems="center"
-                      >
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="strong"
-                          color="font.title"
-                        >
-                          연면적
-                        </Text>
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="regular"
-                          color="font.primary"
-                        >
-                          429.77 m
-                        </Text>
-                      </ListItem>
-                    </List>
-                  </Flex>
-                </AccordionPanel>
-              </AccordionItem>
-              <AccordionItem>
-                <AccordionButton>매물1</AccordionButton>
-                <AccordionPanel>
-                  <Flex gap="0.75rem" alignItems="center">
-                    <Image w="2.3125rem" h="2.3125rem" src={sampleImg} />
-                    <List
-                      display="flex"
-                      flexDirection="column"
-                      w="100%"
-                      gap="0.375rem"
-                    >
-                      <ListItem
-                        w="100%"
-                        display="flex"
-                        justifyContent={"space-between"}
-                        alignItems="center"
-                      >
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="strong"
-                          color="font.title"
-                        >
-                          준공기간
-                        </Text>
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="regular"
-                          color="font.primary"
-                        >
-                          89.11.03~94.10.25
-                        </Text>
-                      </ListItem>
-                      <ListItem
-                        w="100%"
-                        display="flex"
-                        justifyContent={"space-between"}
-                        alignItems="center"
-                      >
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="strong"
-                          color="font.title"
-                        >
-                          대장종류
-                        </Text>
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="regular"
-                          color="font.primary"
-                        >
-                          건축물대장
-                        </Text>
-                      </ListItem>
-                      <ListItem
-                        w="100%"
-                        display="flex"
-                        justifyContent={"space-between"}
-                        alignItems="center"
-                      >
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="strong"
-                          color="font.title"
-                        >
-                          지붕
-                        </Text>
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="regular"
-                          color="font.primary"
-                        >
-                          시멘트
-                        </Text>
-                      </ListItem>
-                      <ListItem
-                        w="100%"
-                        display="flex"
-                        justifyContent={"space-between"}
-                        alignItems="center"
-                      >
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="strong"
-                          color="font.title"
-                        >
-                          용도
-                        </Text>
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="regular"
-                          color="font.primary"
-                        >
-                          근린생활시설
-                        </Text>
-                      </ListItem>
-                      <ListItem
-                        w="100%"
-                        display="flex"
-                        justifyContent={"space-between"}
-                        alignItems="center"
-                      >
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="strong"
-                          color="font.title"
-                        >
-                          구조
-                        </Text>
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="regular"
-                          color="font.primary"
-                        >
-                          철근콘크리트
-                        </Text>
-                      </ListItem>
-                      <ListItem
-                        w="100%"
-                        display="flex"
-                        justifyContent={"space-between"}
-                        alignItems="center"
-                      >
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="strong"
-                          color="font.title"
-                        >
-                          연면적
-                        </Text>
-                        <Text
-                          fontFamily="main"
-                          fontSize="0.5rem"
-                          fontWeight="regular"
-                          color="font.primary"
-                        >
-                          429.77 m
-                        </Text>
-                      </ListItem>
-                    </List>
-                  </Flex>
-                </AccordionPanel>
-              </AccordionItem>
-            </Accordion>
-          </Flex>
-        </Section>
-        <Section p="0.75rem" w="calc(22.5% - 0.375rem)" h="100%">
-          <Flex mb="1rem" align="flex-end" gap="4px">
-            <Heading variant={"sectionTitle"}>고객</Heading>
-            <Text variant="sectionSub">Client</Text>
-          </Flex>
-          <Flex w="100%" h="100%">
+              <IcoBtnPrev onClick={() => handlePrev(3)} />
+              <IcoBtnNext
+                onClick={() => handleNext(3)}
+                style={{ top: "1px", transform: "rotate(180deg)" }}
+              />
+            </Flex>
             <Swiper
-              modules={[Navigation]}
-              spaceBetween={50}
+              ref={sliderRentRef}
+              loop={true}
+              spaceBetween={0}
               slidesPerView={1}
-              navigation
-              onSlideChange={() => console.log("slide change")}
-              onSwiper={(swiper) => console.log(swiper)}
               style={{
                 width: "100%",
                 height: "100%",
               }}
             >
-              <SwiperSlide style={{ width: "100%" }}>
-                <ChartPie
-                  title="고객현황"
-                  data={[35, 25, 15, 10]}
-                  labels={["상담대기", "상담중", "상담완료", "종료"]}
-                  labelText="고객현황"
-                />
+              <SwiperSlide style={{ width: "100%", height: "100%" }}>
+                <Flex w="100%" h="100%" justify="center" align="center">
+                  <SampleRent />
+                </Flex>
               </SwiperSlide>
-              <SwiperSlide style={{ width: "100%" }}>
-                <ChartPie
-                  title="인기희망지역"
-                  data={[35, 25, 35, 20, 54]}
-                  labels={["서울", "인천", "경기도", "부산", "기타"]}
-                  labelText="유입경로"
-                />
+              <SwiperSlide style={{ width: "100%", height: "100%" }}>
+                <Flex w="100%" h="100%" justify="center" align="center">
+                  <SampleRent />
+                </Flex>
+              </SwiperSlide>
+              <SwiperSlide style={{ width: "100%", height: "100%" }}>
+                <Flex w="100%" h="100%" justify="center" align="center">
+                  <SampleRent />
+                </Flex>
+              </SwiperSlide>
+              <SwiperSlide style={{ width: "100%", height: "100%" }}>
+                <Flex w="100%" h="100%" justify="center" align="center">
+                  <SampleRent />
+                </Flex>
+              </SwiperSlide>
+            </Swiper>
+          </Flex>
+        </Section>
+        <Section p="0.75rem" w="calc(22.5% - 0.375rem)" h="100%">
+          <Flex align="flex-end" gap="0.25rem">
+            <Heading as={"h3"} variant="outlet">
+              고객
+            </Heading>
+            <Text variant="outlet">Client</Text>
+          </Flex>
+          <Flex w="100%" h="100%" pos="relative" flex="none">
+            <Flex
+              pos="absolute"
+              top="40%"
+              left="0"
+              right="0"
+              w="100%"
+              justify="space-between"
+              zIndex={2}
+            >
+              <IcoBtnPrev onClick={() => handlePrev(2)} />
+              <IcoBtnNext
+                onClick={() => handleNext(2)}
+                style={{ top: "1px", transform: "rotate(180deg)" }}
+              />
+            </Flex>
+            <Swiper
+              ref={sliderClientRef}
+              loop={true}
+              spaceBetween={0}
+              slidesPerView={1}
+              style={{
+                width: "100%",
+                height: "100%",
+              }}
+            >
+              <SwiperSlide style={{ width: "100%", height: "100%" }}>
+                <Flex w="100%" h="100%" justify="center" align="center">
+                  <ChartPie
+                    title="고객현황"
+                    data={[35, 25, 15, 10]}
+                    labels={["상담대기", "상담중", "상담완료", "종료"]}
+                    labelText="고객현황"
+                    width="80%"
+                    height="90%"
+                  />
+                </Flex>
+              </SwiperSlide>
+              <SwiperSlide style={{ width: "100%", height: "100%" }}>
+                <Flex w="100%" h="100%" justify="center" align="center">
+                  <ChartPie
+                    title="인기희망지역"
+                    data={[35, 25, 35, 20, 54]}
+                    labels={["서울", "인천", "경기도", "부산", "기타"]}
+                    labelText="유입경로"
+                    width="80%"
+                    height="90%"
+                  />
+                </Flex>
               </SwiperSlide>
             </Swiper>
           </Flex>
@@ -795,16 +506,20 @@ const ChartPie = ({
   data,
   labels,
   labelText,
+  width,
+  height,
 }: {
   title: string;
   data: any[];
   labels: any[];
   labelText: string;
+  width?: string;
+  height?: string;
 }) => {
   ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
   const options = {
-    responsive: true,
+    // responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
@@ -826,7 +541,7 @@ const ChartPie = ({
         color: "#26232380",
         font: {
           family: "Roboto",
-          size: 12,
+          size: 14,
           fontWeight: 700,
         },
       },
@@ -866,30 +581,42 @@ const ChartPie = ({
       },
     ],
   };
-  return <Pie data={dataSet} options={options} redraw={true} />;
+  return (
+    <Flex
+      width={width || "80%"}
+      height={height || "90%"}
+      justify="center"
+      align="center"
+    >
+      <Pie data={dataSet} options={options} redraw={true} />
+    </Flex>
+  );
 };
 
 const ChartBar = ({
   title,
   data,
   labelText,
+  width,
+  height,
 }: {
   title?: string;
   data: any[];
   labels: any[];
   labelText: string;
+  width?: any;
+  height?: any;
 }) => {
-  ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title,
-    Tooltip,
-    Legend,
-    ...registerables
-  );
-
-  const sample: { [key: string]: any } = {
+  const [duration, setDuration] = useState("month6");
+  const [label, setLabel] = useState([
+    "9월",
+    "10월",
+    "11월",
+    "12월",
+    "1월",
+    "2월",
+  ]);
+  const [sampleData, setData] = useState<any>({
     "9월": {
       A: 100,
       B: 50,
@@ -932,19 +659,70 @@ const ChartBar = ({
       D: 20,
       E: 50,
     },
-  };
+  });
+  const [dataSet, setDataSet] = useState<any>({
+    labels: label,
+    datasets: [
+      {
+        label: "A",
+        data: label.map((date) => sampleData[date].A),
+        backgroundColor: "#CAF0FF",
+        borderRadius: 2,
+      },
+      {
+        label: "B",
+        data: label.map((date) => sampleData[date].B),
+        backgroundColor: "#D9EE86",
+        borderRadius: 2,
+      },
+      {
+        label: "C",
+        data: label.map((date) => sampleData[date].C),
+        backgroundColor: "#EFA180",
+        borderRadius: 2,
+      },
+      {
+        label: "D",
+        data: label.map((date) => sampleData[date].D),
+        backgroundColor: "#6C6C70",
+        borderRadius: 2,
+      },
+      {
+        label: "E",
+        data: label.map((date) => sampleData[date].E),
+        backgroundColor: "#AEAEB2",
+        borderRadius: 2,
+      },
+    ],
+    scales: {
+      display: false,
+      y: {
+        beginAtZero: false,
+      },
+    },
+  });
 
-  const labels = ["9월", "10월", "11월", "12월", "1월", "2월"];
+  ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend,
+    ...registerables
+  );
 
   const options = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: "bottom" as const,
+        position: "top" as const,
+        align: "end",
         labels: {
           boxWidth: 10,
           boxHeight: 10,
+          padding: 5,
         },
       },
       title: {
@@ -954,7 +732,7 @@ const ChartBar = ({
         color: "#26232380",
         font: {
           family: "Roboto",
-          size: 12,
+          size: 14,
           fontWeight: 700,
         },
       },
@@ -998,54 +776,266 @@ const ChartBar = ({
     },
   };
 
-  const dataSet = {
-    labels: labels,
-    datasets: [
-      {
-        label: "A",
-        data: labels.map((date) => sample[date].A),
-        backgroundColor: "#CAF0FF",
-        borderRadius: 2,
-      },
-      {
-        label: "B",
-        data: labels.map((date) => sample[date].B),
-        backgroundColor: "#D9EE86",
-        borderRadius: 2,
-      },
-      {
-        label: "C",
-        data: labels.map((date) => sample[date].C),
-        backgroundColor: "#EFA180",
-        borderRadius: 2,
-      },
-      {
-        label: "D",
-        data: labels.map((date) => sample[date].D),
-        backgroundColor: "#6C6C70",
-        borderRadius: 2,
-      },
-      {
-        label: "E",
-        data: labels.map((date) => sample[date].E),
-        backgroundColor: "#AEAEB2",
-        borderRadius: 2,
-      },
-    ],
-    scales: {
-      display: false,
-      y: {
-        beginAtZero: false,
-      },
-    },
-  };
+  useEffect(() => {
+    if (duration === "month6") {
+      let label = ["9월", "10월", "11월", "12월", "1월", "2월"];
+      let sample: any = {
+        "9월": {
+          A: 100,
+          B: 50,
+          C: 30,
+          D: 20,
+          E: 50,
+        },
+        "10월": {
+          A: 100,
+          B: 50,
+          C: 30,
+          D: 20,
+          E: 50,
+        },
+        "11월": {
+          A: 100,
+          B: 50,
+          C: 30,
+          D: 20,
+          E: 50,
+        },
+        "12월": {
+          A: 100,
+          B: 50,
+          C: 30,
+          D: 20,
+          E: 50,
+        },
+        "1월": {
+          A: 100,
+          B: 50,
+          C: 30,
+          D: 20,
+          E: 50,
+        },
+        "2월": {
+          A: 100,
+          B: 50,
+          C: 30,
+          D: 20,
+          E: 50,
+        },
+      };
+      setLabel(label);
+      setData(sample);
+      setDataSet({
+        labels: label,
+        datasets: [
+          {
+            label: "A",
+            data: label.map((date) => sample[date].A),
+            backgroundColor: "#CAF0FF",
+            borderRadius: 2,
+          },
+          {
+            label: "B",
+            data: label.map((date) => sample[date].B),
+            backgroundColor: "#D9EE86",
+            borderRadius: 2,
+          },
+          {
+            label: "C",
+            data: label.map((date) => sample[date].C),
+            backgroundColor: "#EFA180",
+            borderRadius: 2,
+          },
+          {
+            label: "D",
+            data: label.map((date) => sample[date].D),
+            backgroundColor: "#6C6C70",
+            borderRadius: 2,
+          },
+          {
+            label: "E",
+            data: label.map((date) => sample[date].E),
+            backgroundColor: "#AEAEB2",
+            borderRadius: 2,
+          },
+        ],
+        scales: {
+          display: false,
+          y: {
+            beginAtZero: false,
+          },
+        },
+      });
+    } else if (duration === "month3") {
+      let label = ["12월", "1월", "2월"];
+      let sample: any = {
+        "12월": {
+          A: 100,
+          B: 50,
+          C: 30,
+          D: 20,
+          E: 50,
+        },
+        "1월": {
+          A: 100,
+          B: 50,
+          C: 30,
+          D: 20,
+          E: 50,
+        },
+        "2월": {
+          A: 100,
+          B: 50,
+          C: 30,
+          D: 20,
+          E: 50,
+        },
+      };
+      setLabel(label);
+      setData(sample);
+      setDataSet({
+        labels: label,
+        datasets: [
+          {
+            label: "A",
+            data: label.map((date) => sample[date].A),
+            backgroundColor: "#CAF0FF",
+            borderRadius: 2,
+          },
+          {
+            label: "B",
+            data: label.map((date) => sample[date].B),
+            backgroundColor: "#D9EE86",
+            borderRadius: 2,
+          },
+          {
+            label: "C",
+            data: label.map((date) => sample[date].C),
+            backgroundColor: "#EFA180",
+            borderRadius: 2,
+          },
+          {
+            label: "D",
+            data: label.map((date) => sample[date].D),
+            backgroundColor: "#6C6C70",
+            borderRadius: 2,
+          },
+          {
+            label: "E",
+            data: label.map((date) => sample[date].E),
+            backgroundColor: "#AEAEB2",
+            borderRadius: 2,
+          },
+        ],
+        scales: {
+          display: false,
+          y: {
+            beginAtZero: false,
+          },
+        },
+      });
+    } else if (duration === "monthDay") {
+      let label: any = [];
+      let sample: any = {};
+
+      for (let i = 1; i <= 30; i++) {
+        label.push(`${i}일`);
+      }
+
+      for (let i = 1; i <= 30; i++) {
+        sample[`${i}일`] = {
+          A: 100,
+          B: 50,
+          C: 30,
+          D: 20,
+          E: 50,
+        };
+      }
+
+      setLabel(label);
+      setData(sample);
+      setDataSet({
+        labels: label,
+        datasets: [
+          {
+            label: "A",
+            data: label.map((date: any) => sample[date].A),
+            backgroundColor: "#CAF0FF",
+            borderRadius: 2,
+          },
+          {
+            label: "B",
+            data: label.map((date: any) => sample[date].B),
+            backgroundColor: "#D9EE86",
+            borderRadius: 2,
+          },
+          {
+            label: "C",
+            data: label.map((date: any) => sample[date].C),
+            backgroundColor: "#EFA180",
+            borderRadius: 2,
+          },
+          {
+            label: "D",
+            data: label.map((date: any) => sample[date].D),
+            backgroundColor: "#6C6C70",
+            borderRadius: 2,
+          },
+          {
+            label: "E",
+            data: label.map((date: any) => sample[date].E),
+            backgroundColor: "#AEAEB2",
+            borderRadius: 2,
+          },
+        ],
+        scales: {
+          display: false,
+          y: {
+            beginAtZero: false,
+          },
+        },
+      });
+    } else return;
+  }, [duration]);
+
   return (
-    <Bar
-      data={dataSet}
-      options={options}
-      style={{ width: "100%", height: "100%" }}
-      redraw={true}
-    />
+    <Flex
+      pos="relative"
+      width={width || "100%"}
+      height={height || "100%"}
+      direction="column"
+      align="flex-end"
+    >
+      <Select
+        variant="search"
+        data={[
+          { text: "최근 6개월", value: "month6" },
+          { text: "최근 3개월", value: "month3" },
+          { text: "최근 한달", value: "monthDay" },
+        ]}
+        value={duration}
+        opBaseTxt="text"
+        opBaseId="value"
+        opBaseKey="value"
+        onChange={(val: any) => setDuration(val)}
+        selectProps={{
+          position: "absolute",
+          top: "-3px",
+          left: "-0.5rem",
+          width: "40%",
+          height: "1.3rem",
+          lineHeight: "1.3rem",
+          fontSize: "xs",
+        }}
+      />
+      <Bar
+        data={dataSet}
+        // @ts-ignore
+        options={options}
+        style={{ width: "100%", height: "100%" }}
+        redraw={true}
+      />
+    </Flex>
   );
 };
 
@@ -1053,11 +1043,15 @@ const ChartBarHorizon = ({
   title,
   data,
   labelText,
+  width,
+  height,
 }: {
   title?: string;
   data?: any[];
   labels?: any[];
   labelText?: string;
+  width?: any;
+  height?: any;
 }) => {
   ChartJS.register(
     CategoryScale,
@@ -1242,7 +1236,8 @@ const ChartBarHorizon = ({
       {
         label: "A",
         data: labels.map((date) => sample[date].A),
-        backgroundColor: "#CAF0FF",
+        // backgroundColor: "#CAF0FF",
+        backgroundColor: "#EFA180",
         borderRadius: {
           topLeft: 100,
           bottomLeft: 100,
@@ -1251,54 +1246,57 @@ const ChartBarHorizon = ({
           borderSkipped: false,
         },
       },
-      {
-        label: "B",
-        data: labels.map((date) => sample[date].B),
-        backgroundColor: "#D9EE86",
-        borderRadius: {
-          topLeft: 20,
-          bottomLeft: 20,
-          topRight: 0,
-          bottomRight: 0,
-        },
-      },
-      {
-        label: "C",
-        data: labels.map((date) => sample[date].C),
-        backgroundColor: "#EFA180",
-        borderRadius: {
-          topLeft: 20,
-          bottomLeft: 20,
-          topRight: 0,
-          bottomRight: 0,
-        },
-      },
-      {
-        label: "D",
-        data: labels.map((date) => sample[date].D),
-        backgroundColor: "#6C6C70",
-        borderRadius: {
-          topLeft: 20,
-          bottomLeft: 20,
-          topRight: 0,
-          bottomRight: 0,
-        },
-      },
+      // {
+      //   label: "B",
+      //   data: labels.map((date) => sample[date].B),
+      //   backgroundColor: "#D9EE86",
+      //   borderRadius: {
+      //     topLeft: 20,
+      //     bottomLeft: 20,
+      //     topRight: 0,
+      //     bottomRight: 0,
+      //   },
+      // },
+      // {
+      //   label: "C",
+      //   data: labels.map((date) => sample[date].C),
+      //   backgroundColor: "#EFA180",
+      //   borderRadius: {
+      //     topLeft: 20,
+      //     bottomLeft: 20,
+      //     topRight: 0,
+      //     bottomRight: 0,
+      //   },
+      // },
+      // {
+      //   label: "D",
+      //   data: labels.map((date) => sample[date].D),
+      //   backgroundColor: "#6C6C70",
+      //   borderRadius: {
+      //     topLeft: 20,
+      //     bottomLeft: 20,
+      //     topRight: 0,
+      //     bottomRight: 0,
+      //   },
+      // },
     ],
   };
 
   return (
-    <Bar
-      data={dataSet}
-      options={options}
-      style={{ width: "100%", height: "100%" }}
-      redraw={true}
-    />
+    <Flex width={width || "100%"} height={height || "100%"}>
+      <Bar
+        data={dataSet}
+        // @ts-ignore
+        options={options}
+        style={{ width: "100%", height: "100%" }}
+        redraw={true}
+      />
+    </Flex>
   );
 };
 
-const LineChart = () => {
-  const theme = useTheme();
+const LineChart = ({ width, height }: { width?: any; height?: any }) => {
+  const [gradient, setGradient] = useState(null);
 
   ChartJS.register(
     CategoryScale,
@@ -1311,6 +1309,17 @@ const LineChart = () => {
     Legend,
     ...registerables
   );
+
+  useEffect(() => {
+    // @ts-ignore
+    const ctx = document.getElementById("saleDay").getContext("2d");
+    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, "#ebff05b3");
+    gradient.addColorStop(1, "#ebff0500");
+
+    setGradient(gradient);
+  }, []);
+
   const options = {
     responsive: true,
     maintainAspectRatio: false,
@@ -1325,22 +1334,17 @@ const LineChart = () => {
         color: "#26232380",
         font: {
           family: "Roboto",
-          size: 12,
+          size: 14,
           fontWeight: 700,
         },
       },
     },
-    // scales: {
-    //   yAxes: [
-    //     {
-    //       ticks: {
-    //         min: 0,
-    //         stepSize: 1000000,
-    //         fontSize: 14,
-    //       },
-    //     },
-    //   ],
-    // },
+    elements: {
+      line: {
+        tension: 0.3,
+        capBezierPoints: false,
+      },
+    },
   };
   const labels = ["Mon", "Tue", "Thu", "Wed", "Fri", "Sat", "Sun"];
   const data = {
@@ -1350,22 +1354,203 @@ const LineChart = () => {
         label: "요일별",
         data: [5000000, 2000000, 560000, 5000000, 3000000, 5000000, 10000000],
         fill: true,
-        borderWidth: 1,
-        borderColor: "rgba(41, 45, 48, 0.8)",
-        backgroundColor: `${theme.colors.primary.type7}40`,
+        backgroundColor: gradient,
+        segment: {
+          borderWidth: 1,
+          borderColor: "#00000080",
+        },
+        pointStyle: "circle",
+        pointBorderWidth: 1,
+        pointRadius: 3,
+        pointhoverRadius: 6,
+        pointBackgroundColor: "#e4ff0080",
+        pointBorderColor: "#00000080",
       },
     ],
   };
 
   return (
-    <Flex w="100%" h="100%" justify="center">
-      <Flex p="0 0 1.2rem" w="100%" h="100%">
-        <Line
-          options={options}
-          data={data}
-          style={{ width: "100%", height: "100%" }}
-        />
-      </Flex>
+    <Flex w={width || "100%"} h={height || "100%"} justify="center">
+      <Line
+        id="saleDay"
+        options={options}
+        // @ts-ignore
+        data={data}
+        style={{ width: "100%", height: "100%" }}
+      />
+    </Flex>
+  );
+};
+
+const SampleRent = () => {
+  return (
+    <Flex
+      p="0 1rem"
+      w="80%"
+      gap="0.75rem"
+      alignItems="center"
+      direction="column"
+    >
+      <Image w="8vh" h="8vh" src={sampleImg} />
+      <List display="flex" flexDirection="column" w="100%" gap="0.375rem">
+        <ListItem
+          w="100%"
+          display="flex"
+          justifyContent={"space-between"}
+          alignItems="flex-start"
+          gap="0.5rem"
+        >
+          <Text
+            textStyle="base"
+            fontSize="xs"
+            fontWeight="strong"
+            color="font.title"
+            flex="none"
+          >
+            준공기간
+          </Text>
+          <Text
+            textStyle="base"
+            fontSize="xs"
+            fontWeight="regular"
+            color="font.primary"
+            textAlign="right"
+            whiteSpace="break-spaces"
+          >
+            89.11.03 ~ 94.10.25
+          </Text>
+        </ListItem>
+        <ListItem
+          w="100%"
+          display="flex"
+          justifyContent={"space-between"}
+          alignItems="flex-start"
+          gap="0.5rem"
+        >
+          <Text
+            textStyle="base"
+            fontSize="xs"
+            fontWeight="strong"
+            color="font.title"
+          >
+            대장종류
+          </Text>
+          <Text
+            textStyle="base"
+            fontSize="xs"
+            fontWeight="regular"
+            color="font.primary"
+            textAlign="right"
+            whiteSpace="break-spaces"
+          >
+            건축물대장
+          </Text>
+        </ListItem>
+        <ListItem
+          w="100%"
+          display="flex"
+          justifyContent={"space-between"}
+          alignItems="flex-start"
+          gap="0.5rem"
+        >
+          <Text
+            textStyle="base"
+            fontSize="xs"
+            fontWeight="strong"
+            color="font.title"
+          >
+            지붕
+          </Text>
+          <Text
+            textStyle="base"
+            fontSize="xs"
+            fontWeight="regular"
+            color="font.primary"
+            textAlign="right"
+            whiteSpace="break-spaces"
+          >
+            시멘트
+          </Text>
+        </ListItem>
+        <ListItem
+          w="100%"
+          display="flex"
+          justifyContent={"space-between"}
+          alignItems="flex-start"
+          gap="0.5rem"
+        >
+          <Text
+            textStyle="base"
+            fontSize="xs"
+            fontWeight="strong"
+            color="font.title"
+          >
+            용도
+          </Text>
+          <Text
+            textStyle="base"
+            fontSize="xs"
+            fontWeight="regular"
+            color="font.primary"
+            textAlign="right"
+            whiteSpace="break-spaces"
+          >
+            근린생활시설
+          </Text>
+        </ListItem>
+        <ListItem
+          w="100%"
+          display="flex"
+          justifyContent={"space-between"}
+          alignItems="flex-start"
+          gap="0.5rem"
+        >
+          <Text
+            textStyle="base"
+            fontSize="xs"
+            fontWeight="strong"
+            color="font.title"
+          >
+            구조
+          </Text>
+          <Text
+            textStyle="base"
+            fontSize="xs"
+            fontWeight="regular"
+            color="font.primary"
+            textAlign="right"
+            whiteSpace="break-spaces"
+          >
+            철근콘크리트
+          </Text>
+        </ListItem>
+        <ListItem
+          w="100%"
+          display="flex"
+          justifyContent={"space-between"}
+          alignItems="flex-start"
+          gap="0.5rem"
+        >
+          <Text
+            textStyle="base"
+            fontSize="xs"
+            fontWeight="strong"
+            color="font.title"
+          >
+            연면적
+          </Text>
+          <Text
+            textStyle="base"
+            fontSize="xs"
+            fontWeight="regular"
+            color="font.primary"
+            textAlign="right"
+            whiteSpace="break-spaces"
+          >
+            429.77 m
+          </Text>
+        </ListItem>
+      </List>
     </Flex>
   );
 };

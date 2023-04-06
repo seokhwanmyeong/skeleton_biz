@@ -42,6 +42,7 @@ type PropsTable = {
   children?: any;
   flowHeight?: boolean;
   height?: any;
+  tdH?: any;
 };
 
 const Table = ({
@@ -63,6 +64,7 @@ const Table = ({
   children,
   flowHeight = true,
   height,
+  tdH,
 }: PropsTable) => {
   const pagenation = useMemo(() => {
     return usePagination({
@@ -217,6 +219,9 @@ const Table = ({
                       ? (getHeaderGroups().at(-1)?.headers.length || 0) + 1
                       : getHeaderGroups().at(-1)?.headers.length) || 1
                   }
+                  sx={{
+                    border: "none!important",
+                  }}
                 >
                   <NoContent
                     {...emptyData}
@@ -241,7 +246,12 @@ const Table = ({
                   )}
                   {row.getVisibleCells().map((cell) => (
                     <Td key={cell.id}>
-                      <Flex minH="2.5rem" justify="center" align="center">
+                      <Flex
+                        h={tdH || "auto"}
+                        minH={tdH || "2.5rem"}
+                        justify="center"
+                        align="center"
+                      >
                         {flexRender(cell.column.columnDef.cell, {
                           ...cell.getContext(),
                         })}

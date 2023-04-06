@@ -20,14 +20,14 @@ type ListProps = {
 const DashboardLi = ({ cate, textKey, subKey, data, onClick }: ListProps) => {
   return (
     <List>
-      {data.map((li: any, idx) => {
+      {data.slice(0, 3).map((li: any, idx) => {
         return (
           <ListItem
             key={`${cate}-${idx}`}
             display="flex"
             flexDirection="row"
             mb="0.25rem"
-            p="0.25rem 1rem"
+            p="0.5rem 1rem"
             w="100%"
             justifyContent="space-between"
             bgColor="#FFFFFF"
@@ -48,8 +48,15 @@ const DashboardLi = ({ cate, textKey, subKey, data, onClick }: ListProps) => {
             }}
             onClick={() => onClick(li)}
           >
-            <Text>{li[textKey]}</Text>
-            {subKey && <Text>{li[subKey]}</Text>}
+            <Text
+              textStyle="base"
+              fontSize="md"
+              fontWeight="medium"
+              color="inherit"
+            >
+              {li[textKey]}
+            </Text>
+            {subKey && <Text textStyle="base">{li[subKey]}</Text>}
           </ListItem>
         );
       })}

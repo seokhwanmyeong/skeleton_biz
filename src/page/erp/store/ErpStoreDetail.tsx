@@ -1,5 +1,5 @@
 //  LIB
-import { useEffect, useRef, useState, useMemo } from "react";
+import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Flex,
@@ -12,7 +12,6 @@ import {
   useTheme,
   Button,
   Heading,
-  Box,
 } from "@chakra-ui/react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import {
@@ -33,13 +32,19 @@ import Section from "@components/common/Section";
 import ErpHistory from "@page/erp/history/ErpHistory";
 import ErpDocs from "@page/erp/docs/ErpDocs";
 import FormStoreEditor from "@components/form/erp/FormStoreEditor";
-import { IcoBtnBack } from "@components/common/Btn";
+import { IcoBtnBack, IcoBtnNext, IcoBtnPrev } from "@components/common/Btn";
 import { Select } from "@components/common/Select";
 import Divider from "@components/common/Divider";
+import Table from "@components/table/Table";
 //  Hook
 import useLocationState from "@hook/useLocationState";
 //  Util
-import { columnStoreInfo } from "@components/table/column/erp";
+import {
+  columnStoreSaleMenu,
+  columnStoreSaleTime,
+  columnStoreSaleDay,
+  columnStoreSaleType,
+} from "@components/table/column/erp";
 //  Icon
 import {
   IcoBars,
@@ -49,7 +54,6 @@ import {
   IcoCloseCircle,
   IcoUpdate,
   IcoUpdateChk,
-  IcoHome,
 } from "@assets/icons/icon";
 //  Type
 import type { StoreInfo } from "@page/erp/store/ErpStoreCreate";
@@ -64,15 +68,25 @@ const ErpStoreDetail = ({
   side?: boolean;
 }) => {
   const navigate = useNavigate();
+  const sliderTitleRef = useRef(null);
+  const sliderRef = useRef(null);
   const { location } = useLocationState();
   const state = location.state;
-  const mapRef = useRef<any>();
   const [activeUpdate, setActiveUpdate] = useState(false);
   const [tabIdx, setTabIdx] = useState<number>(state?.tabIdx || 0);
+  const [sliderIdx, setSliderIdx] = useState(0);
   const [storeData, setStoreData] = useState<StoreInfo | undefined>(undefined);
+  const [storeSaleData, setStoreSaleData] = useState<any>(undefined);
+  const [storeSaleDuration, setStoreSaleDuraion] = useState<any>({
+    store: [],
+    brand: [],
+  });
   const submitRef = useRef<FormikValues>(null);
-  const column = useMemo(() => columnStoreInfo, []);
-  const [brand, setBrand] = useState(null);
+  const columnMenu = useMemo(() => columnStoreSaleMenu, []);
+  const columnTime = useMemo(() => columnStoreSaleTime, []);
+  const columnDay = useMemo(() => columnStoreSaleDay, []);
+  const columnType = useMemo(() => columnStoreSaleType, []);
+  const [brand, setBrand] = useState(undefined);
 
   const getStoreInfo = () => {
     console.log("click");
@@ -81,6 +95,18 @@ const ErpStoreDetail = ({
   const updateStoreInfo = (value: StoreInfo) => {
     console.log("update click");
   };
+
+  const handlePrev = useCallback(() => {
+    if (!sliderRef.current && !sliderTitleRef.current) return;
+    // @ts-ignore
+    sliderRef.current.swiper.slidePrev();
+  }, []);
+
+  const handleNext = useCallback(() => {
+    if (!sliderRef.current && !sliderTitleRef.current) return;
+    // @ts-ignore
+    sliderRef.current.swiper.slideNext();
+  }, []);
 
   useEffect(() => {
     // console.log(state);
@@ -107,10 +133,64 @@ const ErpStoreDetail = ({
         lat: 37.5666805,
         lng: 126.9784147,
       });
+
+      setStoreSaleData({
+        menu: [
+          { rank: 1, menu: "test1", amount: "1000000", ratio: "30.3" },
+          { rank: 2, menu: "test2", amount: "900000", ratio: "28" },
+          { rank: 3, menu: "test3", amount: "800000", ratio: "26.2" },
+        ],
+        time: [
+          { rank: 1, time: "17:00", amount: "1000000", ratio: "30" },
+          { rank: 2, time: "18:00", amount: "900000", ratio: "28.5" },
+          { rank: 3, time: "19:00", amount: "800000", ratio: "26" },
+        ],
+        day: [
+          { rank: 1, day: "토요일", amount: "1000000", ratio: "30.8" },
+          { rank: 2, day: "금요일", amount: "900000", ratio: "28.1" },
+          { rank: 3, day: "일요일", amount: "800000", ratio: "26" },
+        ],
+        type: [
+          { rank: 1, type: "배달", amount: "1000000", ratio: "30.3" },
+          { rank: 2, type: "포장", amount: "900000", ratio: "28.6" },
+          { rank: 3, type: "홀", amount: "800000", ratio: "26.7" },
+        ],
+      });
+
+      setStoreSaleDuraion({
+        store: [
+          1000000, 20000000, 30000000, 5000000, 3000000, 5000000, 10000000,
+          30000000, 2000000, 5000000, 3000000, 2000000,
+        ],
+        brand: [],
+      });
     } else {
       navigate("/erp/store");
     }
   }, []);
+
+  useEffect(() => {
+    if (brand !== null) {
+      setStoreSaleDuraion({
+        store: [
+          1000000, 20000000, 30000000, 5000000, 3000000, 5000000, 10000000,
+          30000000, 2000000, 5000000, 3000000, 2000000,
+        ],
+        brand: [
+          2000000, 80000000, 5000000, 5000000, 30000000, 8000000, 10000000,
+          30000000, 2000000, 5000000, 5000000, 2000000,
+        ],
+      });
+    } else {
+      setStoreSaleDuraion({
+        store: [
+          1000000, 20000000, 30000000, 5000000, 3000000, 5000000, 10000000,
+          30000000, 2000000, 5000000, 3000000, 2000000,
+        ],
+        brand: [],
+      });
+    }
+  }, [brand]);
 
   return (
     <Section p="1rem 0.75rem 3.75rem">
@@ -156,7 +236,13 @@ const ErpStoreDetail = ({
               <Text>문서보관함</Text>
             </Tab>
           </TabList>
-          <Flex pos="absolute" top="-0.5rem" right="0.75rem" gap="0.25rem">
+          <Flex
+            pos="absolute"
+            top="-0.5rem"
+            right="0.75rem"
+            gap="0.25rem"
+            justifyContent="space-between"
+          >
             {tabIdx === 0 && (
               <Button
                 variant="editor"
@@ -207,7 +293,7 @@ const ErpStoreDetail = ({
           </TabPanel>
           <TabPanel key="panel-upjong">
             {tabIdx === 1 && (
-              <>
+              <Flex w="100%" h="100%" direction="column">
                 <Flex
                   position="relative"
                   mb="1.5rem"
@@ -228,13 +314,13 @@ const ErpStoreDetail = ({
                         { text: "브랜드3", value: "3" },
                         { text: "브랜드4", value: "4" },
                       ]}
-                      // value={getFieldProps("clientStatus").value}
+                      value={brand}
                       opBaseTxt="text"
                       opBaseId="value"
                       opBaseKey="value"
                       onChange={(val: any) => {
                         if (val === "0") {
-                          setBrand(null);
+                          setBrand(undefined);
                         } else {
                           setBrand(val);
                         }
@@ -429,34 +515,281 @@ const ErpStoreDetail = ({
                     </Flex>
                   </Flex>
                 </Flex>
-                <LineChart />
-                <Swiper
-                  spaceBetween={50}
-                  slidesPerView={1}
-                  // onSlideChange={() => console.log("slide change")}
-                  // onSwiper={(swiper) => console.log(swiper)}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                  }}
-                >
-                  <SwiperSlide
+                <LineChart
+                  store={storeSaleDuration.store}
+                  brand={storeSaleDuration.brand}
+                />
+                <Flex direction="column" mt="1rem" pos="relative" flex="none">
+                  <Flex direction="column">
+                    <Flex justify="space-around">
+                      <Flex w="5rem" justify="center">
+                        <Flex
+                          position="relative"
+                          p="0 0.5rem"
+                          display="flex"
+                          w="fit-content"
+                          h="1.375rem"
+                          align="center"
+                          bgColor="primary.type2"
+                          border="1px solid"
+                          borderColor="primary.type4"
+                          fontFamily="main"
+                          fontSize="xs"
+                          lineHeight="1px"
+                          color="primary.type7"
+                        >
+                          매장
+                        </Flex>
+                      </Flex>
+                      <Flex w="12rem" justify="space-between" align="center">
+                        <IcoBtnPrev
+                          isDisabled={sliderIdx === 0}
+                          onClick={handlePrev}
+                        />
+                        <Swiper
+                          ref={sliderTitleRef}
+                          spaceBetween={0}
+                          slidesPerView={1}
+                          onSlideChange={(swiper) => {
+                            if (
+                              sliderRef.current &&
+                              swiper.activeIndex >
+                                // @ts-ignore
+                                sliderRef.current.swiper.activeIndex
+                            ) {
+                              // @ts-ignore
+                              sliderRef.current.swiper.slideNext();
+                            } else if (
+                              swiper.activeIndex <
+                              // @ts-ignore
+                              sliderRef.current.swiper.activeIndex
+                            ) {
+                              // @ts-ignore
+                              sliderRef.current.swiper.slidePrev();
+                            }
+                          }}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                          }}
+                        >
+                          <SwiperSlide
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <Text
+                              w="10rem"
+                              textStyle="base"
+                              fontWeight="strong"
+                              fontSize="md"
+                              textAlign="center"
+                            >
+                              인기 메뉴 TOP 3
+                            </Text>
+                          </SwiperSlide>
+                          <SwiperSlide
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <Text
+                              w="10rem"
+                              textStyle="base"
+                              fontWeight="strong"
+                              fontSize="md"
+                              textAlign="center"
+                            >
+                              인기 시간 TOP 3
+                            </Text>
+                          </SwiperSlide>
+                          <SwiperSlide
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <Text
+                              w="10rem"
+                              textStyle="base"
+                              fontWeight="strong"
+                              fontSize="md"
+                              textAlign="center"
+                            >
+                              인기 요일 TOP 3
+                            </Text>
+                          </SwiperSlide>
+                          <SwiperSlide
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <Text
+                              w="10rem"
+                              textStyle="base"
+                              fontWeight="strong"
+                              fontSize="md"
+                              textAlign="center"
+                            >
+                              인기 유형 TOP 3
+                            </Text>
+                          </SwiperSlide>
+                        </Swiper>
+                        <IcoBtnNext
+                          isDisabled={sliderIdx === 3}
+                          onClick={handleNext}
+                          style={{ top: "1px", transform: "rotate(180deg)" }}
+                        />
+                      </Flex>
+                      <Flex w="5rem" justify="center">
+                        <Flex
+                          position="relative"
+                          p="3 0.5rem"
+                          display="flex"
+                          w="fit-content"
+                          h="1.375rem"
+                          align="center"
+                          bgColor="secondary.second1.type1"
+                          border="1px solid"
+                          borderColor="secondary.second1.type3"
+                          fontFamily="main"
+                          fontSize="xs"
+                          lineHeight="1px"
+                          color="secondary.second1.type6"
+                        >
+                          브랜드
+                        </Flex>
+                      </Flex>
+                    </Flex>
+                    <Divider m="0.4375rem 0 0" />
+                  </Flex>
+                  <Swiper
+                    ref={sliderRef}
+                    spaceBetween={0}
+                    slidesPerView={1}
+                    onSlideChange={(swiper) => {
+                      if (
+                        sliderTitleRef.current &&
+                        swiper.activeIndex >
+                          // @ts-ignore
+                          sliderTitleRef.current.swiper.activeIndex
+                      ) {
+                        // @ts-ignore
+                        sliderTitleRef.current.swiper.slideNext();
+                      } else if (
+                        swiper.activeIndex <
+                        // @ts-ignore
+                        sliderTitleRef.current.swiper.activeIndex
+                      ) {
+                        // @ts-ignore
+                        sliderTitleRef.current.swiper.slidePrev();
+                      }
+
+                      setSliderIdx(swiper.activeIndex);
+                    }}
                     style={{
-                      padding: "1rem 0 3rem",
                       width: "100%",
                       height: "100%",
                     }}
                   >
-                    <Flex gap="1rem">
-                      <Sample />
-                      {brand && <Sample />}
-                    </Flex>
-                  </SwiperSlide>
-                  <SwiperSlide style={{ padding: "3rem", width: "100%" }}>
-                    test1
-                  </SwiperSlide>
-                </Swiper>
-              </>
+                    <SwiperSlide>
+                      <Flex gap="1rem">
+                        <Table
+                          data={storeSaleData.menu}
+                          actviePage={false}
+                          activeCheck={false}
+                          divide={3}
+                          columns={columnMenu}
+                          tdH="2rem"
+                        />
+                        {brand && (
+                          <Table
+                            data={storeSaleData.menu}
+                            actviePage={false}
+                            activeCheck={false}
+                            divide={3}
+                            columns={columnMenu}
+                            tdH="2rem"
+                          />
+                        )}
+                      </Flex>
+                    </SwiperSlide>
+                    <SwiperSlide>
+                      <Flex gap="1rem">
+                        <Table
+                          data={storeSaleData.time}
+                          actviePage={false}
+                          activeCheck={false}
+                          divide={3}
+                          columns={columnTime}
+                          tdH="2rem"
+                        />
+                        {brand && (
+                          <Table
+                            data={storeSaleData.time}
+                            actviePage={false}
+                            activeCheck={false}
+                            divide={3}
+                            columns={columnTime}
+                            tdH="2rem"
+                          />
+                        )}
+                      </Flex>
+                    </SwiperSlide>
+                    <SwiperSlide>
+                      <Flex gap="1rem">
+                        <Table
+                          data={storeSaleData.day}
+                          actviePage={false}
+                          activeCheck={false}
+                          divide={3}
+                          columns={columnDay}
+                          tdH="2rem"
+                        />
+                        {brand && (
+                          <Table
+                            data={storeSaleData.day}
+                            actviePage={false}
+                            activeCheck={false}
+                            divide={3}
+                            columns={columnDay}
+                            tdH="2rem"
+                          />
+                        )}
+                      </Flex>
+                    </SwiperSlide>
+                    <SwiperSlide>
+                      <Flex gap="1rem">
+                        <Table
+                          data={storeSaleData.type}
+                          actviePage={false}
+                          activeCheck={false}
+                          divide={3}
+                          columns={columnType}
+                          tdH="2rem"
+                        />
+                        {brand && (
+                          <Table
+                            data={storeSaleData.type}
+                            actviePage={false}
+                            activeCheck={false}
+                            divide={3}
+                            columns={columnType}
+                            tdH="2rem"
+                          />
+                        )}
+                      </Flex>
+                    </SwiperSlide>
+                  </Swiper>
+                </Flex>
+              </Flex>
             )}
           </TabPanel>
           <TabPanel key="panel-area" overflow={"visible"}>
@@ -473,8 +806,11 @@ const ErpStoreDetail = ({
   );
 };
 
-const LineChart = () => {
-  const theme = useTheme();
+const LineChart = ({ store, brand }: { store: any[]; brand: any[] }) => {
+  const [gradient, setGradient] = useState({
+    store: null,
+    brand: null,
+  });
   ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -485,6 +821,23 @@ const LineChart = () => {
     Tooltip,
     Legend
   );
+
+  useEffect(() => {
+    // @ts-ignore
+    const ctx = document.getElementById("saleChart").getContext("2d");
+    const gradient01 = ctx.createLinearGradient(0, 0, 0, 400);
+    gradient01.addColorStop(0, "#ebff05b3");
+    gradient01.addColorStop(1, "#ebff0500");
+
+    const gradient02 = ctx.createLinearGradient(0, 0, 0, 400);
+    gradient02.addColorStop(0, "#94f2ffb3");
+    gradient02.addColorStop(1, "#94f2ff00");
+    setGradient({
+      store: gradient01,
+      brand: gradient02,
+    });
+  }, []);
+
   const options = {
     responsive: true,
     maintainAspectRatio: false,
@@ -495,6 +848,12 @@ const LineChart = () => {
       title: {
         display: false,
         text: "월별추이",
+      },
+    },
+    elements: {
+      line: {
+        tension: 0.3,
+        capBezierPoints: false,
       },
     },
   };
@@ -516,123 +875,49 @@ const LineChart = () => {
     labels,
     datasets: [
       {
-        label: "매출증가추이",
-        data: [
-          1000000, 20000000, 30000000, 5000000, 3000000, 5000000, 10000000,
-          30000000, 2000000, 5000000, 3000000, 2000000,
-        ],
+        label: "매장 매출",
+        data: store,
         fill: true,
-        borderColor: "#D9D9D9",
-        backgroundColor: "#e4ff0080",
-        // "linear-gradient(178.56deg, rgba(235, 255, 5, 0.49) 10%, rgba(56, 59, 61, 0) 98.46%)",
+        backgroundColor: gradient.store,
+        segment: {
+          borderWidth: 1,
+          borderColor: "#00000080",
+        },
+        pointStyle: "circle",
+        pointBorderWidth: 1,
+        pointRadius: 3,
+        pointhoverRadius: 6,
+        pointBackgroundColor: "#e4ff0080",
+        pointBorderColor: "#00000080",
       },
       {
-        label: "매출증가추이",
-        data: [
-          2000000, 80000000, 5000000, 5000000, 30000000, 8000000, 10000000,
-          30000000, 2000000, 5000000, 5000000, 2000000,
-        ],
+        label: "브랜드 매출",
+        data: brand,
         fill: true,
-        borderColor: "#D9D9D9",
-        backgroundColor: "#0037ff80",
-        // "linear-gradient(178.56deg, rgba(235, 255, 5, 0.49) 10%, rgba(56, 59, 61, 0) 98.46%)",
+        backgroundColor: gradient.brand,
+        segment: {
+          borderWidth: 1,
+          borderColor: "#00000080",
+        },
+        pointStyle: "circle",
+        pointBorderWidth: 1,
+        pointRadius: 3,
+        pointhoverRadius: 6,
+        pointBackgroundColor: "#ffffff",
+        pointBorderColor: "#00000080",
       },
     ],
   };
 
   return (
-    <Flex w="100%" h="40%" justify="center">
+    <Flex w="100%" h="10vh" justify="center" flex={1}>
       <Line
+        id="saleChart"
         options={options}
+        // @ts-ignore
         data={data}
         style={{ width: "100%", height: "500px" }}
       />
-    </Flex>
-  );
-};
-
-const Sample = () => {
-  const initVal = [
-    { rank: 1, menu: "test1", sale: "1000000", ratio: "30%" },
-    { rank: 2, menu: "test2", sale: "900000", ratio: "28%" },
-    { rank: 3, menu: "test3", sale: "800000", ratio: "26%" },
-  ];
-  return (
-    <Flex pt="3rem" direction="column" w="100%" h="100%">
-      <Flex w="100%" mb="1rem">
-        <Text
-          w="25%"
-          textAlign="center"
-          fontWeight="strong"
-          fontSize="xs"
-          lineHeight="1.0625rem"
-        >
-          순위
-        </Text>
-        <Text
-          w="25%"
-          textAlign="center"
-          fontWeight="strong"
-          fontSize="xs"
-          lineHeight="1.0625rem"
-        >
-          메뉴
-        </Text>
-        <Text
-          w="25%"
-          textAlign="center"
-          fontWeight="strong"
-          fontSize="xs"
-          lineHeight="1.0625rem"
-        >
-          매출
-        </Text>
-        <Text
-          w="25%"
-          textAlign="center"
-          fontWeight="strong"
-          fontSize="xs"
-          lineHeight="1.0625rem"
-        >
-          비율
-        </Text>
-      </Flex>
-      <Flex h="100%" direction="column">
-        {initVal?.map((li: any, idx: number) => {
-          console.log(li);
-          return (
-            <Flex
-              mb="0.5rem"
-              h="2.5rem"
-              border="1px solid"
-              borderColor="#D8D8DC"
-              borderRadius="12px"
-              align="center"
-            >
-              <Flex w="25%" justify="center" fontWeight="regular" fontSize="xs">
-                <Flex fontWeight="regular" fontSize="xs">
-                  {li.rank}
-                </Flex>
-              </Flex>
-              <Flex w="25%" justify="center">
-                <Flex fontWeight="regular" fontSize="xs">
-                  {li.menu}
-                </Flex>
-              </Flex>
-              <Flex w="25%" justify="center">
-                <Flex fontWeight="regular" fontSize="xs">
-                  {li.sale}
-                </Flex>
-              </Flex>
-              <Flex w="25%" justify="center">
-                <Flex fontWeight="regular" fontSize="xs">
-                  {li.ratio}
-                </Flex>
-              </Flex>
-            </Flex>
-          );
-        })}
-      </Flex>
     </Flex>
   );
 };

@@ -684,6 +684,122 @@ const columnBrand = [
   }),
 ];
 
+const columnStoreSaleMenu = [
+  columnHelper.display({
+    header: "순위",
+    cell: (info) => info.row.index + 1,
+    enableResizing: false,
+    size: 60,
+  }),
+  columnHelper.accessor((row: any) => row["menu"], {
+    id: "menu",
+    header: "메뉴",
+    cell: (info) => info.getValue(),
+    size: 60,
+  }),
+  columnHelper.accessor((row: any) => row["amount"], {
+    id: "amount",
+    header: "매출",
+    cell: (info) => info.getValue(),
+    size: 60,
+  }),
+  columnHelper.accessor((row: any) => row["ratio"], {
+    id: "ratio",
+    header: "비율",
+    cell: (info) => {
+      return String(info.getValue()) + "%";
+    },
+    size: 60,
+  }),
+];
+
+const columnStoreSaleTime = [
+  columnHelper.display({
+    header: "순위",
+    cell: (info) => info.row.index + 1,
+    enableResizing: false,
+    size: 60,
+  }),
+  columnHelper.accessor((row: any) => row["time"], {
+    id: "time",
+    header: "시간대",
+    cell: (info) => info.getValue(),
+    size: 60,
+  }),
+  columnHelper.accessor((row: any) => row["amount"], {
+    id: "amount",
+    header: "매출",
+    cell: (info) => info.getValue(),
+    size: 60,
+  }),
+  columnHelper.accessor((row: any) => row["ratio"], {
+    id: "ratio",
+    header: "비율",
+    cell: (info) => {
+      return String(info.getValue()) + "%";
+    },
+    size: 60,
+  }),
+];
+
+const columnStoreSaleDay = [
+  columnHelper.display({
+    header: "순위",
+    cell: (info) => info.row.index + 1,
+    enableResizing: false,
+    size: 60,
+  }),
+  columnHelper.accessor((row: any) => row["day"], {
+    id: "day",
+    header: "요일",
+    cell: (info) => info.getValue(),
+    size: 60,
+  }),
+  columnHelper.accessor((row: any) => row["amount"], {
+    id: "amount",
+    header: "매출",
+    cell: (info) => info.getValue(),
+    size: 60,
+  }),
+  columnHelper.accessor((row: any) => row["ratio"], {
+    id: "ratio",
+    header: "비율",
+    cell: (info) => {
+      return String(info.getValue()) + "%";
+    },
+    size: 60,
+  }),
+];
+
+const columnStoreSaleType = [
+  columnHelper.display({
+    header: "순위",
+    cell: (info) => info.row.index + 1,
+    enableResizing: false,
+    size: 60,
+  }),
+  columnHelper.accessor((row: any) => row["type"], {
+    id: "type",
+    header: "유형",
+    cell: (info) => info.getValue(),
+    size: 60,
+  }),
+  columnHelper.accessor((row: any) => row["amount"], {
+    id: "amount",
+    header: "매출",
+    cell: (info) => info.getValue(),
+    size: 60,
+  }),
+  columnHelper.accessor((row: any) => row["ratio"], {
+    id: "ratio",
+    header: "비율",
+    cell: (info) => {
+      return String(info.getValue()) + "%";
+    },
+    size: 60,
+  }),
+];
+
 export {
   columnStoreInfo,
   columnSaleInfo,
@@ -695,4 +811,8 @@ export {
   columnNotice,
   columnRentNear,
   columnBrand,
+  columnStoreSaleMenu,
+  columnStoreSaleTime,
+  columnStoreSaleDay,
+  columnStoreSaleType,
 };

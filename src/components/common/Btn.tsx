@@ -22,6 +22,7 @@ type BtnProps = {
   isActive?: boolean;
   text?: string;
   style?: any;
+  rest?: string[];
 };
 
 interface BtnEditProps extends BtnProps {
@@ -326,6 +327,44 @@ const IcoBtnDetail = ({ onClick, isDisabled, ...rest }: BtnProps) => {
   );
 };
 
+const IcoBtnPrev = ({ onClick, isDisabled, ...rest }: BtnProps) => {
+  return (
+    <IconButton
+      onClick={onClick}
+      isDisabled={isDisabled}
+      aria-label="이전 슬라이드"
+      icon={<IcoArrowBack />}
+      w="1rem"
+      h="1rem"
+      bg="transparent"
+      color="font.main"
+      _hover={{
+        bg: "transparent",
+      }}
+      {...rest}
+    />
+  );
+};
+
+const IcoBtnNext = ({ onClick, isDisabled, ...rest }: BtnProps) => {
+  return (
+    <IconButton
+      onClick={onClick}
+      isDisabled={isDisabled}
+      aria-label="다음슬라이드"
+      icon={<IcoArrowBack />}
+      w="1rem"
+      h="1rem"
+      bg="transparent"
+      color="font.main"
+      _hover={{
+        bg: "transparent",
+      }}
+      {...rest}
+    />
+  );
+};
+
 export {
   Btn,
   BtnEditor,
@@ -340,4 +379,6 @@ export {
   IcoBtnBsns,
   IcoBtnBsnsFix,
   IcoBtnDetail,
+  IcoBtnPrev,
+  IcoBtnNext,
 };

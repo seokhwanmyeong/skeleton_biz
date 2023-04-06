@@ -350,8 +350,8 @@ const FormStoreEditor = forwardRef(
                                     } else {
                                       const marker = new naver.maps.Marker({
                                         position: {
-                                          lat: initVal.lat,
-                                          lng: initVal.lng,
+                                          lat: y,
+                                          lng: x,
                                         },
                                         map: mapRef.current,
                                       });

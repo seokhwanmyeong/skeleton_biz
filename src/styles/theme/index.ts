@@ -188,7 +188,7 @@ const createTheme = (name: string) => {
     breakpoints: {
       mobile: "320px",
       tablet: "768px",
-      pc: "1280px",
+      pc: "1260px",
     },
     components: {
       Accordion: accordionTheme,
