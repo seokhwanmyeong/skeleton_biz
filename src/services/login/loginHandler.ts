@@ -1,7 +1,7 @@
 //  LIB
 import { useNavigate } from "react-router-dom";
 //  API
-import { loginApi } from "@api/bizApi/config";
+import { loginApi } from "@src/api/biz/config";
 
 const loginHandler = (val: { username: string; password: string }) => {
   const navigator = useNavigate();

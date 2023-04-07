@@ -1328,20 +1328,6 @@
   dependencies:
     "@chakra-ui/shared-utils" "2.0.2"
 
-"@chakra-ui/icon@3.0.16":
-  "integrity" "sha512-RpA1X5Ptz8Mt39HSyEIW1wxAz2AXyf9H0JJ5HVx/dBdMZaGMDJ0HyyPBVci0m4RCoJuyG1HHG/DXJaVfUTVAeg=="
-  "resolved" "https://registry.npmjs.org/@chakra-ui/icon/-/icon-3.0.16.tgz"
-  "version" "3.0.16"
-  dependencies:
-    "@chakra-ui/shared-utils" "2.0.5"
-
-"@chakra-ui/icons@^2.0.17":
-  "integrity" "sha512-HMJP0WrJgAmFR9+Xh/CBH0nVnGMsJ4ZC8MK6tMgxPKd9/muvn0I4hsicHqdPlLpmB0TlxlhkBAKaVMtOdz6F0w=="
-  "resolved" "https://registry.npmjs.org/@chakra-ui/icons/-/icons-2.0.17.tgz"
-  "version" "2.0.17"
-  dependencies:
-    "@chakra-ui/icon" "3.0.16"
-
 "@chakra-ui/image@2.0.11":
   "integrity" "sha512-S6NqAprPcbHnck/J+2wg06r9SSol62v5A01O8Kke2PnAyjalMcS+6P59lDRO7wvPqsdxq4PPbSTZP6Dww2CvcA=="
   "resolved" "https://registry.npmjs.org/@chakra-ui/image/-/image-2.0.11.tgz"
@@ -1731,11 +1717,6 @@
   "integrity" "sha512-wC58Fh6wCnFFQyiebVZ0NI7PFW9+Vch0QE6qN7iR+bLseOzQY9miYuzPJ1kMYiFd6QTOmPJkI39M3wHqrPYiOg=="
   "resolved" "https://registry.npmjs.org/@chakra-ui/shared-utils/-/shared-utils-2.0.2.tgz"
   "version" "2.0.2"
-
-"@chakra-ui/shared-utils@2.0.5":
-  "integrity" "sha512-4/Wur0FqDov7Y0nCXl7HbHzCg4aq86h+SXdoUeuCMD3dSj7dpsVnStLYhng1vxvlbUnLpdF4oz5Myt3i/a7N3Q=="
-  "resolved" "https://registry.npmjs.org/@chakra-ui/shared-utils/-/shared-utils-2.0.5.tgz"
-  "version" "2.0.5"
 
 "@chakra-ui/skeleton@2.0.17":
   "integrity" "sha512-dL7viXEKDEzmAJGbHMj+QbGl9PAd0VWztEcWcz5wOGfmAcJllA0lVh6NmG/yqLb6iXPCX4Y1Y0Yurm459TEYWg=="
@@ -8218,11 +8199,6 @@
   "integrity" "sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg=="
   "resolved" "https://registry.npmjs.org/gensync/-/gensync-1.0.0-beta.2.tgz"
   "version" "1.0.0-beta.2"
-
-"geojson-polygon-center@^0.0.0":
-  "integrity" "sha512-O2rtRO9NalMv3nXEjGHZg6+taMkK5C5V2ZRh4f6flTof109/jZaGnZtXKlTCeIBK1qB0a+GqKSGwYoYQ9eOD2g=="
-  "resolved" "https://registry.npmjs.org/geojson-polygon-center/-/geojson-polygon-center-0.0.0.tgz"
-  "version" "0.0.0"
 
 "get-caller-file@^2.0.5":
   "integrity" "sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg=="

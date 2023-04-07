@@ -149,6 +149,7 @@ class Resizer {
           var image: HTMLElement = new Image();
 
           if (reader.result) {
+            // @ts-ignore
             image.src = reader.result;
             image.onload = function () {
               var resizedDataUrl = Resizer.resizeAndRotateImage(

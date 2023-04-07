@@ -2,30 +2,30 @@
 import { useRecoilValue } from "recoil";
 import { Flex } from "@chakra-ui/react";
 //  Components
-import FlowEnter from "@components/sementicMapLayer/sementicFilter/FlowEnter";
-import FlowSigungu from "@components/sementicMapLayer/sementicFilter/FlowSigungu";
-import FlowDong from "@components/sementicMapLayer/sementicFilter/FlowDong";
-import FlowCustom from "@components/sementicMapLayer/sementicFilter/FlowCustom";
-import FlowFind from "@components/sementicMapLayer/sementicFilter/FlowFind";
+import FlowEnter from "@src/components/sementicMapLayer/elementFilter/FlowEnter";
+import FlowSigungu from "@src/components/sementicMapLayer/elementFilter/FlowSigungu";
+import FlowDong from "@src/components/sementicMapLayer/elementFilter/FlowDong";
+import FlowCustom from "@src/components/sementicMapLayer/elementFilter/FlowCustom";
+import FlowFind from "@src/components/sementicMapLayer/elementFilter/FlowFind";
 //  States
-import { atomFilterFlow } from "@states/sementicMap/filterState";
+import { atomFilterFlow } from "@states/sementicMap/stateFilter";
 
 const SementicSearchEngine = () => {
   const flow = useRecoilValue(atomFilterFlow);
 
   return (
     <Flex pos="absolute" w="100%" h="100%">
-      {flow === 0 ? (
+      {flow === "init" ? null : flow === "enter" ? (
         <FlowEnter />
-      ) : flow === 1 ? (
+      ) : flow === "sigungu" ? (
         <FlowSigungu />
-      ) : flow === 2 ? (
+      ) : flow === "dong" ? (
         <FlowDong />
-      ) : flow === 3 ? (
+      ) : flow === "find" ? (
         <FlowFind />
-      ) : flow === 4 ? (
+      ) : flow === "custom" ? (
         <FlowCustom />
-      ) : null}
+      ) : flow === "erp" ? null : null}
     </Flex>
   );
 };

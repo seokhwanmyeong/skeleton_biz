@@ -22,9 +22,6 @@ import ErpBrand from "@page/erp/brand/ErpBrand";
 import ErpBrandCreate from "@page/erp/brand/ErpBrandCreate";
 import ErpSmart from "@page/erp/smart/ErpSmart";
 import ErpNotice from "@page/erp/notice/ErpNotice";
-
-// import ErpDetailSample from "@page/erp/ErpDetailSample";
-// import ErpBaseTable from "@page/erp/ErpBaseTable";
 //  Icon
 import {
   HeaderMenu01,
@@ -270,27 +267,6 @@ export const subRoute = atom<{
           return SubMenu09(color);
         },
       },
-      // {
-      //   title: "Sample Table",
-      //   hasChild: true,
-      //   path: "erp02",
-      //   isMenu: true,
-      //   children: [
-      //     {
-      //       title: "BaseTable",
-      //       path: "erpBaseTable",
-      //       page: ErpBaseTable,
-      //       isMenu: true,
-      //     },
-      //   ],
-      // },
-      // {
-      //   title: "상세정보 견본: Tab",
-      //   hasChild: false,
-      //   path: "erpSample",
-      //   page: ErpDetailSample,
-      //   isMenu: true,
-      // },
     ],
   },
 });

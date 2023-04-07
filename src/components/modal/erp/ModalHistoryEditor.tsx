@@ -4,19 +4,15 @@ import {
   Drawer,
   DrawerBody,
   DrawerFooter,
-  DrawerHeader,
   DrawerOverlay,
   DrawerContent,
-  DrawerCloseButton,
   Flex,
   Button,
   useDisclosure,
 } from "@chakra-ui/react";
 //  Components
-import Form from "@components/form/Form";
-import { IcoBtnClose, BtnEditor, IcoBtnUpdate } from "@components/common/Btn";
+import { BtnEditor } from "@components/common/Btn";
 //  Form
-import { formHistoryInfo } from "@page/erp/history/form";
 import FormHistoryEditor from "@components/form/erp/FormHistoryEditor";
 import { IcoCheckCircle, IcoCloseCircle } from "@src/assets/icons/icon";
 

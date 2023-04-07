@@ -5,16 +5,10 @@ import { Divider, Flex, Heading, Text } from "@chakra-ui/react";
 import Section from "@components/common/Section";
 import SearchClient from "@components/search/SearchClient";
 import Table from "@components/table/Table";
-import ModalRentEditor from "@components/modal/erp/ModalRentEditor";
-import {
-  IcoBtnDownload,
-  IcoBtnDelete,
-  BtnEditor,
-} from "@components/common/Btn";
+import { IcoBtnDelete, BtnEditor } from "@components/common/Btn";
 //  Form & Column
 import { columnClientInfo } from "@components/table/column/erp";
 //  Util & Data
-import { exportFileCSV } from "@util/file/manageFile";
 import { useNavigate } from "react-router-dom";
 
 const ErpClient = () => {

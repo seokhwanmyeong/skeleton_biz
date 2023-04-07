@@ -1,7 +1,7 @@
 //  LIB
 import axios from "axios";
 //  Type
-import { BixApiInstance } from "@api/bizApi/type";
+import { BixApiInstance } from "@src/api/biz/type";
 
 //  Daum Api Instance
 const instance: BixApiInstance = axios.create({

@@ -130,6 +130,19 @@ const ErpSale = () => {
           </Flex>
         </Flex>
       </Section>
+      <Flex p="0rem 1.65625rem 0.5rem" w="100%" justify="flex-end" gap="1.5rem">
+        <ModalSaleEditor />
+        <IcoBtnDownload
+          onClick={() =>
+            exportFileCSV(selectData, columnSaleInfo, "매출리스트")
+          }
+          isDisabled={selectData.length > 0 ? false : true}
+        />
+        <IcoBtnDelete
+          onClick={removeStoreHandler}
+          isDisabled={selectData.length > 0 ? false : true}
+        />
+      </Flex>
       <Table
         data={tableData}
         actviePage={true}
@@ -139,26 +152,7 @@ const ErpSale = () => {
         page={curPage}
         getSelectData={setSelectData}
         getPage={setCurPage}
-      >
-        <Flex
-          p="0rem 1.65625rem 0.5rem"
-          w="100%"
-          justify="flex-end"
-          gap="1.5rem"
-        >
-          <ModalSaleEditor />
-          <IcoBtnDownload
-            onClick={() =>
-              exportFileCSV(selectData, columnSaleInfo, "매출리스트")
-            }
-            isDisabled={selectData.length > 0 ? false : true}
-          />
-          <IcoBtnDelete
-            onClick={removeStoreHandler}
-            isDisabled={selectData.length > 0 ? false : true}
-          />
-        </Flex>
-      </Table>
+      />
     </Flex>
   );
 };

@@ -1,5 +1,5 @@
 //  Lib
-import { useEffect, useState, useRef, useContext, useMemo } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
 import { CubeContext } from "@cubejs-client/react";
 import {
   useRecoilState,
@@ -13,9 +13,7 @@ import {
   selectorSementicMapState,
   areaSelectActivator,
   atomMapController,
-  infoComFloatPop,
   infoComHousehold,
-  infoComUpjong,
   infoComUpjongCnt,
   infoComSale,
   infoComMyStore,
@@ -26,13 +24,10 @@ import {
 //  Services
 import { addrAreaApiHandler, dong } from "@services/address/sgisDepthAddr";
 //  Util
-import { addrHCode } from "@util/data/address";
-import { dongData } from "@util/data/dongData";
 import { BaseAreaContext } from "./filter/BaseAreaProvider";
 
 const SementicMapLagacy = () => {
   const slctArea = useRecoilValue(atomArea);
-  const mapFloatPop = useRecoilValue(infoComFloatPop);
   const mapHousehold = useRecoilValue(infoComHousehold);
   const mapUpjong = useRecoilValue(infoComUpjongCnt);
   const mapSale = useRecoilValue(infoComSale);
@@ -331,7 +326,7 @@ const SementicMapLagacy = () => {
           zIndex: 0,
         },
       });
-
+      // @ts-ignore
       drawingManager.addListener("polygonAdded", function (overlay: any) {
         // console.log(overlay);
         // console.log(overlay.id);
@@ -1256,48 +1251,7 @@ const SementicMapLagacy = () => {
   useEffect(() => {
     console.log(markerPop);
     markerPop.map((res) => res.setMap(mapRef.current));
-    console.log(mapFloatPop);
   }, [markerPop]);
-
-  // 인구 마커
-  useEffect(() => {
-    if (markerPop.length === 0) {
-      if (mapFloatPop.data) {
-        setMarkerPop(
-          centerMarkerCreator(
-            dongCenter,
-            mapFloatPop.data,
-            mapRef.current,
-            "유동인구",
-            [54, 36]
-          )
-        );
-      } else {
-        return;
-      }
-    } else {
-      if (mapFloatPop.data) {
-        if (mapFloatPop.active) {
-          console.log(mapFloatPop);
-          markerPop.map((marker: any) => marker.setMap(null));
-          setMarkerPop(
-            centerMarkerCreator(
-              dongCenter,
-              mapFloatPop.data,
-              mapRef.current,
-              "유동인구",
-              [54, 36]
-            )
-          );
-        } else {
-          markerPop.map((marker: any) => marker.setMap(null));
-        }
-      } else {
-        markerPop.map((marker: any) => marker.setMap(null));
-        setMarkerPop([]);
-      }
-    }
-  }, [mapFloatPop]);
 
   // 세대수 마커
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { erpStoreApi } from "@api/bizApi/config";
+import { erpStoreApi } from "@src/api/biz/config";
 
 type PropsTable = {
   reqBody: any;

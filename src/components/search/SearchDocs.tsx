@@ -1,11 +1,10 @@
 //  Lib
-import { Formik, Form, FormikProps } from "formik";
+import { Formik, Form } from "formik";
 import { Flex, FormControl, FormLabel, Text, Button } from "@chakra-ui/react";
 //  Component
-import { Select, SelectAddr } from "@components/common/Select";
-import { CheckboxGroup } from "@components/common/CheckBox";
+import { Input } from "@components/common/Input";
+//  Icon
 import { IcoSearch } from "@assets/icons/icon";
-import { Input, InputTotalDate } from "@components/common/Input";
 
 const SearchDocs = ({
   initVal,

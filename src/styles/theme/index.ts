@@ -1,26 +1,26 @@
 //  Lib
 import { extendTheme, type ThemeConfig } from "@chakra-ui/react";
 //  Default
-import resetTheme from "@styles/theme/reset";
+import themeReset from "@styles/theme/reset";
 //  color
 import { selectColorScheme } from "@styles/theme/colors";
 //  Component Theme
-import headingTheme from "@styles/theme/components/common/headingTheme";
-import inputTheme from "@styles/theme/components/common/inputTheme";
-import { btnTheme } from "@styles/theme/components/common/btnTheme";
-import tagTheme from "@styles/theme/components/common/tagTheme";
-import checkboxTheme from "@styles/theme/components/common/checkBoxTheme";
-import accordionTheme from "@styles/theme/components/menu/accordionTheme";
-import linkTheme from "@styles/theme/components/common/linkTheme";
-import selectTheme from "@styles/theme/components/common/selectTheme";
-import themeTable from "@styles/theme/components/table/tableTheme";
-import formTheme from "@styles/theme/components/form/formTheme";
-import switchTheme from "@styles/theme/components/common/switchTheme";
-import radioTheme from "@styles/theme/components/common/radioTheme";
-import textTheme from "@styles/theme/components/common/textTheme";
-import textAreaTheme from "@styles/theme/components/common/textAreaTheme";
-import drawerTheme from "@styles/theme/components/modal/drawerTheme";
-import tabsTheme from "@styles/theme/components/menu/tabsTheme";
+import themeHeading from "@styles/theme/components/common/themeHeading";
+import themeInput from "@styles/theme/components/common/themeInput";
+import themeBtn from "@styles/theme/components/common/themeBtn";
+import themeTag from "@styles/theme/components/common/themeTag";
+import themeCheckbox from "@styles/theme/components/common/themeCheckbox";
+import themeAccordion from "@styles/theme/components/menu/themeAccordion";
+import themeLink from "@styles/theme/components/common/themeLink";
+import themeSelect from "@styles/theme/components/common/themeSelect";
+import themeTable from "@styles/theme/components/table/themeTable";
+import themeForm from "@styles/theme/components/form/themeForm";
+import themeSwitch from "@styles/theme/components/common/themeSwitch";
+import themeRadio from "@styles/theme/components/common/themeRadio";
+import themeText from "@styles/theme/components/common/themeText";
+import themeTextArea from "@styles/theme/components/common/themeTextArea";
+import themeDrawer from "@styles/theme/components/modal/themeDrawer";
+import themeTabs from "@styles/theme/components/menu/themeTabs";
 
 const createTheme = (name: string) => {
   const config: ThemeConfig = {
@@ -30,7 +30,7 @@ const createTheme = (name: string) => {
   const theme = extendTheme({
     config,
     styles: {
-      global: resetTheme,
+      global: themeReset,
     },
     colors: selectColorScheme(name),
     size: {
@@ -191,22 +191,22 @@ const createTheme = (name: string) => {
       pc: "1260px",
     },
     components: {
-      Accordion: accordionTheme,
-      Checkbox: checkboxTheme,
-      Radio: radioTheme,
-      Select: selectTheme,
-      Heading: headingTheme,
-      Link: linkTheme,
-      Form: formTheme,
+      Accordion: themeAccordion,
+      Checkbox: themeCheckbox,
+      Radio: themeRadio,
+      Select: themeSelect,
+      Heading: themeHeading,
+      Link: themeLink,
+      Form: themeForm,
       Table: themeTable,
-      Button: btnTheme,
-      Input: inputTheme,
-      Tag: tagTheme,
-      Switch: switchTheme,
-      Drawer: drawerTheme,
-      TextArea: textAreaTheme,
-      Tabs: tabsTheme,
-      Text: textTheme,
+      Button: themeBtn,
+      Input: themeInput,
+      Tag: themeTag,
+      Switch: themeSwitch,
+      Drawer: themeDrawer,
+      TextArea: themeTextArea,
+      Tabs: themeTabs,
+      Text: themeText,
     },
   });
 

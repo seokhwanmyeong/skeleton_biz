@@ -2,7 +2,7 @@
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Flex, useColorMode } from "@chakra-ui/react";
 //  State
-import { atomThemeColor } from "@states/theme/themeState";
+import { atomThemeColor } from "@states/theme/stateTheme";
 //  Components
 import { ThemeSwitch } from "@components/common/Switch";
 

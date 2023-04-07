@@ -1,5 +1,5 @@
 //  LIB
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { FormikValues } from "formik";
 import { useNavigate } from "react-router-dom";
 import {
@@ -16,10 +16,9 @@ import {
 //  Component
 import FormClientEditor from "@components/form/erp/FormClientEditor";
 import Section from "@components/common/Section";
-import ModalStoreUpload from "@components/modal/erp/ModalStoreUpload";
 import { IcoBtnBack } from "@components/common/Btn";
 //  Api & Query
-import { IcoAppStore, IcoPlusSquare } from "@src/assets/icons/icon";
+import { IcoAppStore, IcoPlusSquare } from "@assets/icons/icon";
 
 type ClientInfo = {
   clientName: string;

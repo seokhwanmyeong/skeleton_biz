@@ -5,7 +5,6 @@ import { Divider, Flex, Heading, Text } from "@chakra-ui/react";
 import Section from "@components/common/Section";
 import SearchRent from "@components/search/SearchRent";
 import Table from "@components/table/Table";
-import ModalRentEditor from "@components/modal/erp/ModalRentEditor";
 import {
   IcoBtnDownload,
   IcoBtnDelete,
@@ -71,6 +70,23 @@ const ErpRent = () => {
         <Divider m="0.5rem 0 1rem" color="font.title" />
         <SearchRent initVal={initVal} setValues={setTableData} />
       </Section>
+      <Flex p="0rem 1.65625rem 0.5rem" w="100%" justify="flex-end" gap="1.5rem">
+        <BtnEditor
+          onClick={() => {
+            navigate("/erp/rent/create");
+          }}
+        />
+        <IcoBtnDownload
+          onClick={() =>
+            exportFileCSV(selectData, columnRentInfo, "매물리스트")
+          }
+          isDisabled={selectData.length > 0 ? false : true}
+        />
+        <IcoBtnDelete
+          onClick={removeStoreHandler}
+          isDisabled={selectData.length > 0 ? false : true}
+        />
+      </Flex>
       <Table
         data={tableData}
         actviePage={true}
@@ -80,31 +96,7 @@ const ErpRent = () => {
         page={curPage}
         getSelectData={setSelectData}
         getPage={setCurPage}
-      >
-        <Flex
-          p="0rem 1.65625rem 0.5rem"
-          w="100%"
-          justify="flex-end"
-          gap="1.5rem"
-        >
-          <ModalRentEditor update={false} />
-          <BtnEditor
-            onClick={() => {
-              navigate("/erp/rent/create");
-            }}
-          />
-          <IcoBtnDownload
-            onClick={() =>
-              exportFileCSV(selectData, columnRentInfo, "매물리스트")
-            }
-            isDisabled={selectData.length > 0 ? false : true}
-          />
-          <IcoBtnDelete
-            onClick={removeStoreHandler}
-            isDisabled={selectData.length > 0 ? false : true}
-          />
-        </Flex>
-      </Table>
+      />
     </Flex>
   );
 };

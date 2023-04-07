@@ -3,10 +3,11 @@ import { useEffect, useState } from "react";
 import { Flex, Heading, Link, Text, Spinner } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 //  Components
-import FormLogin from "@components/form/FormLogin";
+import FormLogin from "@components/form/login/FormLogin";
 //  Services
-import { loginApi } from "@api/bizApi/config";
-import { IcoLogoMain } from "@src/assets/icons/icon";
+import { loginApi } from "@src/api/biz/config";
+//  Icon
+import { IcoLogoMain } from "@assets/icons/icon";
 
 const Login = () => {
   const navigator = useNavigate();

@@ -8,7 +8,7 @@ import RouterOutlet from "@router/RouterOutlet";
 //  Style
 import { createTheme } from "@styles/theme/index";
 //  State
-import { atomThemeColor } from "@states/theme/themeState";
+import { atomThemeColor } from "@states/theme/stateTheme";
 import { NaverMapProvider } from "@src/lib/src";
 
 const App = () => {

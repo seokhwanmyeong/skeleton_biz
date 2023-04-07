@@ -5,7 +5,6 @@ import { Divider, Flex, Heading, Text } from "@chakra-ui/react";
 import Section from "@components/common/Section";
 import SearchHistory from "@src/components/search/SearchHistory";
 import Table from "@components/table/Table";
-import ModalStoreEditor from "@components/modal/erp/ModalStoreEditor";
 import { IcoBtnDownload, IcoBtnDelete } from "@components/common/Btn";
 //  Form & Column
 import { columnNotice } from "@components/table/column/erp";
@@ -52,6 +51,12 @@ const ErpNotice = () => {
         <Divider m="0.5rem 0 1rem" color="font.title" />
         <SearchHistory initVal={initVal} setValues={setTableData} />
       </Section>
+      <Flex p="0rem 1.65625rem 0.5rem" w="100%" justify="flex-end" gap="1.5rem">
+        <IcoBtnDelete
+          onClick={removeStoreHandler}
+          isDisabled={selectData.length > 0 ? false : true}
+        />
+      </Flex>
       <Table
         data={tableData.slice(
           Math.floor(curPage / 10),
@@ -63,20 +68,7 @@ const ErpNotice = () => {
         totalPage={totalPage}
         page={curPage}
         getPage={setCurPage}
-      >
-        <Flex
-          p="0rem 1.65625rem 0.5rem"
-          w="100%"
-          justify="flex-end"
-          gap="1.5rem"
-        >
-          <ModalStoreEditor update={false} />
-          <IcoBtnDelete
-            onClick={removeStoreHandler}
-            isDisabled={selectData.length > 0 ? false : true}
-          />
-        </Flex>
-      </Table>
+      />
     </Flex>
   );
 };

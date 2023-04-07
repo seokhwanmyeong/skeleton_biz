@@ -1,4 +1,4 @@
-const resetTheme = {
+const themeReset = {
   html: {
     fontSize: "16px",
     fontFamily: "Roboto, sans-serif",
@@ -41,4 +41,4 @@ const resetTheme = {
   },
 };
 
-export default resetTheme;
+export default themeReset;

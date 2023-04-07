@@ -2,7 +2,6 @@
 import { useRef, useMemo, useState, useEffect } from "react";
 import {
   Flex,
-  Heading,
   Text,
   Tabs,
   TabList,
@@ -14,21 +13,19 @@ import {
 import { FormikValues } from "formik";
 import { useNavigate } from "react-router-dom";
 //  Components
+import ErpHistory from "@page/erp/history/ErpHistory";
 import Section from "@components/common/Section";
-import ErpHistory from "../history/ErpHistory";
-import ListTable from "@components/table/ListTable";
-import ModalClientEditor from "@components/modal/erp/ModalClientEditor";
 import { IcoBtnBack, IcoBtnClose, IcoBtnUpdate } from "@components/common/Btn";
 import FormClientEditor from "@components/form/erp/FormClientEditor";
 //  Hook
 import useLocationState from "@hook/useLocationState";
 //  Api & URL
-import { erpStoreApi } from "@api/bizApi/config";
+import { erpStoreApi } from "@src/api/biz/config";
 //  Form & Column
 import { formSearchStore } from "@page/erp/store/form";
 import { mainTable } from "@page/erp/store/column";
 //  Icon
-import { IcoBars, IcoHistory } from "@src/assets/icons/icon";
+import { IcoBars, IcoHistory } from "@assets/icons/icon";
 
 type ClientInfo = {
   clientName: string;
@@ -56,21 +53,6 @@ const ErpClientDetail = () => {
     undefined
   );
   const submitRef = useRef<FormikValues>(null);
-  const testKeys = {
-    clientName: "고객명",
-    clientPhone: "고객연락처",
-    clientStatus: "고객상태",
-    clientPath: "유입경로",
-    age: "나이",
-    job: "직업",
-    resident: "거주지",
-    exp: true,
-    hopeArea: "희망지역",
-    startFund: "창업자금",
-    favorRent: "관심매물",
-    manager: "담당자명",
-    createdAt: "등록일",
-  };
   const { column, initReq, form } = useMemo(
     () => ({
       column: mainTable,

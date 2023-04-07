@@ -7,7 +7,7 @@ import ModalBrandStandEditor from "@components/modal/erp/ModalBrandStandEditor";
 //  Form & Column
 import { mainTable } from "@page/erp/brand/column";
 //  Api & URL
-import { erpSaleApi } from "@api/bizApi/config";
+import { erpSaleApi } from "@src/api/biz/config";
 import Table from "@src/components/table/Table";
 import { columnBrand } from "@src/components/table/column/erp";
 import { IcoBtnDelete, BtnEditor } from "@src/components/common/Btn";

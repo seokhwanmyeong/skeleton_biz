@@ -7,19 +7,19 @@ import {
   DrawerOverlay,
   DrawerContent,
   Button,
-  Modal,
-  ModalContent,
-  ModalBody,
-  useDisclosure,
 } from "@chakra-ui/react";
 //  Components
 import FormBsnsD from "@components/form/map/FormBsnsD";
 //  State
-import { atomCreateArea } from "@states/sementicMap/mapState";
+import { atomCreateArea } from "@src/states/sementicMap/stateMap";
 
-type Props = {};
+type Props = {
+  isOpen: boolean;
+  onOpen: (props?: any) => any;
+  onClose: (props?: any) => any;
+};
 
-const ModalBsnsDEditor = ({ isOpen, onOpen, onClose }: any) => {
+const ModalBsnsDEditor = ({ isOpen, onOpen, onClose }: Props) => {
   const { pathType, path, center } = useRecoilValue(atomCreateArea);
 
   const [initData, setInitData] = useState({

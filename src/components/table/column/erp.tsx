@@ -17,7 +17,6 @@ import {
 import FormHistoryEditor from "@components/form/erp/FormHistoryEditor";
 import {
   IcoBtnBsns,
-  IcoBtnClose,
   IcoBtnDownload,
   IcoBtnUpdate,
   IcoBtnDetail,
@@ -25,11 +24,8 @@ import {
 //  Util
 import { csvStoreSale } from "@util/data/fileCSV";
 import { exportFormCsv } from "@util/file/manageFile";
-import {
-  IcoCheckCircle,
-  IcoCloseCircle,
-  IcoUpdate,
-} from "@src/assets/icons/icon";
+//  Icon
+import { IcoCheckCircle, IcoCloseCircle, IcoUpdate } from "@assets/icons/icon";
 
 const columnHelper = createColumnHelper();
 
@@ -140,13 +136,6 @@ const columnSaleInfo = [
     enableResizing: false,
     size: 100,
   }),
-  // columnHelper.accessor((row: any) => row["Sales.avg"], {
-  //   id: "avg",
-  //   header: "평균매출",
-  //   cell: (info) => info.getValue(),
-  //   enableResizing: false,
-  //   size: 100,
-  // }),
   columnHelper.accessor((row: any) => row["avgM"], {
     id: "avgM",
     header: "평균월매출",

@@ -8,7 +8,7 @@ import ModalSaleEditor from "@components/modal/erp/ModalSaleEditor";
 import { formSearchSale } from "@page/erp/sale/form";
 import { mainTable } from "@page/erp/sale/column";
 //  Api & URL
-import { erpSaleApi } from "@api/bizApi/config";
+import { erpSaleApi } from "@src/api/biz/config";
 //  Util
 import { exportFileCSV } from "@util/file/manageFile";
 

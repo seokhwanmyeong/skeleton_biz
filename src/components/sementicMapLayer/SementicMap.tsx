@@ -1,46 +1,41 @@
 //  Lib
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { NaverMapContext } from "@src/lib/src";
-import { Box } from "@chakra-ui/react";
 import Map from "@src/lib/src/components/Map";
+import { Box } from "@chakra-ui/react";
 //  Components
-import MapFlowEnter from "@components/sementicMapLayer/mapElement/MapFlowEnter";
-import MapFlowSigungu from "@components/sementicMapLayer/mapElement/MapFlowSigungu";
-import MapFlowDong from "@components/sementicMapLayer/mapElement/MapFlowDong";
-import MapFlowCustom from "@components/sementicMapLayer/mapElement/MapFlowCustom";
-import MapFlowFind from "@components/sementicMapLayer/mapElement/MapFlowFind";
-//  Atom
+import MapFlowEnter from "@components/sementicMapLayer/elementMap/MapFlowEnter";
+import MapFlowSigungu from "@components/sementicMapLayer/elementMap/MapFlowSigungu";
+import MapFlowDong from "@components/sementicMapLayer/elementMap/MapFlowDong";
+import MapFlowCustom from "@components/sementicMapLayer/elementMap/MapFlowCustom";
+import MapFlowFind from "@components/sementicMapLayer/elementMap/MapFlowFind";
+import DecoFilterBg from "@components/sementicMapLayer/elementDeco/DecoFilterBg";
+//  AtomZ
 import { useRecoilValue } from "recoil";
-import { atomCurrentMapOption } from "@states/sementicMap/mapState";
-import { atomFilterFlow } from "@states/sementicMap/filterState";
+import { atomCurrentMapOption } from "@states/sementicMap/stateMap";
+import { atomFilterFlow } from "@states/sementicMap/stateFilter";
+import MapFlowInit from "./elementMap/MapFlowInit";
 
 type Props = {};
 
 const SementicMap = (props: Props) => {
-  const { state, dispatch } = useContext(NaverMapContext);
-  const [mapOption, setMapOption] = useState<any>({
-    zoom: {
-      minZoom: 8,
-      maxZoom: 8,
-    },
-    center: {
-      lat: 35.9223291,
-      lng: 127.9101228,
-    },
-  });
-  const currentOption = useRecoilValue(atomCurrentMapOption);
-
   const flow = useRecoilValue(atomFilterFlow);
 
   return (
     <Box position="relative" w="100vw" h="100%">
+      <DecoFilterBg position={{ top: 0, left: 0, right: 0 }} />
+      <DecoFilterBg position={{ bottom: 0, left: 0, right: 0 }} />
       <Map
         ncpClientId="ypiwp561ux"
         className="map"
         opts={{
-          center: mapOption.center,
-          minZoom: mapOption.zoom.minZoom,
-          maxZoom: mapOption.zoom.maxZoom,
+          center: {
+            lat: 35.9223291,
+            lng: 127.9101228,
+          },
+          zoom: 8,
+          minZoom: 0,
+          maxZoom: 16,
         }}
         style={{
           position: "relative",
@@ -48,32 +43,19 @@ const SementicMap = (props: Props) => {
           height: "inherit",
         }}
       >
-        {/* <Flex
-          pos="absolute"
-          top="0"
-          left="0"
-          w="100vw"
-          h="5rem"
-          bg="linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, #ffffff 50%, rgba(255, 255, 255, 0) 100%)"
-          zIndex="1"
-        ></Flex>
-        <Flex
-          pos="absolute"
-          bottom="0"
-          w="100vw"
-          h="5rem"
-          bg="linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, #ffffff 50%, rgba(255, 255, 255, 0) 100%)"
-          zIndex="1"
-        ></Flex> */}
-        {flow === 0 ? (
+        {flow === "init" ? (
+          <MapFlowInit />
+        ) : flow === "enter" ? (
           <MapFlowEnter />
-        ) : flow === 1 ? (
+        ) : flow === "sigungu" ? (
           <MapFlowSigungu />
-        ) : flow === 2 ? (
+        ) : flow === "dong" ? (
           <MapFlowDong />
-        ) : flow === 3 ? (
+        ) : flow === "find" ? (
           <MapFlowFind />
-        ) : flow === 4 ? (
+        ) : flow === "custom" ? (
+          <MapFlowCustom />
+        ) : flow === "erp" ? (
           <MapFlowCustom />
         ) : null}
       </Map>

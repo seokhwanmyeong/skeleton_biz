@@ -3,7 +3,6 @@ import { useState } from "react";
 import {
   Drawer,
   DrawerBody,
-  DrawerOverlay,
   DrawerContent,
   Button,
   Modal,
@@ -11,16 +10,17 @@ import {
   ModalBody,
   useDisclosure,
 } from "@chakra-ui/react";
-//  Components
-import Form from "@components/form/Form";
-import { IcoBtnClose, BtnEditor, IcoBtnUpdate } from "@components/common/Btn";
-//  Form
-import FormRentEditor from "@src/components/form/map/FormRentEditor";
 import DaumPostcodeEmbed from "react-daum-postcode";
+//  Components
+import FormRentEditor from "@components/form/map/FormRentEditor";
 
-type Props = {};
+type Props = {
+  isOpen: boolean;
+  onOpen: (props?: any) => any;
+  onClose: (props?: any) => any;
+};
 
-const ModalRentEditor = ({ isOpen, onOpen, onClose }: any) => {
+const ModalRentEditor = ({ isOpen, onOpen, onClose }: Props) => {
   const [addr, setAddr] = useState({
     address: "",
     point: {

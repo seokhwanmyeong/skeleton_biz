@@ -4,13 +4,12 @@ import { Flex, Heading, Button } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 //  Components
 import ApiTable from "@components/table/ApiTable";
-import ModalStoreEditor from "@components/modal/erp/ModalStoreEditor";
 import Search from "@components/search/Search";
 //  Form & Column
 import { formSearchStore } from "@page/erp/store/form";
 import { mainTable } from "@page/erp/store/column";
 //  Api & URL
-import { erpStoreApi } from "@api/bizApi/config";
+import { erpStoreApi } from "@src/api/biz/config";
 //  Util & Data
 import { exportFileCSV } from "@util/file/manageFile";
 
@@ -44,7 +43,6 @@ const ErpBranch = () => {
 
     return (
       <Flex gap={2}>
-        <ModalStoreEditor update={false} />
         <Button
           onClick={exportFileHandler}
           isDisabled={selectData.length > 0 ? false : true}

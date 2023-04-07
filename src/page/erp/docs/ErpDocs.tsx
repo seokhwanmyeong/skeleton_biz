@@ -7,9 +7,9 @@ import SearchDocs from "@components/search/SearchDocs";
 import Table from "@components/table/Table";
 //  Form & Column
 import { columnDocs } from "@components/table/column/erp";
-import { BtnDelete, IcoBtnDelete } from "@components/common/Btn";
-import ModalDoxs from "@src/components/modal/erp/ModalDoxs";
-import Divider from "@src/components/common/Divider";
+import { BtnDelete } from "@components/common/Btn";
+import ModalDoxs from "@components/modal/erp/ModalDoxs";
+import Divider from "@components/common/Divider";
 
 const ErpDocs = ({ id, title }: { id: string | number; title?: string }) => {
   const navigate = useNavigate();

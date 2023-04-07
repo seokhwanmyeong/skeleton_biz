@@ -5,7 +5,6 @@ import { Divider, Flex, Heading } from "@chakra-ui/react";
 import Section from "@components/common/Section";
 import SearchStore from "@components/search/SearchStore";
 import Table from "@components/table/Table";
-import ModalStoreEditor from "@components/modal/erp/ModalStoreEditor";
 import { IcoBtnDownload, IcoBtnDelete } from "@components/common/Btn";
 //  Form & Column
 import { columnStoreInfo } from "@components/table/column/erp";
@@ -81,7 +80,6 @@ const ErpSmart = () => {
           justify="flex-end"
           gap="1.5rem"
         >
-          <ModalStoreEditor update={false} />
           <IcoBtnDelete
             onClick={removeStoreHandler}
             isDisabled={selectData.length > 0 ? false : true}
