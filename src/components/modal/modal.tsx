@@ -51,7 +51,7 @@ const Modal = ({
           {children}
         </ModalBody>
         <ModalFooter>
-          <Button variant="cancel" mr={3} onClick={onClose}>
+          <Button mr={3} onClick={onClose}>
             {cancelText}
           </Button>
           {botBtnComponent}

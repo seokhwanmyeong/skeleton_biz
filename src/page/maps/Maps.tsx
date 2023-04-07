@@ -7,19 +7,10 @@ import SementicViewer from "@components/sementicMapLayer/SementicViewer";
 
 const Maps = () => {
   return (
-    <Flex w="inherit" h="100%" flexDirection="column">
-      <Flex
-        flex="1"
-        flexDirection="row"
-        position="relative"
-        w="inherit"
-        h="100%"
-        overflow="hidden"
-      >
-        <SementicViewer />
-        <SementicSearchEngine />
-        <SementicMap />
-      </Flex>
+    <Flex w="inherit" h="100%" position="relative" overflow="hidden">
+      <SementicViewer />
+      <SementicSearchEngine />
+      <SementicMap />
     </Flex>
   );
 };

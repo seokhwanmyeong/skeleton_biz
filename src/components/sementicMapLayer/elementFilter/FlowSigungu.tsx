@@ -4,22 +4,19 @@ import { Box, Button, Flex, Text, useDisclosure } from "@chakra-ui/react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { NaverMapContext } from "@src/lib/src";
 //  Component
-import UpjongListBox from "@src/components/sementicMapLayer/elementFilter/UpjongListBox";
-import NiceFilter from "@src/components/sementicMapLayer/elementFilter/NiceFilter";
-import ErpFilter from "@src/components/sementicMapLayer/elementFilter/ErpFilter";
-import BtnReset from "@src/components/sementicMapLayer/elementFilter/BtnReset";
-import BtnFlowCustom from "@src/components/sementicMapLayer/elementFilter/BtnFlowCustom";
-import BtnBack from "@src/components/sementicMapLayer/elementFilter/BtnBack";
-import DecoTop from "@src/components/sementicMapLayer/elementFilter/DecoTop";
-import DrawTools from "@src/components/sementicMapLayer/elementFilter/DrawTools";
+import UpjongListBox from "@components/sementicMapLayer/elementFilter/UpjongListBox";
+import NiceFilter from "@components/sementicMapLayer/elementFilter/NiceFilter";
+import ErpFilter from "@components/sementicMapLayer/elementFilter/ErpFilter";
+import BtnReset from "@components/sementicMapLayer/elementFilter/BtnReset";
+import BtnFlowCustom from "@components/sementicMapLayer/elementFilter/BtnFlowCustom";
+import BtnBack from "@components/sementicMapLayer/elementFilter/BtnBack";
+import DrawTools from "@components/sementicMapLayer/elementFilter/DrawTools";
+import DecoTop from "@components/sementicMapLayer/elementDeco/DecoTop";
 //  State
-import { atomFilterFlow } from "@src/states/sementicMap/stateFilter";
-import {
-  atomFlowEnterArea,
-  atomDongLi,
-} from "@src/states/sementicMap/stateMap";
+import { atomFilterFlow } from "@states/sementicMap/stateFilter";
+import { atomFlowEnterArea, atomDongLi } from "@states/sementicMap/stateMap";
 //  Icon
-import { IcoBarChart, IcoErp, IcoFilter } from "@src/assets/icons/icon";
+import { IcoBarChart, IcoErp, IcoFilter } from "@assets/icons/icon";
 //  Sample
 import dongListData from "@util/data/area/dong.json";
 
@@ -127,7 +124,7 @@ const FlowSigungu = (props: Props) => {
                       slctPath: [],
                     },
                   });
-                  setFlow(0);
+                  setFlow("enter");
                 }}
               />
               <Button

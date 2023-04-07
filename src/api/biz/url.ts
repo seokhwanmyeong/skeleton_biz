@@ -3,6 +3,7 @@ export const BIZ_LOGIN = "/auth/login";
 
 //  MAP_ERP_STORE
 export const ERP_STORE_GET_POINT = "/v1/Franchise_Branch";
+export const ERP_BSDIS_GET_TEST = "/v1/Franchise_Unsoldshop/";
 
 //  MAP_ERP_RENT
 export const ERP_RENT_GET_POINT = "/v1/Franchise_Branch";

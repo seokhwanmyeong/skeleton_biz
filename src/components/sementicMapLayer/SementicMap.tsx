@@ -1,6 +1,6 @@
 //  Lib
 import { useContext, useState, useEffect } from "react";
-import { NaverMapContext } from "@src/lib/src";
+import { useRecoilValue } from "recoil";
 import Map from "@src/lib/src/components/Map";
 import { Box } from "@chakra-ui/react";
 //  Components
@@ -9,12 +9,11 @@ import MapFlowSigungu from "@components/sementicMapLayer/elementMap/MapFlowSigun
 import MapFlowDong from "@components/sementicMapLayer/elementMap/MapFlowDong";
 import MapFlowCustom from "@components/sementicMapLayer/elementMap/MapFlowCustom";
 import MapFlowFind from "@components/sementicMapLayer/elementMap/MapFlowFind";
+import MapFlowInit from "@components/sementicMapLayer/elementMap/MapFlowInit";
+import MapFlowErp from "@components/sementicMapLayer/elementMap/MapFlowErp";
 import DecoFilterBg from "@components/sementicMapLayer/elementDeco/DecoFilterBg";
-//  AtomZ
-import { useRecoilValue } from "recoil";
-import { atomCurrentMapOption } from "@states/sementicMap/stateMap";
+//  State
 import { atomFilterFlow } from "@states/sementicMap/stateFilter";
-import MapFlowInit from "./elementMap/MapFlowInit";
 
 type Props = {};
 
@@ -23,7 +22,9 @@ const SementicMap = (props: Props) => {
 
   return (
     <Box position="relative" w="100vw" h="100%">
-      <DecoFilterBg position={{ top: 0, left: 0, right: 0 }} />
+      {flow !== "init" && flow !== "find" && (
+        <DecoFilterBg position={{ top: 0, left: 0, right: 0 }} />
+      )}
       <DecoFilterBg position={{ bottom: 0, left: 0, right: 0 }} />
       <Map
         ncpClientId="ypiwp561ux"
@@ -56,7 +57,7 @@ const SementicMap = (props: Props) => {
         ) : flow === "custom" ? (
           <MapFlowCustom />
         ) : flow === "erp" ? (
-          <MapFlowCustom />
+          <MapFlowErp />
         ) : null}
       </Map>
     </Box>

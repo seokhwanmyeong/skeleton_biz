@@ -4,7 +4,7 @@ import { NaverMapShape } from "@src/lib/src/common/types";
 import CustomControl from "@src/lib/src/components/Control/CustomControl";
 import { IconButton, ButtonGroup, Button, Flex, Text } from "@chakra-ui/react";
 import PolyIcon from "../assets/polygon.svg";
-import { IcoReset } from "@src/assets/icons/icon";
+import { IcoAim } from "@src/assets/icons/icon";
 
 interface ToggleButtonProps {
   active: boolean;
@@ -37,7 +37,7 @@ function ToggleButton(props: ToggleButtonProps) {
       aria-label="Call Segun"
       size="lg"
       style={{ margin: 0 }}
-      icon={<IcoReset />}
+      icon={<IcoAim />}
       onClick={onClick}
       _focus={{ boxShadow: "none" }}
       {...(active ? activeStyle : inactiveStyle)}

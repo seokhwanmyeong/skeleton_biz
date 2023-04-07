@@ -32,13 +32,13 @@ const BtnReset = ({ activeReset = true, onClick }: Props) => {
           resetNiceFilter();
           resetNiceDepthFilter();
           resetErpFilter();
-          setFlow(0);
+          setFlow("init");
         }
         onClick && onClick();
       }}
     >
       <Box>
-        <IcoReset />
+        <IcoReset width="1.125rem" height="1.125rem" />
       </Box>
       전체 초기화
     </Button>

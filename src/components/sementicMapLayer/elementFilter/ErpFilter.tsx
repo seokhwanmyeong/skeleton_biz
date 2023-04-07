@@ -37,14 +37,17 @@ import {
   infoComErpRent,
   resetErp,
 } from "@src/states/sementicMap/stateFilter";
+//  Api
+import { apiErpMap } from "@api/biz/config";
 
-type Props = {
+type ErpFilterProps = {
   toolOpen: any;
   areaCode?: string;
   path?: any;
 };
 
-const ErpFilter = ({ toolOpen, areaCode, path }: Props) => {
+const ErpFilter = ({ toolOpen, areaCode, path }: ErpFilterProps) => {
+  const { getStoreList, getRentList, getBsDisList, test } = apiErpMap;
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [openIdx, setOpenIdx] = useState(0);
   const [modalIdx, setModalIdx] = useState(1);
@@ -55,6 +58,13 @@ const ErpFilter = ({ toolOpen, areaCode, path }: Props) => {
   const [erpRent, setErpRent] = useRecoilState(infoComErpRent);
   const resetRent = useResetRecoilState(infoComErpRent);
   const reset = useResetRecoilState(resetErp);
+
+  const testEvent = () => {
+    console.log("search");
+    test({ id: 54 }).then((res) => {
+      console.log(res);
+    });
+  };
 
   useEffect(() => {
     console.log(areaCode);
@@ -126,7 +136,14 @@ const ErpFilter = ({ toolOpen, areaCode, path }: Props) => {
       left="50%"
       zIndex={999}
       transform="translateX(-50%)"
-      gap="1.25rem"
+      p="0.5rem 0"
+      w="29.5rem"
+      justify="center"
+      gap="1.5rem"
+      bgColor="#FFFFFFBF"
+      border="1px solid"
+      borderColor="neutral.gray6"
+      borderRadius="34px"
     >
       {/* ============================== infoCom의 필터 버튼 ============================== */}
       <Button
@@ -219,14 +236,24 @@ const ErpFilter = ({ toolOpen, areaCode, path }: Props) => {
               </Heading>
               <IcoStore02 color="font.title" />
             </Flex>
-            <Switch
-              isChecked={erpStore.active}
-              onChange={() => {
-                setErpStore({ ...erpStore, active: !erpStore.active });
-              }}
-              variant="filterControl"
-              spacing="5rem"
-            />
+            <Flex>
+              <Switch
+                isChecked={erpStore.active}
+                onChange={() => {
+                  setErpStore({ ...erpStore, active: !erpStore.active });
+                }}
+                variant="filterControl"
+                spacing="5rem"
+              />
+              <Button
+                onClick={() => {
+                  testEvent();
+                }}
+                variant="search"
+              >
+                검색
+              </Button>
+            </Flex>
           </Flex>
           {/* ============================== 박스 데코 ============================== */}
           <Deco01 margin="0.3rem 0 0.5rem" width="100%" height="4px" />

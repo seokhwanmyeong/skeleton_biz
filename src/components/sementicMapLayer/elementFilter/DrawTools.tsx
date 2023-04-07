@@ -14,10 +14,10 @@ import {
 import DaumPostcodeEmbed from "react-daum-postcode";
 import { NaverMapContext } from "@src/lib/src";
 //  Components
-import DecoTop from "@src/components/sementicMapLayer/elementFilter/DecoTop";
+import DecoTop from "@components/sementicMapLayer/elementDeco/DecoTop";
 //  State
-import { atomFilterFlow } from "@src/states/sementicMap/stateFilter";
-import { atomCreateArea } from "@src/states/sementicMap/stateMap";
+import { atomFilterFlow } from "@states/sementicMap/stateFilter";
+import { atomCreateArea } from "@states/sementicMap/stateMap";
 //  Icons
 import { IcoAppStore } from "@assets/icons/icon";
 import markerIcon from "@assets/icons/marker.png";
@@ -221,9 +221,11 @@ const ToggleButtonGroup = ({ toolOpen }: any) => {
 
   const addrSlctHandler = (addr: any) => {
     const { address } = addr;
+    // @ts-ignore
     const geocoder = new kakao.maps.services.Geocoder();
 
     geocoder.addressSearch(address, (result: any, status: any) => {
+      // @ts-ignore
       if (status === kakao.maps.services.Status.OK) {
         const { x, y } = result[0];
         console.log(x, y);

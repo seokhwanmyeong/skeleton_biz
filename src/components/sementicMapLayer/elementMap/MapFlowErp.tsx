@@ -16,8 +16,18 @@ import { apiErpMap } from "@api/biz/config";
 
 type Props = {};
 
-const MapFlowInit = (props: Props) => {
+const MapFlowErp = (props: Props) => {
+  const { state, dispatch } = useContext(NaverMapContext);
+  const [{ sido, sigungu }, setSlctArea] = useRecoilState(atomFlowEnterArea);
+  const sidoLi = useRecoilValue(atomSidoLi);
+  const sigunguLi = useRecoilValue(atomSigunguLi);
+  const setFlow = useSetRecoilState(atomFilterFlow);
+
+  const { getStoreList, getRentList, getBsDisList } = apiErpMap;
+
+  useEffect(() => {}, []);
+
   return null;
 };
 
-export default MapFlowInit;
+export default MapFlowErp;

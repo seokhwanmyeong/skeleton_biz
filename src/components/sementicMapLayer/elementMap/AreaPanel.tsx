@@ -281,7 +281,7 @@ const AreaPanel = ({ localEvent, num, selectDong }: AreaPanelProps) => {
             다이얼로그
           </ModalBody>
           <ModalFooter>
-            <Button variant="cancel" mr={3} onClick={onClose}>
+            <Button mr={3} onClick={onClose}>
               취소
             </Button>
           </ModalFooter>

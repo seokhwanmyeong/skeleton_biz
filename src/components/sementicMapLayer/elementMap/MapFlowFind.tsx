@@ -15,10 +15,10 @@ import DaumPostcodeEmbed from "react-daum-postcode";
 import { NaverMapContext } from "@src/lib/src";
 import { NaverMapShape } from "@src/lib/src/common/types";
 //  Components
-import DecoTop from "@src/components/sementicMapLayer/elementFilter/DecoTop";
+import DecoTop from "@components/sementicMapLayer/elementDeco/DecoTop";
 //  State
-import { atomFilterFlow } from "@src/states/sementicMap/stateFilter";
-import { atomSlctCustom } from "@src/states/sementicMap/stateMap";
+import { atomFilterFlow } from "@states/sementicMap/stateFilter";
+import { atomSlctCustom } from "@states/sementicMap/stateMap";
 //  Icons
 import { IcoAppStore } from "@assets/icons/icon";
 import markerIcon from "@assets/icons/marker.png";
@@ -222,9 +222,11 @@ const ToggleButtonGroup = () => {
 
   const addrSlctHandler = (addr: any) => {
     const { address } = addr;
+    // @ts-ignore
     const geocoder = new kakao.maps.services.Geocoder();
 
     geocoder.addressSearch(address, (result: any, status: any) => {
+      // @ts-ignore
       if (status === kakao.maps.services.Status.OK) {
         const { x, y } = result[0];
         console.log(x, y);
@@ -424,6 +426,7 @@ const ToggleButtonGroup = () => {
               const path: any = poly?.getPath();
               const bounds: any = poly?.getBounds();
               const center: any = bounds?.getCenter();
+              // @ts-ignore
               const geocoder = new kakao.maps.services.Geocoder();
 
               if (!path || path.length - 1 <= 2) {
@@ -443,7 +446,7 @@ const ToggleButtonGroup = () => {
                     pathType: "bounds",
                   });
                   resetAllElement();
-                  setFlow(4);
+                  setFlow("custom");
                 }
               );
             } else if (activeIdx === 1) {
@@ -454,6 +457,7 @@ const ToggleButtonGroup = () => {
               const bounds: any = circleRef.current?.getBounds();
               const range = circleRef.current?.getRadius();
               const center: any = circleRef.current?.getCenter();
+              // @ts-ignore
               const geocoder = new kakao.maps.services.Geocoder();
 
               geocoder.coord2RegionCode(
@@ -468,7 +472,7 @@ const ToggleButtonGroup = () => {
                     pathType: "circle",
                   });
                   resetAllElement();
-                  setFlow(4);
+                  setFlow("custom");
                 }
               );
             } else if (activeIdx === 2) {
@@ -488,7 +492,7 @@ const ToggleButtonGroup = () => {
                 pathType: "circle",
               });
               resetAllElement();
-              setFlow(4);
+              setFlow("custom");
             }
           }}
         >

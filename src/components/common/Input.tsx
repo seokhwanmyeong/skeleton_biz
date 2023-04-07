@@ -796,9 +796,6 @@ const InputAddr = ({
         <IcoSearch w="0.875rem" h="0.875rem" />
         검색
       </Button>
-      {/* <Button variant="addrBtn" onClick={onOpen}>
-        {value}
-      </Button> */}
       <ChakraModal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent w="auto" maxW="auto">

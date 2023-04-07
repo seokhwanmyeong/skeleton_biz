@@ -4,21 +4,18 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { Box, Button, Flex, Text, useDisclosure } from "@chakra-ui/react";
 import { NaverMapContext } from "@src/lib/src";
 //  Component
-import UpjonListBox from "@src/components/sementicMapLayer/elementFilter/UpjongListBox";
-import NiceFilterDepth from "@src/components/sementicMapLayer/elementFilter/NiceFilterDepth";
-import ErpFilter from "@src/components/sementicMapLayer/elementFilter/ErpFilter";
-import BtnReset from "@src/components/sementicMapLayer/elementFilter/BtnReset";
-import BtnFlowCustom from "@src/components/sementicMapLayer/elementFilter/BtnFlowCustom";
-import BtnBack from "@src/components/sementicMapLayer/elementFilter/BtnBack";
-import DecoTop from "@src/components/sementicMapLayer/elementFilter/DecoTop";
-import DrawTools from "@src/components/sementicMapLayer/elementFilter/DrawTools";
+import UpjonListBox from "@components/sementicMapLayer/elementFilter/UpjongListBox";
+import NiceFilterDepth from "@components/sementicMapLayer/elementFilter/NiceFilterDepth";
+import ErpFilter from "@components/sementicMapLayer/elementFilter/ErpFilter";
+import BtnReset from "@components/sementicMapLayer/elementFilter/BtnReset";
+import BtnFlowCustom from "@components/sementicMapLayer/elementFilter/BtnFlowCustom";
+import BtnBack from "@components/sementicMapLayer/elementFilter/BtnBack";
+import DrawTools from "@components/sementicMapLayer/elementFilter/DrawTools";
+import DecoTop from "@components/sementicMapLayer/elementDeco/DecoTop";
 //  State
-import { atomFilterFlow } from "@src/states/sementicMap/stateFilter";
-import {
-  atomFlowEnterArea,
-  atomSlctDong,
-} from "@src/states/sementicMap/stateMap";
-import { sementicViewState } from "@src/states/sementicMap/stateView";
+import { atomFilterFlow } from "@states/sementicMap/stateFilter";
+import { atomFlowEnterArea, atomSlctDong } from "@states/sementicMap/stateMap";
+import { sementicViewState } from "@states/sementicMap/stateView";
 //  Icon
 import { IcoBarChart, IcoErp, IcoFilter } from "@assets/icons/icon";
 
@@ -62,7 +59,7 @@ const FlowDong = (props: Props) => {
                     maxZoom: 16,
                     scrollWheel: false,
                   });
-                  setFlow(1);
+                  setFlow("sigungu");
                 }}
               />
               <Button

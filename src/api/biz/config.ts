@@ -34,6 +34,7 @@ import {
   ERP_CLIENT_DELETE,
   ERP_CODE_CHECKER,
   ERP_LINK_GET,
+  ERP_BSDIS_GET_TEST,
 } from "@api/biz/url";
 
 const localStorage = window.localStorage;
@@ -74,7 +75,8 @@ const instance: BixApiInstance = axios.create({
   headers: {
     Accept: "*/*",
     "Content-Type": "application/json",
-    Authorization: jwtToken ? "Bearer " + jwtToken : "Bearer",
+    Authorization:
+      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJ1c2VybmFtZSI6ImFkbWluIiwicGFzc3dvcmQiOiJhZG1pbjEyMyJ9LCJpYXQiOjE2ODA4NjAxOTMsImV4cCI6MTY4MTcyNDE5M30.SrbSytFCMHxp37_-E-XaH3-CiW0NlYK-bjvMQ06CxKM",
   },
 });
 
@@ -138,9 +140,10 @@ const erpClientApi = {
 };
 
 const apiErpMap = {
-  getStoreList: (req: any) => instance.post(ERP_STORE_GET_POINT),
-  getRentList: (req: any) => instance.post(ERP_RENT_GET_POINT),
-  getBsDisList: (req: any) => instance.post(ERP_BSDIS_GET_AREA),
+  getStoreList: (req?: any) => instance.post(ERP_STORE_GET_POINT),
+  getRentList: (req?: any) => instance.post(ERP_RENT_GET_POINT),
+  getBsDisList: (req?: any) => instance.post(ERP_BSDIS_GET_AREA),
+  test: (req?: any) => instance.post(ERP_BSDIS_GET_TEST),
 };
 
 const apiCommon = {
