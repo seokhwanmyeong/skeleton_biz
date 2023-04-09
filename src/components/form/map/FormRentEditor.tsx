@@ -1,37 +1,18 @@
 //  Lib
-import { Formik, Form, FormikProps } from "formik";
-import {
-  Flex,
-  FormControl,
-  FormLabel,
-  Text,
-  Button,
-  Divider,
-  IconButton,
-  Box,
-  Heading,
-} from "@chakra-ui/react";
+import { forwardRef, useContext, useEffect } from "react";
+import { Formik, Form } from "formik";
+import { Flex, FormControl, FormLabel, Text, Heading } from "@chakra-ui/react";
+import { NaverMapContext } from "@src/lib/src";
 //  Component
 import { Select } from "@components/common/Select";
 import { Input, InputAddr } from "@components/common/Input";
-import { RadioBox } from "@components/common/RadioBox";
-import { IcoClose, IcoPlusSquare, IcoSearch } from "@assets/icons/icon";
-import { forwardRef, useEffect, useState } from "react";
-import { Deco01 } from "@src/assets/deco/DecoSvg";
 
-const storeStatusText: any = {
-  statusOpen: "입점",
-  statusClose: "폐점",
-  statusRest: "휴점",
-  statusReady: "대기",
-  statusEtc: "기타",
-};
-const storeRankText: any = {
-  rankA: "A타입",
-  rankB: "B타입",
-  rankC: "C타입",
-  rankD: "D타입",
-  rankE: "E타입",
+const rentTypeText: any = {
+  A: "A타입",
+  B: "B타입",
+  C: "C타입",
+  D: "D타입",
+  E: "E타입",
 };
 
 const FormRentEditor = forwardRef(
@@ -44,36 +25,25 @@ const FormRentEditor = forwardRef(
     },
     ref: any
   ) => {
+    const { state, dispatch } = useContext(NaverMapContext);
     const { initVal, update = false, fixMode = false, setValues } = props;
-    const [form, setForm] = useState(initVal);
 
-    console.log(form);
+    const addMarker = (marker: naver.maps.Marker) => {
+      dispatch({ type: "add_object", object: marker, id: "createErp" });
+    };
+
+    const removeMarker = () => {
+      dispatch({ type: "remove_object", id: "createErp" });
+    };
 
     useEffect(() => {
-      setForm(initVal);
-    }, [update]);
+      return removeMarker();
+    }, []);
 
     return (
-      <Flex h="100%" direction={"column"}>
-        <Flex p="0 0.5rem" align="center" gap="1rem">
-          <IcoPlusSquare
-            width="0.875rem"
-            height="0.875rem"
-            color="primary.type7"
-          />
-          <Heading
-            as={"h5"}
-            fontSize="sm"
-            lineHeight="normal"
-            color="font.title"
-            bg="none"
-          >
-            매물 등록
-          </Heading>
-        </Flex>
-        <Deco01 margin="0.25rem 0 1.3125rem" p="0" width="100%" height="auto" />
+      <Flex h="100%" direction="column">
         <Formik
-          key="storeEditor"
+          key="rentEditor"
           innerRef={ref}
           initialValues={initVal}
           enableReinitialize={true}
@@ -109,58 +79,6 @@ const FormRentEditor = forwardRef(
                   gap="1.875rem"
                 >
                   <Flex w="100%" align="center">
-                    <FormLabel
-                      display="flex"
-                      alignItems="flex-start"
-                      m="0"
-                      minW="4.4rem"
-                      w="30%"
-                      flex="none"
-                      fontSize="xs"
-                      fontWeight="strong"
-                    >
-                      매장명
-                    </FormLabel>
-                    {fixMode ? (
-                      <Input
-                        value={getFieldProps("storeName").value}
-                        inputProps={{ w: "100%" }}
-                        onChange={(val: any) => setFieldValue("storeName", val)}
-                        placeholder="매장명을 입력하세요."
-                      />
-                    ) : (
-                      <Heading as="h3" mb="2rem" variant="detailTitle">
-                        {initVal?.storeName}
-                      </Heading>
-                    )}
-                  </Flex>
-                  <Flex w="100%" align="center">
-                    <FormLabel
-                      display="flex"
-                      alignItems="flex-start"
-                      m="0"
-                      minW="4.4rem"
-                      w="30%"
-                      flex="none"
-                      fontSize="xs"
-                      fontWeight="strong"
-                    >
-                      매장코드
-                    </FormLabel>
-                    {fixMode ? (
-                      <Input
-                        value={getFieldProps("storeCode").value}
-                        inputProps={{ w: "100%" }}
-                        onChange={(val: any) => setFieldValue("storeCode", val)}
-                        placeholder="매장코드를 입력하세요."
-                      />
-                    ) : (
-                      <Text variant="detailSub">
-                        매장코드 : {initVal?.storeCode}
-                      </Text>
-                    )}
-                  </Flex>
-                  <Flex w="100%" align="center">
                     <FormControl display="flex" flexDirection="row">
                       <FormLabel
                         display="flex"
@@ -169,33 +87,25 @@ const FormRentEditor = forwardRef(
                         minW="4.4rem"
                         w="30%"
                         flex="none"
+                        textStyle="base"
                         fontSize="xs"
                         fontWeight="strong"
                       >
-                        매장상태
+                        매물명
                       </FormLabel>
-                      {!update || fixMode ? (
-                        <Select
-                          data={[
-                            { text: "입점", value: "statusOpen" },
-                            { text: "폐점", value: "statusClose" },
-                            { text: "휴점", value: "statusRest" },
-                            { text: "대기", value: "statusReady" },
-                            { text: "기타", value: "statusEtc" },
-                          ]}
-                          value={getFieldProps("storeStatus").value}
-                          opBaseTxt="text"
-                          opBaseId="value"
-                          opBaseKey="value"
+                      {fixMode ? (
+                        <Input
+                          value={getFieldProps("rentName").value}
+                          inputProps={{ w: "100%" }}
                           onChange={(val: any) =>
-                            setFieldValue("storeStatus", val)
+                            setFieldValue("rentName", val)
                           }
-                          selectProps={{
-                            width: "100%",
-                          }}
+                          placeholder="매물명을 입력하세요."
                         />
                       ) : (
-                        <Text>{storeStatusText[initVal?.storeStatus]}</Text>
+                        <Heading as="h3" mb="2rem" variant="detailTitle">
+                          {initVal?.rentName}
+                        </Heading>
                       )}
                     </FormControl>
                   </Flex>
@@ -208,10 +118,11 @@ const FormRentEditor = forwardRef(
                         minW="4.4rem"
                         w="30%"
                         flex="none"
+                        textStyle="base"
                         fontSize="xs"
                         fontWeight="strong"
                       >
-                        매장타입
+                        매물타입
                       </FormLabel>
                       {!update || fixMode ? (
                         <Select
@@ -222,16 +133,16 @@ const FormRentEditor = forwardRef(
                             { text: "D타입", value: "rankD" },
                             { text: "E타입", value: "rankE" },
                           ]}
-                          value={getFieldProps("storeRank").value}
+                          value={getFieldProps("rentType").value}
                           opBaseTxt="text"
                           opBaseId="value"
                           opBaseKey="value"
                           onChange={(val: any) =>
-                            setFieldValue("storeRank", val)
+                            setFieldValue("rentType", val)
                           }
                         />
                       ) : (
-                        <Text>{storeRankText[initVal?.storeRank]}</Text>
+                        <Text>{rentTypeText[initVal?.rentType]}</Text>
                       )}
                     </FormControl>
                   </Flex>
@@ -244,48 +155,25 @@ const FormRentEditor = forwardRef(
                         minW="4.4rem"
                         w="30%"
                         flex="none"
+                        textStyle="base"
                         fontSize="xs"
                         fontWeight="strong"
                       >
-                        매장연락처
+                        현업종----
                       </FormLabel>
-                      {!update || fixMode ? (
+                      {fixMode ? (
                         <Input
-                          value={getFieldProps("phone").value}
-                          inputProps={{ w: "100%" }}
-                          onChange={(val: any) => setFieldValue("phone", val)}
-                          placeholder="매장연락처를 입력하세요."
-                        />
-                      ) : (
-                        <Text>{initVal?.phone}</Text>
-                      )}
-                    </FormControl>
-                  </Flex>
-                  <Flex w="100%" align="center">
-                    <FormControl display="flex" flexDirection="row">
-                      <FormLabel
-                        display="flex"
-                        alignItems="flex-start"
-                        m="0"
-                        minW="4.4rem"
-                        w="30%"
-                        flex="none"
-                        fontSize="xs"
-                        fontWeight="strong"
-                      >
-                        사업자등록번호
-                      </FormLabel>
-                      {!update || fixMode ? (
-                        <Input
-                          value={getFieldProps("biz_number").value}
+                          value={getFieldProps("curUpjong").value}
                           inputProps={{ w: "100%" }}
                           onChange={(val: any) =>
-                            setFieldValue("biz_number", val)
+                            setFieldValue("curUpjong", val)
                           }
-                          placeholder="사업자 등록번호를 입력하세요."
+                          placeholder="현업종을 입력하세요."
                         />
                       ) : (
-                        <Text>{initVal?.biz_number}</Text>
+                        <Heading as="h3" mb="2rem" variant="detailTitle">
+                          {initVal?.curUpjong}
+                        </Heading>
                       )}
                     </FormControl>
                   </Flex>
@@ -298,22 +186,25 @@ const FormRentEditor = forwardRef(
                         minW="4.4rem"
                         w="30%"
                         flex="none"
+                        textStyle="base"
                         fontSize="xs"
                         fontWeight="strong"
                       >
-                        대표자
+                        현업종
                       </FormLabel>
-                      {!update || fixMode ? (
+                      {fixMode ? (
                         <Input
-                          value={getFieldProps("owner_name").value}
+                          value={getFieldProps("curUpjong").value}
                           inputProps={{ w: "100%" }}
                           onChange={(val: any) =>
-                            setFieldValue("owner_name", val)
+                            setFieldValue("curUpjong", val)
                           }
-                          placeholder="대표자 이름을 입력하세요."
+                          placeholder="현업종을 입력하세요."
                         />
                       ) : (
-                        <Text>{initVal?.owner_name}</Text>
+                        <Heading as="h3" mb="2rem" variant="detailTitle">
+                          {initVal?.curUpjong}
+                        </Heading>
                       )}
                     </FormControl>
                   </Flex>
@@ -326,22 +217,23 @@ const FormRentEditor = forwardRef(
                         minW="4.4rem"
                         w="30%"
                         flex="none"
+                        textStyle="base"
                         fontSize="xs"
                         fontWeight="strong"
                       >
-                        대표자 연락처
+                        실평수
                       </FormLabel>
-                      {!update || fixMode ? (
+                      {fixMode ? (
                         <Input
-                          value={getFieldProps("owner_phone").value}
+                          value={getFieldProps("size").value}
                           inputProps={{ w: "100%" }}
-                          onChange={(val: any) =>
-                            setFieldValue("owner_phone", val)
-                          }
-                          placeholder="대표자 연락처를 입력하세요."
+                          onChange={(val: any) => setFieldValue("size", val)}
+                          placeholder="평을 입력하세요."
                         />
                       ) : (
-                        <Text>{initVal?.owner_phone}</Text>
+                        <Heading as="h3" mb="2rem" variant="detailTitle">
+                          {initVal?.size}
+                        </Heading>
                       )}
                     </FormControl>
                   </Flex>
@@ -354,6 +246,160 @@ const FormRentEditor = forwardRef(
                         minW="4.4rem"
                         w="30%"
                         flex="none"
+                        textStyle="base"
+                        fontSize="xs"
+                        fontWeight="strong"
+                      >
+                        층수
+                      </FormLabel>
+                      {fixMode ? (
+                        <Input
+                          value={getFieldProps("floor").value}
+                          inputProps={{ w: "100%" }}
+                          onChange={(val: any) => setFieldValue("floor", val)}
+                          placeholder="층수를 입력하세요."
+                        />
+                      ) : (
+                        <Heading as="h3" mb="2rem" variant="detailTitle">
+                          {initVal?.floor}
+                        </Heading>
+                      )}
+                    </FormControl>
+                  </Flex>
+                  <Flex w="100%" align="center">
+                    <FormControl display="flex" flexDirection="row">
+                      <FormLabel
+                        display="flex"
+                        alignItems="flex-start"
+                        m="0"
+                        minW="4.4rem"
+                        w="30%"
+                        flex="none"
+                        textStyle="base"
+                        fontSize="xs"
+                        fontWeight="strong"
+                      >
+                        권리금
+                      </FormLabel>
+                      {fixMode ? (
+                        <Input
+                          value={getFieldProps("premiumFee").value}
+                          inputProps={{ w: "100%" }}
+                          onChange={(val: any) =>
+                            setFieldValue("premiumFee", val)
+                          }
+                          placeholder="권리금을 입력하세요."
+                        />
+                      ) : (
+                        <Heading as="h3" mb="2rem" variant="detailTitle">
+                          {initVal?.premiumFee}
+                        </Heading>
+                      )}
+                    </FormControl>
+                  </Flex>
+                  <Flex w="100%" align="center">
+                    <FormControl display="flex" flexDirection="row">
+                      <FormLabel
+                        display="flex"
+                        alignItems="flex-start"
+                        m="0"
+                        minW="4.4rem"
+                        w="30%"
+                        flex="none"
+                        textStyle="base"
+                        fontSize="xs"
+                        fontWeight="strong"
+                      >
+                        관리비
+                      </FormLabel>
+                      {fixMode ? (
+                        <Input
+                          value={getFieldProps("manageFee").value}
+                          inputProps={{ w: "100%" }}
+                          onChange={(val: any) =>
+                            setFieldValue("manageFee", val)
+                          }
+                          placeholder="관리비를 입력하세요."
+                        />
+                      ) : (
+                        <Heading as="h3" mb="2rem" variant="detailTitle">
+                          {initVal?.manageFee}
+                        </Heading>
+                      )}
+                    </FormControl>
+                  </Flex>
+                  <Flex w="100%" align="center">
+                    <FormControl display="flex" flexDirection="row">
+                      <FormLabel
+                        display="flex"
+                        alignItems="flex-start"
+                        m="0"
+                        minW="4.4rem"
+                        w="30%"
+                        flex="none"
+                        textStyle="base"
+                        fontSize="xs"
+                        fontWeight="strong"
+                      >
+                        임대료
+                      </FormLabel>
+                      {fixMode ? (
+                        <Input
+                          value={getFieldProps("rentalFee").value}
+                          inputProps={{ w: "100%" }}
+                          onChange={(val: any) =>
+                            setFieldValue("rentalFee", val)
+                          }
+                          placeholder="임대료를 입력하세요."
+                        />
+                      ) : (
+                        <Heading as="h3" mb="2rem" variant="detailTitle">
+                          {initVal?.rentalFee}
+                        </Heading>
+                      )}
+                    </FormControl>
+                  </Flex>
+                  <Flex w="100%" align="center">
+                    <FormControl display="flex" flexDirection="row">
+                      <FormLabel
+                        display="flex"
+                        alignItems="flex-start"
+                        m="0"
+                        minW="4.4rem"
+                        w="30%"
+                        flex="none"
+                        textStyle="base"
+                        fontSize="xs"
+                        fontWeight="strong"
+                      >
+                        보증금
+                      </FormLabel>
+                      {fixMode ? (
+                        <Input
+                          value={getFieldProps("depositFee").value}
+                          inputProps={{ w: "100%" }}
+                          onChange={(val: any) =>
+                            setFieldValue("depositFee", val)
+                          }
+                          placeholder="보증금을 입력하세요."
+                        />
+                      ) : (
+                        <Heading as="h3" mb="2rem" variant="detailTitle">
+                          {initVal?.depositFee}
+                        </Heading>
+                      )}
+                    </FormControl>
+                  </Flex>
+                  <Flex w="100%" align="center">
+                    <FormControl display="flex" flexDirection="row">
+                      <FormLabel
+                        display="flex"
+                        alignItems="flex-start"
+                        m="0"
+                        minW="4.4rem"
+                        w="30%"
+                        flex="none"
+                        textStyle="base"
                         fontSize="xs"
                         fontWeight="strong"
                       >
@@ -363,9 +409,47 @@ const FormRentEditor = forwardRef(
                         <Flex w="100%" direction="column" gap="0.5rem">
                           <InputAddr
                             fieldKey={"addr"}
+                            hasIcon={false}
+                            btnProps={{
+                              variant: "filterSearch",
+                              width: "4rem",
+                              lineHeight: "1",
+                            }}
                             value={getFieldProps("addr").value}
-                            onChange={(val: any) => setFieldValue("addr", val)}
-                            isDisabled={true}
+                            onChange={(val: any) => {
+                              const geocoder =
+                                // @ts-ignore
+                                new kakao.maps.services.Geocoder();
+
+                              geocoder.addressSearch(
+                                val,
+                                (result: any, status: any) => {
+                                  if (status === "OK") {
+                                    const { x, y } = result[0];
+                                    setFieldValue("addr", val);
+                                    setFieldValue("lat", y);
+                                    setFieldValue("lng", x);
+
+                                    addMarker(
+                                      new naver.maps.Marker({
+                                        map: state.map,
+                                        position: {
+                                          lat: y,
+                                          lng: x,
+                                        },
+                                      })
+                                    );
+
+                                    state.map?.setCenter({
+                                      lat: y,
+                                      lng: x,
+                                    });
+                                    state.map?.setZoom(13);
+                                  }
+                                }
+                              );
+                            }}
+                            isDisabled={false}
                           />
                           <Input
                             value={getFieldProps("addrDetail").value}
@@ -380,99 +464,6 @@ const FormRentEditor = forwardRef(
                           {initVal?.addr}
                           {initVal?.addrDetail}
                         </Text>
-                      )}
-                    </FormControl>
-                  </Flex>
-                  <Flex w="100%" align="center">
-                    <FormControl display="flex" flexDirection="row">
-                      <FormLabel
-                        display="flex"
-                        alignItems="flex-start"
-                        m="0"
-                        minW="4.4rem"
-                        w="30%"
-                        flex="none"
-                        fontSize="xs"
-                        fontWeight="strong"
-                      >
-                        연동상권
-                      </FormLabel>
-                      {!update || fixMode ? (
-                        <Flex position="relative" w="100%" direction="column">
-                          <Input
-                            inputProps={{
-                              w: "100%",
-                              zIndex: 2,
-                              background: "#ffffff",
-                              _focus: {
-                                background: "#ffffff",
-                              },
-                            }}
-                            onChange={(val: any) => console.log(val)}
-                            placeholder="상권을 검색하세요"
-                          />
-                          <Select
-                            data={[
-                              { text: "매장명", value: "storeName" },
-                              { text: "매장코드", value: "storeCode" },
-                              { text: "대표자", value: "ownerName" },
-                            ]}
-                            defalutValue="storeName"
-                            opBaseTxt="text"
-                            opBaseId="value"
-                            opBaseKey="value"
-                            onChange={(val: any) => setFieldValue("type", val)}
-                            selectProps={{
-                              position: "absolute",
-                              top: 0,
-                              left: 0,
-                              w: "100%",
-                              zIndex: 1,
-                            }}
-                          />
-                          {getFieldProps("linkBsns").value && (
-                            <Flex gap="0.5rem">
-                              {getFieldProps("linkBsns").value?.map(
-                                (link: any) => {
-                                  console.log(link);
-                                  return (
-                                    <Flex
-                                      position="relative"
-                                      p="1px 0.5rem 0"
-                                      display="flex"
-                                      align="center"
-                                      bgColor="primary.type2"
-                                      fontFamily="main"
-                                      fontSize="xs"
-                                      lineHeight="1.5rem"
-                                      color="primary.type7"
-                                    >
-                                      {link.name}
-                                      <IconButton
-                                        bgColor="inherit"
-                                        _hover={{
-                                          bgColor: "primary.type6",
-                                        }}
-                                        icon={
-                                          <IcoClose color='color="inherit"' />
-                                        }
-                                        aria-label="삭제버튼"
-                                      />
-                                    </Flex>
-                                  );
-                                }
-                              )}
-                            </Flex>
-                          )}
-                        </Flex>
-                      ) : (
-                        <Flex>
-                          {initVal?.linkBsns?.map((li: any) => (
-                            <Text key={li.code} mr="1rem">
-                              {li.name}
-                            </Text>
-                          ))}
-                        </Flex>
                       )}
                     </FormControl>
                   </Flex>

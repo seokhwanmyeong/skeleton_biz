@@ -1,37 +1,33 @@
 //  Lib
-import { Formik, Form, FormikProps } from "formik";
+import { forwardRef, useContext, useEffect } from "react";
+import { Formik, Form } from "formik";
 import {
   Flex,
   FormControl,
   FormLabel,
   Text,
-  Button,
-  Divider,
   IconButton,
-  Box,
   Heading,
 } from "@chakra-ui/react";
+import { NaverMapContext } from "@src/lib/src";
 //  Component
 import { Select } from "@components/common/Select";
 import { Input, InputAddr } from "@components/common/Input";
-import { RadioBox } from "@components/common/RadioBox";
-import { IcoClose, IcoPlusSquare, IcoSearch } from "@assets/icons/icon";
-import { forwardRef, useEffect, useState } from "react";
-import { Deco01 } from "@src/assets/deco/DecoSvg";
+import { IcoClose } from "@assets/icons/icon";
 
 const storeStatusText: any = {
-  statusOpen: "입점",
-  statusClose: "폐점",
-  statusRest: "휴점",
-  statusReady: "대기",
-  statusEtc: "기타",
+  open: "입점",
+  close: "폐점",
+  rest: "휴점",
+  ready: "대기",
+  etc: "기타",
 };
-const storeRankText: any = {
-  rankA: "A타입",
-  rankB: "B타입",
-  rankC: "C타입",
-  rankD: "D타입",
-  rankE: "E타입",
+const storeTypeText: any = {
+  A: "A타입",
+  B: "B타입",
+  C: "C타입",
+  D: "D타입",
+  E: "E타입",
 };
 
 const FormStoreEditor = forwardRef(
@@ -44,34 +40,23 @@ const FormStoreEditor = forwardRef(
     },
     ref: any
   ) => {
+    const { state, dispatch } = useContext(NaverMapContext);
     const { initVal, update = false, fixMode = false, setValues } = props;
-    const [form, setForm] = useState(initVal);
 
-    console.log(form);
+    const addMarker = (marker: naver.maps.Marker) => {
+      dispatch({ type: "add_object", object: marker, id: "createErp" });
+    };
+
+    const removeMarker = () => {
+      dispatch({ type: "remove_object", id: "createErp" });
+    };
 
     useEffect(() => {
-      setForm(initVal);
-    }, [update]);
+      return removeMarker();
+    }, []);
 
     return (
-      <Flex h="100%" direction={"column"}>
-        <Flex p="0 0.5rem" align="center" gap="1rem">
-          <IcoPlusSquare
-            width="0.875rem"
-            height="0.875rem"
-            color="primary.type7"
-          />
-          <Heading
-            as={"h5"}
-            fontSize="sm"
-            lineHeight="normal"
-            color="font.title"
-            bg="none"
-          >
-            매장 등록
-          </Heading>
-        </Flex>
-        <Deco01 margin="0.25rem 0 1.3125rem" p="0" width="100%" height="auto" />
+      <Flex h="100%" direction="column">
         <Formik
           key="storeEditor"
           innerRef={ref}
@@ -116,6 +101,7 @@ const FormStoreEditor = forwardRef(
                       minW="4.4rem"
                       w="30%"
                       flex="none"
+                      textStyle="base"
                       fontSize="xs"
                       fontWeight="strong"
                     >
@@ -142,6 +128,7 @@ const FormStoreEditor = forwardRef(
                       minW="4.4rem"
                       w="30%"
                       flex="none"
+                      textStyle="base"
                       fontSize="xs"
                       fontWeight="strong"
                     >
@@ -169,6 +156,7 @@ const FormStoreEditor = forwardRef(
                         minW="4.4rem"
                         w="30%"
                         flex="none"
+                        textStyle="base"
                         fontSize="xs"
                         fontWeight="strong"
                       >
@@ -177,11 +165,11 @@ const FormStoreEditor = forwardRef(
                       {!update || fixMode ? (
                         <Select
                           data={[
-                            { text: "입점", value: "statusOpen" },
-                            { text: "폐점", value: "statusClose" },
-                            { text: "휴점", value: "statusRest" },
-                            { text: "대기", value: "statusReady" },
-                            { text: "기타", value: "statusEtc" },
+                            { text: "입점", value: "open" },
+                            { text: "폐점", value: "close" },
+                            { text: "휴점", value: "rest" },
+                            { text: "대기", value: "ready" },
+                            { text: "기타", value: "etc" },
                           ]}
                           value={getFieldProps("storeStatus").value}
                           opBaseTxt="text"
@@ -208,6 +196,7 @@ const FormStoreEditor = forwardRef(
                         minW="4.4rem"
                         w="30%"
                         flex="none"
+                        textStyle="base"
                         fontSize="xs"
                         fontWeight="strong"
                       >
@@ -216,22 +205,22 @@ const FormStoreEditor = forwardRef(
                       {!update || fixMode ? (
                         <Select
                           data={[
-                            { text: "A타입", value: "rankA" },
-                            { text: "B타입", value: "rankB" },
-                            { text: "C타입", value: "rankC" },
-                            { text: "D타입", value: "rankD" },
-                            { text: "E타입", value: "rankE" },
+                            { text: "A타입", value: "A" },
+                            { text: "B타입", value: "B" },
+                            { text: "C타입", value: "C" },
+                            { text: "D타입", value: "D" },
+                            { text: "E타입", value: "E" },
                           ]}
-                          value={getFieldProps("storeRank").value}
+                          value={getFieldProps("storeType").value}
                           opBaseTxt="text"
                           opBaseId="value"
                           opBaseKey="value"
                           onChange={(val: any) =>
-                            setFieldValue("storeRank", val)
+                            setFieldValue("storeType", val)
                           }
                         />
                       ) : (
-                        <Text>{storeRankText[initVal?.storeRank]}</Text>
+                        <Text>{storeTypeText[initVal?.storeType]}</Text>
                       )}
                     </FormControl>
                   </Flex>
@@ -244,6 +233,7 @@ const FormStoreEditor = forwardRef(
                         minW="4.4rem"
                         w="30%"
                         flex="none"
+                        textStyle="base"
                         fontSize="xs"
                         fontWeight="strong"
                       >
@@ -270,6 +260,7 @@ const FormStoreEditor = forwardRef(
                         minW="4.4rem"
                         w="30%"
                         flex="none"
+                        textStyle="base"
                         fontSize="xs"
                         fontWeight="strong"
                       >
@@ -298,6 +289,7 @@ const FormStoreEditor = forwardRef(
                         minW="4.4rem"
                         w="30%"
                         flex="none"
+                        textStyle="base"
                         fontSize="xs"
                         fontWeight="strong"
                       >
@@ -326,6 +318,7 @@ const FormStoreEditor = forwardRef(
                         minW="4.4rem"
                         w="30%"
                         flex="none"
+                        textStyle="base"
                         fontSize="xs"
                         fontWeight="strong"
                       >
@@ -354,6 +347,7 @@ const FormStoreEditor = forwardRef(
                         minW="4.4rem"
                         w="30%"
                         flex="none"
+                        textStyle="base"
                         fontSize="xs"
                         fontWeight="strong"
                       >
@@ -363,9 +357,47 @@ const FormStoreEditor = forwardRef(
                         <Flex w="100%" direction="column" gap="0.5rem">
                           <InputAddr
                             fieldKey={"addr"}
+                            hasIcon={false}
+                            btnProps={{
+                              variant: "filterSearch",
+                              width: "4rem",
+                              lineHeight: "1",
+                            }}
                             value={getFieldProps("addr").value}
-                            onChange={(val: any) => setFieldValue("addr", val)}
-                            isDisabled={true}
+                            onChange={(val: any) => {
+                              const geocoder =
+                                // @ts-ignore
+                                new kakao.maps.services.Geocoder();
+
+                              geocoder.addressSearch(
+                                val,
+                                (result: any, status: any) => {
+                                  if (status === "OK") {
+                                    const { x, y } = result[0];
+                                    setFieldValue("addr", val);
+                                    setFieldValue("lat", y);
+                                    setFieldValue("lng", x);
+
+                                    addMarker(
+                                      new naver.maps.Marker({
+                                        map: state.map,
+                                        position: {
+                                          lat: y,
+                                          lng: x,
+                                        },
+                                      })
+                                    );
+
+                                    state.map?.setCenter({
+                                      lat: y,
+                                      lng: x,
+                                    });
+                                    state.map?.setZoom(13);
+                                  }
+                                }
+                              );
+                            }}
+                            isDisabled={false}
                           />
                           <Input
                             value={getFieldProps("addrDetail").value}
@@ -392,6 +424,7 @@ const FormStoreEditor = forwardRef(
                         minW="4.4rem"
                         w="30%"
                         flex="none"
+                        textStyle="base"
                         fontSize="xs"
                         fontWeight="strong"
                       >

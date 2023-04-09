@@ -14,6 +14,7 @@ type SwitchProps = {
   hasContent?: boolean;
   activeContent?: any;
   inactiveContent?: any;
+  isDisabled?: boolean;
   isChecked?: boolean;
   onChange: (props?: any) => any;
 };
@@ -73,7 +74,7 @@ const Switch = ({
   );
 };
 
-const ThemeSwitch = ({
+const SwitchTheme = ({
   size,
   hasContent = true,
   isChecked = false,
@@ -144,4 +145,85 @@ const ThemeSwitch = ({
   );
 };
 
-export { Switch, ThemeSwitch };
+const SwitchFilter = ({
+  size,
+  hasContent = true,
+  isChecked = false,
+  isDisabled = false,
+  onChange,
+}: SwitchProps) => {
+  return (
+    <Flex
+      position="relative"
+      w="2.5rem"
+      h="1rem"
+      cursor="pointer"
+      onChange={() => {
+        if (isDisabled) return;
+
+        onChange();
+      }}
+    >
+      {hasContent && (
+        <>
+          <Flex
+            position="absolute"
+            top="1px"
+            left={0}
+            zIndex={1}
+            pl="0.5rem"
+            w="fit-content"
+            h="100%"
+            alignItems="center"
+            visibility={isChecked ? "visible" : "hidden"}
+            textStyle="base"
+            fontSize="xs"
+            fontWeight="regular"
+            lineHeight="2rem"
+            color="font.primary"
+            onClick={(e) => {
+              if (isDisabled) return;
+              e.stopPropagation();
+              onChange();
+            }}
+          >
+            ON
+          </Flex>
+          <Flex
+            position="absolute"
+            top="1px"
+            right={0}
+            zIndex={1}
+            w="fit-content"
+            h="100%"
+            alignItems="center"
+            visibility={isChecked ? "hidden" : "visible"}
+            textStyle="base"
+            fontSize="xs"
+            fontWeight="regular"
+            onClick={(e) => {
+              if (isDisabled) return;
+              e.stopPropagation();
+              onChange();
+            }}
+          >
+            OFF
+          </Flex>
+        </>
+      )}
+      <ChakraSwitch
+        variant="filterControl"
+        spacing="5rem"
+        size={size}
+        isDisabled={isDisabled}
+        isChecked={isChecked}
+        onChange={(e) => {
+          e.stopPropagation();
+          onChange();
+        }}
+      />
+    </Flex>
+  );
+};
+
+export { Switch, SwitchTheme, SwitchFilter };

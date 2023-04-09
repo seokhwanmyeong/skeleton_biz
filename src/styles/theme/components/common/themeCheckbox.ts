@@ -10,9 +10,10 @@ const $size = cssVar("checkbox-size");
 
 const themeCheckbox = {
   baseStyle: {
-    container: { fontSize: "11px" },
+    container: { fontSize: "xs", lineHeight: "calc(1.375rem)" },
     label: {
       textStyle: "chkBox",
+      top: "-1px",
     },
     control: {
       w: "1rem",

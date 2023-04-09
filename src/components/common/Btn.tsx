@@ -12,6 +12,7 @@ import {
   IcoCloseCircle,
   IcoDetail,
   IcoPlusSquare02,
+  IcoSearch,
 } from "@assets/icons/icon";
 
 type Props = {};
@@ -116,6 +117,26 @@ const BtnDelete = ({
       {...rest}
     >
       <IcoDelete w="0.75rem" h="0.75rem" />
+      {text}
+    </Button>
+  );
+};
+
+const BtnFilterSearch = ({
+  onClick,
+  isDisabled,
+  text = "조회",
+  ...rest
+}: BtnProps) => {
+  return (
+    <Button
+      variant="filterSearch"
+      onClick={onClick}
+      isDisabled={isDisabled}
+      aria-label="조회하기"
+      {...rest}
+    >
+      <IcoSearch width="0.875rem" height="0.875rem" color="primary.inverse" />
       {text}
     </Button>
   );
@@ -368,6 +389,7 @@ const IcoBtnNext = ({ onClick, isDisabled, ...rest }: BtnProps) => {
 export {
   Btn,
   BtnEditor,
+  BtnFilterSearch,
   BtnDownload,
   IcoBtnDownload,
   BtnDelete,

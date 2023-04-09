@@ -1,6 +1,6 @@
 //  Lib
-import { useContext, useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useContext, useState, useEffect } from "react";
+import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
 import { Box, Button, Flex, Text, useDisclosure } from "@chakra-ui/react";
 import { NaverMapContext } from "@src/lib/src";
 //  Component
@@ -25,11 +25,18 @@ const FlowDong = (props: Props) => {
   const { state } = useContext(NaverMapContext);
   const setFlow = useSetRecoilState(atomFilterFlow);
   const setSv = useSetRecoilState(sementicViewState);
+  const resetSv = useResetRecoilState(sementicViewState);
   const { sigungu } = useRecoilValue(atomFlowEnterArea);
   const dong = useRecoilValue(atomSlctDong);
   const [isToolOpen, toolOpen] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [filterType, setType] = useState("");
+
+  useEffect(() => {
+    return () => {
+      resetSv();
+    };
+  }, []);
 
   return (
     <>
@@ -135,7 +142,11 @@ const FlowDong = (props: Props) => {
       </Flex>
       {filterType === "anal" && <NiceFilterDepth areaCode={dong?.slctCode} />}
       {filterType === "erp" && (
-        <ErpFilter toolOpen={toolOpen} areaCode={sigungu?.slctCode} />
+        <ErpFilter
+          isToolOpen={isToolOpen}
+          toolOpen={toolOpen}
+          areaCode={sigungu?.slctCode}
+        />
       )}
       {isToolOpen && <DrawTools />}
     </>

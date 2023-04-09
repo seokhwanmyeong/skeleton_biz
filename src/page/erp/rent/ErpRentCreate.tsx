@@ -19,30 +19,39 @@ import { FormikValues } from "formik";
 import { useNavigate } from "react-router-dom";
 import FormRentEditore from "@src/components/form/erp/FormRentEditore";
 
-type RentInfo = {};
+export type RentInfo = {
+  rentName: string;
+  rentType?: "A" | "B" | "C" | "D" | "E";
+  curUpjong: string;
+  size: number;
+  floor: number;
+  rentalFee: number;
+  depositFee: number;
+  premiumFee: number;
+  manageFee: number;
+  img?: [];
+  lat: number;
+  lng: number;
+};
 
 const ErpRentCreate = () => {
   const navitate = useNavigate();
   const submitRef = useRef<FormikValues>(null);
   const mapRef = useRef<any>();
   const [center, setCenter] = useState({ lat: null, lng: null });
-  const [rentData, setRentData] = useState<any>({
+  const [rentData, setRentData] = useState<RentInfo>({
     rentName: "",
-    rentCode: "",
-    rentRank: "",
-    upjong: "",
-    addr: "",
-    openDate: "",
-    size: undefined,
-    floor: undefined,
-    rentFee: undefined,
-    reCharge: undefined,
-    rightFee: undefined,
-    manageFee: undefined,
-    center: {
-      lat: undefined,
-      lng: undefined,
-    },
+    rentType: undefined,
+    curUpjong: "",
+    size: 0,
+    floor: 0,
+    rentalFee: 0,
+    depositFee: 0,
+    premiumFee: 0,
+    manageFee: 0,
+    img: [],
+    lat: 0,
+    lng: 0,
   });
 
   const createRent = (value: any) => {

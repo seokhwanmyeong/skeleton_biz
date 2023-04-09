@@ -1,37 +1,46 @@
 //  Lib
-import { useContext, useEffect, useState, useRef } from "react";
-import { useSetRecoilState } from "recoil";
-import {
-  Box,
-  Button,
-  Flex,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalOverlay,
-  useDisclosure,
-} from "@chakra-ui/react";
-import DaumPostcodeEmbed from "react-daum-postcode";
+import { useContext, useEffect, useState, useRef, Fragment } from "react";
+import { useResetRecoilState, useSetRecoilState } from "recoil";
+import { Box, Button, Flex, useDisclosure } from "@chakra-ui/react";
 import { NaverMapContext } from "@src/lib/src";
+import OverlayView from "@src/lib/src/components/Overlay/OverlayView";
 //  Components
 import DecoTop from "@components/sementicMapLayer/elementDeco/DecoTop";
+import ModalDaumAddr from "@components/modal/common/ModalDaumAddr";
 //  State
-import { atomFilterFlow } from "@states/sementicMap/stateFilter";
 import { atomCreateArea } from "@states/sementicMap/stateMap";
 //  Icons
-import { IcoAppStore } from "@assets/icons/icon";
+import {
+  IcoAppStore,
+  IcoCheck,
+  IcoCloseCircle,
+  IcoEnvironment,
+  IcoGateWay,
+  IcoReset,
+} from "@assets/icons/icon";
 import markerIcon from "@assets/icons/marker.png";
 
 const ToggleButtonGroup = ({ toolOpen }: any) => {
   const { state } = useContext(NaverMapContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const setFlow = useSetRecoilState(atomFilterFlow);
+  const {
+    isOpen: isConOpen,
+    onOpen: onConOpen,
+    onClose: onConClose,
+  } = useDisclosure();
+  const {
+    isOpen: isInfoOpen,
+    onOpen: onInfoOpen,
+    onClose: onInfoClose,
+  } = useDisclosure();
   const setCreateArea = useSetRecoilState(atomCreateArea);
+  const resetCreateArea = useResetRecoilState(atomCreateArea);
   const [activeIdx, setActiveIdx] = useState(-1);
   const [event, setEvent] = useState<any>(null);
   const [moveEvent, setMoveEvent] = useState<any>(null);
+  const [cursorPo, setCursorPo] = useState<any>(null);
   const [distance, setDistance] = useState<any>(null);
-  const [poly, setpoly] = useState<naver.maps.Polyline | undefined>();
+  // const [poly, setpoly] = useState<naver.maps.Polyline | undefined>();
   const [rangeCenter, setRangeCenter] = useState<any>();
   const [addr, setAddr] = useState({
     address: "",
@@ -40,15 +49,54 @@ const ToggleButtonGroup = ({ toolOpen }: any) => {
       lng: 0,
     },
   });
+  const polyRef = useRef<naver.maps.Polyline | undefined>();
   const markerRef = useRef<any[]>([]);
   const markerAddrRef = useRef<any>();
   const markerRangeRef = useRef<any>();
   const circleRef = useRef<naver.maps.Circle | undefined>();
 
-  const resetAllElement = () => {
+  const resetDraw = () => {
     markerRef.current.map((marker: any) => marker.setMap(null));
     markerRef.current = [];
-    poly?.setMap(null);
+    markerRangeRef.current?.setMap(null);
+    markerRangeRef.current = null;
+    naver.maps.Event.removeListener(event);
+    naver.maps.Event.removeListener(moveEvent);
+    setEvent(null);
+    setMoveEvent(null);
+
+    polyRef.current?.setMap(null);
+    polyRef.current = new naver.maps.Polyline({
+      map: state.map,
+      path: [],
+      strokeColor: "#000000",
+      strokeOpacity: 0.8,
+      strokeWeight: 3,
+      clickable: true,
+    });
+    circleRef.current?.setMap(null);
+    circleRef.current = new naver.maps.Circle({
+      map: state.map,
+      center: new naver.maps.LatLng(0, 0),
+      radius: 0,
+      strokeColor: "#5347AA",
+      strokeOpacity: 0.5,
+      strokeWeight: 2,
+      fillColor: "#E51D1A",
+      fillOpacity: 0.3,
+    });
+    setDistance(0);
+    setActiveIdx(-1);
+    resetCreateArea();
+  };
+
+  const resetAllElement = () => {
+    console.log("unmount");
+    markerRef.current.map((marker: any) => marker.setMap(null));
+    markerRef.current = [];
+    // poly?.setMap(null);
+    polyRef.current?.setMap(null);
+    polyRef.current = undefined;
     markerRangeRef.current?.setMap(null);
     markerRangeRef.current = null;
     markerAddrRef.current?.setMap(null);
@@ -57,6 +105,7 @@ const ToggleButtonGroup = ({ toolOpen }: any) => {
     circleRef.current = undefined;
     naver.maps.Event.removeListener(event);
     naver.maps.Event.removeListener(moveEvent);
+    resetCreateArea();
   };
 
   const calDist = (point01: any, point02: any) => {
@@ -106,7 +155,8 @@ const ToggleButtonGroup = ({ toolOpen }: any) => {
         setMoveEvent(null);
       }
 
-      poly?.setMap(null);
+      // poly?.setMap(null);
+      polyRef.current?.setMap(null);
 
       const polyline = new naver.maps.Polyline({
         map: state.map,
@@ -117,13 +167,13 @@ const ToggleButtonGroup = ({ toolOpen }: any) => {
         clickable: true,
       });
 
-      setpoly(polyline);
+      polyRef.current = polyline;
+      // setpoly(polyline);
     }
 
     if (idx === 2) {
       if (addr.address) {
         state.map?.setCenter(addr.point);
-        state.map?.setZoom(12);
         let distance = 0;
 
         markerAddrRef.current && markerAddrRef.current?.setMap(null);
@@ -153,6 +203,9 @@ const ToggleButtonGroup = ({ toolOpen }: any) => {
               console.log(distance);
               setDistance(distance);
             }
+
+            setCursorPo(e.latlng);
+            onInfoOpen();
           }
         );
 
@@ -172,10 +225,11 @@ const ToggleButtonGroup = ({ toolOpen }: any) => {
   };
 
   const OnDrawPolygon = (e: any) => {
-    if (poly === undefined) return;
+    if (polyRef.current === undefined) return;
     const point: naver.maps.LatLng = e.coord;
-    const path: any = poly.getPath();
-    console.log(markerRef.current.length);
+    const path: any = polyRef.current.getPath();
+    setCursorPo(point);
+    onInfoOpen();
     if (markerRef.current.length === 2) {
       path.push(point);
       path.push(path._array[0]);
@@ -197,10 +251,32 @@ const ToggleButtonGroup = ({ toolOpen }: any) => {
       },
     });
     markerRef.current.push(marker);
+
+    const moveEvent = naver.maps.Event.addListener(
+      state.map,
+      "mousemove",
+      (e) => {
+        if (e.latlng) {
+        }
+
+        setCursorPo(e.latlng);
+        onInfoOpen();
+      }
+    );
+
+    setMoveEvent(moveEvent);
+
+    const tmp = naver.maps.Event?.addListener(state.map, "rightclick", () => {
+      naver.maps.Event.removeListener(event);
+      naver.maps.Event.removeListener(moveEvent);
+      naver.maps.Event.removeListener(tmp);
+      onInfoClose();
+      onConOpen();
+    });
   };
 
   const OnRangePolygon = (e: any) => {
-    if (poly === undefined) return;
+    if (polyRef.current === undefined) return;
 
     if (!markerRangeRef.current) {
       const point: naver.maps.LatLng = e.coord;
@@ -249,21 +325,20 @@ const ToggleButtonGroup = ({ toolOpen }: any) => {
   };
 
   useEffect(() => {
-    console.log("test");
     if (activeIdx === 1 && markerRangeRef.current && rangeCenter) {
       circleRef.current?.setCenter(rangeCenter);
       const moveEvent = naver.maps.Event.addListener(
         state.map,
         "mousemove",
         (e) => {
-          console.log(e);
           if (markerRangeRef.current && e.latlng) {
             let point01 = markerRangeRef.current.getPosition();
             let point02 = e.latlng;
-
             let distance = calDist(point01, point02);
-            // console.log(distance);
+
             setDistance(distance);
+            setCursorPo(e.latlng);
+            onInfoOpen();
           }
         }
       );
@@ -273,38 +348,42 @@ const ToggleButtonGroup = ({ toolOpen }: any) => {
   }, [markerRangeRef, activeIdx, rangeCenter]);
 
   useEffect(() => {
-    console.log("test");
-    if (activeIdx === 1 && markerRangeRef?.current && moveEvent) {
-      const center = markerRangeRef.current.getPosition();
+    if (!(activeIdx === 1 && markerRangeRef?.current && moveEvent)) return;
 
-      console.log("test");
-      circleRef.current?.setCenter(center);
-      circleRef.current?.setRadius(distance);
-      const tmp = naver.maps.Event?.addListener(state.map, "click", () => {
-        naver.maps.Event.removeListener(moveEvent);
-        naver.maps.Event.removeListener(tmp);
-        console.log(circleRef.current?.getBounds());
-      });
-    }
+    const center = markerRangeRef.current.getPosition();
+
+    circleRef.current?.setCenter(center);
+    circleRef.current?.setRadius(distance);
+    const tmp = naver.maps.Event?.addListener(state.map, "rightclick", () => {
+      naver.maps.Event.removeListener(moveEvent);
+      naver.maps.Event.removeListener(tmp);
+      onInfoClose();
+      onConOpen();
+    });
   }, [activeIdx, distance, markerRangeRef, moveEvent]);
 
   useEffect(() => {
-    if (addr.address) {
-      markerAddrRef.current && markerAddrRef.current?.setMap(null);
+    if (!addr.address) return;
 
-      const marker = new naver.maps.Marker({
-        map: state.map,
-        position: new naver.maps.LatLng(addr.point),
-        icon: {
-          url: markerIcon,
-          size: new naver.maps.Size(21, 31),
-          anchor: new naver.maps.Point(9, 22),
-        },
-      });
+    markerAddrRef.current && markerAddrRef.current?.setMap(null);
 
-      markerAddrRef.current = marker;
-    }
+    const marker = new naver.maps.Marker({
+      map: state.map,
+      position: new naver.maps.LatLng(addr.point),
+      icon: {
+        url: markerIcon,
+        size: new naver.maps.Size(21, 31),
+        anchor: new naver.maps.Point(9, 22),
+      },
+    });
+
+    markerAddrRef.current = marker;
   }, [addr, markerAddrRef]);
+
+  useEffect(() => {
+    onConClose();
+    setCursorPo(undefined);
+  }, [activeIdx]);
 
   useEffect(() => {
     if (addr.address && activeIdx === 2 && markerAddrRef?.current) {
@@ -312,10 +391,11 @@ const ToggleButtonGroup = ({ toolOpen }: any) => {
 
       circleRef.current?.setCenter(center);
       circleRef.current?.setRadius(distance);
-      const tmp = naver.maps.Event?.addListener(state.map, "click", () => {
+      const tmp = naver.maps.Event?.addListener(state.map, "rightclick", () => {
         naver.maps.Event.removeListener(moveEvent);
         naver.maps.Event.removeListener(tmp);
-        console.log(circleRef.current?.getBounds());
+        onInfoClose();
+        onConOpen();
       });
     }
   }, [addr, activeIdx, distance, markerAddrRef]);
@@ -341,155 +421,227 @@ const ToggleButtonGroup = ({ toolOpen }: any) => {
       clickable: true,
     });
     circleRef.current = circle;
-    setpoly(polyline);
+    polyRef.current = polyline;
+    // setpoly(polyline);
     markerRef.current = [];
-  }, []);
+    resetCreateArea();
+
+    return () => {
+      resetAllElement();
+      resetCreateArea();
+    };
+  }, [toolOpen]);
 
   return (
-    <Flex
-      pos="absolute"
-      top="1rem"
-      left="50%"
-      transform="translateX(-50%)"
-      zIndex={999}
-      gap={"0.5rem"}
-      direction="column"
-    >
-      <Flex gap="1rem" justifyContent="center">
-        <Button
-          variant="filterTop"
-          isActive={activeIdx === 0}
-          onClick={() => {
-            if (activeIdx === 0) {
-              handleClick(-1);
-            } else {
-              handleClick(0);
-            }
-          }}
-        >
-          <Box>
-            <IcoAppStore />
-          </Box>
-          그리기
-        </Button>
-        <Button
-          variant="filterTop"
-          isActive={activeIdx === 1}
-          onClick={() => {
-            if (activeIdx === 1) {
-              handleClick(-1);
-            } else {
-              handleClick(1);
-            }
-          }}
-        >
-          <Box>
-            <IcoAppStore />
-          </Box>
-          반경
-        </Button>
-        <Button
-          variant="filterTop"
-          isActive={activeIdx === 2}
-          onClick={() => {
-            if (activeIdx === 2) {
-              handleClick(-1);
-            } else if (addr.address) {
-              handleClick(2);
-            } else {
-              alert("주소를 입력해주세요");
-              handleClick(-1);
-            }
-          }}
-        >
-          <Box>
-            <IcoAppStore />
-          </Box>
-          주소지
-        </Button>
-      </Flex>
+    <Fragment>
       <Button
-        variant="filterTopMain"
+        variant="filterTop02"
+        isActive={activeIdx === 0}
         onClick={() => {
-          isOpen ? onClose() : onOpen();
+          if (activeIdx === 0) {
+            handleClick(-1);
+          } else {
+            handleClick(0);
+          }
         }}
       >
-        {addr.address || "주소를 검색하세요."}
+        <Box>
+          <IcoGateWay width="1.125rem" height="1.125rem" color="font.primary" />
+        </Box>
+        그리기
       </Button>
-      <DecoTop width="13rem" />
-      {activeIdx !== -1 && (
+      <Button
+        variant="filterTop02"
+        isActive={activeIdx === 1}
+        onClick={() => {
+          if (activeIdx === 1) {
+            handleClick(-1);
+          } else {
+            handleClick(1);
+          }
+        }}
+      >
+        <Box>
+          <IcoAppStore
+            width="1.125rem"
+            height="1.125rem"
+            color="font.primary"
+          />
+        </Box>
+        반경
+      </Button>
+      <Button
+        variant="filterTop02"
+        isActive={activeIdx === 2}
+        onClick={() => {
+          if (activeIdx === 2) {
+            handleClick(-1);
+          } else if (addr.address) {
+            handleClick(2);
+          } else {
+            alert("주소를 입력해주세요");
+            handleClick(-1);
+          }
+        }}
+      >
+        <Box>
+          <IcoEnvironment
+            width="1.125rem"
+            height="1.125rem"
+            color="font.primary"
+          />
+        </Box>
+        주소지
+      </Button>
+      <Button
+        variant="filterTop02"
+        onClick={() => {
+          handleClick(-1);
+          resetAllElement();
+          toolOpen(false);
+        }}
+      >
+        <Box>
+          <IcoCloseCircle
+            width="1.125rem"
+            height="1.125rem"
+            color="font.primary"
+          />
+        </Box>
+        취소
+      </Button>
+      <Flex pos="fixed" bottom="calc(100vh - 2.8rem - 8rem)" direction="column">
         <Button
-          variant="search"
+          variant="filterTopMain"
           onClick={() => {
-            if (activeIdx === 0) {
-              const path: any = poly?.getPath();
-              const bounds: any = poly?.getBounds();
-              const center: any = bounds?.getCenter();
-
-              if (!path || path.length - 1 <= 2) {
-                alert("영역을 제대로 설정해주세요");
-                return;
-              }
-
-              setCreateArea({
-                path: path._array,
-                center: center,
-                pathType: "bounds",
-              });
-              resetAllElement();
-              toolOpen(false);
-            } else if (activeIdx === 1) {
-              if (!circleRef.current) {
-                alert("범위를 설정해주세요");
-                return;
-              }
-              const bounds: any = circleRef.current?.getBounds();
-              const center: any = circleRef.current?.getCenter();
-
-              setCreateArea({
-                path: bounds,
-                center: center,
-                pathType: "circle",
-              });
-              resetAllElement();
-              toolOpen(false);
-            } else if (activeIdx === 2) {
-              if (!circleRef.current) {
-                alert("범위를 설정해주세요");
-                return;
-              }
-              const bounds: any = circleRef.current?.getBounds();
-              const center: any = circleRef.current?.getCenter();
-
-              setCreateArea({
-                path: bounds,
-                center: center,
-                pathType: "circle",
-              });
-              resetAllElement();
-              toolOpen(false);
-            }
+            isOpen ? onClose() : onOpen();
           }}
         >
-          설정완료
+          {addr.address || "주소를 검색하세요"}
         </Button>
-      )}
+        <DecoTop width="10rem" />
+      </Flex>
       {/* ------------------------------ 모달 ------------------------------*/}
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent w="50vw">
-          <ModalBody
-            p="0"
-            w="100%"
-            h="40vh"
-            borderRadius="base"
-            overflow="hidden"
+      <ModalDaumAddr
+        isOpen={isOpen}
+        onClose={onClose}
+        onComplete={addrSlctHandler}
+      />
+      {isConOpen && cursorPo && activeIdx !== -1 && (
+        <OverlayView id={`confirmBox`} position={cursorPo}>
+          <Flex
+            gap="1rem"
+            w="15rem"
+            h="3rem"
+            bgColor="#FFFFFF"
+            justify="center"
+            align="center"
           >
-            <DaumPostcodeEmbed onComplete={addrSlctHandler} />
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-    </Flex>
+            <Button
+              variant="filterSearch"
+              aria-label="영역확정"
+              onClick={() => {
+                if (activeIdx === 0) {
+                  // const path: any = poly?.getPath();
+                  // const bounds: any = poly?.getBounds();
+                  const path: any = polyRef.current?.getPath();
+                  const bounds: any = polyRef.current?.getBounds();
+                  const center: any = bounds?.getCenter();
+                  console.log(path);
+                  if (!path || path.length - 1 <= 2) {
+                    alert("영역을 제대로 설정해주세요");
+                    return;
+                  }
+
+                  setCreateArea({
+                    path: path._array,
+                    center: center,
+                    pathType: "bounds",
+                  });
+
+                  onConClose();
+                  // resetAllElement();
+                  // toolOpen(false);
+                } else if (activeIdx === 1) {
+                  if (!circleRef.current) {
+                    alert("범위를 설정해주세요");
+                    return;
+                  }
+                  const bounds: any = circleRef.current?.getBounds();
+                  const center: any = circleRef.current?.getCenter();
+
+                  setCreateArea({
+                    path: bounds,
+                    center: center,
+                    pathType: "circle",
+                  });
+
+                  onConClose();
+                  // resetAllElement();
+                  // toolOpen(false);
+                } else if (activeIdx === 2) {
+                  if (!circleRef.current) {
+                    alert("범위를 설정해주세요");
+                    return;
+                  }
+                  const bounds: any = circleRef.current?.getBounds();
+                  const center: any = circleRef.current?.getCenter();
+
+                  setCreateArea({
+                    path: bounds,
+                    center: center,
+                    pathType: "circle",
+                  });
+
+                  onConClose();
+                  // resetAllElement();
+                  // toolOpen(false);
+                }
+              }}
+              top="1px"
+            >
+              <IcoCheck
+                width="0.875rem"
+                height="0.875rem"
+                color="primary.inverse"
+              />
+              영역확정
+            </Button>
+            <Button
+              variant="filterSearch"
+              aria-label="다시 그리기"
+              onClick={() => {
+                resetDraw();
+                onConClose();
+              }}
+              top="1px"
+            >
+              <IcoReset
+                width="0.875rem"
+                height="0.875rem"
+                color="primary.inverse"
+              />
+              다시 그리기
+            </Button>
+          </Flex>
+        </OverlayView>
+      )}
+      {isInfoOpen && cursorPo && activeIdx !== -1 && (
+        <OverlayView id={`infoBox`} position={cursorPo}>
+          <Flex
+            w="10rem"
+            h="3rem"
+            bgColor="#FFFFFF"
+            justify="center"
+            align="center"
+            textStyle="base"
+            fontSize="xs"
+          >
+            완료되셨으면 마우스 우측을 눌러주세요
+          </Flex>
+        </OverlayView>
+      )}
+    </Fragment>
   );
 };
 

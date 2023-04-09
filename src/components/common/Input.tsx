@@ -87,6 +87,7 @@ interface InpFileProps extends InpProps {
 }
 
 interface InpAddressProps extends InpProps {
+  hasIcon?: boolean;
   groupProps?: {};
   addonProps?: {};
   btnProps?: {};
@@ -746,11 +747,13 @@ const InputAddr = ({
   onChange,
   variant,
   inputProps,
+  btnProps,
   groupProps,
   placeholder,
   _placeholder,
   focusBorderColor,
   errorBorderColor,
+  hasIcon = true,
   isDisabled = false,
   isInvalid = false,
   isReadOnly = false,
@@ -792,8 +795,13 @@ const InputAddr = ({
         value={value}
         onChange={() => {}}
       />
-      <Button isDisabled={isDisabled} variant="search" onClick={onOpen}>
-        <IcoSearch w="0.875rem" h="0.875rem" />
+      <Button
+        isDisabled={isDisabled}
+        variant="search"
+        onClick={onOpen}
+        {...btnProps}
+      >
+        {hasIcon && <IcoSearch w="0.875rem" h="0.875rem" />}
         검색
       </Button>
       <ChakraModal isOpen={isOpen} onClose={onClose}>

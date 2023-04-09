@@ -1,9 +1,11 @@
+import { defineStyle } from "@chakra-ui/react";
+
 const themeHeading = {
   baseStyle: {
     mb: 0,
-    textStyle: "base",
+    fontFamily: "Roboto",
+    fontStyle: "noemal",
     fontWeight: "strong",
-    fontStyle: "normal",
     color: "font.primary",
   },
   variants: {
@@ -16,13 +18,6 @@ const themeHeading = {
     serviceName: {
       fontSize: "xs",
       fontWeight: "heavy",
-    },
-    subMenu: {
-      fontSize: "1.7rem",
-      lineHeight: "1.875rem",
-      color: "font.primary",
-      textAlign: "center",
-      opacity: 0.8,
     },
     outlet: {
       textStyle: {
@@ -40,10 +35,6 @@ const themeHeading = {
       lineHeight: "normal",
       color: "font.secondary",
     },
-    sectionTitle: {
-      fontSize: "1rem",
-      color: "font.primary",
-    },
     detailTitle: {
       m: 0,
       fontSize: "1.5rem",
@@ -57,6 +48,14 @@ const themeHeading = {
       lineHeight: "1.05rem",
       letterSpacing: "2.66667px",
       color: "rgba(38, 35, 35, 0.8)",
+    },
+    filterBox: {
+      w: "max-content",
+      bg: "none",
+      fontSize: "sm",
+      lineHeight: "1.46",
+      color: "font.title",
+      textAlign: "left",
     },
   },
 };

@@ -8,16 +8,12 @@ import OverlayView from "@src/lib/src/components/Overlay/OverlayView";
 import GuPanel from "./GuPanel";
 import InteractArea from "./InteractArea";
 //  Atom
+import { atomFilterFlow, dataCollector } from "@states/sementicMap/stateFilter";
 import {
-  atomFilterFlow,
-  dataCollector,
-} from "@src/states/sementicMap/stateFilter";
-import {
-  atomCurrentMapOption,
   atomDongLi,
   atomFlowEnterArea,
   atomSlctDong,
-} from "@src/states/sementicMap/stateMap";
+} from "@states/sementicMap/stateMap";
 //  Deco
 import Rounding from "@assets/rounding.svg";
 
@@ -32,7 +28,6 @@ const MapFlowSigungu = (props: Props) => {
   const [slctDong, setSlctDong] = useState(-1);
   const filterData = useRecoilValue(dataCollector);
   const [center, setCenter] = useState<any>(null);
-  const setCurrent = useSetRecoilState(atomCurrentMapOption);
   const [range, setRange] = useState({
     xMax: 0,
     xMin: 0,
@@ -84,19 +79,6 @@ const MapFlowSigungu = (props: Props) => {
         });
       }
 
-      if (curCenter && curZoom) {
-        setCurrent({
-          zoom: {
-            minZoom: curZoom,
-            maxZoom: curZoom,
-          },
-          center: {
-            lat: curCenter.x,
-            lng: curCenter.y,
-          },
-        });
-      }
-
       let xyRange = {
         xMax: 0,
         xMin: 0,
@@ -130,7 +112,7 @@ const MapFlowSigungu = (props: Props) => {
       slctData: filterData || [],
       slctRank: areaIdx,
     });
-    setFlow(2);
+    setFlow("dong");
   };
 
   return (
@@ -160,7 +142,7 @@ const MapFlowSigungu = (props: Props) => {
                     slctData: filterData || [],
                     slctRank: idx,
                   });
-                  setFlow(2);
+                  setFlow("dong");
                 }}
                 onMouse={() => {
                   setSlctDong(idx);

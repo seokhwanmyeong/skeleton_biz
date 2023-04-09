@@ -8,8 +8,10 @@ import FormLogin from "@components/form/login/FormLogin";
 import { loginApi } from "@src/api/biz/config";
 //  Icon
 import { IcoLogoMain } from "@assets/icons/icon";
+import { getAccessToken } from "@src/api/niceApi/config";
 
 const Login = () => {
+  const { login } = loginApi;
   const navigator = useNavigate();
   const [loading, setLoading] = useState(false);
   const [loadingChk, setLoadingChk] = useState(false);
@@ -20,29 +22,47 @@ const Login = () => {
       alert("정보입력필요_test");
       return;
     }
-    setLoadingChk(true);
-
-    loginApi
-      .login(val)
-      .then((res) => {
-        const { accessToken, expiresIn, userData } = res;
-        console.log(res);
-
-        if (expiresIn > 0) {
-          localStorage.setItem("token", accessToken);
-          setTimeout(() => {
-            setLoadingChk(false);
-            navigator("/maps");
-          }, 300);
+    getAccessToken()
+      .then((loginRes: any) => {
+        console.log(loginRes);
+        if (loginRes?.result === "success" && loginRes?.data) {
+          const { authorization, timestamp } = loginRes.data;
+          console.log(loginRes.data);
+          localStorage.setItem("nctk", authorization);
+          localStorage.setItem("nctm", timestamp);
+          navigator("/maps");
         } else {
-          alert("expires is already");
+          console.log(loginRes.data);
+          navigator("/maps");
         }
       })
       .catch((err) => {
-        console.log(err);
-        navigator("/maps");
-        setLoadingChk(false);
+        return Promise.reject(err);
       });
+
+    // setLoadingChk(true);
+    // login(val)
+    //   .then((res: any) => {
+    //     const { accessToken, expiresIn, userData } = res.data;
+    //     console.log(res);
+
+    //     if (expiresIn > 0) {
+    //       localStorage.setItem("token", accessToken);
+    //       setTimeout(() => {
+    //         setLoadingChk(false);
+    //         navigator("/maps");
+    //       }, 300);
+    //     } else {
+    //       alert("expires is already");
+    //       setLoadingChk(false);
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //     setLoadingChk(false);
+    //     alert("아이디, 비밀번호를 확인해주세요");
+    //     navigator("/maps");
+    //   });
   };
 
   useEffect(() => {

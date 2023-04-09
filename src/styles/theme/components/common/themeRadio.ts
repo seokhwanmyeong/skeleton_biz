@@ -74,6 +74,51 @@ const themeRadio = {
       label: { m: "0px" },
       icon: { display: "none" },
     },
+    filterBox: {
+      control: {
+        w: "1rem",
+        h: "1rem",
+        borderRadius: "chk",
+        borderColor: "border.radio",
+        bgColor: "#FFFFFF",
+        _checked: {
+          bgColor: "#FFFFFF",
+          borderColor: "border.radio",
+          _before: {
+            content: '""',
+            display: "inline-block",
+            position: "relative",
+            w: "0.5rem",
+            h: "0.5rem",
+            borderRadius: "chk",
+            bgColor: "primary.type7",
+          },
+          _hover: {
+            bgColor: "#FFFFFF",
+            borderColor: "border.radio",
+          },
+        },
+        _hover: {
+          _before: {
+            content: '""',
+            display: "inline-block",
+            position: "relative",
+            w: "0.5rem",
+            h: "0.5rem",
+            borderRadius: "chk",
+            bgColor: "primary.type7",
+          },
+        },
+      },
+      label: {
+        top: "1px",
+        textStyle: "base",
+        fontSize: "xs",
+        fontWeight: "regular",
+        lineHeight: "1.375rem",
+        color: "font.title",
+      },
+    },
   },
   defaultProps: {
     size: "base",

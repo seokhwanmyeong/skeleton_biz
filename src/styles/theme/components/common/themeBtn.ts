@@ -100,6 +100,20 @@ const themeBtn = {
         bgColor: "primary.type9",
       },
     },
+    filterSearch: {
+      padding: "0 0.4375rem",
+      w: "auto",
+      h: "1.375rem",
+      gap: "0.625rem",
+      bgColor: "primary.type7",
+      textStyle: "base",
+      fontSize: "xs",
+      fontWeight: "regular",
+      lineHeight: "1px",
+      _hover: {
+        bgColor: "primary.type7",
+      },
+    },
     editor: {
       padding: "0 0.984375rem",
       w: "auto",
@@ -205,6 +219,7 @@ const themeBtn = {
     },
     filterTop02: {
       p: 0,
+      minW: "3.25rem",
       flexDirection: "column",
       justifyContent: "center",
       gap: "0.25rem",
@@ -218,10 +233,10 @@ const themeBtn = {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        w: "2.5rem",
-        h: "1.5625rem",
+        w: "2.625rem",
+        h: "1.6875rem",
         backdropFilter: "blur(5px)",
-        bg: "#FFFFFF",
+        bg: "neutral.gray1",
         filter: "drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25))",
         boxSizing: "border-box",
         border: "1px solid",
@@ -231,30 +246,29 @@ const themeBtn = {
       _active: {
         bg: "none",
         div: {
-          bg: "linear-gradient(180deg, #D4B106 0%, rgba(212, 177, 6, 0) 100%);",
+          bg: "linear-gradient(180deg, #D4B106 0%, rgba(212, 177, 6, 0) 100%)",
           svg: {
-            color: "#FFFFFF",
+            color: "neutral.gray1",
           },
         },
       },
       _hover: {
         bg: "none",
         div: {
-          bg: "linear-gradient(180deg, #D4B106 0%, rgba(212, 177, 6, 0) 100%);",
+          bg: "linear-gradient(180deg, #D4B106 0%, rgba(212, 177, 6, 0) 100%)",
           svg: {
-            color: "#FFFFFF",
+            color: "neutral.gray1",
           },
         },
       },
     },
     filterTopMain: {
       bg: "none",
-      // fontFamily: 'Inter';
+      textStyle: "base",
       fontWeight: "strong",
-      fontSize: "xs",
+      fontSize: "md",
       lineHeight: "1",
       color: "font.secondary",
-      textShadow: "0px 6.4px 6.4px rgba(0, 0, 0, 0.25)",
       _active: {
         bg: "none",
         div: {

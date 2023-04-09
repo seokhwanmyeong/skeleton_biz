@@ -1,6 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
-import { Box, Button, Flex, Text, useDisclosure } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Text,
+  useDisclosure,
+  Tooltip,
+} from "@chakra-ui/react";
 import { NaverMapContext } from "@src/lib/src";
 //  Component
 import BtnReset from "@components/sementicMapLayer/elementFilter/BtnReset";
@@ -117,34 +124,17 @@ const FlowEnter = () => {
         transform="translateX(-50%)"
         gap="4rem"
       >
-        <UpjongListBox />
-        {sidoLi.length !== 0 && (
-          <AreaListBox
-            title="시/도 선택"
-            isOpen={isOpen}
-            list={sido?.slctCode && sigunguLi.length !== 0 ? sigunguLi : sidoLi}
-            setSlctArea={(val: {
-              slctName: string;
-              slctCode: string;
-              slctIdx: string;
-              slctPath: any;
-            }) => {
-              if (sido?.slctCode && sigunguLi.length !== 0) {
-                setSlctArea({
-                  sido,
-                  sigungu: val,
-                });
-
-                setFlow("sigungu");
-              } else {
-                setSlctArea({
-                  sido: val,
-                  sigungu,
-                });
-              }
-            }}
-          />
-        )}
+        <BtnBack
+          onClick={() => {
+            state.map?.setOptions({
+              minZoom: 0,
+              maxZoom: 16,
+              scrollWheel: false,
+            });
+            resetSlct();
+          }}
+          disabled={!sido?.slctName}
+        />
         <Flex
           pos="relative"
           pt="0.3rem"
@@ -154,26 +144,13 @@ const FlowEnter = () => {
           gap="0.5rem"
         >
           <Flex pos="relative" direction="column">
-            {sido?.slctName && (
-              <BtnBack
-                onClick={() => {
-                  resetSlct();
-                  state.map?.setOptions({
-                    minZoom: 0,
-                    maxZoom: 16,
-                    scrollWheel: false,
-                  });
-                }}
-                disabled={!sido?.slctName}
-              />
-            )}
             <Button
               variant="filterTopMain"
               onClick={() => {
                 isOpen ? onClose() : onOpen();
               }}
             >
-              {sido?.slctName ? "시군구를 선택하세요" : "지역을 선택하세요"}
+              {sido?.slctName ? "시/군/구를 선택하세요" : "시/도를 선택하세요"}
             </Button>
             <DecoTop width={"13rem"} />
           </Flex>
@@ -210,7 +187,7 @@ const FlowEnter = () => {
             />
           )}
         </Flex>
-        <BtnFlowCustom />
+        <UpjongListBox />
       </Flex>
       {/* ------------------------------ 하단 ------------------------------*/}
       <Flex
@@ -219,49 +196,32 @@ const FlowEnter = () => {
         left="50%"
         zIndex={999}
         transform="translateX(-50%)"
-        gap="1.25rem"
+        gap="4.25rem"
       >
-        <Button
-          variant="filterTop"
-          isActive={filterType === "anal"}
-          disabled
-          onClick={() => {
-            setType("anal");
-          }}
+        <Tooltip
+          hasArrow
+          isDisabled={false}
+          placement="auto"
+          label="시군구까지 지역을 선택하셔야 합니다"
+          p="1rem"
+          borderRadius="base"
         >
-          <Box>
-            <IcoFilter />
-          </Box>
-          분석필터
-        </Button>
-        <Button
-          variant="filterTop"
-          isActive={filterType === "erp"}
-          disabled
-          onClick={() => {
-            setType("erp");
-          }}
-        >
-          <Box>
-            <IcoErp />
-          </Box>
-          ERP 필터
-        </Button>
-        <BtnReset
-          activeReset={false}
-          onClick={() => {
-            resetSlct();
-          }}
-        />
-        <Button variant="filterTop" disabled onClick={() => {}}>
-          <Box>
-            <IcoBarChart />
-          </Box>
-          리포트
-        </Button>
+          <Button
+            variant="filterTop"
+            isActive={filterType === "anal"}
+            disabled
+            onClick={() => {
+              setType("anal");
+            }}
+          >
+            <Box>
+              <IcoFilter width="1.125rem" height="1.125rem" />
+            </Box>
+            분석필터
+          </Button>
+        </Tooltip>
+        <BtnReset />
       </Flex>
-      {/* {filterType === "anal" && <NiceFilter />} */}
-      {/* {filterType === "erp" && <ErpFilter />} */}
     </>
   );
 };

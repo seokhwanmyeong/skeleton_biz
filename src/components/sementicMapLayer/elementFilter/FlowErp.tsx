@@ -1,17 +1,39 @@
 //  Lib
-import { Fragment, useState } from "react";
+import { Fragment, useContext, useState } from "react";
 import { Box, Button, Flex, useDisclosure } from "@chakra-ui/react";
+import { NaverMapContext } from "@src/lib/src";
 //  Component
 import ErpFilter from "@components/sementicMapLayer/elementFilter/ErpFilter";
-import DrawTools from "@components/sementicMapLayer/elementFilter/DrawTools";
 import BtnReset from "@components/sementicMapLayer/elementFilter/BtnReset";
 import DecoTop from "@components/sementicMapLayer/elementDeco/DecoTop";
+import ModalDaumAddr from "@components/modal/common/ModalDaumAddr";
 //  Icon
 import { IcoDoubleSquere } from "@assets/icons/icon";
 
 const FlowErp = () => {
+  const { state, dispatch } = useContext(NaverMapContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isToolOpen, toolOpen] = useState(false);
+
+  const setAddrCenter = (val: any) => {
+    // @ts-ignore
+    const geocoder = new kakao.maps.services.Geocoder();
+    const { address } = val;
+
+    geocoder.addressSearch(address, (result: any, status: any) => {
+      if (status === "OK") {
+        const { x, y } = result[0];
+
+        state.map?.setOptions({
+          zoom: 15,
+          center: {
+            lat: y,
+            lng: x,
+          },
+        });
+      }
+    });
+  };
 
   return (
     <Fragment>
@@ -21,7 +43,7 @@ const FlowErp = () => {
           pos="absolute"
           top="1%"
           left="50%"
-          zIndex={999}
+          zIndex={2}
           transform="translateX(-50%)"
           gap="4rem"
         >
@@ -40,9 +62,14 @@ const FlowErp = () => {
                   isOpen ? onClose() : onOpen();
                 }}
               >
-                주소 검색
+                주소를 검색하세요
               </Button>
-              <DecoTop width={"13rem"} />
+              <ModalDaumAddr
+                isOpen={isOpen}
+                onClose={onClose}
+                onComplete={setAddrCenter}
+              />
+              <DecoTop width={"10rem"} />
             </Flex>
           </Flex>
         </Flex>
@@ -70,8 +97,7 @@ const FlowErp = () => {
         </Button>
         <BtnReset />
       </Flex>
-      <ErpFilter toolOpen={toolOpen} />
-      {isToolOpen && <DrawTools />}
+      <ErpFilter isToolOpen={isToolOpen} toolOpen={toolOpen} />
     </Fragment>
   );
 };

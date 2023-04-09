@@ -1,14 +1,17 @@
 //  Lib
+import { useContext } from "react";
 import { useSetRecoilState } from "recoil";
 import { Box, Button } from "@chakra-ui/react";
+import { NaverMapContext } from "@src/lib/src";
 //  State
 import {
   atomFilterFlow,
   resetNice,
   resetNiceDepth,
   resetErp,
-} from "@src/states/sementicMap/stateFilter";
-import { resetHandler } from "@src/states/sementicMap/stateMap";
+} from "@states/sementicMap/stateFilter";
+import { resetHandler } from "@states/sementicMap/stateMap";
+//  Icon
 import { IcoReset } from "@assets/icons/icon";
 
 type Props = {
@@ -17,6 +20,7 @@ type Props = {
 };
 
 const BtnReset = ({ activeReset = true, onClick }: Props) => {
+  const { state } = useContext(NaverMapContext);
   const setFlow = useSetRecoilState(atomFilterFlow);
   const resetSlctArea = useSetRecoilState(resetHandler);
   const resetNiceFilter = useSetRecoilState(resetNice);
@@ -27,14 +31,21 @@ const BtnReset = ({ activeReset = true, onClick }: Props) => {
     <Button
       variant="filterTop"
       onClick={() => {
+        onClick && onClick();
+
         if (activeReset) {
+          state.map?.setOptions({
+            minZoom: 0,
+            maxZoom: 16,
+            scrollWheel: true,
+          });
+
           resetSlctArea();
           resetNiceFilter();
           resetNiceDepthFilter();
           resetErpFilter();
           setFlow("init");
         }
-        onClick && onClick();
       }}
     >
       <Box>

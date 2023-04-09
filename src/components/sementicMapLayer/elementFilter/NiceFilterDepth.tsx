@@ -1,5 +1,5 @@
 //  Lib
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import {
   Box,
@@ -7,29 +7,35 @@ import {
   Flex,
   FormLabel,
   Heading,
-  Switch,
+  Tooltip,
 } from "@chakra-ui/react";
 //  Component
 import { CheckboxGroup } from "@components/common/CheckBox";
-//  Icon
-import { Deco01 } from "@assets/deco/DecoSvg";
-import {
-  IcoBank,
-  IcoMy,
-  IcoNice1,
-  IcoNice2,
-  IcoNice3,
-  IcoNice5,
-} from "@assets/icons/icon";
+import { SwitchFilter } from "@components/common/Switch";
+import { BtnFilterSearch } from "@components/common/Btn";
+import { Select } from "@components/common/Select";
+import { Input } from "@components/common/Input";
+import DecoCardBg from "@components/sementicMapLayer/elementDeco/DecoCardBg";
 //  State
 import {
   infoComFlowDepth,
   infoComBrand,
-  infoComJobPop,
   infoComBuilding,
   resetNiceDepth,
   atomUpjongState,
-} from "@src/states/sementicMap/stateFilter";
+} from "@states/sementicMap/stateFilter";
+//  Icon
+import { Deco01 } from "@assets/deco/DecoSvg";
+import {
+  IcoFileSearch,
+  IcoHeatMap,
+  IcoNice1,
+  IcoNice2,
+  IcoNice3,
+  IcoNice5,
+  IcoSync,
+  IcoTextB,
+} from "@assets/icons/icon";
 
 type Props = {
   areaCode?: string;
@@ -37,16 +43,17 @@ type Props = {
 };
 
 const NiceFilterDepth = ({ areaCode, path }: Props) => {
+  const divRef = useRef<HTMLDivElement | null>(null);
   const [openIdx, setOpenIdx] = useState(0);
   const { bot } = useRecoilValue(atomUpjongState);
   const [flowPop, setFlowPop] = useRecoilState(infoComFlowDepth);
-  const resetFlow = useResetRecoilState(infoComFlowDepth);
+  const [filterPop, setFilterPop] = useState(flowPop.filter);
   const [brandFilter, setBrandFilter] = useRecoilState(infoComBrand);
+  const [filterBrand, setFilterBrand] = useState(brandFilter.filter);
   const [brandList, setBrandList] = useState<any>([]);
-  const resetBrandFilter = useResetRecoilState(infoComBrand);
+  const [buildingFilter, setBuildingFilter] = useRecoilState(infoComBuilding);
+  const [filterBuilding, setFilterBuilding] = useState(buildingFilter.filter);
 
-  const [jobPop, setJobPop] = useRecoilState(infoComJobPop);
-  const resetJobop = useResetRecoilState(infoComJobPop);
   const reset = useResetRecoilState(resetNiceDepth);
 
   useEffect(() => {
@@ -54,24 +61,9 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
   }, []);
 
   //  세부 유동인구 필터 변화 및 액티브
-  useEffect(() => {
-    if (
-      flowPop?.filter?.gender?.length !== 0 ||
-      flowPop?.filter?.age?.length !== 0
-    ) {
-      setFlowPop({
-        ...flowPop,
-        active: true,
-        data: {
-          inflowCustCnt: 631067,
-          inflowCustSexCnt: [287208, 343914],
-          inflowCustAgeCnt: [101220, 105396, 132929, 120468, 171109],
-        },
-      });
-    } else {
-      resetFlow();
-    }
-  }, [flowPop.filter]);
+  const searchPopHandler = () => {
+    setFlowPop(filterPop);
+  };
 
   //  사업체 필터 변화 및 액티브
   useEffect(() => {
@@ -84,50 +76,31 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
     }
   }, [bot]);
 
-  useEffect(() => {
-    if (brandFilter?.filter?.brand?.length !== 0) {
-      setBrandFilter({
-        ...brandFilter,
-        active: true,
-        data: {
-          jobCustCnt: 9333,
-          jobCustSexCnt: [5271, 4062],
-          jobCustAgeCnt: [214, 1323, 2745, 2227, 1614],
-        },
-      });
-    } else {
-      resetBrandFilter();
-    }
-  }, [brandFilter?.filter]);
+  const searchBrandHandler = () => {
+    setBrandFilter(filterBrand);
+  };
 
   //  건물조회 필터 변화 및 액티브
-  useEffect(() => {
-    if (
-      jobPop?.filter?.gender?.length !== 0 ||
-      jobPop?.filter?.age?.length !== 0
-    ) {
-      setJobPop({
-        ...jobPop,
-        active: true,
-        data: {
-          housCustcnt: 12311,
-          housCustSexCnt: [5037, 6036],
-          housCustAgeCnt: [1132, 1487, 1543, 2075, 1888],
-        },
-      });
-    } else {
-      resetJobop();
-    }
-  }, [jobPop?.filter]);
+  const searchBuildingHandler = () => {
+    setBrandFilter(filterBrand);
+  };
 
   return (
     <Flex
+      ref={divRef}
       pos="absolute"
-      bottom="calc(1% + 4.5rem)"
+      bottom="5.25rem"
       left="50%"
       zIndex={999}
       transform="translateX(-50%)"
-      gap="1.25rem"
+      p="0.5rem 0"
+      w="29.5rem"
+      justify="center"
+      gap="1.5rem"
+      bgColor="#FFFFFFBF"
+      border="1px solid"
+      borderColor="neutral.gray6"
+      borderRadius="34px"
     >
       {/* ============================== infoCom의 필터 버튼 ============================== */}
       <Button
@@ -142,28 +115,39 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
         }}
       >
         <Box>
-          <IcoNice1 color="#262323cc" />
+          <IcoHeatMap width="1.125rem" height="1.125rem" color="font.primary" />
         </Box>
+        유동인구
       </Button>
-      <Button
-        variant="filterTop02"
-        isDisabled={bot ? false : true}
-        isActive={brandFilter?.active}
-        onClick={() => {
-          if (openIdx === 2) {
-            setOpenIdx(0);
-          } else {
-            setOpenIdx(2);
-          }
-        }}
+      <Tooltip
+        hasArrow
+        isDisabled={bot ? true : false}
+        placement="auto"
+        label="업종을 선택하셔야 합니다."
+        p="1rem"
+        borderRadius="base"
       >
-        <Box>
-          <IcoNice2 color="#262323cc" />
-        </Box>
-      </Button>
+        <Button
+          variant="filterTop02"
+          isDisabled={bot ? false : true}
+          isActive={brandFilter?.active}
+          onClick={() => {
+            if (openIdx === 2) {
+              setOpenIdx(0);
+            } else {
+              setOpenIdx(2);
+            }
+          }}
+        >
+          <Box>
+            <IcoTextB width="1.125rem" height="1.125rem" color="font.primary" />
+          </Box>
+          사업체 데이터
+        </Button>
+      </Tooltip>
       <Button
         variant="filterTop02"
-        isActive={jobPop?.active}
+        isActive={buildingFilter?.active}
         onClick={() => {
           if (openIdx === 3) {
             setOpenIdx(0);
@@ -173,8 +157,13 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
         }}
       >
         <Box>
-          <IcoNice3 color="#262323cc" />
+          <IcoFileSearch
+            width="1.125rem"
+            height="1.125rem"
+            color="font.primary"
+          />
         </Box>
+        건물 데이터
       </Button>
       <Button
         variant="filterTop02"
@@ -184,51 +173,52 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
         }}
       >
         <Box>
-          <IcoNice5 color="#262323cc" />
+          <IcoSync width="1.125rem" height="1.125rem" color="font.primary" />
         </Box>
+        필터초기화
       </Button>
       {/* ============================== infoCom의 필터 박스 ============================== */}
       {openIdx === 1 ? (
         <Flex
           pos="absolute"
-          bottom="4rem"
+          bottom={
+            divRef?.current
+              ? `calc(${divRef.current.clientHeight}px + 0.25rem)`
+              : "5.25rem"
+          }
           left="50%"
           transform="translateX(-50%)"
-          p="1.125rem 0.6875rem 1.4375rem"
+          p="1.125rem 1.375rem 1rem"
+          w="29.5rem"
           display={openIdx === 1 ? "flex" : "none"}
           direction="column"
           justify="center"
           border="1px solid #BFBFBF"
-          w="29.5rem"
         >
           <Flex justify="space-between">
-            <Flex align="center">
-              <Heading
-                as={"h5"}
-                p="0 0.5rem"
-                w="max-content"
-                fontSize="md"
-                lineHeight="1.5rem"
-                color="font.title"
-                textAlign="left"
-                bg="none"
-              >
+            <Flex pl="0.25rem" align="center" gap="1rem">
+              <Heading as={"h5"} variant="filterBox">
                 유동인구
               </Heading>
-              <IcoMy />
+              <IcoHeatMap
+                width="0.875rem"
+                height="0.875rem"
+                color="font.title"
+              />
             </Flex>
-            <Switch
-              isChecked={flowPop?.active}
-              onChange={() => {
-                setFlowPop({ ...flowPop, active: !flowPop?.active });
-              }}
-              variant="filterControl"
-              spacing="5rem"
-            />
+            <Flex align="center" gap="0.5rem">
+              <SwitchFilter
+                isChecked={flowPop.active}
+                onChange={() => {
+                  setFlowPop({ ...flowPop, active: !flowPop.active });
+                }}
+              />
+              <BtnFilterSearch onClick={searchPopHandler} />
+            </Flex>
           </Flex>
           {/* ============================== 박스 데코 ============================== */}
-          <Deco01 margin="0.3rem 0 1.375rem" width="100%" height="4px" />
-          <Flex direction="column" gap="0.75rem">
+          <Deco01 margin="0.25rem 0 0.75rem" width="100%" height="0.3125rem" />
+          <Flex p="0 0.25rem" direction="column" gap="0.625rem">
             <Flex align="center">
               <FormLabel
                 display="flex"
@@ -236,8 +226,10 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
                 flex="none"
                 m="0"
                 w="2.8rem"
+                textStyle="base"
                 fontSize="xs"
                 fontWeight="strong"
+                color="font.secondary"
               >
                 성별
               </FormLabel>
@@ -246,18 +238,16 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
                   { text: "남자", value: "man" },
                   { text: "여자", value: "woman" },
                 ]}
-                chkValue={flowPop?.filter?.gender}
+                chkValue={filterPop?.gender}
                 activeTotal={true}
                 onChange={(val: any) =>
-                  // setInitPop({ ...initFlowPop, gender: val })
-                  setFlowPop({
-                    ...flowPop,
-                    filter: { ...flowPop?.filter, gender: val },
+                  setFilterPop({
+                    ...filterPop,
+                    gender: val,
                   })
                 }
                 groupProps={{
                   w: "max-content",
-                  gap: "1.875rem",
                 }}
               />
             </Flex>
@@ -268,8 +258,10 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
                 flex="none"
                 m="0"
                 w="2.8rem"
+                textStyle="base"
                 fontSize="xs"
                 fontWeight="strong"
+                color="font.secondary"
               >
                 나이대
               </FormLabel>
@@ -281,13 +273,12 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
                   { text: "50대", value: "gen50" },
                   { text: "60대 이상", value: "gen60" },
                 ]}
-                chkValue={flowPop?.filter?.age}
+                chkValue={filterPop?.age}
                 activeTotal={true}
                 onChange={(val: any) =>
-                  // setInitPop({ ...initFlowPop, age: val })
-                  setFlowPop({
-                    ...flowPop,
-                    filter: { ...flowPop?.filter, age: val },
+                  setFilterPop({
+                    ...filterPop,
+                    age: val,
                   })
                 }
                 groupProps={{
@@ -296,70 +287,56 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
               />
             </Flex>
           </Flex>
-          <Box
-            zIndex={-1}
-            position="absolute"
-            top={0}
-            left={0}
-            display="block"
-            width="100%"
-            height="100%"
-            bg="rgba(255, 255, 255, 0.75)"
-            backdropFilter="blur(5px)"
-            userSelect="none"
-          ></Box>
+          <DecoCardBg />
         </Flex>
       ) : openIdx === 2 ? (
         <Flex
           pos="absolute"
-          bottom="4rem"
+          bottom={
+            divRef?.current
+              ? `calc(${divRef.current.clientHeight}px + 0.25rem)`
+              : "5.25rem"
+          }
           left="50%"
           transform="translateX(-50%)"
-          p="1.125rem 0.6875rem 1.4375rem"
+          p="1.125rem 1.375rem 1rem"
+          w="29.5rem"
           display={openIdx === 2 ? "flex" : "none"}
           direction="column"
           justify="center"
           border="1px solid #BFBFBF"
-          w="29.5rem"
         >
           <Flex justify="space-between">
-            <Flex align="center">
-              <Heading
-                as={"h5"}
-                p="0 0.5rem"
-                w="max-content"
-                fontSize="md"
-                lineHeight="1.5rem"
-                color="font.title"
-                textAlign="left"
-                bg="none"
-              >
-                사업체 조회
+            <Flex pl="0.25rem" align="center" gap="1rem">
+              <Heading as={"h5"} variant="filterBox">
+                사업체 데이터
               </Heading>
-              <IcoMy />
+              <IcoTextB width="0.875rem" height="0.875rem" color="font.title" />
             </Flex>
-            <Switch
-              isChecked={brandFilter?.active}
-              onChange={() => {
-                setBrandFilter({
-                  ...brandFilter,
-                  active: !brandFilter?.active,
-                });
-              }}
-              variant="filterControl"
-              spacing="5rem"
-            />
+            <Flex align="center" gap="0.5rem">
+              <SwitchFilter
+                isChecked={brandFilter.active}
+                onChange={() => {
+                  setBrandFilter({
+                    ...brandFilter,
+                    active: !brandFilter.active,
+                  });
+                }}
+                variant="filterControl"
+              />
+              <BtnFilterSearch onClick={searchBrandHandler} />
+            </Flex>
           </Flex>
           {/* ============================== 박스 데코 ============================== */}
-          <Deco01 margin="0.3rem 0 1.375rem" width="100%" height="4px" />
-          <Flex direction="column" gap="0.75rem">
+          <Deco01 margin="0.25rem 0 0.75rem" width="100%" height="0.3125rem" />
+          <Flex p="0 0.25rem" direction="column" gap="0.625rem">
             <Flex align="center">
               <FormLabel
                 display="flex"
                 alignItems="center"
                 flex="none"
                 m="0"
-                w="6rem"
+                w="2.8rem"
                 fontSize="xs"
                 fontWeight="strong"
               >
@@ -371,9 +348,9 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
                 activeTotal={true}
                 onChange={(val: any) =>
                   // setInitPop({ ...initFlowPop, age: val })
-                  setBrandFilter({
-                    ...brandFilter,
-                    filter: { ...brandFilter?.filter, brand: val },
+                  setFilterBrand({
+                    ...filterBrand,
+                    brand: val,
                   })
                 }
                 groupProps={{
@@ -382,88 +359,76 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
               />
             </Flex>
           </Flex>
-          <Box
-            zIndex={-1}
-            position="absolute"
-            top={0}
-            left={0}
-            display="block"
-            width="100%"
-            height="100%"
-            bg="rgba(255, 255, 255, 0.75)"
-            backdropFilter="blur(5px)"
-            userSelect="none"
-          ></Box>
+          <DecoCardBg />
         </Flex>
       ) : openIdx === 3 ? (
         <Flex
           pos="absolute"
-          bottom="4rem"
+          bottom={
+            divRef?.current
+              ? `calc(${divRef.current.clientHeight}px + 0.25rem)`
+              : "5.25rem"
+          }
           left="50%"
           transform="translateX(-50%)"
-          p="1.125rem 0.6875rem 1.4375rem"
+          p="1.125rem 1.375rem 1rem"
+          w="29.5rem"
           display={openIdx === 3 ? "flex" : "none"}
           direction="column"
           justify="center"
           border="1px solid #BFBFBF"
-          w="29.5rem"
         >
           <Flex justify="space-between">
-            <Flex align="center">
-              <Heading
-                as={"h5"}
-                p="0 0.5rem"
-                w="max-content"
-                fontSize="md"
-                lineHeight="1.5rem"
-                color="font.title"
-                textAlign="left"
-                bg="none"
-              >
+            <Flex pl="0.25rem" align="center" gap="1rem">
+              <Heading as={"h5"} variant="filterBox">
                 건물조회
               </Heading>
-              <IcoBank />
+              <IcoFileSearch
+                width="0.875rem"
+                height="0.875rem"
+                color="font.title"
+              />
             </Flex>
-            <Switch
-              isChecked={jobPop?.active}
-              onChange={() => {
-                setJobPop({ ...jobPop, active: !jobPop?.active });
-              }}
-              variant="filterControl"
-              spacing="5rem"
-            />
+            <Flex align="center" gap="0.5rem">
+              <SwitchFilter
+                isChecked={buildingFilter.active}
+                onChange={() => {
+                  setBuildingFilter({
+                    ...buildingFilter,
+                    active: !buildingFilter.active,
+                  });
+                }}
+                variant="filterControl"
+              />
+              <BtnFilterSearch onClick={searchBuildingHandler} />
+            </Flex>
           </Flex>
           {/* ============================== 박스 데코 ============================== */}
           <Deco01 margin="0.3rem 0 1.375rem" width="100%" height="4px" />
-          <Flex direction="column" gap="0.75rem">
+          <Flex p="0 0.25rem" direction="column" gap="0.625rem">
             <Flex align="center">
               <FormLabel
                 display="flex"
                 alignItems="center"
                 flex="none"
                 m="0"
-                w="2.8rem"
+                w="4rem"
                 fontSize="xs"
                 fontWeight="strong"
               >
-                성별
+                대장종류
               </FormLabel>
-              <CheckboxGroup
-                chkboxData={[
-                  { text: "남자", value: "man" },
-                  { text: "여자", value: "woman" },
+              <Select
+                data={[
+                  { text: "-", value: "-" },
+                  { text: "-", value: "-" },
                 ]}
-                chkValue={jobPop?.filter?.gender}
-                activeTotal={true}
-                onChange={(val: any) =>
-                  setJobPop({
-                    ...jobPop,
-                    filter: { ...jobPop?.filter, gender: val },
-                  })
-                }
-                groupProps={{
-                  w: "max-content",
-                }}
+                // value={filterBuilding.searchType}
+                opBaseTxt="text"
+                opBaseId="value"
+                opBaseKey="value"
+                onChange={(val: any) => {}}
+                selectProps={{ w: "100%" }}
               />
             </Flex>
             <Flex align="center">
@@ -472,47 +437,95 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
                 alignItems="center"
                 flex="none"
                 m="0"
-                w="2.8rem"
+                w="4rem"
                 fontSize="xs"
                 fontWeight="strong"
               >
-                나이대
+                지붕구조
               </FormLabel>
-              <CheckboxGroup
-                chkboxData={[
-                  { text: "20대", value: "gen20" },
-                  { text: "30대", value: "gen30" },
-                  { text: "40대", value: "gen40" },
-                  { text: "50대", value: "gen50" },
-                  { text: "60대 이상", value: "gen60" },
+              <Select
+                data={[
+                  { text: "-", value: "-" },
+                  { text: "-", value: "-" },
                 ]}
-                chkValue={jobPop?.filter?.age}
-                activeTotal={true}
-                onChange={(val: any) =>
-                  // setInitPop({ ...initFlowPop, age: val })
-                  setJobPop({
-                    ...jobPop,
-                    filter: { ...jobPop?.filter, age: val },
-                  })
-                }
-                groupProps={{
-                  w: "max-content",
-                }}
+                // value={filterBuilding.searchType}
+                opBaseTxt="text"
+                opBaseId="value"
+                opBaseKey="value"
+                onChange={(val: any) => {}}
+                selectProps={{ w: "100%" }}
+              />
+            </Flex>
+            <Flex align="center">
+              <FormLabel
+                display="flex"
+                alignItems="center"
+                flex="none"
+                m="0"
+                w="4rem"
+                fontSize="xs"
+                fontWeight="strong"
+              >
+                용도
+              </FormLabel>
+              <Select
+                data={[
+                  { text: "-", value: "-" },
+                  { text: "-", value: "-" },
+                ]}
+                // value={filterBuilding.searchType}
+                opBaseTxt="text"
+                opBaseId="value"
+                opBaseKey="value"
+                onChange={(val: any) => {}}
+                selectProps={{ w: "100%" }}
+              />
+            </Flex>
+            <Flex align="center">
+              <FormLabel
+                display="flex"
+                alignItems="center"
+                flex="none"
+                m="0"
+                w="4rem"
+                fontSize="xs"
+                fontWeight="strong"
+              >
+                구조
+              </FormLabel>
+              <Select
+                data={[
+                  { text: "-", value: "-" },
+                  { text: "-", value: "-" },
+                ]}
+                // value={filterBuilding.searchType}
+                opBaseTxt="text"
+                opBaseId="value"
+                opBaseKey="value"
+                onChange={(val: any) => {}}
+                selectProps={{ w: "100%" }}
+              />
+            </Flex>
+            <Flex align="center">
+              <FormLabel
+                display="flex"
+                alignItems="center"
+                flex="none"
+                m="0"
+                w="4rem"
+                fontSize="xs"
+                fontWeight="strong"
+              >
+                연면적
+              </FormLabel>
+              <Input
+                inputProps={{ w: "100%" }}
+                placeholder={"연면적을 입력하세요"}
+                onChange={(val: any) => {}}
               />
             </Flex>
           </Flex>
-          <Box
-            zIndex={-1}
-            position="absolute"
-            top={0}
-            left={0}
-            display="block"
-            width="100%"
-            height="100%"
-            bg="rgba(255, 255, 255, 0.75)"
-            backdropFilter="blur(5px)"
-            userSelect="none"
-          ></Box>
+          <DecoCardBg />
         </Flex>
       ) : null}
     </Flex>

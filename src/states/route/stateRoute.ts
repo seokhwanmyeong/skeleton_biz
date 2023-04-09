@@ -26,15 +26,15 @@ import ErpNotice from "@page/erp/notice/ErpNotice";
 import {
   HeaderMenu01,
   HeaderMenu02,
-  SubMenu01,
-  SubMenu02,
-  SubMenu03,
-  SubMenu04,
-  SubMenu05,
-  SubMenu06,
-  SubMenu07,
-  SubMenu08,
-  SubMenu09,
+  IcoAppStore,
+  IcoBank,
+  IcoLineChart,
+  IcoStore,
+  IcoGateWay,
+  IcoTeam,
+  IcoCiCircle,
+  IcoNotic,
+  IcoAudit,
 } from "@assets/icons/icon";
 
 type MainRouteType = {
@@ -54,7 +54,7 @@ type SubRouteType = {
   children?: DepthRouteType[];
   page?: (props: any) => JSX.Element;
   isMenu: boolean;
-  icon?: (color?: HEX) => JSX.Element;
+  icon?: (props?: IcoProps) => JSX.Element;
 };
 
 type DepthRouteType = {
@@ -65,6 +65,12 @@ type DepthRouteType = {
 };
 
 type HEX = `#${string}`;
+
+type IcoProps = {
+  width?: string;
+  height?: string;
+  color?: `#${string}`;
+};
 
 export type { MainRouteType, SubRouteType, DepthRouteType };
 
@@ -117,155 +123,134 @@ export const subRoute = atom<{
 }>({
   key: "subRoute",
   default: {
-    //  index path = 'index'
-    //  key = root _ mainRoute property ,
-    //  value = subRoute List
     erp: [
       {
-        title: "대쉬보드",
-        hasChild: false,
         path: "index",
+        title: "대쉬보드",
+        isMenu: true,
+        hasChild: false,
         page: ErpDashBoard,
-        isMenu: true,
-        icon: (color?: HEX) => {
-          return SubMenu01(color);
-        },
+        icon: (props?: IcoProps) => IcoAppStore(props),
       },
       {
-        title: "매장",
-        hasChild: false,
         path: "store",
+        title: "매장",
+        isMenu: true,
+        hasChild: false,
         page: ErpStore,
-        isMenu: true,
-        icon: (color?: HEX) => {
-          return SubMenu02(color);
-        },
+        icon: (props?: IcoProps) => IcoStore(props),
       },
       {
-        title: "매장상세보기",
-        hasChild: false,
         path: "store/detail",
+        title: "매장상세보기",
+        isMenu: false,
+        hasChild: false,
         page: ErpStoreDetail,
-        isMenu: false,
       },
       {
-        title: "매장등록",
-        hasChild: false,
         path: "store/create",
+        title: "매장등록",
+        isMenu: false,
+        hasChild: false,
         page: ErpStoreCreate,
-        isMenu: false,
       },
       {
-        title: "매출",
-        hasChild: false,
         path: "sale",
+        title: "매출",
+        isMenu: true,
+        hasChild: false,
         page: ErpSale,
-        isMenu: true,
-        icon: (color?: HEX) => {
-          return SubMenu03(color);
-        },
+        icon: (props?: IcoProps) => IcoLineChart(props),
       },
       {
-        title: "상권",
-        hasChild: false,
         path: "bsns",
+        title: "상권",
+        isMenu: true,
+        hasChild: false,
         page: ErpBsnsDis,
-        isMenu: true,
-        icon: (color?: HEX) => {
-          return SubMenu04(color);
-        },
+        icon: (props?: IcoProps) => IcoGateWay(props),
       },
       {
-        title: "상권상세보기",
-        hasChild: false,
         path: "bsns/detail",
+        title: "상권상세보기",
+        isMenu: false,
+        hasChild: false,
         page: ErpBsnsDetail,
-        isMenu: false,
       },
       {
-        title: "매물",
-        hasChild: false,
         path: "rent",
+        title: "매물",
+        isMenu: true,
+        hasChild: false,
         page: ErpRent,
-        isMenu: true,
-        icon: (color?: HEX) => {
-          return SubMenu05(color);
-        },
+        icon: (props?: IcoProps) => IcoBank(props),
       },
       {
-        title: "매물상세보기",
-        hasChild: false,
         path: "rent/detail",
+        title: "매물상세보기",
+        isMenu: false,
+        hasChild: false,
         page: ErpRentDetail,
-        isMenu: false,
       },
       {
-        title: "매물생성",
-        hasChild: false,
         path: "rent/create",
+        title: "매물생성",
+        isMenu: false,
+        hasChild: false,
         page: ErpRentCreate,
-        isMenu: false,
       },
       {
-        title: "고객",
-        hasChild: false,
         path: "client",
+        title: "고객",
+        isMenu: true,
+        hasChild: false,
         page: ErpClient,
-        isMenu: true,
-        icon: (color?: HEX) => {
-          return SubMenu06(color);
-        },
+        icon: (props?: IcoProps) => IcoTeam(props),
       },
       {
-        title: "고객상세보기",
-        hasChild: false,
         path: "client/detail",
+        title: "고객상세보기",
+        isMenu: false,
+        hasChild: false,
         page: ErpClientDetail,
-        isMenu: false,
       },
       {
-        title: "고객생성",
-        hasChild: false,
         path: "client/create",
+        title: "고객생성",
+        isMenu: false,
+        hasChild: false,
         page: ErpClientCreate,
-        isMenu: false,
       },
       {
-        title: "브랜드",
-        hasChild: false,
         path: "brand",
+        title: "브랜드",
+        isMenu: true,
+        hasChild: false,
         page: ErpBrand,
-        isMenu: true,
-        icon: (color?: HEX) => {
-          return SubMenu07(color);
-        },
+        icon: (props?: IcoProps) => IcoCiCircle(props),
       },
       {
-        title: "브랜드생성",
-        hasChild: false,
         path: "brand/create",
-        page: ErpBrandCreate,
+        title: "브랜드생성",
         isMenu: false,
+        hasChild: false,
+        page: ErpBrandCreate,
       },
       {
-        title: "Smart",
-        hasChild: false,
         path: "smart",
-        page: ErpSmart,
+        title: "Smart",
         isMenu: true,
-        icon: (color?: HEX) => {
-          return SubMenu08(color);
-        },
+        hasChild: false,
+        page: ErpSmart,
+        icon: (props?: IcoProps) => IcoAudit(props),
       },
       {
-        title: "공지",
-        hasChild: false,
         path: "notice",
-        page: ErpNotice,
+        title: "공지",
         isMenu: true,
-        icon: (color?: HEX) => {
-          return SubMenu09(color);
-        },
+        hasChild: false,
+        page: ErpNotice,
+        icon: (props?: IcoProps) => IcoNotic(props),
       },
     ],
   },

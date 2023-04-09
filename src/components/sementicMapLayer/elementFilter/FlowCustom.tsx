@@ -1,63 +1,63 @@
 //  Lib
-import { useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useState, useEffect } from "react";
+import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
 import { Box, Button, Flex, useDisclosure } from "@chakra-ui/react";
 //  Component
 import UpjonListBox from "@components/sementicMapLayer/elementFilter/UpjongListBox";
 import NiceFilterDepth from "@components/sementicMapLayer/elementFilter/NiceFilterDepth";
-import ErpFilter from "@components/sementicMapLayer/elementFilter/ErpFilter";
 import BtnReset from "@components/sementicMapLayer/elementFilter/BtnReset";
 import BtnFlowCustom from "@components/sementicMapLayer/elementFilter/BtnFlowCustom";
-import DrawTools from "@components/sementicMapLayer/elementFilter/DrawTools";
 import DecoTop from "@components/sementicMapLayer/elementDeco/DecoTop";
 //  State
 import { atomSlctCustom } from "@states/sementicMap/stateMap";
 //  Icon
-import { IcoBarChart, IcoErp, IcoFilter } from "@assets/icons/icon";
+import { IcoBarChart, IcoFilter } from "@assets/icons/icon";
+import { sementicViewState } from "@states/sementicMap/stateView";
 
 type Props = {};
 
 const FlowCustom = (props: Props) => {
   const cutomArea = useRecoilValue(atomSlctCustom);
+  const setSv = useSetRecoilState(sementicViewState);
+  const resetSv = useResetRecoilState(sementicViewState);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [filterType, setType] = useState("");
-  const [isToolOpen, toolOpen] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      resetSv();
+    };
+  }, []);
 
   return (
     <>
-      {!isToolOpen && (
+      <Flex
+        pos="absolute"
+        top="1%"
+        left="50%"
+        zIndex={999}
+        transform="translateX(-50%)"
+        gap={"4rem"}
+      >
         <Flex
-          pos="absolute"
-          top="1%"
-          left="50%"
-          zIndex={999}
-          transform="translateX(-50%)"
-          gap={"4rem"}
+          pos="relative"
+          pt="0.3rem"
+          direction="column"
+          justify="flex-start"
+          color="#000000"
+          gap="0.5rem"
         >
-          <UpjonListBox />
-          <Flex
-            pos="relative"
-            pt="0.3rem"
-            direction="column"
-            justify="flex-start"
-            color="#000000"
-            gap="0.5rem"
-          >
-            <Flex pos="relative" direction="column">
-              <Button
-                variant="filterTopMain"
-                onClick={() => {
-                  isOpen ? onClose() : onOpen();
-                }}
-              >
-                {cutomArea.slctName}
-              </Button>
-              <DecoTop width={"13rem"} />
-            </Flex>
+          <Flex pos="relative" direction="column">
+            <Button variant="filterTopMain" cursor="unset">
+              {cutomArea.slctName}
+            </Button>
+            <DecoTop width={"13rem"} />
           </Flex>
-          <BtnFlowCustom />
         </Flex>
-      )}
+        <Flex pos="absolute" right="-4rem">
+          <UpjonListBox />
+        </Flex>
+      </Flex>
       {/* ------------------------------ 하단 ------------------------------*/}
       <Flex
         pos="absolute"
@@ -65,51 +65,32 @@ const FlowCustom = (props: Props) => {
         left="50%"
         zIndex={999}
         transform="translateX(-50%)"
-        gap="1.25rem"
+        gap="4.25rem"
       >
         <Button
           variant="filterTop"
-          isActive={filterType === "anal"}
-          onClick={() => {
-            if (filterType === "anal") {
-              setType("");
-            } else {
-              setType("anal");
-            }
-          }}
+          isActive={isOpen}
+          onClick={() => (isOpen ? onClose() : onOpen())}
         >
           <Box>
             <IcoFilter />
           </Box>
-          분석필터
+          마켓데이터
         </Button>
         <Button
           variant="filterTop"
-          isActive={filterType === "erp"}
           onClick={() => {
-            if (filterType === "erp") {
-              setType("");
-            } else {
-              setType("erp");
-            }
+            setSv({ props: null, viewId: "eval" });
           }}
         >
-          <Box>
-            <IcoErp />
-          </Box>
-          ERP 필터
-        </Button>
-        <BtnReset />
-        <Button variant="filterTop" onClick={() => {}}>
           <Box>
             <IcoBarChart />
           </Box>
           리포트
         </Button>
+        <BtnReset />
       </Flex>
-      {filterType === "anal" && <NiceFilterDepth path={cutomArea.slctPath} />}
-      {filterType === "erp" && <ErpFilter toolOpen={toolOpen} />}
-      {isToolOpen && <DrawTools />}
+      {isOpen && <NiceFilterDepth path={cutomArea.slctPath} />}
     </>
   );
 };

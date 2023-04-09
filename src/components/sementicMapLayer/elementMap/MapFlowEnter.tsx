@@ -5,13 +5,12 @@ import { NaverMapContext } from "@src/lib/src";
 //  Components
 import InteractArea from "./InteractArea";
 //  Atom
-import { atomFilterFlow } from "@src/states/sementicMap/stateFilter";
+import { atomFilterFlow } from "@states/sementicMap/stateFilter";
 import {
-  atomCurrentMapOption,
   atomFlowEnterArea,
   atomSidoLi,
   atomSigunguLi,
-} from "@src/states/sementicMap/stateMap";
+} from "@states/sementicMap/stateMap";
 
 type Props = {};
 
@@ -21,7 +20,6 @@ const MapFlowEnter = (props: Props) => {
   const sidoLi = useRecoilValue(atomSidoLi);
   const sigunguLi = useRecoilValue(atomSigunguLi);
   const setFlow = useSetRecoilState(atomFilterFlow);
-  const setCurrent = useSetRecoilState(atomCurrentMapOption);
 
   useEffect(() => {
     if (sido?.slctCode && sido?.slctName && sido?.slctPath) {
@@ -37,24 +35,18 @@ const MapFlowEnter = (props: Props) => {
           maxZoom: curZoom,
           scrollWheel: false,
         });
-
-        setCurrent({
-          zoom: {
-            minZoom: curZoom,
-            maxZoom: curZoom,
-          },
-          center: {
-            lat: center.y,
-            lng: center.x,
-          },
-        });
       }
     } else if (sidoLi.length > 0) {
       console.log("진입 2");
 
-      state.map?.setZoom(8, false);
-      state.map?.setCenter(new naver.maps.LatLng(35.9223291, 127.9101228));
+      // state.map?.setZoom(8, false);
+      // state.map?.setCenter(new naver.maps.LatLng(35.9223291, 127.9101228));
       state.map?.setOptions({
+        center: {
+          lat: 35.9223291,
+          lng: 127.9101228,
+        },
+        zoom: 8,
         minZoom: 8,
         maxZoom: 8,
         scrollWheel: false,

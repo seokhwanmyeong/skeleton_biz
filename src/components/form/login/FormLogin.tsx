@@ -21,7 +21,7 @@ const FormLogin = ({
         setValues(values);
       }}
     >
-      {({ handleSubmit, errors, touched, getFieldProps, setFieldValue }) => {
+      {({ getFieldProps, setFieldValue }) => {
         return (
           <Form style={{ marginBottom: "1.375rem", width: "100%" }}>
             <Flex mb="2.125rem" flexDirection="column" gap="1rem">
@@ -46,6 +46,9 @@ const FormLogin = ({
                       h: "2.5rem",
                       bgColor: "bg.primary",
                       borderColor: "neutral.gray5",
+                      _focus: {
+                        borderColor: "#000000",
+                      },
                     }}
                     placeholder={"아이디를 입력해주세요"}
                     onChange={(val: any) => setFieldValue("username", val)}
@@ -75,9 +78,6 @@ const FormLogin = ({
                       _focus: {
                         borderColor: "#000000",
                       },
-                    }}
-                    groupProps={{
-                      _focus: "#000000",
                     }}
                     focusBorderColor={"#cbd5e0"}
                     placeholder={"비밀번호를 입력해주세요"}

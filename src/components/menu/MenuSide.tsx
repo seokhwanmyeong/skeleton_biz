@@ -82,7 +82,7 @@ const MenuSide = () => {
                     border="1px solid #FFFFFF"
                     bg="linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%)"
                   >
-                    {menuLi.icon()}
+                    {menuLi.icon({ width: "1.125rem", height: "1.125rem" })}
                   </Flex>
                 )}
                 {menuLi.title}

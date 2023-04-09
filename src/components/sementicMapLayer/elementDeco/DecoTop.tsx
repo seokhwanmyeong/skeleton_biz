@@ -15,7 +15,7 @@ const DecoTop = ({ width }: { width?: any }) => {
       <Box
         w="100%"
         h="1px"
-        bg="linear-gradient(-90deg, #000000 0%, rgba(255, 255, 255, 0) 100%)"
+        bg="linear-gradient(-90deg, #000000 0%, #FFFFFF00 100%)"
         transition="inherit"
       ></Box>
       <Box
@@ -32,7 +32,7 @@ const DecoTop = ({ width }: { width?: any }) => {
       <Box
         w="100%"
         h="1px"
-        bg="linear-gradient(90deg, #000000 0%, rgba(255, 255, 255, 0) 100%)"
+        bg="linear-gradient(90deg, #000000 0%, #FFFFFF00 100%)"
         transition="inherit"
       ></Box>
     </Flex>

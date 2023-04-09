@@ -1,5 +1,5 @@
 //  Lib
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useContext, Fragment } from "react";
 import { useRecoilState, useResetRecoilState } from "recoil";
 import {
   Box,
@@ -7,132 +7,166 @@ import {
   Flex,
   FormLabel,
   Heading,
-  Switch,
-  Text,
   useDisclosure,
 } from "@chakra-ui/react";
+import { NaverMapContext } from "@src/lib/src";
 //  Component
 import { CheckboxGroup } from "@components/common/CheckBox";
 import { RadioBox } from "@components/common/RadioBox";
-import { Select } from "@components/common/Select";
+import { Select, SelectAddr } from "@components/common/Select";
 import { Input } from "@components/common/Input";
+import { BtnFilterSearch } from "@components/common/Btn";
+import { SwitchFilter } from "@components/common/Switch";
 import ModalStoreEditor from "@components/modal/map/ModalStoreEditor";
 import ModalRentEditor from "@components/modal/map/ModalRentEditor";
 import ModalBsnsDEditor from "@components/modal/map/ModalBsnsDEditor";
-//  Icon
-import { Deco01 } from "@assets/deco/DecoSvg";
-import {
-  IcoBsnsD,
-  IcoDoubleSquere,
-  IcoPlus,
-  IcoRent,
-  IcoStore,
-  IcoStore02,
-  IcoPlusSquare02,
-} from "@assets/icons/icon";
+import DecoCardBg from "@components/sementicMapLayer/elementDeco/DecoCardBg";
+import DrawTools from "@components/sementicMapLayer/elementFilter/DrawTools";
+//  Api
+import { apiErpMap } from "@api/biz/config";
 //  State
 import {
   infoComErpStore,
   infoComErpBsnsD,
   infoComErpRent,
   resetErp,
-} from "@src/states/sementicMap/stateFilter";
-//  Api
-import { apiErpMap } from "@api/biz/config";
+} from "@states/sementicMap/stateFilter";
+//  Icon
+import { Deco01 } from "@assets/deco/DecoSvg";
+import {
+  IcoDoubleSquere,
+  IcoStore,
+  IcoPlusSquare02,
+  IcoExpand,
+  IcoEnvironment,
+  IcoBuilding,
+  IcoSync,
+  IcoFileSearch,
+  IcoCheck,
+} from "@assets/icons/icon";
+//  Type
+import type {
+  Infocome,
+  TypeFilterStore,
+  TypeFilterBsDis,
+  TypeFilterRent,
+} from "@states/sementicMap/stateFilter";
 
 type ErpFilterProps = {
-  toolOpen: any;
   areaCode?: string;
   path?: any;
+  isToolOpen: boolean;
+  toolOpen: (props?: any) => any;
 };
 
-const ErpFilter = ({ toolOpen, areaCode, path }: ErpFilterProps) => {
-  const { getStoreList, getRentList, getBsDisList, test } = apiErpMap;
+const ErpFilter = ({
+  isToolOpen,
+  toolOpen,
+  areaCode,
+  path,
+}: ErpFilterProps) => {
+  const { dispatch } = useContext(NaverMapContext);
+  const divRef = useRef<HTMLDivElement | null>(null);
+  const { getStoreList, getRentList, getBsDisList } = apiErpMap;
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [openIdx, setOpenIdx] = useState(0);
-  const [modalIdx, setModalIdx] = useState(1);
-  const [erpStore, setErpStore] = useRecoilState(infoComErpStore);
-  const resetStore = useResetRecoilState(infoComErpStore);
-  const [erpBsnsD, setErpBsnsD] = useRecoilState(infoComErpBsnsD);
-  const resetBsnsD = useResetRecoilState(infoComErpBsnsD);
-  const [erpRent, setErpRent] = useRecoilState(infoComErpRent);
-  const resetRent = useResetRecoilState(infoComErpRent);
+  const [localModalIdx, setLocalModalIdx] = useState(0);
+  const [modalIdx, setModalIdx] = useState(0);
+  const [erpStore, setErpStore] =
+    useRecoilState<Infocome<TypeFilterStore>>(infoComErpStore);
+  const [filterStore, setFilterStore] = useState<TypeFilterStore>(
+    erpStore.filter
+  );
+  const [erpBsD, setErpBsD] =
+    useRecoilState<Infocome<TypeFilterBsDis>>(infoComErpBsnsD);
+  const [filterBsD, setFilterBsD] = useState<TypeFilterBsDis>(erpBsD.filter);
+  const [erpRent, setErpRent] =
+    useRecoilState<Infocome<TypeFilterRent>>(infoComErpRent);
+  const [filterRent, setFilterRent] = useState<TypeFilterRent>(erpRent.filter);
   const reset = useResetRecoilState(resetErp);
 
-  const testEvent = () => {
-    console.log("search");
-    test({ id: 54 }).then((res) => {
-      console.log(res);
+  //  매장 필터 검색
+  const searchStoreHandler = () => {
+    console.log("store search");
+    getStoreList({
+      searchType: filterStore.searchType,
+      text: filterStore.text,
+      areaCode: filterStore.areaCode,
+    }).then((res: any) => {
+      const { records } = res;
+      console.log(records);
+
+      setErpStore({
+        filter: filterStore,
+        active: true,
+        data: records || [],
+      });
     });
   };
 
-  useEffect(() => {
-    console.log(areaCode);
-  }, []);
+  //  상권 필터 검색
+  const searchBsDHandler = () => {
+    console.log("bsD search");
+    const tmp = {};
 
-  //  매장 필터 변화 및 액티브
-  useEffect(() => {
-    const { filter } = erpStore;
-    if (
-      filter.text ||
-      filter.storeRank.length !== 0 ||
-      filter.storeStatus.length !== 0 ||
-      filter.salesRange.start ||
-      filter.salesRange.end
-    ) {
-      console.log("진입");
-      setErpStore({
-        ...erpStore,
-        active: true,
-        data: [],
-      });
-    } else {
-      resetStore();
-    }
-  }, [erpStore.filter]);
+    getBsDisList({
+      searchType: filterBsD.searchType,
+      text: filterBsD.text,
+      areaCode: filterBsD.areaCode,
+    }).then((res) => {
+      console.log(res);
+    });
 
-  //  상권 필터 변화 및 액티브
-  useEffect(() => {
-    const { filter } = erpBsnsD;
+    setErpBsD({
+      filter: filterBsD,
+      active: true,
+      data: [],
+    });
+  };
 
-    if (filter.text || filter.bsnsType.length !== 0) {
-      setErpBsnsD({
-        ...erpBsnsD,
-        active: true,
-        data: [],
-      });
-    } else {
-      resetBsnsD();
-    }
-  }, [erpBsnsD.filter]);
+  //  매물 필터 검색
+  const searchRentHandler = () => {
+    console.log("rent search");
+    getRentList({
+      searchType: filterRent.searchType,
+      text: filterRent.text,
+      areaCode: filterRent.areaCode,
+    }).then((res) => {
+      console.log(res);
+    });
 
-  //  매물 필터 변화 및 액티브
-  useEffect(() => {
-    const { filter } = erpRent;
+    setErpRent({
+      filter: filterRent,
+      active: true,
+      data: [],
+    });
+  };
 
-    if (filter.text || filter.rentRank.length !== 0) {
-      setErpRent({
-        ...erpRent,
-        active: true,
-        data: [],
-      });
-    } else {
-      resetRent();
-    }
-  }, [erpRent.filter]);
+  //  ERP 필터 초기화
+  const filterResetHandler = () => {
+    console.log("reset ERP");
+    setOpenIdx(0);
+    setLocalModalIdx(0);
+    setModalIdx(0);
+    onClose();
+    toolOpen(false);
+    reset();
+  };
+
+  const removeMarker = () => {
+    dispatch({ type: "remove_object", id: "createErp" });
+  };
 
   useEffect(() => {
-    if (isOpen && modalIdx === 2) {
-      toolOpen(true);
-    } else {
-      toolOpen(false);
-    }
-  }, [isOpen]);
+    console.log("active");
+    removeMarker();
+  }, [modalIdx, isOpen]);
 
   return (
     <Flex
+      ref={divRef}
       pos="absolute"
-      bottom="calc(1% + 4.5rem)"
+      bottom="5.25rem"
       left="50%"
       zIndex={999}
       transform="translateX(-50%)"
@@ -146,118 +180,300 @@ const ErpFilter = ({ toolOpen, areaCode, path }: ErpFilterProps) => {
       borderRadius="34px"
     >
       {/* ============================== infoCom의 필터 버튼 ============================== */}
-      <Button
-        variant="filterTop02"
-        isActive={erpStore.active}
-        onClick={() => {
-          if (openIdx === 1) {
-            setOpenIdx(0);
-          } else {
-            setOpenIdx(1);
-          }
-        }}
-      >
-        <Box>
-          <IcoStore color="#262323cc" />
-        </Box>
-      </Button>
-      <Button
-        variant="filterTop02"
-        isActive={erpBsnsD.active}
-        onClick={() => {
-          if (openIdx === 2) {
-            setOpenIdx(0);
-          } else {
-            setOpenIdx(2);
-          }
-        }}
-      >
-        <Box>
-          <IcoBsnsD color="#262323cc" />
-        </Box>
-      </Button>
-      <Button
-        variant="filterTop02"
-        isActive={erpRent.active}
-        onClick={() => {
-          if (openIdx === 3) {
-            setOpenIdx(0);
-          } else {
-            setOpenIdx(3);
-          }
-        }}
-      >
-        <Box>
-          <IcoRent color="#262323cc" />
-        </Box>
-      </Button>
-      <Button
-        variant="filterTop02"
-        // isActive={household.active || filterSale.active || upjongCnt.active}
-        onClick={() => {
-          if (openIdx === 4) {
-            setOpenIdx(0);
-          } else {
-            setOpenIdx(4);
-          }
-        }}
-      >
-        <Box>
-          <IcoPlus color="#262323cc" />
-        </Box>
-      </Button>
+      {isToolOpen ? (
+        <DrawTools toolOpen={toolOpen} />
+      ) : (
+        <Fragment>
+          <Button
+            variant="filterTop02"
+            isActive={erpStore.active}
+            onClick={() => (openIdx === 1 ? setOpenIdx(0) : setOpenIdx(1))}
+          >
+            <Box>
+              <IcoEnvironment
+                width="1.125rem"
+                height="1.125rem"
+                color="font.primary"
+              />
+            </Box>
+            매장조회
+          </Button>
+          <Button
+            variant="filterTop02"
+            isActive={erpBsD.active}
+            onClick={() => (openIdx === 2 ? setOpenIdx(0) : setOpenIdx(2))}
+          >
+            <Box>
+              <IcoExpand
+                width="1.125rem"
+                height="1.125rem"
+                color="font.primary"
+              />
+            </Box>
+            상권조회
+          </Button>
+          <Button
+            variant="filterTop02"
+            isActive={erpRent.active}
+            onClick={() => (openIdx === 3 ? setOpenIdx(0) : setOpenIdx(3))}
+          >
+            <Box>
+              <IcoBuilding
+                width="1.125rem"
+                height="1.125rem"
+                color="font.primary"
+              />
+            </Box>
+            매물조회
+          </Button>
+          <Button
+            variant="filterTop02"
+            onClick={() => (openIdx === 4 ? setOpenIdx(0) : setOpenIdx(4))}
+          >
+            <Box>
+              <IcoPlusSquare02
+                width="1.125rem"
+                height="1.125rem"
+                color="font.primary"
+              />
+            </Box>
+            생성
+          </Button>
+          <Button variant="filterTop02" onClick={filterResetHandler}>
+            <Box>
+              <IcoSync
+                width="1.125rem"
+                height="1.125rem"
+                color="font.primary"
+              />
+            </Box>
+            필터초기화
+          </Button>
+        </Fragment>
+      )}
       {/* ============================== infoCom의 필터 박스 ============================== */}
       {openIdx === 1 ? (
         <Flex
           pos="absolute"
-          bottom="4rem"
+          bottom={
+            divRef?.current
+              ? `calc(${divRef.current.clientHeight}px + 0.25rem)`
+              : "5.25rem"
+          }
           left="50%"
           transform="translateX(-50%)"
-          p="1.125rem 0.6875rem 1.4375rem"
+          p="1.125rem 1.375rem 1rem"
+          w="29.5rem"
           display={openIdx === 1 ? "flex" : "none"}
           direction="column"
           justify="center"
           border="1px solid #BFBFBF"
-          w="29.5rem"
         >
-          <Flex p="0 1rem" justify="space-between">
-            <Flex align="center">
-              <Heading
-                as={"h5"}
-                pr="1rem"
-                w="max-content"
-                fontSize="md"
-                lineHeight="1.5rem"
-                color="font.title"
-                textAlign="left"
-                bg="none"
-              >
+          <Flex justify="space-between">
+            <Flex pl="0.25rem" align="center" gap="1rem">
+              <Heading as={"h5"} variant="filterBox">
                 매장조회
               </Heading>
-              <IcoStore02 color="font.title" />
+              <IcoStore width="0.875rem" height="0.875rem" color="font.title" />
             </Flex>
-            <Flex>
-              <Switch
+            <Flex align="center" gap="0.5rem">
+              <SwitchFilter
                 isChecked={erpStore.active}
                 onChange={() => {
                   setErpStore({ ...erpStore, active: !erpStore.active });
                 }}
-                variant="filterControl"
-                spacing="5rem"
               />
-              <Button
-                onClick={() => {
-                  testEvent();
-                }}
-                variant="search"
-              >
-                검색
-              </Button>
+              <BtnFilterSearch onClick={searchStoreHandler} />
             </Flex>
           </Flex>
-          {/* ============================== 박스 데코 ============================== */}
-          <Deco01 margin="0.3rem 0 0.5rem" width="100%" height="4px" />
-          <Flex p="0 1rem" direction="column" gap="0.75rem">
+          <Deco01 margin="0.25rem 0 0.75rem" width="100%" height="0.3125rem" />
+          <Flex p="0 0.25rem" direction="column" gap="0.625rem">
+            <Flex align="center">
+              <FormLabel
+                display="flex"
+                alignItems="center"
+                flex="none"
+                m="0"
+                w="2.8rem"
+                textStyle="base"
+                fontSize="xs"
+                fontWeight="strong"
+                color="font.secondary"
+              >
+                검색
+              </FormLabel>
+              <Flex w="100%" gap="0.5rem">
+                <Select
+                  data={[
+                    { text: "매장명", value: "name" },
+                    { text: "매장코드", value: "code" },
+                    { text: "매장코드", value: "owner_name" },
+                  ]}
+                  opBaseTxt="text"
+                  opBaseId="value"
+                  opBaseKey="value"
+                  value={filterStore.searchType}
+                  onChange={(val: "name" | "code" | "owner_name") => {
+                    setFilterStore({
+                      ...filterStore,
+                      searchType: val,
+                    });
+                  }}
+                  selectProps={{ w: "30%" }}
+                />
+                <Input
+                  inputProps={{ w: "100%" }}
+                  placeholder={"매장명, 코드, 대표자를 입력해주세요"}
+                  value={filterStore.text}
+                  onChange={(val: any) => {
+                    setFilterStore({
+                      ...filterStore,
+                      text: val,
+                    });
+                  }}
+                />
+              </Flex>
+            </Flex>
+            <Flex align="center">
+              <FormLabel
+                display="flex"
+                alignItems="center"
+                flex="none"
+                m="0"
+                w="2.8rem"
+                textStyle="base"
+                fontSize="xs"
+                fontWeight="strong"
+                color="font.secondary"
+              >
+                지역
+              </FormLabel>
+              <Flex w="100%" gap="0.5rem">
+                <SelectAddr
+                  value={filterStore.areaCode}
+                  onChange={(val: any) => {
+                    setFilterStore({
+                      ...filterStore,
+                      areaCode: val,
+                    });
+                  }}
+                />
+              </Flex>
+            </Flex>
+            <Flex align="center">
+              <FormLabel
+                display="flex"
+                alignItems="center"
+                flex="none"
+                m="0"
+                w="2.8rem"
+                textStyle="base"
+                fontSize="xs"
+                fontWeight="strong"
+                color="font.secondary"
+              >
+                타입
+              </FormLabel>
+              <CheckboxGroup
+                chkboxData={[
+                  { text: "A타입", value: "A" },
+                  { text: "B타입", value: "B" },
+                  { text: "C타입", value: "C" },
+                  { text: "D타입", value: "D" },
+                  { text: "E타입", value: "E" },
+                ]}
+                chkValue={filterStore.storeType}
+                activeTotal={true}
+                onChange={(val: any) => {
+                  setFilterStore({
+                    ...filterStore,
+                    storeType: val,
+                  });
+                }}
+                groupProps={{
+                  w: "max-content",
+                }}
+              />
+            </Flex>
+            <Flex align="center">
+              <FormLabel
+                display="flex"
+                alignItems="center"
+                flex="none"
+                m="0"
+                w="2.8rem"
+                textStyle="base"
+                fontSize="xs"
+                fontWeight="strong"
+                color="font.secondary"
+              >
+                상태
+              </FormLabel>
+              <CheckboxGroup
+                chkboxData={[
+                  { text: "입점", value: "open" },
+                  { text: "휴점", value: "rest" },
+                  { text: "폐점", value: "close" },
+                  { text: "대기", value: "ready" },
+                  { text: "기타", value: "etc" },
+                ]}
+                chkValue={filterStore.storeStatus}
+                activeTotal={true}
+                onChange={(val: any) => {
+                  setFilterStore({
+                    ...filterStore,
+                    storeStatus: val,
+                  });
+                }}
+                groupProps={{
+                  w: "max-content",
+                }}
+              />
+            </Flex>
+          </Flex>
+          <DecoCardBg />
+        </Flex>
+      ) : openIdx === 2 ? (
+        <Flex
+          pos="absolute"
+          bottom={
+            divRef?.current
+              ? `calc(${divRef.current.clientHeight}px + 0.25rem)`
+              : "5.25rem"
+          }
+          left="50%"
+          transform="translateX(-50%)"
+          p="1.125rem 1.375rem 1rem"
+          w="29.5rem"
+          display={openIdx === 2 ? "flex" : "none"}
+          direction="column"
+          justify="center"
+          border="1px solid #BFBFBF"
+        >
+          <Flex justify="space-between">
+            <Flex pl="0.25rem" align="center" gap="1rem">
+              <Heading as={"h5"} variant="filterBox">
+                상권조회
+              </Heading>
+              <IcoDoubleSquere
+                width="0.875rem"
+                height="0.875rem"
+                color="font.title"
+              />
+            </Flex>
+            <Flex align="center" gap="0.5rem">
+              <SwitchFilter
+                isChecked={erpBsD.active}
+                onChange={() => {
+                  setErpBsD({ ...erpBsD, active: !erpBsD.active });
+                }}
+                variant="filterControl"
+              />
+              <BtnFilterSearch onClick={searchBsDHandler} />
+            </Flex>
+          </Flex>
+          <Deco01 margin="0.25rem 0 0.75rem" width="100%" height="0.3125rem" />
+          <Flex p="0 0.25rem" direction="column" gap="0.625rem">
             <Flex align="center">
               <FormLabel
                 display="flex"
@@ -273,29 +489,57 @@ const ErpFilter = ({ toolOpen, areaCode, path }: ErpFilterProps) => {
               <Flex w="100%" gap="0.5rem">
                 <Select
                   data={[
-                    { text: "매장명", value: "storeName" },
-                    { text: "매장코드", value: "storeCode" },
+                    { text: "상권명", value: "bsDName" },
+                    { text: "상권코드", value: "bsDCode" },
                   ]}
+                  value={filterBsD.searchType}
                   opBaseTxt="text"
                   opBaseId="value"
                   opBaseKey="value"
-                  value={erpStore.filter.type}
                   onChange={(val: any) => {
-                    setErpStore({
-                      ...erpStore,
-                      filter: { ...erpStore.filter, type: val },
+                    setFilterBsD({
+                      ...filterBsD,
+                      searchType: val,
                     });
                   }}
-                  selectProps={{ w: "20%" }}
+                  selectProps={{ w: "30%" }}
                 />
                 <Input
-                  inputProps={{ w: "50%" }}
-                  placeholder={"매장코드를 입력해주세요"}
-                  value={erpStore.filter.text}
+                  inputProps={{ w: "100%" }}
+                  placeholder={
+                    filterBsD.searchType === "bsDName"
+                      ? "상권명를 입력해주세요"
+                      : "상권코드를 입력해주세요"
+                  }
+                  value={filterBsD.text}
                   onChange={(val: any) => {
-                    setErpStore({
-                      ...erpStore,
-                      filter: { ...erpStore.filter, text: val },
+                    setFilterBsD({
+                      ...filterBsD,
+                      text: val,
+                    });
+                  }}
+                />
+              </Flex>
+            </Flex>
+            <Flex align="center">
+              <FormLabel
+                display="flex"
+                alignItems="center"
+                flex="none"
+                m="0"
+                w="2.8rem"
+                fontSize="xs"
+                fontWeight="strong"
+              >
+                지역
+              </FormLabel>
+              <Flex w="100%" gap="0.5rem">
+                <SelectAddr
+                  value={filterBsD.areaCode}
+                  onChange={(val: any) => {
+                    setFilterBsD({
+                      ...filterBsD,
+                      areaCode: val,
                     });
                   }}
                 />
@@ -315,185 +559,69 @@ const ErpFilter = ({ toolOpen, areaCode, path }: ErpFilterProps) => {
               </FormLabel>
               <CheckboxGroup
                 chkboxData={[
-                  { text: "A타입", value: "rankA" },
-                  { text: "B타입", value: "rankB" },
-                  { text: "C타입", value: "rankC" },
-                  { text: "D타입", value: "rankD" },
-                  { text: "E타입", value: "rankE" },
+                  { text: "상권1", value: "A" },
+                  { text: "상권2", value: "B" },
+                  { text: "상권3", value: "C" },
+                  { text: "상권4", value: "D" },
+                  { text: "상권5", value: "E" },
                 ]}
-                chkValue={erpStore.filter.storeRank}
+                chkValue={filterBsD.bsDType}
                 activeTotal={true}
-                onChange={(val: any) => {
-                  setErpStore({
-                    ...erpStore,
-                    filter: { ...erpStore.filter, storeRank: val },
-                  });
-                  return null;
-                }}
+                onChange={(val: any) =>
+                  setFilterBsD({
+                    ...filterBsD,
+                    bsDType: val,
+                  })
+                }
                 groupProps={{
                   w: "max-content",
                 }}
               />
-            </Flex>
-            <Flex align="center">
-              <FormLabel
-                display="flex"
-                alignItems="center"
-                flex="none"
-                m="0"
-                w="2.8rem"
-                fontSize="xs"
-                fontWeight="strong"
-              >
-                상태
-              </FormLabel>
-              <CheckboxGroup
-                chkboxData={[
-                  { text: "입점", value: "statusOpen" },
-                  { text: "휴점", value: "statusRest" },
-                  { text: "폐점", value: "statusClose" },
-                  { text: "대기", value: "statusReady" },
-                  { text: "기타", value: "statusEtc" },
-                ]}
-                chkValue={erpStore.filter.storeStatus}
-                activeTotal={true}
-                onChange={(val: any) => {
-                  setErpStore({
-                    ...erpStore,
-                    filter: { ...erpStore.filter, storeStatus: val },
-                  });
-                  return null;
-                }}
-                groupProps={{
-                  w: "max-content",
-                }}
-              />
-            </Flex>
-            <Flex align="center">
-              <FormLabel
-                display="flex"
-                alignItems="center"
-                flex="none"
-                m="0"
-                w="2.8rem"
-                fontSize="xs"
-                fontWeight="strong"
-              >
-                매출
-              </FormLabel>
-              <Flex w="100%" gap="0.5rem">
-                <Select
-                  data={[
-                    { text: "평균월매출", value: "avgM" },
-                    { text: "평균일매출", value: "avgD" },
-                    { text: "누적매출", value: "sum" },
-                  ]}
-                  defalutValue="avgM"
-                  opBaseTxt="text"
-                  opBaseId="value"
-                  opBaseKey="value"
-                  value={erpStore.filter.salesType}
-                  onChange={(val: any) => {
-                    setErpStore({
-                      ...erpStore,
-                      filter: { ...erpStore.filter, salesType: val },
-                    });
-                    return null;
-                  }}
-                  selectProps={{ w: "30%", lineHeight: "1.4rem" }}
-                />
-                <Flex w="76%" gap="1rem">
-                  <Input
-                    inputProps={{ w: "100%" }}
-                    value={erpStore.filter.salesRange.start}
-                    onChange={(val: any) =>
-                      setErpStore({
-                        ...erpStore,
-                        filter: {
-                          ...erpStore.filter,
-                          salesRange: {
-                            start: val,
-                            end: erpStore.filter.salesRange.end,
-                          },
-                        },
-                      })
-                    }
-                  />
-                  <Text>~</Text>
-                  <Input
-                    inputProps={{ w: "100%" }}
-                    value={erpStore.filter.salesRange.end}
-                    onChange={(val: any) =>
-                      setErpStore({
-                        ...erpStore,
-                        filter: {
-                          ...erpStore.filter,
-                          salesRange: {
-                            start: erpStore.filter.salesRange.start,
-                            end: val,
-                          },
-                        },
-                      })
-                    }
-                  />
-                </Flex>
-              </Flex>
             </Flex>
           </Flex>
-          <Box
-            zIndex={-1}
-            position="absolute"
-            top={0}
-            left={0}
-            display="block"
-            width="100%"
-            height="100%"
-            bg="rgba(255, 255, 255, 0.75)"
-            backdropFilter="blur(5px)"
-            userSelect="none"
-          ></Box>
+          <DecoCardBg />
         </Flex>
-      ) : openIdx === 2 ? (
+      ) : openIdx === 3 ? (
         <Flex
           pos="absolute"
-          bottom="4rem"
+          bottom={
+            divRef?.current
+              ? `calc(${divRef.current.clientHeight}px + 0.25rem)`
+              : "5.25rem"
+          }
           left="50%"
           transform="translateX(-50%)"
-          p="1.125rem 0.6875rem 1.4375rem"
-          display={openIdx === 2 ? "flex" : "none"}
+          p="1.125rem 1.375rem 1rem"
+          w="29.5rem"
+          display={openIdx === 3 ? "flex" : "none"}
           direction="column"
           justify="center"
           border="1px solid #BFBFBF"
-          w="29.5rem"
         >
-          <Flex p="0 1rem" justify="space-between">
-            <Flex align="center">
-              <Heading
-                as={"h5"}
-                pr="1rem"
-                w="max-content"
-                fontSize="md"
-                lineHeight="1.5rem"
-                color="font.title"
-                textAlign="left"
-                bg="none"
-              >
-                상권조회
+          <Flex justify="space-between">
+            <Flex pl="0.25rem" align="center" gap="1rem">
+              <Heading as={"h5"} variant="filterBox">
+                매물조회
               </Heading>
-              <IcoDoubleSquere color="font.title" />
+              <IcoFileSearch
+                width="0.875rem"
+                height="0.875rem"
+                color="font.title"
+              />
             </Flex>
-            <Switch
-              isChecked={erpBsnsD.active}
-              onChange={() => {
-                setErpBsnsD({ ...erpBsnsD, active: !erpBsnsD.active });
-              }}
-              variant="filterControl"
-              spacing="5rem"
-            />
+            <Flex align="center" gap="0.5rem">
+              <SwitchFilter
+                isChecked={erpRent.active}
+                onChange={() => {
+                  setErpRent({ ...erpRent, active: !erpRent.active });
+                }}
+                variant="filterControl"
+              />
+              <BtnFilterSearch onClick={searchRentHandler} />
+            </Flex>
           </Flex>
-          {/* ============================== 박스 데코 ============================== */}
-          <Deco01 margin="0.3rem 0 0.5rem" width="100%" height="4px" />
-          <Flex p="0 1rem" direction="column" gap="0.75rem">
+          <Deco01 margin="0.25rem 0 0.75rem" width="100%" height="0.3125rem" />
+          <Flex p="0 0.25rem" direction="column" gap="0.625rem">
             <Flex align="center">
               <FormLabel
                 display="flex"
@@ -512,26 +640,54 @@ const ErpFilter = ({ toolOpen, areaCode, path }: ErpFilterProps) => {
                     { text: "매물명", value: "rentName" },
                     { text: "매물코드", value: "rentCode" },
                   ]}
-                  value={erpBsnsD.filter.type}
                   opBaseTxt="text"
                   opBaseId="value"
                   opBaseKey="value"
+                  value={filterRent.searchType}
                   onChange={(val: any) => {
-                    setErpBsnsD({
-                      ...erpBsnsD,
-                      filter: { ...erpBsnsD.filter, type: val },
+                    setFilterRent({
+                      ...filterRent,
+                      searchType: val,
                     });
                   }}
-                  selectProps={{ w: "20%" }}
+                  selectProps={{ w: "30%" }}
                 />
                 <Input
-                  inputProps={{ w: "50%" }}
-                  placeholder={"매장코드를 입력해주세요"}
-                  value={erpBsnsD.filter.text}
+                  inputProps={{ w: "100%" }}
+                  placeholder={
+                    filterRent.searchType === "rentName"
+                      ? "매물명를 입력해주세요"
+                      : "매물코드를 입력해주세요"
+                  }
+                  value={filterRent.text}
                   onChange={(val: any) => {
-                    setErpBsnsD({
-                      ...erpBsnsD,
-                      filter: { ...erpBsnsD.filter, text: val },
+                    setFilterRent({
+                      ...filterRent,
+                      text: val,
+                    });
+                  }}
+                />
+              </Flex>
+            </Flex>
+            <Flex align="center">
+              <FormLabel
+                display="flex"
+                alignItems="center"
+                flex="none"
+                m="0"
+                w="2.8rem"
+                fontSize="xs"
+                fontWeight="strong"
+              >
+                지역
+              </FormLabel>
+              <Flex w="100%" gap="0.5rem">
+                <SelectAddr
+                  value={filterRent.areaCode}
+                  onChange={(val: any) => {
+                    setFilterRent({
+                      ...filterRent,
+                      areaCode: val,
                     });
                   }}
                 />
@@ -551,149 +707,18 @@ const ErpFilter = ({ toolOpen, areaCode, path }: ErpFilterProps) => {
               </FormLabel>
               <CheckboxGroup
                 chkboxData={[
-                  { text: "상권1", value: "bsnsType1" },
-                  { text: "상권2", value: "bsnsType2" },
-                  { text: "상권3", value: "bsnsType3" },
-                  { text: "상권4", value: "bsnsType4" },
-                  { text: "상권5", value: "bsnsType5" },
+                  { text: "A타입", value: "A" },
+                  { text: "B타입", value: "B" },
+                  { text: "C타입", value: "C" },
+                  { text: "D타입", value: "D" },
+                  { text: "E타입", value: "E" },
                 ]}
-                chkValue={erpBsnsD.filter.bsnsType}
-                activeTotal={true}
-                onChange={(val: any) =>
-                  setErpBsnsD({
-                    ...erpBsnsD,
-                    filter: { ...erpBsnsD.filter, bsnsType: val },
-                  })
-                }
-                groupProps={{
-                  w: "max-content",
-                }}
-              />
-            </Flex>
-          </Flex>
-          <Box
-            zIndex={-1}
-            position="absolute"
-            top={0}
-            left={0}
-            display="block"
-            width="100%"
-            height="100%"
-            bg="rgba(255, 255, 255, 0.75)"
-            backdropFilter="blur(5px)"
-            userSelect="none"
-          ></Box>
-        </Flex>
-      ) : openIdx === 3 ? (
-        <Flex
-          pos="absolute"
-          bottom="4rem"
-          left="50%"
-          transform="translateX(-50%)"
-          p="1.125rem 0.6875rem 1.4375rem"
-          display={openIdx === 3 ? "flex" : "none"}
-          direction="column"
-          justify="center"
-          border="1px solid #BFBFBF"
-          w="29.5rem"
-        >
-          <Flex p="0 1rem" justify="space-between">
-            <Flex align="center">
-              <Heading
-                as={"h5"}
-                pr="1rem"
-                w="max-content"
-                fontSize="md"
-                lineHeight="1.5rem"
-                color="font.title"
-                textAlign="left"
-                bg="none"
-              >
-                매물조회
-              </Heading>
-              <IcoStore02 color="font.title" />
-            </Flex>
-            <Switch
-              isChecked={erpRent.active}
-              onChange={() => {
-                setErpRent({ ...erpRent, active: !erpRent.active });
-              }}
-              variant="filterControl"
-              spacing="5rem"
-            />
-          </Flex>
-          {/* ============================== 박스 데코 ============================== */}
-          <Deco01 margin="0.3rem 0 0.5rem" width="100%" height="4px" />
-          <Flex p="0 1rem" direction="column" gap="0.75rem">
-            <Flex align="center">
-              <FormLabel
-                display="flex"
-                alignItems="center"
-                flex="none"
-                m="0"
-                w="4rem"
-                fontSize="xs"
-                fontWeight="strong"
-              >
-                검색
-              </FormLabel>
-              <Flex w="100%" gap="0.5rem">
-                <Select
-                  data={[
-                    { text: "상권명", value: "bsnsDName" },
-                    { text: "상권코드", value: "bsnsDCode" },
-                  ]}
-                  opBaseTxt="text"
-                  opBaseId="value"
-                  opBaseKey="value"
-                  value={erpRent.filter.type}
-                  onChange={(val: any) => {
-                    setErpRent({
-                      ...erpRent,
-                      filter: { ...erpRent.filter, type: val },
-                    });
-                  }}
-                  selectProps={{ w: "20%" }}
-                />
-                <Input
-                  inputProps={{ w: "50%" }}
-                  placeholder={"매장코드를 입력해주세요"}
-                  value={erpRent.filter.text}
-                  onChange={(val: any) => {
-                    setErpRent({
-                      ...erpRent,
-                      filter: { ...erpRent.filter, text: val },
-                    });
-                  }}
-                />
-              </Flex>
-            </Flex>
-            <Flex align="center">
-              <FormLabel
-                display="flex"
-                alignItems="center"
-                flex="none"
-                m="0"
-                w="4rem"
-                fontSize="xs"
-                fontWeight="strong"
-              >
-                타입
-              </FormLabel>
-              <CheckboxGroup
-                chkboxData={[
-                  { text: "A타입", value: "rankA" },
-                  { text: "B타입", value: "rankB" },
-                  { text: "C타입", value: "rankC" },
-                  { text: "D타입", value: "rankD" },
-                  { text: "E타입", value: "rankE" },
-                ]}
-                chkValue={erpRent.filter.rentRank}
+                chkValue={erpRent.filter.rentType}
                 activeTotal={true}
                 onChange={(val: any) => {
-                  setErpRent({
-                    ...erpRent,
-                    filter: { ...erpRent.filter, rentRank: val },
+                  setFilterRent({
+                    ...filterRent,
+                    rentType: val,
                   });
                   return null;
                 }}
@@ -703,44 +728,28 @@ const ErpFilter = ({ toolOpen, areaCode, path }: ErpFilterProps) => {
               />
             </Flex>
           </Flex>
-          <Box
-            zIndex={-1}
-            position="absolute"
-            top={0}
-            left={0}
-            display="block"
-            width="100%"
-            height="100%"
-            bg="rgba(255, 255, 255, 0.75)"
-            backdropFilter="blur(5px)"
-            userSelect="none"
-          ></Box>
+          <DecoCardBg />
         </Flex>
       ) : openIdx === 4 ? (
         <Flex
           pos="absolute"
-          bottom="4rem"
+          bottom={
+            divRef?.current
+              ? `calc(${divRef.current.clientHeight}px + 0.25rem)`
+              : "5.25rem"
+          }
           left="50%"
           transform="translateX(-50%)"
-          p="1.125rem 0.6875rem 1.4375rem"
-          display={openIdx === 4 ? "flex" : "none"}
+          p="1.125rem 1.375rem 1rem"
+          w="29.5rem"
+          display={modalIdx === 2 && isToolOpen ? "none" : "flex"}
           direction="column"
           justify="center"
           border="1px solid #BFBFBF"
-          w="29.5rem"
         >
           <Flex justify="space-between">
-            <Flex p="0 1rem" align="center">
-              <Heading
-                as={"h5"}
-                pr="1rem"
-                w="max-content"
-                fontSize="md"
-                lineHeight="1.5rem"
-                color="font.title"
-                textAlign="left"
-                bg="none"
-              >
+            <Flex pl="0.25rem" align="center" gap="1rem">
+              <Heading as={"h5"} variant="filterBox">
                 생성
               </Heading>
               <IcoPlusSquare02
@@ -749,24 +758,44 @@ const ErpFilter = ({ toolOpen, areaCode, path }: ErpFilterProps) => {
                 color="font.title"
               />
             </Flex>
+            <Flex align="center" gap="0.5rem">
+              <Button
+                variant="filterSearch"
+                aria-label="생성하기"
+                onClick={() => {
+                  setModalIdx(localModalIdx);
+                  onOpen();
+
+                  if (localModalIdx === 2) {
+                    toolOpen(true);
+                  }
+                }}
+              >
+                <IcoCheck
+                  width="0.875rem"
+                  height="0.875rem"
+                  color="primary.inverse"
+                />
+                생성
+              </Button>
+            </Flex>
           </Flex>
-          {/* ============================== 박스 데코 ============================== */}
-          <Deco01 margin="0.3rem 0 0.5rem" width="100%" height="4px" />
-          <Flex p="0 1rem" direction="row" justify="space-between" gap="1rem">
-            <Flex align="center" w="100%">
+          <Deco01 margin="0.25rem 0 0.75rem" width="100%" height="0.3125rem" />
+          <Flex p="0 0.25rem" direction="column" gap="0.625rem">
+            <Flex align="center">
               <FormLabel
                 display="flex"
                 alignItems="center"
                 flex="none"
                 m="0"
-                w="5rem"
+                w="2.8rem"
                 fontSize="xs"
                 fontWeight="strong"
               >
                 타입
               </FormLabel>
               <RadioBox
-                variant="search"
+                variant="filterBox"
                 values={[
                   { text: "매장", value: 1 },
                   { text: "상권", value: 2 },
@@ -774,9 +803,9 @@ const ErpFilter = ({ toolOpen, areaCode, path }: ErpFilterProps) => {
                   // { text: "고객", value: 4 },
                 ]}
                 fieldKey="value"
-                value={modalIdx}
+                value={localModalIdx}
                 onChange={(val: any) => {
-                  setModalIdx(Number(val));
+                  setLocalModalIdx(Number(val));
                 }}
                 radioProps={{
                   w: "max-content",
@@ -784,54 +813,31 @@ const ErpFilter = ({ toolOpen, areaCode, path }: ErpFilterProps) => {
                 }}
               />
             </Flex>
-            <Button
-              w="6rem"
-              variant="search"
-              onClick={() => {
-                onOpen();
-              }}
-            >
-              생성하기
-            </Button>
           </Flex>
-          {modalIdx === 1 ? (
-            <Flex mt="1rem">
-              <ModalStoreEditor
-                onOpen={onOpen}
-                onClose={onClose}
-                isOpen={isOpen}
-              />
-            </Flex>
-          ) : modalIdx === 2 ? (
-            <Flex mt="1rem">
-              <ModalBsnsDEditor
-                onOpen={onOpen}
-                onClose={onClose}
-                isOpen={isOpen}
-              />
-            </Flex>
-          ) : modalIdx === 3 ? (
-            <Flex mt="1rem">
-              <ModalRentEditor
-                onOpen={onOpen}
-                onClose={onClose}
-                isOpen={isOpen}
-              />
-            </Flex>
-          ) : null}
-          <Box
-            zIndex={-1}
-            position="absolute"
-            top={0}
-            left={0}
-            display="block"
-            width="100%"
-            height="100%"
-            bg="rgba(255, 255, 255, 0.75)"
-            backdropFilter="blur(5px)"
-            userSelect="none"
-          ></Box>
+          <DecoCardBg />
         </Flex>
+      ) : null}
+      {modalIdx === 1 && isOpen ? (
+        <ModalStoreEditor
+          onOpen={onOpen}
+          onClose={onClose}
+          isOpen={isOpen}
+          setOpenIdx={setOpenIdx}
+        />
+      ) : modalIdx === 2 && isOpen ? (
+        <ModalBsnsDEditor
+          onOpen={onOpen}
+          onClose={onClose}
+          isOpen={isOpen}
+          toolOpen={toolOpen}
+        />
+      ) : modalIdx === 3 && isOpen ? (
+        <ModalRentEditor
+          onOpen={onOpen}
+          onClose={onClose}
+          isOpen={isOpen}
+          setOpenIdx={setOpenIdx}
+        />
       ) : null}
     </Flex>
   );

@@ -1,10 +1,19 @@
 //  Lib
 import { useCallback, useEffect, useId, useState } from "react";
-import { Flex, Select as ChakraSelect } from "@chakra-ui/react";
+import {
+  Flex,
+  Select as ChakraSelect,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Button,
+} from "@chakra-ui/react";
 //  Services
 import { addrApiHandler } from "@services/address/sgisDepthAddr";
 //  Util: Data
 import { addrHCode } from "@util/data/address";
+import { IcoDown } from "@src/assets/icons/icon";
 
 type PropsSlct = {
   selectProps?: {};
@@ -64,6 +73,9 @@ const Select = ({
       onChange={(e) => onChange(e.target.value)}
       // defaultValue={defaultId}
       value={value}
+      iconSize="0.875rem"
+      iconColor="font.placeholder"
+      icon={<IcoDown />}
     >
       {!defalutValue && (
         <option key={defaultId} value={defaultId} hidden>
@@ -86,6 +98,18 @@ const Select = ({
   );
 };
 
+const SelectMenu = () => {
+  return (
+    <Menu>
+      {/* <MenuButton as={Button} rightIcon={<ChevronDownIcon />}> */}
+      <MenuButton as={Button}>Your Cats</MenuButton>
+      <MenuList>
+        <MenuItem minH="48px">Fluffybuns the Destroyer</MenuItem>
+        <MenuItem minH="48px">Fluffybuns the Destroyer</MenuItem>
+      </MenuList>
+    </Menu>
+  );
+};
 const SelectAddr = ({
   selectProps,
   selectGroupProps,
@@ -203,4 +227,8 @@ const SelectAddr = ({
   );
 };
 
-export { Select, SelectAddr };
+const SelectBsDisLayer = () => {
+  return null;
+};
+
+export { Select, SelectAddr, SelectBsDisLayer };

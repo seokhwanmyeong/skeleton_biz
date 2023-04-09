@@ -96,9 +96,27 @@ const FlowSigungu = (props: Props) => {
           left="50%"
           zIndex={999}
           transform="translateX(-50%)"
-          gap={"4rem"}
+          gap={"7rem"}
         >
-          <UpjongListBox />
+          <BtnBack
+            onClick={() => {
+              state.map?.setOptions({
+                minZoom: 0,
+                maxZoom: 16,
+                scrollWheel: false,
+              });
+              setSlctArea({
+                sido,
+                sigungu: {
+                  slctName: "",
+                  slctCode: "",
+                  slctIdx: "",
+                  slctPath: [],
+                },
+              });
+              setFlow("enter");
+            }}
+          />
           <Flex
             pos="relative"
             pt="0.3rem"
@@ -108,31 +126,7 @@ const FlowSigungu = (props: Props) => {
             gap="0.5rem"
           >
             <Flex pos="relative" direction="column">
-              <BtnBack
-                onClick={() => {
-                  state.map?.setOptions({
-                    minZoom: 0,
-                    maxZoom: 16,
-                    scrollWheel: false,
-                  });
-                  setSlctArea({
-                    sido,
-                    sigungu: {
-                      slctName: "",
-                      slctCode: "",
-                      slctIdx: "",
-                      slctPath: [],
-                    },
-                  });
-                  setFlow("enter");
-                }}
-              />
-              <Button
-                variant="filterTopMain"
-                onClick={() => {
-                  isOpen ? onClose() : onOpen();
-                }}
-              >
+              <Button variant="filterTopMain" cursor="unset">
                 {sigungu?.slctName.replace(sido?.slctName || "", "")}
               </Button>
               <DecoTop width="13rem" />
@@ -141,7 +135,7 @@ const FlowSigungu = (props: Props) => {
               <Text variant="filterTopArea">{sido.slctName}</Text>
             )}
           </Flex>
-          <BtnFlowCustom />
+          <UpjongListBox />
         </Flex>
       )}
       {/* ------------------------------ 하단 ------------------------------*/}
@@ -151,7 +145,7 @@ const FlowSigungu = (props: Props) => {
         left="50%"
         zIndex={999}
         transform="translateX(-50%)"
-        gap="1.25rem"
+        gap="4.25rem"
       >
         <Button
           variant="filterTop"
@@ -165,39 +159,15 @@ const FlowSigungu = (props: Props) => {
           }}
         >
           <Box>
-            <IcoFilter />
+            <IcoFilter width="1.125rem" height="1.125rem" />
           </Box>
           분석필터
         </Button>
-        <Button
-          variant="filterTop"
-          isActive={filterType === "erp"}
-          onClick={() => {
-            if (filterType === "erp") {
-              setType("");
-            } else {
-              setType("erp");
-            }
-          }}
-        >
-          <Box>
-            <IcoErp />
-          </Box>
-          ERP 필터
-        </Button>
         <BtnReset />
-        <Button variant="filterTop" disabled onClick={() => {}}>
-          <Box>
-            <IcoBarChart />
-          </Box>
-          리포트
-        </Button>
       </Flex>
-      {filterType === "anal" && <NiceFilter areaCode={sigungu?.slctCode} />}
-      {filterType === "erp" && (
-        <ErpFilter toolOpen={toolOpen} areaCode={sigungu?.slctCode} />
+      {filterType === "anal" && sigungu?.slctCode && (
+        <NiceFilter areaCode={sigungu.slctCode} />
       )}
-      {isToolOpen && <DrawTools toolOpen={toolOpen} />}
     </>
   );
 };

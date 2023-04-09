@@ -41,13 +41,9 @@ const MapFlowCustom = (props: Props) => {
           maxZoom: curZoom,
         });
       }
-      console.log(cutomArea.slctPath);
     }
   }, [cutomArea]);
-
-  const customAreaData = useMemo(() => {
-    return [];
-  }, []);
+  console.log(cutomArea);
 
   return (
     <>

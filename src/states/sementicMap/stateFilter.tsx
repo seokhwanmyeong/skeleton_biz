@@ -200,57 +200,71 @@ export const dataDepthCollector = selector({
 
 // ==================== ERP 필터 리스트 ====================
 
-export const infoComErpStore = atom<{
-  filter: any;
-  data: any;
+export type Infocome<Filter> = {
+  filter: Filter;
+  data: any[];
   active: boolean;
-}>({
+};
+
+export type TypeFilterStore = {
+  searchType: "name" | "code" | "owner_name";
+  text: string;
+  areaCode: string;
+  storeType: ["A" | "B" | "C" | "D" | "E"] | [];
+  storeStatus: ["open" | "ready" | "rest" | "close" | "etc"] | [];
+};
+
+export type TypeFilterBsDis = {
+  searchType: "bsDName" | "bsDCode";
+  text: string;
+  areaCode: string;
+  bsDType: ["A" | "B" | "C" | "D" | "E"] | [];
+};
+
+export type TypeFilterRent = {
+  searchType: "rentName" | "rentCode";
+  text: string;
+  areaCode: string;
+  rentType: ["A" | "B" | "C" | "D" | "E"] | [];
+};
+
+export const infoComErpStore = atom<Infocome<TypeFilterStore>>({
   key: "infoComErpStore",
   default: {
     filter: {
-      type: "storeName",
+      searchType: "name",
       text: "",
-      storeRank: [],
+      areaCode: "",
+      storeType: [],
       storeStatus: [],
-      salesType: "avgM",
-      salesRange: {
-        start: "",
-        end: "",
-      },
     },
     data: [],
     active: false,
   },
 });
 
-export const infoComErpBsnsD = atom<{
-  filter: any;
-  data: any;
-  active: boolean;
-}>({
+export const infoComErpBsnsD = atom<Infocome<TypeFilterBsDis>>({
   key: "infoComErpBsnsD",
   default: {
     filter: {
-      type: "rentName",
+      searchType: "bsDName",
       text: "",
-      bsnsType: [],
+      areaCode: "",
+      bsDType: [],
     },
     data: [],
     active: false,
   },
 });
 
-export const infoComErpRent = atom<{
-  filter: any;
-  data: any;
-  active: boolean;
-}>({
+export const infoComErpRent = atom<Infocome<TypeFilterRent>>({
   key: "infoComErpRent",
   default: {
     filter: {
-      type: "bsnsDName",
+      searchType: "rentName",
+      areaCode: "",
       text: "",
-      rentRank: [],
+      rentType: [],
     },
     data: [],
     active: false,

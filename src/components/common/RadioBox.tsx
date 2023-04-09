@@ -43,7 +43,7 @@ const RadioBox = ({
       {values &&
         values.map((li: { text: string; value: string | number }) => (
           <Radio
-            variant="search"
+            variant={variant || "search"}
             key={`radio-${li.value}`}
             value={li.value}
             isDisabled={isDisabled}

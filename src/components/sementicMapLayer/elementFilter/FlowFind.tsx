@@ -1,14 +1,11 @@
 //  Lib
-import { useState } from "react";
 import { Box, Button, Flex } from "@chakra-ui/react";
 //  Component
-import BtnReset from "@src/components/sementicMapLayer/elementFilter/BtnReset";
+import BtnReset from "@components/sementicMapLayer/elementFilter/BtnReset";
 //  Icon
-import { IcoBarChart, IcoErp, IcoFilter } from "@assets/icons/icon";
+import { IcoBorderOuter } from "@assets/icons/icon";
 
 const FlowFind = () => {
-  const [filterType, setType] = useState("");
-
   return (
     <>
       {/* ------------------------------ 하단 ------------------------------*/}
@@ -18,52 +15,16 @@ const FlowFind = () => {
         left="50%"
         zIndex={999}
         transform="translateX(-50%)"
-        gap="1.25rem"
+        gap="4.25rem"
       >
-        <Button
-          variant="filterTop"
-          disabled={true}
-          isActive={false}
-          onClick={() => {
-            if (filterType === "anal") {
-              setType("");
-            } else {
-              setType("anal");
-            }
-          }}
-        >
+        <Button variant="filterTop" disabled={false} isActive={true}>
           <Box>
-            <IcoFilter />
+            <IcoBorderOuter width="1.125rem" height="1.125rem" />
           </Box>
-          분석필터
-        </Button>
-        <Button
-          variant="filterTop"
-          disabled={true}
-          isActive={false}
-          onClick={() => {
-            if (filterType === "erp") {
-              setType("");
-            } else {
-              setType("erp");
-            }
-          }}
-        >
-          <Box>
-            <IcoErp />
-          </Box>
-          ERP 필터
+          영역 분석
         </Button>
         <BtnReset />
-        <Button disabled={true} variant="filterTop" onClick={() => {}}>
-          <Box>
-            <IcoBarChart />
-          </Box>
-          리포트
-        </Button>
       </Flex>
-      {/* {filterType === "anal" && <NiceFilterDepth areaCode={dong?.slctCode} />}
-      {filterType === "erp" && <ErpFilter areaCode={dong?.slctCode} />} */}
     </>
   );
 };

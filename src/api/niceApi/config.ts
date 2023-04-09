@@ -49,55 +49,57 @@ const loginInstance: NiceApiInstance = axios.create({
 
 niceApi.interceptors.request.use((req: any) => {
   const localStorage = window.localStorage;
-  const niceTokenInfo = localStorage.getItem("nc");
-  const parseJson = niceTokenInfo ? JSON.parse(niceTokenInfo) : null;
+  const tk = localStorage.getItem("nctk");
+  const tm = localStorage.getItem("nctm");
   console.log(req);
-  if (parseJson && parseJson?.tk && parseJson?.tm) {
-    const { tk, tm } = parseJson;
-    const data = dayjs();
-    if (dayjs().valueOf() < Number(tm)) {
-      req.params = { ...req.params, accessToken: tk };
-      return req;
-    } else {
-      const accessReq = getAccessToken()
-        .then((loginRes) => {
-          if (loginRes?.data?.result) {
-            const { accessToken, accessTimeout } = loginRes.data.result;
 
-            localStorage.setItem(
-              "sg",
-              JSON.stringify({ tk: accessToken, to: accessTimeout })
-            );
-            req.params = { ...req.params, accessToken: accessToken };
-            return req;
-          } else {
-            return Promise.reject("getAccessToken Error");
-          }
-        })
-        .catch((err) => {
-          return Promise.reject(err);
-        });
+  if (tk && tm) {
+    req.params = { ...req.params, Authorization: tk };
+    return req;
+    // if (dayjs().valueOf() < Number(tm)) {
+    //   req.params = { ...req.params, accessToken: tk };
+    //   return req;
+    // } else {
+    //   const accessReq = getAccessToken()
+    //     .then((loginRes: any) => {
+    //       if (loginRes?.result === "success" && loginRes?.data) {
+    //         const { authorization, timestamp } = loginRes.data;
 
-      return accessReq;
-    }
+    //         localStorage.setItem(
+    //           "nctk",
+    //           authorization
+    //         );
+    //         localStorage.setItem(
+    //           "nctm",
+    //           timestamp
+    //         );
+    //         req.params = { ...req.params, Authorization: authorization };
+    //         return req;
+    //       } else {
+    //         return Promise.reject("getAccessToken Error");
+    //       }
+    //     })
+    //     .catch((err) => {
+    //       return Promise.reject(err);
+    //     });
+
+    //   return accessReq;
+    // }
   } else {
     const accessReq = getAccessToken()
-      .then((loginRes) => {
+      .then((loginRes: any) => {
         console.log(loginRes);
-        const text = "20230217043042791_";
-        const trans = text.slice(0, -1);
-        // if (loginRes?.data?.result) {
-        //   const { accessToken, accessTimeout } = loginRes.data.result;
+        if (loginRes?.result === "success" && loginRes?.data) {
+          const { authorization, timestamp } = loginRes.data;
+          console.log(loginRes.data);
+          localStorage.setItem("nctk", authorization);
+          localStorage.setItem("nctm", timestamp);
 
-        //   localStorage.setItem(
-        //     "sg",
-        //     JSON.stringify({ tk: accessToken, tm: accessTimeout })
-        //   );
-        //   req.params = { ...req.params, accessToken: accessToken };
-        //   return req;
-        // } else {
-        //   return Promise.reject("getAccessToken Error");
-        // }
+          req.headers = { Authorization: authorization };
+          return req;
+        } else {
+          return Promise.reject("getAccessToken Error");
+        }
       })
       .catch((err) => {
         return Promise.reject(err);
@@ -108,6 +110,14 @@ niceApi.interceptors.request.use((req: any) => {
 });
 
 niceApi.interceptors.response.use((res: any) => {
+  return res;
+});
+
+loginInstance.interceptors.request.use((req: any) => {
+  return req;
+});
+
+loginInstance.interceptors.response.use((res: any) => {
   return res;
 });
 
@@ -130,8 +140,8 @@ const niceArrCode = {
 
 //  Api Module
 //  01. 토큰발급
-const getAccessToken = () =>
-  loginInstance.get("/common/getToken", {
+export const getAccessToken = () =>
+  loginInstance.post("/common/getToken", null, {
     params: {
       loginId: import.meta.env.VITE_API_NICE_ID,
       pwd: import.meta.env.VITE_API_NICE_PWD,
@@ -145,13 +155,12 @@ export const getSigunguPopInfo = ({
 }: {
   upjongCode: string;
   sigunguCode: string;
-}) => {
-  niceApi.post(`/bizRecipe/getGuCustDataList`, {
+}) =>
+  niceApi.post(`/bizRecipe/getGuCustDataList`, null, {
     params: {
-      upjongCd: "D11002",
+      upjongCd: upjongCode || "D11002",
       sigunguCode: sigunguCode,
     },
   });
-};
 
 export default niceApi;

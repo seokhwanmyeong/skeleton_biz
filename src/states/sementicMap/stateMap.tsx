@@ -62,20 +62,6 @@ export const atomFlowEnterArea = atom<SlctAreaProps>({
   },
 });
 
-export const atomCurrentMapOption = atom({
-  key: "atomCurrentMapOption",
-  default: {
-    zoom: {
-      minZoom: 0,
-      maxZoom: 0,
-    },
-    center: {
-      lat: 0,
-      lng: 0,
-    },
-  },
-});
-
 export const atomSidoLi = atom<AreaListProps>({
   key: "sidoLi",
   default: [],
