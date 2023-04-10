@@ -108,6 +108,7 @@ const CheckboxGroup = ({
   groupProps?: any;
 }) => {
   const originLength = chkboxData.length;
+  const originArr = chkboxData.map((li) => li.value);
 
   const chkHandler = (val: (string | number)[]) => {
     console.log(val);
@@ -115,7 +116,7 @@ const CheckboxGroup = ({
 
     if (activeTotal) {
       if (exceptTotal.length === originLength) {
-        onChange(["total"]);
+        onChange(originArr);
       } else {
         onChange(exceptTotal);
       }
@@ -126,15 +127,15 @@ const CheckboxGroup = ({
 
   const totalTrans = () => {
     if (Array.isArray(chkValue)) {
-      return chkValue.length === originLength ? ["total"] : chkValue;
+      return chkValue.length === originLength ? originArr : chkValue;
     } else {
-      return ["total"];
+      return originArr;
     }
   };
 
   return (
     <ChakraCheckboxGroup
-      defaultValue={activeTotal ? ["total"] : defaultValue}
+      defaultValue={activeTotal ? originArr : defaultValue}
       value={activeTotal ? totalTrans() : chkValue}
       isDisabled={isDisabled}
       onChange={chkHandler}
@@ -143,15 +144,16 @@ const CheckboxGroup = ({
         {activeTotal && (
           <ChakraCheckbox
             variant={variant}
+            isChecked={chkValue.length === originLength}
             onChange={() => {
-              if (chkValue.length === 1 && chkValue[0] === "total") {
+              if (chkValue.length === originLength) {
                 onChange([]);
               } else {
-                onChange(["total"]);
+                onChange(originArr);
               }
             }}
             key={`check-total`}
-            value={"total"}
+            // value={"total"}
             // sx={{
             //   span: {
             //     _last: { fontSize: "sm", position: "relative", top: "1px" },

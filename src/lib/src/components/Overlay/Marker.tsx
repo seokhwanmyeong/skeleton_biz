@@ -36,7 +36,8 @@ const Marker = ({
   const [marker, setMarker] = useState<naver.maps.Marker | undefined>(
     undefined
   );
-  const [markerId] = useState(id ? id : `marker-${uuid()}`);
+  // const [markerId] = useState(id ? id : `marker-${uuid()}`);
+  const [markerId] = useState(id ? id : `marker-test`);
 
   const addMarker = (marker: naver.maps.Marker) => {
     dispatch({ type: "add_object", object: marker, id: markerId });
@@ -45,7 +46,7 @@ const Marker = ({
     dispatch({ type: "remove_object", id: markerId });
   };
   useEffect(() => {
-    if (state.map === undefined) return;
+    if (state.map === undefined && !id && !opts) return;
     const marker = new naver.maps.Marker({ ...opts, map: state.map });
     setMarker(marker);
     setPrevOpts(JSON.stringify(opts));
@@ -93,14 +94,17 @@ const Marker = ({
   // 컴포넌트 프랍이 변경되면 마커 객체 수정
   useEffect(() => {
     if (
+      !state.map ||
       marker === undefined ||
       opts === undefined ||
       JSON.stringify(opts) === prevOpts
-    )
+    ) {
       return;
+    }
+
     marker.setOptions(opts);
     setPrevOpts(JSON.stringify(opts));
-  }, [marker, opts]);
+  }, [marker, opts, state.map]);
 
   return null;
 };

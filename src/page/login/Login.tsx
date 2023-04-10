@@ -8,7 +8,6 @@ import FormLogin from "@components/form/login/FormLogin";
 import { loginApi } from "@src/api/biz/config";
 //  Icon
 import { IcoLogoMain } from "@assets/icons/icon";
-import { getAccessToken } from "@src/api/niceApi/config";
 
 const Login = () => {
   const { login } = loginApi;
@@ -22,47 +21,29 @@ const Login = () => {
       alert("정보입력필요_test");
       return;
     }
-    getAccessToken()
-      .then((loginRes: any) => {
-        console.log(loginRes);
-        if (loginRes?.result === "success" && loginRes?.data) {
-          const { authorization, timestamp } = loginRes.data;
-          console.log(loginRes.data);
-          localStorage.setItem("nctk", authorization);
-          localStorage.setItem("nctm", timestamp);
-          navigator("/maps");
+
+    setLoadingChk(true);
+    login(val)
+      .then((res: any) => {
+        const { accessToken, expiresIn, userData } = res.data;
+        console.log(res);
+
+        if (expiresIn > 0) {
+          localStorage.setItem("token", accessToken);
+          setTimeout(() => {
+            setLoadingChk(false);
+            navigator("/maps");
+          }, 300);
         } else {
-          console.log(loginRes.data);
-          navigator("/maps");
+          alert("expires is already");
+          setLoadingChk(false);
         }
       })
       .catch((err) => {
-        return Promise.reject(err);
+        console.log(err);
+        setLoadingChk(false);
+        alert("아이디, 비밀번호를 확인해주세요");
       });
-
-    // setLoadingChk(true);
-    // login(val)
-    //   .then((res: any) => {
-    //     const { accessToken, expiresIn, userData } = res.data;
-    //     console.log(res);
-
-    //     if (expiresIn > 0) {
-    //       localStorage.setItem("token", accessToken);
-    //       setTimeout(() => {
-    //         setLoadingChk(false);
-    //         navigator("/maps");
-    //       }, 300);
-    //     } else {
-    //       alert("expires is already");
-    //       setLoadingChk(false);
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //     setLoadingChk(false);
-    //     alert("아이디, 비밀번호를 확인해주세요");
-    //     navigator("/maps");
-    //   });
   };
 
   useEffect(() => {

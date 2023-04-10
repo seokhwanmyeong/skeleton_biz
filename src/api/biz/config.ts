@@ -1,7 +1,13 @@
 //  LIB
 import axios from "axios";
 //  Type
-import { BixApiInstance, TypeLogin } from "@api/biz/type";
+import {
+  BixApiInstance,
+  TypeLogin,
+  TypeMapBsDisSearch,
+  TypeMapRentSearch,
+  TypeMapStoreSearch,
+} from "@api/biz/type";
 //  URL
 import {
   BIZ_LOGIN,
@@ -125,9 +131,12 @@ const erpClientApi = {
 };
 
 const apiErpMap = {
-  getStoreList: (req?: any) => instance.post(ERP_STORE_GET_POINT, req),
-  getRentList: (req?: any) => instance.post(ERP_RENT_GET_POINT, req),
-  getBsDisList: (req?: any) => instance.post(ERP_BSDIS_GET_AREA, req),
+  getStoreList: (req: TypeMapStoreSearch["req"]) =>
+    instance.post<TypeMapStoreSearch["req"], any>(ERP_STORE_GET_POINT, req),
+  getRentList: (req: TypeMapRentSearch["req"]) =>
+    instance.post<TypeMapRentSearch["req"], any>(ERP_RENT_GET_POINT, req),
+  getBsDisList: (req: TypeMapBsDisSearch["req"]) =>
+    instance.post<TypeMapBsDisSearch["req"], any>(ERP_BSDIS_GET_AREA, req),
 };
 
 const apiCommon = {

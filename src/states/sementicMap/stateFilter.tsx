@@ -207,25 +207,25 @@ export type Infocome<Filter> = {
 };
 
 export type TypeFilterStore = {
-  searchType: "name" | "code" | "owner_name";
-  text: string;
-  areaCode: string;
-  storeType: ["A" | "B" | "C" | "D" | "E"] | [];
-  storeStatus: ["open" | "ready" | "rest" | "close" | "etc"] | [];
+  searchType?: "name" | "code" | "owner_name";
+  text?: string;
+  areaCode?: string;
+  storeType?: ["A" | "B" | "C" | "D" | "E"] | [];
+  storeStatus?: ["open" | "ready" | "rest" | "close" | "etc"] | [];
 };
 
 export type TypeFilterBsDis = {
-  searchType: "bsDName" | "bsDCode";
-  text: string;
-  areaCode: string;
-  bsDType: ["A" | "B" | "C" | "D" | "E"] | [];
+  searchType?: "bsDName" | "bsDCode";
+  text?: string;
+  areaCode?: string;
+  bsDType?: ["A" | "B" | "C" | "D" | "E"] | [];
 };
 
 export type TypeFilterRent = {
-  searchType: "rentName" | "rentCode";
-  text: string;
-  areaCode: string;
-  rentType: ["A" | "B" | "C" | "D" | "E"] | [];
+  searchType?: "rentName" | "rentCode";
+  text?: string;
+  areaCode?: string;
+  rentType?: ["A" | "B" | "C" | "D" | "E"] | [];
 };
 
 export const infoComErpStore = atom<Infocome<TypeFilterStore>>({
@@ -233,10 +233,10 @@ export const infoComErpStore = atom<Infocome<TypeFilterStore>>({
   default: {
     filter: {
       searchType: "name",
-      text: "",
-      areaCode: "",
-      storeType: [],
-      storeStatus: [],
+      // text: "",
+      // areaCode: "",
+      // storeType: [],
+      // storeStatus: [],
     },
     data: [],
     active: false,
@@ -248,9 +248,9 @@ export const infoComErpBsnsD = atom<Infocome<TypeFilterBsDis>>({
   default: {
     filter: {
       searchType: "bsDName",
-      text: "",
-      areaCode: "",
-      bsDType: [],
+      // text: "",
+      // areaCode: "",
+      // bsDType: [],
     },
     data: [],
     active: false,
@@ -262,9 +262,9 @@ export const infoComErpRent = atom<Infocome<TypeFilterRent>>({
   default: {
     filter: {
       searchType: "rentName",
-      areaCode: "",
-      text: "",
-      rentType: [],
+      // text: "",
+      // areaCode: "",
+      // rentType: [],
     },
     data: [],
     active: false,

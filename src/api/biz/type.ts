@@ -1,3 +1,8 @@
+import {
+  TypeFilterBsDis,
+  TypeFilterRent,
+  TypeFilterStore,
+} from "@src/states/sementicMap/stateFilter";
 import { AxiosInstance } from "axios";
 
 interface AxiosInterceptorManager {}
@@ -34,4 +39,41 @@ type TypeLogin = {
   };
 };
 
-export type { BixApiInstance, TypeLogin };
+type TypeMapStoreSearch = {
+  req: TypeFilterStore;
+  res: {
+    _id: string;
+    storeName: string;
+    lat: number;
+    lng: number;
+  };
+};
+
+type TypeMapBsDisSearch = {
+  req: TypeFilterBsDis;
+  res: {
+    _id: string;
+    bisName: string;
+    polygon: [number[]];
+    center: [number, number];
+    polygonType: "single" | "multi";
+  };
+};
+
+type TypeMapRentSearch = {
+  req: TypeFilterRent;
+  res: {
+    _id: string;
+    rentName: string;
+    lat: number;
+    lng: number;
+  };
+};
+
+export type {
+  BixApiInstance,
+  TypeLogin,
+  TypeMapStoreSearch,
+  TypeMapBsDisSearch,
+  TypeMapRentSearch,
+};

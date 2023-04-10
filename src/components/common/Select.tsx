@@ -131,7 +131,7 @@ const SelectAddr = ({
     mid: [],
     bot: [],
   });
-
+  console.log(value);
   const selectAddrHandler = (val: any, step: "top" | "mid" | "bot") => {
     let result: string = "total";
 
@@ -191,6 +191,7 @@ const SelectAddr = ({
       <Select
         selectProps={selectProps}
         variant={variant}
+        value={addr.top || "total"}
         data={addrList.top}
         opBaseTxt="address"
         opBaseId="code"
@@ -202,6 +203,7 @@ const SelectAddr = ({
       <Select
         selectProps={selectProps}
         variant={variant}
+        value={addr.mid ? addr.top + addr.mid : ""}
         data={addrList.mid}
         opBaseTxt="address"
         opBaseId="code"
@@ -214,6 +216,7 @@ const SelectAddr = ({
       <Select
         selectProps={selectProps}
         variant={variant}
+        value={addr.bot ? addr.top + addr.mid + addr.bot : ""}
         data={addrList.bot}
         opBaseTxt="address"
         opBaseId="code"

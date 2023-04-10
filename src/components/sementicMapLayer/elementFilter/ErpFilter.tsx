@@ -88,16 +88,240 @@ const ErpFilter = ({
   //  매장 필터 검색
   const searchStoreHandler = () => {
     console.log("store search");
-    getStoreList({
-      searchType: filterStore.searchType,
-      text: filterStore.text,
-      areaCode: filterStore.areaCode,
-    }).then((res: any) => {
+    console.log(filterStore);
+    const tmp = { ...filterStore };
+
+    if (!tmp.text) {
+      delete tmp.searchType;
+      delete tmp.text;
+    }
+    console.log(tmp);
+    setErpStore({
+      filter: tmp,
+      active: true,
+      data: [
+        {
+          _id: {
+            $oid: "63db684647d2511eb5cfd506",
+          },
+          BRAND_CD: "01",
+          BP_CD: "11119",
+          BP_NM: "안국점",
+          OPEN_DATE: {
+            $date: {
+              $numberLong: "1363186800000",
+            },
+          },
+          TEL_NO1: "02-745-1676",
+          ADDR_H: "서울특별시 종로구 창덕궁길 84 (원서동)",
+          STATUS: "10",
+          STATUS_NM: "정상",
+          DTS_UPDATE: {
+            $date: {
+              $numberLong: "1668059439000",
+            },
+          },
+          RK: "1",
+          areaCode: "11110600",
+          lat: "37.5811933",
+          lng: "126.9894288",
+        },
+        {
+          _id: {
+            $oid: "63db684647d2511eb5cfdb43",
+          },
+          BRAND_CD: "01",
+          BP_CD: "13060",
+          BP_NM: "경희궁자이점",
+          OPEN_DATE: {
+            $date: {
+              $numberLong: "1630422000000",
+            },
+          },
+          TEL_NO1: "02-720-1008",
+          ADDR_H: "서울특별시 종로구 통일로14길 8 (무악동)",
+          STATUS: "10",
+          STATUS_NM: "정상",
+          DTS_UPDATE: {
+            $date: {
+              $numberLong: "1636607504000",
+            },
+          },
+          RK: "1",
+          areaCode: "11110570",
+          lat: "37.5749062",
+          lng: "126.9581177",
+        },
+        {
+          _id: {
+            $oid: "63db684647d2511eb5cfde13",
+          },
+          BRAND_CD: "01",
+          BP_CD: "71701",
+          BP_NM: "종로본점",
+          OPEN_DATE: {
+            $date: {
+              $numberLong: "1369407600000",
+            },
+          },
+          TEL_NO1: "02-725-9282",
+          ADDR_H: "서울특별시 종로구 청계천로 81",
+          ADDR_D: "(관철동)",
+          STATUS: "40",
+          STATUS_NM: "폐점",
+          DTS_UPDATE: {
+            $date: {
+              $numberLong: "1620967301000",
+            },
+          },
+          RK: "1",
+          areaCode: "11110615",
+          lat: "37.5685614",
+          lng: "126.9865980",
+        },
+        {
+          _id: {
+            $oid: "63db684647d2511eb5cfde1f",
+          },
+          BRAND_CD: "01",
+          BP_CD: "71747",
+          BP_NM: "명륜점",
+          OPEN_DATE: {
+            $date: {
+              $numberLong: "1373641200000",
+            },
+          },
+          TEL_NO1: "02-742-4442",
+          ADDR_H: "서울특별시 종로구 성균관로 12-3",
+          ADDR_D: "1층",
+          STATUS: "10",
+          STATUS_NM: "정상",
+          DTS_UPDATE: {
+            $date: {
+              $numberLong: "1668059466000",
+            },
+          },
+          RK: "1",
+          areaCode: "11110650",
+          lat: "37.5841424",
+          lng: "126.9979887",
+        },
+        {
+          _id: {
+            $oid: "63db684647d2511eb5cfe1d4",
+          },
+          BRAND_CD: "01",
+          BP_CD: "73899",
+          BP_NM: "인사동점",
+          OPEN_DATE: {
+            $date: {
+              $numberLong: "1607007600000",
+            },
+          },
+          TEL_NO1: "02-738-9282",
+          ADDR_H: "서울특별시 종로구 인사동3길 37 (인사동)",
+          STATUS: "10",
+          STATUS_NM: "정상",
+          DTS_UPDATE: {
+            $date: {
+              $numberLong: "1668492093000",
+            },
+          },
+          RK: "1",
+          areaCode: "11110615",
+          lat: "37.5720371",
+          lng: "126.9864703",
+        },
+        {
+          _id: {
+            $oid: "63db684647d2511eb5cfe36e",
+          },
+          BRAND_CD: "01",
+          BP_CD: "74631",
+          BP_NM: "동대문역점",
+          OPEN_DATE: {
+            $date: {
+              $numberLong: "1610463600000",
+            },
+          },
+          TEL_NO1: "02-742-9282",
+          ADDR_H: "서울특별시 종로구 창신길 59 (창신동, 주영빌딩)",
+          ADDR_D: "1층 1호",
+          STATUS: "10",
+          STATUS_NM: "정상",
+          DTS_UPDATE: {
+            $date: {
+              $numberLong: "1673326811000",
+            },
+          },
+          RK: "1",
+          areaCode: "11110680",
+          lat: "37.5743906",
+          lng: "127.010517",
+        },
+        {
+          _id: {
+            $oid: "63db684647d2511eb5cfe53a",
+          },
+          BRAND_CD: "01",
+          BP_CD: "75225",
+          BP_NM: "대학로점",
+          OPEN_DATE: {
+            $date: {
+              $numberLong: "1640271600000",
+            },
+          },
+          TEL_NO1: "02-2135-6563",
+          ADDR_H: "서울특별시 종로구 대학로10길 16 (동숭동)",
+          ADDR_D: "1층",
+          STATUS: "10",
+          STATUS_NM: "정상",
+          DTS_UPDATE: {
+            $date: {
+              $numberLong: "1668059414000",
+            },
+          },
+          RK: "1",
+          areaCode: "11110640",
+          lat: "37.5816377",
+          lng: "127.0031047",
+        },
+        {
+          _id: {
+            $oid: "63db684647d2511eb5cfe53e",
+          },
+          BRAND_CD: "01",
+          BP_CD: "75230",
+          BP_NM: "종로LCK점",
+          OPEN_DATE: {
+            $date: {
+              $numberLong: "1641654000000",
+            },
+          },
+          TEL_NO1: "07040474742",
+          ADDR_H: "서울특별시 종로구 종로 33 (청진동, 그랑서울)",
+          ADDR_D: "3층 1-309호",
+          STATUS: "10",
+          STATUS_NM: "정상",
+          DTS_UPDATE: {
+            $date: {
+              $numberLong: "1668492042000",
+            },
+          },
+          RK: "1",
+          areaCode: "11110615",
+          lat: "37.57096",
+          lng: "126.9814392",
+        },
+      ],
+    });
+    return;
+    getStoreList(tmp).then((res: any) => {
       const { records } = res;
       console.log(records);
 
       setErpStore({
-        filter: filterStore,
+        filter: tmp,
         active: true,
         data: records || [],
       });
@@ -107,38 +331,50 @@ const ErpFilter = ({
   //  상권 필터 검색
   const searchBsDHandler = () => {
     console.log("bsD search");
-    const tmp = {};
+    console.log(filterBsD);
+    const tmp = { ...filterBsD };
 
-    getBsDisList({
-      searchType: filterBsD.searchType,
-      text: filterBsD.text,
-      areaCode: filterBsD.areaCode,
-    }).then((res) => {
+    if (!tmp.text) {
+      delete tmp.searchType;
+      delete tmp.text;
+    }
+
+    console.log(tmp);
+    return;
+    getBsDisList(tmp).then((res: any) => {
+      const { records } = res;
       console.log(res);
-    });
 
-    setErpBsD({
-      filter: filterBsD,
-      active: true,
-      data: [],
+      setErpBsD({
+        filter: tmp,
+        active: true,
+        data: records || [],
+      });
     });
   };
 
   //  매물 필터 검색
   const searchRentHandler = () => {
     console.log("rent search");
-    getRentList({
-      searchType: filterRent.searchType,
-      text: filterRent.text,
-      areaCode: filterRent.areaCode,
-    }).then((res) => {
-      console.log(res);
-    });
+    console.log(filterRent);
+    const tmp = { ...filterRent };
 
-    setErpRent({
-      filter: filterRent,
-      active: true,
-      data: [],
+    if (!tmp.text) {
+      delete tmp.searchType;
+      delete tmp.text;
+    }
+
+    console.log(tmp);
+    return;
+    getRentList(tmp).then((res: any) => {
+      const { records } = res;
+      console.log(res);
+
+      setErpRent({
+        filter: filterRent,
+        active: true,
+        data: records || [],
+      });
     });
   };
 
@@ -307,7 +543,7 @@ const ErpFilter = ({
                   data={[
                     { text: "매장명", value: "name" },
                     { text: "매장코드", value: "code" },
-                    { text: "매장코드", value: "owner_name" },
+                    { text: "대표자", value: "owner_name" },
                   ]}
                   opBaseTxt="text"
                   opBaseId="value"
@@ -324,12 +560,19 @@ const ErpFilter = ({
                 <Input
                   inputProps={{ w: "100%" }}
                   placeholder={"매장명, 코드, 대표자를 입력해주세요"}
-                  value={filterStore.text}
+                  value={filterStore.text || ""}
                   onChange={(val: any) => {
-                    setFilterStore({
-                      ...filterStore,
-                      text: val,
-                    });
+                    if (val) {
+                      setFilterStore({
+                        ...filterStore,
+                        text: val,
+                      });
+                    } else {
+                      const tmp = { ...filterStore };
+                      delete tmp.text;
+
+                      setFilterStore(tmp);
+                    }
                   }}
                 />
               </Flex>
@@ -350,12 +593,19 @@ const ErpFilter = ({
               </FormLabel>
               <Flex w="100%" gap="0.5rem">
                 <SelectAddr
-                  value={filterStore.areaCode}
+                  value={filterStore.areaCode || ""}
                   onChange={(val: any) => {
-                    setFilterStore({
-                      ...filterStore,
-                      areaCode: val,
-                    });
+                    if (val && val !== "total") {
+                      setFilterStore({
+                        ...filterStore,
+                        areaCode: val,
+                      });
+                    } else {
+                      const tmp = { ...filterStore };
+                      delete tmp.areaCode;
+
+                      setFilterStore(tmp);
+                    }
                   }}
                 />
               </Flex>
@@ -382,13 +632,20 @@ const ErpFilter = ({
                   { text: "D타입", value: "D" },
                   { text: "E타입", value: "E" },
                 ]}
-                chkValue={filterStore.storeType}
+                chkValue={filterStore.storeType || []}
                 activeTotal={true}
                 onChange={(val: any) => {
-                  setFilterStore({
-                    ...filterStore,
-                    storeType: val,
-                  });
+                  if (val.length === 0) {
+                    const tmp = { ...filterStore };
+                    delete tmp.storeType;
+
+                    setFilterStore(tmp);
+                  } else {
+                    setFilterStore({
+                      ...filterStore,
+                      storeType: val,
+                    });
+                  }
                 }}
                 groupProps={{
                   w: "max-content",
@@ -417,13 +674,20 @@ const ErpFilter = ({
                   { text: "대기", value: "ready" },
                   { text: "기타", value: "etc" },
                 ]}
-                chkValue={filterStore.storeStatus}
+                chkValue={filterStore.storeStatus || []}
                 activeTotal={true}
                 onChange={(val: any) => {
-                  setFilterStore({
-                    ...filterStore,
-                    storeStatus: val,
-                  });
+                  if (val.length === 0) {
+                    const tmp = { ...filterStore };
+                    delete tmp.storeStatus;
+
+                    setFilterStore(tmp);
+                  } else {
+                    setFilterStore({
+                      ...filterStore,
+                      storeStatus: val,
+                    });
+                  }
                 }}
                 groupProps={{
                   w: "max-content",
@@ -511,12 +775,19 @@ const ErpFilter = ({
                       ? "상권명를 입력해주세요"
                       : "상권코드를 입력해주세요"
                   }
-                  value={filterBsD.text}
+                  value={filterBsD.text || ""}
                   onChange={(val: any) => {
-                    setFilterBsD({
-                      ...filterBsD,
-                      text: val,
-                    });
+                    if (val) {
+                      setFilterBsD({
+                        ...filterBsD,
+                        text: val,
+                      });
+                    } else {
+                      const tmp = { ...filterBsD };
+                      delete tmp.text;
+
+                      setFilterBsD(tmp);
+                    }
                   }}
                 />
               </Flex>
@@ -535,12 +806,19 @@ const ErpFilter = ({
               </FormLabel>
               <Flex w="100%" gap="0.5rem">
                 <SelectAddr
-                  value={filterBsD.areaCode}
+                  value={filterBsD.areaCode || ""}
                   onChange={(val: any) => {
-                    setFilterBsD({
-                      ...filterBsD,
-                      areaCode: val,
-                    });
+                    if (val && val !== "total") {
+                      setFilterBsD({
+                        ...filterBsD,
+                        areaCode: val,
+                      });
+                    } else {
+                      const tmp = { ...filterBsD };
+                      delete tmp.areaCode;
+
+                      setFilterBsD(tmp);
+                    }
                   }}
                 />
               </Flex>
@@ -565,14 +843,21 @@ const ErpFilter = ({
                   { text: "상권4", value: "D" },
                   { text: "상권5", value: "E" },
                 ]}
-                chkValue={filterBsD.bsDType}
+                chkValue={filterBsD.bsDType || []}
                 activeTotal={true}
-                onChange={(val: any) =>
-                  setFilterBsD({
-                    ...filterBsD,
-                    bsDType: val,
-                  })
-                }
+                onChange={(val: any) => {
+                  if (val.length === 0) {
+                    const tmp = { ...filterBsD };
+                    delete tmp.bsDType;
+
+                    setFilterBsD(tmp);
+                  } else {
+                    setFilterBsD({
+                      ...filterBsD,
+                      bsDType: val,
+                    });
+                  }
+                }}
                 groupProps={{
                   w: "max-content",
                 }}
@@ -659,12 +944,19 @@ const ErpFilter = ({
                       ? "매물명를 입력해주세요"
                       : "매물코드를 입력해주세요"
                   }
-                  value={filterRent.text}
+                  value={filterRent.text || ""}
                   onChange={(val: any) => {
-                    setFilterRent({
-                      ...filterRent,
-                      text: val,
-                    });
+                    if (val) {
+                      setFilterRent({
+                        ...filterRent,
+                        text: val,
+                      });
+                    } else {
+                      const tmp = { ...filterRent };
+                      delete tmp.text;
+
+                      setFilterRent(tmp);
+                    }
                   }}
                 />
               </Flex>
@@ -683,12 +975,19 @@ const ErpFilter = ({
               </FormLabel>
               <Flex w="100%" gap="0.5rem">
                 <SelectAddr
-                  value={filterRent.areaCode}
+                  value={filterRent.areaCode || ""}
                   onChange={(val: any) => {
-                    setFilterRent({
-                      ...filterRent,
-                      areaCode: val,
-                    });
+                    if (val && val !== "total") {
+                      setFilterRent({
+                        ...filterRent,
+                        areaCode: val,
+                      });
+                    } else {
+                      const tmp = { ...filterRent };
+                      delete tmp.areaCode;
+
+                      setFilterRent(tmp);
+                    }
                   }}
                 />
               </Flex>
@@ -713,14 +1012,20 @@ const ErpFilter = ({
                   { text: "D타입", value: "D" },
                   { text: "E타입", value: "E" },
                 ]}
-                chkValue={erpRent.filter.rentType}
+                chkValue={filterRent.rentType || []}
                 activeTotal={true}
                 onChange={(val: any) => {
-                  setFilterRent({
-                    ...filterRent,
-                    rentType: val,
-                  });
-                  return null;
+                  if (val.length === 0) {
+                    const tmp = { ...filterRent };
+                    delete tmp.rentType;
+
+                    setFilterRent(tmp);
+                  } else {
+                    setFilterRent({
+                      ...filterRent,
+                      rentType: val,
+                    });
+                  }
                 }}
                 groupProps={{
                   w: "max-content",

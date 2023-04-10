@@ -9,7 +9,6 @@ import {
   atomFilterFlow,
   infoComErpStore,
 } from "@states/sementicMap/stateFilter";
-import { atomFlowEnterArea } from "@states/sementicMap/stateMap";
 //  Api
 import { apiErpMap } from "@api/biz/config";
 
@@ -25,68 +24,40 @@ const MapFlowErp = (props: Props) => {
 
   useEffect(() => {
     if (storeList.length > 0) {
+      console.log(storeList);
       setStore(storeList);
     }
   }, [storeList]);
 
   return (
     <Fragment>
-      {storeList?.length > 0 && (
-        // storeList.map((store: any, idx: number) => {
-        //   const { _id, lat, lng, storeName } = store;
-
-        //   if (_id && lat && lng && storeName) {
-        //     return (
-        //       <Marker
-        //         id={`markerStore-${_id}`}
-        //         opts={{
-        //           position: [lat, lng],
-        //           icon: {
-        //             path: [
-        //               { x: 0, y: 0 },
-        //               { x: 0, y: 0 },
-        //               { x: 0, y: 150 },
-        //               { x: 150, y: 250 },
-        //               { x: 0, y: 150 },
-        //             ],
-        //             anchor: { x: 23, y: 103 },
-        //             fillColor: "#ff0000",
-        //             fillOpacity: 1,
-        //             strokeColor: "#000000",
-        //             strokeStyle: "solid",
-        //             strokeWeight: 1,
-        //           },
-        //         }}
-        //         onClick={() => {}}
-        //       />
-        //     );
-        //   } else {
-        //     return null;
-        //   }
-        // })}
-        <Marker
-          id={`markerStore-${storeList[0]._id}`}
-          opts={{
-            position: [storeList[0].lat, storeList[0].lng],
-            icon: {
-              path: [
-                { x: 0, y: 0 },
-                { x: 0, y: 0 },
-                { x: 0, y: 150 },
-                { x: 150, y: 250 },
-                { x: 0, y: 150 },
-              ],
-              anchor: { x: 23, y: 103 },
-              fillColor: "#ff0000",
-              fillOpacity: 1,
-              strokeColor: "#000000",
-              strokeStyle: "solid",
-              strokeWeight: 1,
-            },
-          }}
-          onClick={() => {}}
-        />
-      )}
+      {storeList?.length > 0 &&
+        storeList.map((store) => {
+          return (
+            <Marker
+              id={`markerStore-${store._id.$oid}`}
+              opts={{
+                position: [Number(store.lat), Number(store.lng)],
+                // icon: {
+                //   path: [
+                //     { x: 0, y: 0 },
+                //     { x: 0, y: 0 },
+                //     { x: 0, y: 150 },
+                //     { x: 150, y: 250 },
+                //     { x: 0, y: 150 },
+                //   ],
+                //   anchor: { x: 23, y: 103 },
+                //   fillColor: "#ff0000",
+                //   fillOpacity: 1,
+                //   strokeColor: "#000000",
+                //   strokeStyle: "solid",
+                //   strokeWeight: 1,
+                // },
+              }}
+              onClick={() => {}}
+            />
+          );
+        })}
     </Fragment>
   );
 };
