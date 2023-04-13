@@ -1,7 +1,6 @@
 const themeLink = {
   baseStyle: {
-    fontFamily: "main",
-    fontStyle: "normal",
+    textStyle: "base",
     color: "font.primary",
     textDecoration: "none",
     outline: "none",
@@ -13,13 +12,6 @@ const themeLink = {
   },
   sizes: {},
   variants: {
-    serviceLink: {
-      fontSize: "sm",
-      fontWeight: "regular",
-      lineHeight: "1.375rem",
-      color: "font.placeholder",
-      transition: "0.1s",
-    },
     headMenuOff: {
       position: "relative",
       display: "flex",
@@ -30,23 +22,10 @@ const themeLink = {
       h: "100%",
       textStyle: "header.menu",
       color: "font.placeholder",
-      transition: "all 0.3s",
       _hover: {
         fontWeight: "strong",
         color: "primary.type7",
         svg: { color: "primary.type7" },
-        _after: {
-          position: "absolute",
-          top: 0,
-          left: 0,
-          content: "attr(data-text)",
-          w: "100%",
-          h: "100%",
-          borderBottom: "2px solid",
-          borderColor: "primary.type7",
-          fontSize: 0,
-          color: "transparent",
-        },
       },
     },
     headMenuOn: {
@@ -59,22 +38,7 @@ const themeLink = {
       h: "100%",
       textStyle: "header.menu",
       color: "primary.type7",
-      transition: "all 0.3s",
-      _after: {
-        position: "absolute",
-        top: 0,
-        left: 0,
-        content: "attr(data-text)",
-        w: "100%",
-        h: "100%",
-        borderBottom: "2px solid",
-        borderColor: "primary.type7",
-        fontSize: 0,
-        color: "transparent",
-      },
-      _hover: {
-        fontWeight: "strong",
-      },
+      cursor: "default",
     },
   },
   defaultProps: {},

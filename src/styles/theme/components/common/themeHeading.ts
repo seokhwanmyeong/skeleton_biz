@@ -9,16 +9,6 @@ const themeHeading = {
     color: "font.primary",
   },
   variants: {
-    loginHead: {
-      fontSize: "3.75rem",
-      fontWeight: "heavy",
-      lineHeight: 1,
-      color: "#262323cc",
-    },
-    serviceName: {
-      fontSize: "xs",
-      fontWeight: "heavy",
-    },
     outlet: {
       textStyle: {
         pc: "body.title",

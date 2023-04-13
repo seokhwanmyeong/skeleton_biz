@@ -1,5 +1,6 @@
-//  LIB
+//  Lib
 import axios from "axios";
+import dayjs from "dayjs";
 //  Type
 import {
   BixApiInstance,
@@ -42,8 +43,8 @@ import {
   ERP_LINK_GET,
 } from "@api/biz/url";
 
-const localStorage = window.localStorage;
-const jwtToken = localStorage.getItem("token");
+let localStorage = window.localStorage;
+let jwtToken = localStorage.getItem("tk");
 
 //  Axios Instance
 const instance: BixApiInstance = axios.create({
@@ -55,7 +56,7 @@ const instance: BixApiInstance = axios.create({
     Accept: "*/*",
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
-    Authorization: jwtToken ? "Bearer " + jwtToken : "Bearer",
+    Authorization: jwtToken ? "Bearer " + jwtToken : "",
   },
 });
 
@@ -74,10 +75,24 @@ const loginInstance: BixApiInstance = axios.create({
 //  Axios interceptors
 instance.interceptors.request.use((req: any) => {
   const { url, data } = req;
+  const tk = localStorage.getItem("tk");
+  const te = localStorage.getItem("te");
+
   console.log("\nIntercept Req\n", req);
   console.log("\nReq url\n", url);
   console.log("\nReq Data\n", data);
-  return req;
+
+  if (tk && dayjs().valueOf() > Number(te)) {
+    if (req.headers.Authorization) {
+      return req;
+    } else {
+      req.headers.Authorization = tk;
+
+      return req;
+    }
+  } else {
+    //  로그인 재발급 로직
+  }
 });
 
 instance.interceptors.response.use((res: any) => {

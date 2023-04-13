@@ -13,6 +13,8 @@ type ChekboxProps = {
   isChecked?: boolean;
   onChange?: any;
   value?: any;
+  variant?: string;
+  [x: string]: any;
 };
 
 interface ChekboxTagProps extends ChekboxProps {
@@ -22,9 +24,22 @@ interface ChekboxTagProps extends ChekboxProps {
   checkBoxProps?: any;
 }
 
-const CheckBox = ({ title, isChecked, onChange, value }: ChekboxProps) => {
+const CheckBox = ({
+  title,
+  isChecked,
+  onChange,
+  value,
+  variant,
+  ...rest
+}: ChekboxProps) => {
   return (
-    <ChakraCheckbox isChecked={isChecked} onChange={onChange} value={value}>
+    <ChakraCheckbox
+      variant={variant}
+      isChecked={isChecked}
+      onChange={onChange}
+      value={value}
+      {...rest}
+    >
       {title}
     </ChakraCheckbox>
   );

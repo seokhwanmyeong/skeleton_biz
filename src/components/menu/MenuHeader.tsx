@@ -9,8 +9,8 @@ import type { MainRouteType } from "@states/route/stateRoute";
 import useLocationState from "@hook/useLocationState";
 
 const MenuHeader = () => {
-  const menuList = useRecoilValue(headerRouteList);
   const { rootState } = useLocationState();
+  const menuList = useRecoilValue(headerRouteList);
 
   return (
     <Flex h="inherit" gap="2rem">
@@ -25,7 +25,7 @@ const MenuHeader = () => {
             }
             data-text={menu.title}
           >
-            {menu.icon && menu.icon()}
+            {menu.icon && menu.icon({ width: "0.875rem", height: "0.875rem" })}
             {menu.title}
           </Link>
         );

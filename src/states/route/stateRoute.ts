@@ -44,7 +44,7 @@ type MainRouteType = {
   index?: boolean;
   hasSub: boolean;
   page?: (props: any) => JSX.Element;
-  icon?: (color?: HEX) => JSX.Element;
+  icon?: (props?: IcoProps) => JSX.Element;
 };
 
 type SubRouteType = {
@@ -92,21 +92,21 @@ export const mainRoute = atom<Array<MainRouteType>>({
   default: [
     {
       root: "maps",
-      title: "상권분석",
+      title: "Data Map",
       path: "/maps",
       hasSub: false,
       page: Maps,
-      icon: (color?: HEX) => {
-        return HeaderMenu01(color);
+      icon: (props?: IcoProps) => {
+        return HeaderMenu01(props);
       },
     },
     {
       root: "erp",
-      title: "ERP",
+      title: "ERP Board",
       path: "/erp",
       hasSub: true,
-      icon: (color?: HEX) => {
-        return HeaderMenu02(color);
+      icon: (props?: IcoProps) => {
+        return HeaderMenu02(props);
       },
     },
     {

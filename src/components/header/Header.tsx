@@ -1,12 +1,12 @@
 //  Lib
-import { Flex, Heading, Link, useTheme } from "@chakra-ui/react";
+import { Flex, Link, useTheme } from "@chakra-ui/react";
 //  Components
 import MenuHeader from "@components/menu/MenuHeader";
 import ThemeBox from "@components/header/ThemeBox";
 //  CustomHooks
 import useLocationState from "@hook/useLocationState";
 //  Icon
-import { IcoMy, Logo } from "@assets/icons/icon";
+import { IcoLogoMain, IcoLogoText, IcoMy } from "@assets/icons/icon";
 
 const Header = () => {
   const { pathState } = useLocationState();
@@ -15,19 +15,21 @@ const Header = () => {
   return (
     <Flex
       zIndex={999}
-      padding="0 18px"
+      p="0 1rem"
       w="100%"
       h="2.875rem"
       justify="space-between"
       alignItems="center"
-      bgColor="bg.primary"
+      bgColor="neutral.gray1"
       boxShadow="0px 4px 4px rgba(0, 0, 0, 0.25)"
     >
-      <Flex h="100%">
-        <Flex alignItems="center" gap="0.5rem">
-          <Logo w="36px" h="36px" color={theme.colors.bg.inverse} />
-          <Heading variant="serviceName">ON THE MAP</Heading>
-        </Flex>
+      <Flex h="100%" alignItems="center" gap="0.5rem">
+        <IcoLogoMain w="2rem" h="1rem" color={theme.colors.bg.inverse} />
+        <IcoLogoText
+          width="4.875rem"
+          height="0.625rem"
+          color="neutral.gray10"
+        />
       </Flex>
       {pathState !== "/" && <MenuHeader />}
       {pathState !== "/" && (
@@ -40,7 +42,7 @@ const Header = () => {
           <ThemeBox />
           <Link
             isExternal={true}
-            href="https://www.bizrecipe.co.kr/"
+            href="https://www.onthemap.kr/"
             display="flex"
             justifyContent="center"
             alignItems="center"

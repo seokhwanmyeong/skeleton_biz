@@ -21,7 +21,7 @@ import {
 } from "@chakra-ui/react";
 import DaumPostcode from "react-daum-postcode";
 //  Icons
-import { IconDownload, IconFileAdd, IcoSearch } from "@assets/icons/icon";
+import { IconDownload, IcoSearch } from "@assets/icons/icon";
 //  Util
 import {
   importFileXlsx,
@@ -53,6 +53,7 @@ interface InpProps {
   isInvalid?: boolean;
   isReadOnly?: boolean;
   isRequired?: boolean;
+  [x: string]: any;
 }
 
 interface InpPwdProps extends InpProps {
@@ -114,7 +115,10 @@ const Input = ({
       id={fieldKey}
       type={type}
       value={value}
-      onChange={(e: any) => onChange(e.target.value)}
+      onChange={(e: any) => {
+        console.log(e.target.value);
+        return onChange(e.target.value);
+      }}
       variant={variant}
       placeholder={placeholder}
       _placeholder={_placeholder}

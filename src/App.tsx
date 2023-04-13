@@ -5,11 +5,13 @@ import { useRecoilValue } from "recoil";
 import { ChakraProvider } from "@chakra-ui/react";
 //  Router
 import RouterOutlet from "@router/RouterOutlet";
-//  Style
-import { createTheme } from "@styles/theme/index";
 //  State
 import { atomThemeColor } from "@states/theme/stateTheme";
 import { NaverMapProvider } from "@src/lib/src";
+//  Style
+import { createTheme } from "@styles/theme/index";
+import "@fontsource/roboto/latin.css";
+import "@fontsource/noto-sans-kr/korean.css";
 
 const App = () => {
   const currentTheme = useRecoilValue(atomThemeColor);

@@ -3,9 +3,6 @@ import { StrictMode } from "react";
 import { RecoilRoot } from "recoil";
 import ReactDOM from "react-dom/client";
 import { CubeProvider } from "@cubejs-client/react";
-//  Style
-import "@fontsource/roboto/latin.css";
-import "@fontsource/noto-sans-kr/korean.css";
 // Components
 import App from "@src/App";
 //  API

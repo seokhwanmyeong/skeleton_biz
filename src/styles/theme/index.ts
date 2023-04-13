@@ -142,9 +142,9 @@ const createTheme = (name: string) => {
       header: {
         menu: {
           fontFamily: "main",
-          fontSize: "md",
+          fontSize: "lg",
           fontWeight: "strong",
-          lineHeight: "body",
+          lineHeight: "1.375rem",
           letterSpacing: "normal",
         },
       },

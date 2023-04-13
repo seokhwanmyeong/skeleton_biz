@@ -16,7 +16,7 @@ export interface Auth {
 }
 
 //  User Info
-export const atomUser = atom<User>({
+export const atomUser = atom<any>({
   key: "userProfile",
   default: {
     id: undefined,
