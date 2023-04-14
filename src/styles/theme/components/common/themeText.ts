@@ -45,6 +45,13 @@ const themeText = {
     textArea: {
       p: "5px 12px",
     },
+    alertContent: {
+      textStyle: "base",
+      fontSize: "sm",
+      fontWeight: "regular",
+      lineHeight: "1.375rem",
+      color: "font.primary",
+    },
   },
   defaultProps: {},
 };

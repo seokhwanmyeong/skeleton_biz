@@ -1,6 +1,11 @@
 //  Login
 export const BIZ_LOGIN = "/auth/login";
 
+//  MAP_AREA_POLYGON
+export const MAP_SIDO_GET_LIST = "/v1/Franchise_Branch/mapsearch";
+export const MAP_SIGUNGU_GET_LIST = "/v1/Franchise_Branch/mapsearch";
+export const MAP_DONG_GET_LIST = "/v1/Franchise_Branch/mapsearch";
+
 //  MAP_ERP_STORE
 export const ERP_STORE_GET_POINT = "/v1/Franchise_Branch/mapsearch";
 

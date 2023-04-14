@@ -1,14 +1,6 @@
 //  Lib
 import axios from "axios";
 import dayjs from "dayjs";
-//  Type
-import {
-  BixApiInstance,
-  TypeLogin,
-  TypeMapBsDisSearch,
-  TypeMapRentSearch,
-  TypeMapStoreSearch,
-} from "@api/biz/type";
 //  URL
 import {
   BIZ_LOGIN,
@@ -41,7 +33,21 @@ import {
   ERP_CLIENT_DELETE,
   ERP_CODE_CHECKER,
   ERP_LINK_GET,
+  MAP_SIDO_GET_LIST,
+  MAP_SIGUNGU_GET_LIST,
+  MAP_DONG_GET_LIST,
 } from "@api/biz/url";
+//  Type
+import {
+  BixApiInstance,
+  TypeLogin,
+  TypeMapBsDisSearch,
+  TypeMapRentSearch,
+  TypeMapStoreSearch,
+  TypeMapSido,
+  TypeMapSigungu,
+  TypeMapDong,
+} from "@api/biz/type";
 
 let localStorage = window.localStorage;
 let jwtToken = localStorage.getItem("tk");
@@ -154,6 +160,14 @@ const apiErpMap = {
     instance.post<TypeMapBsDisSearch["req"], any>(ERP_BSDIS_GET_AREA, req),
 };
 
+const apiMapArea = {
+  getSidoList: () => instance.get(MAP_SIDO_GET_LIST),
+  getSigunguList: (req: TypeMapSigungu["req"]) =>
+    instance.post<TypeMapSigungu["req"], any>(MAP_SIGUNGU_GET_LIST, req),
+  getDongList: (req: TypeMapDong["req"]) =>
+    instance.post<TypeMapDong["req"], any>(MAP_DONG_GET_LIST, req),
+};
+
 const apiCommon = {
   checkCode: (req: any) => instance.post(ERP_CODE_CHECKER, req),
   getAvailableErpLinkLi: (req: any) => instance.post(ERP_LINK_GET, req),
@@ -168,4 +182,5 @@ export {
   erpClientApi,
   apiErpMap,
   apiCommon,
+  apiMapArea,
 };

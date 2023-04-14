@@ -136,8 +136,10 @@ const Input = ({
 const InputPwd = ({
   fieldKey,
   type = "single",
+  name,
   value,
   onChange,
+  onKeyUp,
   groupProps,
   addonProps,
   inputProps,
@@ -161,9 +163,11 @@ const InputPwd = ({
       <InputGroup {...groupProps} variant={variant}>
         <ChakraInput
           id={fieldKey}
-          value={value}
           variant={variant}
+          name={name}
+          value={value}
           onChange={(e: any) => onChange(e.target.value)}
+          onKeyUp={onKeyUp}
           placeholder={placeholder}
           _placeholder={_placeholder}
           focusBorderColor={focusBorderColor}
@@ -388,7 +392,7 @@ const InputBtn = (props: any) => {
 
   return (
     <InputGroup {...groupProps}>
-      <Input
+      <ChakraInput
         {...inputProps}
         placeholder={placeholder}
         _placeholder={_placeholder}
@@ -793,7 +797,7 @@ const InputAddr = ({
 
   return (
     <Flex minW={0} w="100%" h="100%" gap="0.25rem">
-      <Input
+      <ChakraInput
         variant={variant}
         isDisabled={true}
         value={value}

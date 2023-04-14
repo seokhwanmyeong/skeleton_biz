@@ -6,6 +6,7 @@ type Colors = {
   bg: {};
   border: {};
   neutral: {};
+  conditional: {};
 };
 
 export const selectColorScheme = (type: string) => {
@@ -155,6 +156,9 @@ export const selectColorScheme = (type: string) => {
         gray12: "#141414",
         gray13: "#000000",
       },
+      conditional: {
+        popOver: "#FFFFFF",
+      },
     },
     dark: {
       primary: {
@@ -263,6 +267,9 @@ export const selectColorScheme = (type: string) => {
         gray11: "#1F1F1F",
         gray12: "#141414",
         gray13: "#000000",
+      },
+      conditional: {
+        popOver: "#FFFFFF",
       },
     },
   };

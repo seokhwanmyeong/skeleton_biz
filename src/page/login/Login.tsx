@@ -1,7 +1,7 @@
 //  LIB
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import dayjs from "dayjs";
 import { Flex, Link, Text, Spinner, Button, Box } from "@chakra-ui/react";
 import { FormikValues } from "formik";
@@ -11,29 +11,49 @@ import { CheckBox } from "@components/common/CheckBox";
 //  Api
 import { loginApi } from "@api/biz/config";
 //  State
-import { atomUser } from "@states/user/stateUser";
+import { atomUser, selectorAutoLogin } from "@states/user/stateUser";
+//  Util
+import {
+  dencryptedDataHandler,
+  encryptedHandler,
+} from "@util/security/encrypted";
 //  Icon
 import { IcoLogoMain, IcoLogoText } from "@assets/icons/icon";
+import DialogAlert from "@src/components/dialog/DialogAlert";
 
 const Login = () => {
   const { login } = loginApi;
-  const setUserInfo = useSetRecoilState(atomUser);
+  const [{ username, password, autoLogin }, setUserInfo] =
+    useRecoilState(atomUser);
+  const autoLoginHandler = useSetRecoilState(selectorAutoLogin);
   const navigator = useNavigate();
   const [loading, setLoading] = useState(false);
   const [loadingChk, setLoadingChk] = useState(false);
+  const [isShow, setShow] = useState<boolean>(false);
   const submitRef = useRef<FormikValues>();
   const localStorage = window.localStorage;
   const tk = localStorage.getItem("tk");
   const te = localStorage.getItem("te");
 
-  const requsetLoginBtn = (val: { username: string; password: string }) => {
-    if (!val.username || !val.password) {
+  const requsetLoginBtn = ({
+    username,
+    password,
+  }: {
+    username: string;
+    password: string;
+  }) => {
+    if (!username || !password) {
       alert("아이디 및 패스워드를 입력해주세요");
       return;
     }
-
+    const ei = encryptedHandler(username);
+    const ep = encryptedHandler(password);
     setLoadingChk(true);
-    login(val)
+
+    login({
+      username: ei,
+      password: ep,
+    })
       .then((res: any) => {
         console.log(res);
         const { accessToken, expiresIn, userData } = res.data;
@@ -41,15 +61,19 @@ const Login = () => {
         localStorage.setItem("tk", accessToken);
         localStorage.setItem("te", expiresIn);
 
+        setUserInfo({ autoLogin, username: ei, password: ep });
+
         setTimeout(() => {
           setLoadingChk(false);
           navigator("/maps");
-        }, 300);
+        }, 400);
       })
       .catch((err) => {
-        console.log(err);
-        setLoadingChk(false);
-        alert("아이디, 비밀번호를 확인해주세요");
+        setTimeout(() => {
+          setLoadingChk(false);
+          setShow(true);
+        }, 400);
+        // alert("아이디, 비밀번호를 확인해주세요");
       });
   };
 
@@ -58,7 +82,7 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (tk && te) {
+    if (tk && te && autoLogin && username && password) {
       if (dayjs().valueOf() > Number(te)) {
         setLoading(true);
         setTimeout(() => {
@@ -66,6 +90,13 @@ const Login = () => {
           navigator("/maps");
         }, 500);
       }
+    } else if (autoLogin && username && password) {
+      console.log(username, password);
+      const du = dencryptedDataHandler(username);
+      const dp = dencryptedDataHandler(password);
+      console.log(du, dp);
+
+      requsetLoginBtn({ username: du, password: dp });
     }
   }, []);
 
@@ -101,12 +132,12 @@ const Login = () => {
         >
           <Spinner
             zIndex={101}
-            w="20rem"
-            h="20rem"
+            w="3rem"
+            h="3rem"
             speed="2s"
             color="primary.type7"
             emptyColor="#eeeeee"
-            thickness="10px"
+            thickness="7px"
           />
         </Flex>
       )}
@@ -149,7 +180,13 @@ const Login = () => {
             setValues={requsetLoginBtn}
           />
           <Flex mb="1.25rem" w="100%" justify="space-between">
-            <CheckBox title="자동 로그인" fontSize="sm" color="font.primary" />
+            <CheckBox
+              isChecked={autoLogin}
+              onChange={() => autoLoginHandler()}
+              title="자동 로그인"
+              fontSize="sm"
+              color="font.primary"
+            />
             <Link
               isExternal={true}
               href="https://www.onthemap.kr/"
@@ -184,7 +221,7 @@ const Login = () => {
             </Text>
           </Button>
           <Flex m="1.25rem 0rem" w="100%" align="center" gap="1rem">
-            <Box w="100%" border="1px solid" borderColor="neutral.gray6" />
+            <Box w="100%" h="1px" bgColor="neutral.gray6" />
             <Text
               textStyle="base"
               fontSize="sm"
@@ -194,7 +231,7 @@ const Login = () => {
             >
               또는
             </Text>
-            <Box w="100%" border="1px solid" borderColor="neutral.gray6" />
+            <Box w="100%" h="1px" bgColor="neutral.gray6" />
           </Flex>
           <Flex mb="15vh" w="100%" justify="center" gap="0.75rem">
             <Text
@@ -231,6 +268,7 @@ const Login = () => {
           Copyright ©2023 Produced by OntheMap
         </Text>
       </Flex>
+      <DialogAlert show={isShow} setShow={setShow} />
     </Flex>
   );
 };

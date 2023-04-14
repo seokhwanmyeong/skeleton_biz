@@ -11,11 +11,12 @@ import {
 import { NaverMapContext } from "@src/lib/src";
 //  Component
 import BtnReset from "@components/sementicMapLayer/elementFilter/BtnReset";
-import BtnFlowCustom from "@components/sementicMapLayer/elementFilter/BtnFlowCustom";
 import BtnBack from "@components/sementicMapLayer/elementFilter/BtnBack";
 import DecoTop from "@components/sementicMapLayer/elementDeco/DecoTop";
 import AreaListBox from "@components/sementicMapLayer/elementFilter/AreaListBox";
 import UpjongListBox from "@components/sementicMapLayer/elementFilter/UpjongListBox";
+//  Api
+import { apiMapArea } from "@api/biz/config";
 //  State
 import { atomFilterFlow } from "@states/sementicMap/stateFilter";
 import {
@@ -30,6 +31,7 @@ import sidoData from "@util/data/area/sido.json";
 import sigunguListData from "@util/data/area/sigungu.json";
 
 const FlowEnter = () => {
+  const { getSidoList, getSigunguList } = apiMapArea;
   const { state } = useContext(NaverMapContext);
   const setFlow = useSetRecoilState(atomFilterFlow);
   const resetSlct = useResetRecoilState(atomFlowEnterArea);
@@ -57,7 +59,7 @@ const FlowEnter = () => {
     });
   };
 
-  const getSidoList = () => {
+  const getSidoHandler = () => {
     const test = sidoData.map(({ code, name, polygon }) => {
       return {
         code: code,
@@ -69,9 +71,32 @@ const FlowEnter = () => {
     const transData = pathTransHandler(test);
 
     setSidoLi(transData);
+    return;
+
+    getSidoList().then((res: any) => {
+      console.log(res);
+
+      if (res.records && res.records.length > 0) {
+        const tmp = res.records.map(({ code, name, polygon }: any) => {
+          return {
+            code: code,
+            name: name,
+            path: polygon,
+          };
+        });
+
+        const transData = pathTransHandler(tmp);
+
+        setSidoLi(transData);
+        return;
+      } else {
+        alert(`시/도 리스트를 불러올 수 없습니다. \n다시 시도해주세요`);
+        return;
+      }
+    });
   };
 
-  const getSigunguList = (slctCode: string) => {
+  const getSigunguHandler = (slctCode: string) => {
     let sigunguData: any = sigunguListData;
 
     const tmp = sigunguData
@@ -92,13 +117,13 @@ const FlowEnter = () => {
 
   useEffect(() => {
     if (sidoLi.length === 0) {
-      getSidoList();
+      getSidoHandler();
     }
   }, []);
 
   useEffect(() => {
     if (sido?.slctCode && sido?.slctName && sido?.slctIdx) {
-      getSigunguList(sido.slctCode);
+      getSigunguHandler(sido.slctCode);
     }
   }, [sido]);
 
@@ -109,7 +134,7 @@ const FlowEnter = () => {
       sigungu?.slctIdx &&
       sido?.slctCode
     ) {
-      getSigunguList(sido.slctCode);
+      getSigunguHandler(sido.slctCode);
     }
   }, [sigungu]);
 

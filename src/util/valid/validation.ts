@@ -16,10 +16,9 @@ const formValidateDate = (startD: any, endD: any, key: string | number) => {
 const validateEmail = (value: any) => {
   let error;
   if (!value) {
-    error = "이메일을 입력해주세요";
+    error = "이메일을 입력해주세요.";
   } else if (!emailRegExp.test(value)) {
-    console.log("test");
-    error = "이메일 형식이 맞지 않습니다";
+    error = "이메일을 다시 확인해주세요.";
   }
   return error;
 };
@@ -27,10 +26,11 @@ const validateEmail = (value: any) => {
 const validatePwd = (value: any) => {
   let error;
   if (!value) {
-    error = "비밀번호를 입력해주세요";
-  } else if (!pwdRegExp.test(value)) {
-    error = "비밀번호 형식이 맞지 않습니다";
+    error = "비밀번호를 입력해주세요.";
   }
+  // else if (!pwdRegExp.test(value)) {
+  //   error = "비밀번호 형식을 확인해주세요.";
+  // }
   return error;
 };
 

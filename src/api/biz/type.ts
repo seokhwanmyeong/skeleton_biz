@@ -70,10 +70,43 @@ type TypeMapRentSearch = {
   };
 };
 
+type TypeMapSido = {
+  req: TypeFilterRent;
+  res: {
+    _id: string;
+    rentName: string;
+    lat: number;
+    lng: number;
+  };
+};
+
+type TypeMapSigungu = {
+  req: TypeFilterRent;
+  res: {
+    _id: string;
+    rentName: string;
+    lat: number;
+    lng: number;
+  };
+};
+
+type TypeMapDong = {
+  req: TypeFilterRent;
+  res: {
+    _id: string;
+    rentName: string;
+    lat: number;
+    lng: number;
+  };
+};
+
 export type {
   BixApiInstance,
   TypeLogin,
   TypeMapStoreSearch,
   TypeMapBsDisSearch,
   TypeMapRentSearch,
+  TypeMapSido,
+  TypeMapSigungu,
+  TypeMapDong,
 };

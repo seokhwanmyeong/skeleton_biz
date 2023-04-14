@@ -2,7 +2,6 @@ import { atom, selector } from "recoil";
 
 //  Type
 export interface User {
-  id: number | undefined;
   username: string;
   password: string;
   // auth: {
@@ -19,11 +18,11 @@ export interface Auth {
 export const atomUser = atom<any>({
   key: "userProfile",
   default: {
-    id: undefined,
     username: "",
     password: "",
     // auth: {},
     // company: "",
+    autoLogin: false,
   },
 });
 
@@ -31,6 +30,16 @@ export const selectorUser = selector({
   key: "selectorUser",
   get: ({ get }) => {},
   set: ({ set }, newValue) => {},
+});
+
+export const selectorAutoLogin = selector({
+  key: "selectorAutoLogin",
+  get: ({ get }) => {},
+  set: ({ set, get }) => {
+    const userInfo = get(atomUser);
+
+    set(atomUser, { ...userInfo, autoLogin: !userInfo.autoLogin });
+  },
 });
 
 //  Auth

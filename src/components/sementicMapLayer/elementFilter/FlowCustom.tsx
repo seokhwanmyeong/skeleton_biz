@@ -6,7 +6,6 @@ import { Box, Button, Flex, useDisclosure } from "@chakra-ui/react";
 import UpjonListBox from "@components/sementicMapLayer/elementFilter/UpjongListBox";
 import NiceFilterDepth from "@components/sementicMapLayer/elementFilter/NiceFilterDepth";
 import BtnReset from "@components/sementicMapLayer/elementFilter/BtnReset";
-import BtnFlowCustom from "@components/sementicMapLayer/elementFilter/BtnFlowCustom";
 import DecoTop from "@components/sementicMapLayer/elementDeco/DecoTop";
 //  State
 import { atomSlctCustom } from "@states/sementicMap/stateMap";

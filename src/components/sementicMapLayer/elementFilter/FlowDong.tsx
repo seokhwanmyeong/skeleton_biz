@@ -8,7 +8,6 @@ import UpjonListBox from "@components/sementicMapLayer/elementFilter/UpjongListB
 import NiceFilterDepth from "@components/sementicMapLayer/elementFilter/NiceFilterDepth";
 import ErpFilter from "@components/sementicMapLayer/elementFilter/ErpFilter";
 import BtnReset from "@components/sementicMapLayer/elementFilter/BtnReset";
-import BtnFlowCustom from "@components/sementicMapLayer/elementFilter/BtnFlowCustom";
 import BtnBack from "@components/sementicMapLayer/elementFilter/BtnBack";
 import DrawTools from "@components/sementicMapLayer/elementFilter/DrawTools";
 import DecoTop from "@components/sementicMapLayer/elementDeco/DecoTop";
@@ -83,7 +82,6 @@ const FlowDong = (props: Props) => {
               <Text variant="filterTopArea">{sigungu?.slctName}</Text>
             )}
           </Flex>
-          <BtnFlowCustom />
         </Flex>
       )}
       {/* ------------------------------ 하단 ------------------------------*/}

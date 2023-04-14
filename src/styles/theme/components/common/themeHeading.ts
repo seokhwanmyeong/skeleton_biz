@@ -47,6 +47,13 @@ const themeHeading = {
       color: "font.title",
       textAlign: "left",
     },
+    alertTitle: {
+      m: 0,
+      textStyle: "base",
+      fontSize: "md",
+      lineHeight: "1.5rem",
+      color: "font.title",
+    },
   },
 };
 

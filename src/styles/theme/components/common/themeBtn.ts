@@ -367,6 +367,19 @@ const themeBtn = {
         bgColor: "primary.type7",
       },
     },
+    alert: {
+      w: "fit-content",
+      h: "2rem",
+      gap: "0.5rem",
+      textStyle: "base",
+      fontSize: "sm",
+      fontWeight: "strong",
+      lineHeight: "normal",
+      bgColor: "primary.type7",
+      _hover: {
+        bgColor: "primary.type8",
+      },
+    },
   },
   defaultProps: {
     size: "auto",

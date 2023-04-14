@@ -6,17 +6,14 @@ import { NaverMapContext } from "@src/lib/src";
 //  Component
 import UpjongListBox from "@components/sementicMapLayer/elementFilter/UpjongListBox";
 import NiceFilter from "@components/sementicMapLayer/elementFilter/NiceFilter";
-import ErpFilter from "@components/sementicMapLayer/elementFilter/ErpFilter";
 import BtnReset from "@components/sementicMapLayer/elementFilter/BtnReset";
-import BtnFlowCustom from "@components/sementicMapLayer/elementFilter/BtnFlowCustom";
 import BtnBack from "@components/sementicMapLayer/elementFilter/BtnBack";
-import DrawTools from "@components/sementicMapLayer/elementFilter/DrawTools";
 import DecoTop from "@components/sementicMapLayer/elementDeco/DecoTop";
 //  State
 import { atomFilterFlow } from "@states/sementicMap/stateFilter";
 import { atomFlowEnterArea, atomDongLi } from "@states/sementicMap/stateMap";
 //  Icon
-import { IcoBarChart, IcoErp, IcoFilter } from "@assets/icons/icon";
+import { IcoFilter } from "@assets/icons/icon";
 //  Sample
 import dongListData from "@util/data/area/dong.json";
 
