@@ -5,7 +5,6 @@ import { Box, Button, Flex, useDisclosure } from "@chakra-ui/react";
 import { NaverMapContext } from "@src/lib/src";
 import OverlayView from "@src/lib/src/components/Overlay/OverlayView";
 //  Components
-import DecoTop from "@components/sementicMapLayer/elementDeco/DecoTop";
 import ModalDaumAddr from "@components/modal/common/ModalDaumAddr";
 //  State
 import { atomCreateArea } from "@states/sementicMap/stateMap";
@@ -19,6 +18,8 @@ import {
   IcoReset,
 } from "@assets/icons/icon";
 import markerIcon from "@assets/icons/marker.png";
+//  Deco
+import { DecoTop } from "@components/sementicMapLayer/elementDeco/Deco";
 
 const ToggleButtonGroup = ({ toolOpen }: any) => {
   const { state } = useContext(NaverMapContext);

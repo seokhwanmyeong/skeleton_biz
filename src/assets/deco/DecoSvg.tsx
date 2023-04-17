@@ -1,6 +1,4 @@
-import { Icon, createIcon, Flex, Box } from "@chakra-ui/react";
-
-type HEX = `#${string}`;
+import { Icon } from "@chakra-ui/react";
 
 const Deco01 = (iconProps: any) => {
   return (
@@ -18,24 +16,4 @@ const Deco01 = (iconProps: any) => {
   );
 };
 
-const DecoBoxL = (iconProps: any) => {
-  return (
-    <Icon viewBox="0 0 17 260" fill="none" {...iconProps}>
-      <path d="M1 0V260" stroke="white" />
-      <rect x="1" width="16" height="1" fill="white" />
-      <rect x="1" y="259" width="16" height="1" fill="white" />
-    </Icon>
-  );
-};
-
-const DecoBoxR = (iconProps: any) => {
-  return (
-    <Icon viewBox="0 0 17 260" fill="none" {...iconProps}>
-      <path d="M16 0V260" stroke="white" />
-      <rect width="16" height="1" fill="white" />
-      <rect y="259" width="16" height="1" fill="white" />
-    </Icon>
-  );
-};
-
-export { Deco01, DecoBoxL, DecoBoxR };
+export { Deco01 };

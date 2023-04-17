@@ -182,7 +182,7 @@ const themeBtn = {
       flexDirection: "column",
       justifyContent: "center",
       gap: "0.25rem",
-      testStyle: "base",
+      textStyle: "base",
       fontWeight: "regular",
       fontSize: "sm",
       lineHeight: "1.25rem",

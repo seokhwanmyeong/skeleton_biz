@@ -20,7 +20,6 @@ import { SwitchFilter } from "@components/common/Switch";
 import ModalStoreEditor from "@components/modal/map/ModalStoreEditor";
 import ModalRentEditor from "@components/modal/map/ModalRentEditor";
 import ModalBsnsDEditor from "@components/modal/map/ModalBsnsDEditor";
-import DecoCardBg from "@components/sementicMapLayer/elementDeco/DecoCardBg";
 import DrawTools from "@components/sementicMapLayer/elementFilter/DrawTools";
 //  Api
 import { apiErpMap } from "@api/biz/config";
@@ -32,7 +31,6 @@ import {
   resetErp,
 } from "@states/sementicMap/stateFilter";
 //  Icon
-import { Deco01 } from "@assets/deco/DecoSvg";
 import {
   IcoDoubleSquere,
   IcoStore,
@@ -44,6 +42,9 @@ import {
   IcoFileSearch,
   IcoCheck,
 } from "@assets/icons/icon";
+//  Deco
+import { Deco01 } from "@assets/deco/DecoSvg";
+import { DecoCardBg } from "@components/sementicMapLayer/elementDeco/Deco";
 //  Type
 import type {
   Infocome,
@@ -89,12 +90,6 @@ const ErpFilter = ({
   const searchStoreHandler = () => {
     console.log("store search");
     console.log(filterStore);
-    const tmp = { ...filterStore };
-
-    if (!tmp.text) {
-      delete tmp.searchType;
-      delete tmp.text;
-    }
     // console.log(tmp);
     // setErpStore({
     //   filter: tmp,
@@ -316,13 +311,13 @@ const ErpFilter = ({
     //   ],
     // });
     // return;
-    getStoreList(tmp).then((res: any) => {
+    getStoreList(filterStore).then((res: any) => {
       const { records } = res;
       console.log(records);
 
       if (records || records.length > 0) {
         setErpStore({
-          filter: tmp,
+          filter: filterStore,
           active: true,
           data: records || [],
         });
@@ -334,21 +329,13 @@ const ErpFilter = ({
   const searchBsDHandler = () => {
     console.log("bsD search");
     console.log(filterBsD);
-    const tmp = { ...filterBsD };
 
-    if (!tmp.text) {
-      delete tmp.searchType;
-      delete tmp.text;
-    }
-
-    console.log(tmp);
-    return;
-    getBsDisList(tmp).then((res: any) => {
+    getBsDisList(filterBsD).then((res: any) => {
       const { records } = res;
       console.log(res);
 
       setErpBsD({
-        filter: tmp,
+        filter: filterBsD,
         active: true,
         data: records || [],
       });
@@ -359,16 +346,8 @@ const ErpFilter = ({
   const searchRentHandler = () => {
     console.log("rent search");
     console.log(filterRent);
-    const tmp = { ...filterRent };
 
-    if (!tmp.text) {
-      delete tmp.searchType;
-      delete tmp.text;
-    }
-
-    console.log(tmp);
-    return;
-    getRentList(tmp).then((res: any) => {
+    getRentList(filterRent).then((res: any) => {
       const { records } = res;
       console.log(res);
 
@@ -564,17 +543,10 @@ const ErpFilter = ({
                   placeholder={"매장명, 코드, 대표자를 입력해주세요"}
                   value={filterStore.text || ""}
                   onChange={(val: any) => {
-                    if (val) {
-                      setFilterStore({
-                        ...filterStore,
-                        text: val,
-                      });
-                    } else {
-                      const tmp = { ...filterStore };
-                      delete tmp.text;
-
-                      setFilterStore(tmp);
-                    }
+                    setFilterStore({
+                      ...filterStore,
+                      text: val || "",
+                    });
                   }}
                 />
               </Flex>
@@ -597,17 +569,10 @@ const ErpFilter = ({
                 <SelectAddr
                   value={filterStore.areaCode || ""}
                   onChange={(val: any) => {
-                    if (val && val !== "total") {
-                      setFilterStore({
-                        ...filterStore,
-                        areaCode: val,
-                      });
-                    } else {
-                      const tmp = { ...filterStore };
-                      delete tmp.areaCode;
-
-                      setFilterStore(tmp);
-                    }
+                    setFilterStore({
+                      ...filterStore,
+                      areaCode: val || "",
+                    });
                   }}
                 />
               </Flex>
@@ -637,17 +602,10 @@ const ErpFilter = ({
                 chkValue={filterStore.storeType || []}
                 activeTotal={true}
                 onChange={(val: any) => {
-                  if (val.length === 0) {
-                    const tmp = { ...filterStore };
-                    delete tmp.storeType;
-
-                    setFilterStore(tmp);
-                  } else {
-                    setFilterStore({
-                      ...filterStore,
-                      storeType: val,
-                    });
-                  }
+                  setFilterStore({
+                    ...filterStore,
+                    storeType: val.length === 0 ? [] : val,
+                  });
                 }}
                 groupProps={{
                   w: "max-content",
@@ -679,17 +637,10 @@ const ErpFilter = ({
                 chkValue={filterStore.storeStatus || []}
                 activeTotal={true}
                 onChange={(val: any) => {
-                  if (val.length === 0) {
-                    const tmp = { ...filterStore };
-                    delete tmp.storeStatus;
-
-                    setFilterStore(tmp);
-                  } else {
-                    setFilterStore({
-                      ...filterStore,
-                      storeStatus: val,
-                    });
-                  }
+                  setFilterStore({
+                    ...filterStore,
+                    storeStatus: val.length === 0 ? [] : val,
+                  });
                 }}
                 groupProps={{
                   w: "max-content",
@@ -779,17 +730,10 @@ const ErpFilter = ({
                   }
                   value={filterBsD.text || ""}
                   onChange={(val: any) => {
-                    if (val) {
-                      setFilterBsD({
-                        ...filterBsD,
-                        text: val,
-                      });
-                    } else {
-                      const tmp = { ...filterBsD };
-                      delete tmp.text;
-
-                      setFilterBsD(tmp);
-                    }
+                    setFilterBsD({
+                      ...filterBsD,
+                      text: val || "",
+                    });
                   }}
                 />
               </Flex>
@@ -810,17 +754,10 @@ const ErpFilter = ({
                 <SelectAddr
                   value={filterBsD.areaCode || ""}
                   onChange={(val: any) => {
-                    if (val && val !== "total") {
-                      setFilterBsD({
-                        ...filterBsD,
-                        areaCode: val,
-                      });
-                    } else {
-                      const tmp = { ...filterBsD };
-                      delete tmp.areaCode;
-
-                      setFilterBsD(tmp);
-                    }
+                    setFilterBsD({
+                      ...filterBsD,
+                      areaCode: val || "",
+                    });
                   }}
                 />
               </Flex>
@@ -848,17 +785,10 @@ const ErpFilter = ({
                 chkValue={filterBsD.bsDType || []}
                 activeTotal={true}
                 onChange={(val: any) => {
-                  if (val.length === 0) {
-                    const tmp = { ...filterBsD };
-                    delete tmp.bsDType;
-
-                    setFilterBsD(tmp);
-                  } else {
-                    setFilterBsD({
-                      ...filterBsD,
-                      bsDType: val,
-                    });
-                  }
+                  setFilterBsD({
+                    ...filterBsD,
+                    bsDType: val.length === 0 ? [] : val,
+                  });
                 }}
                 groupProps={{
                   w: "max-content",
@@ -948,17 +878,10 @@ const ErpFilter = ({
                   }
                   value={filterRent.text || ""}
                   onChange={(val: any) => {
-                    if (val) {
-                      setFilterRent({
-                        ...filterRent,
-                        text: val,
-                      });
-                    } else {
-                      const tmp = { ...filterRent };
-                      delete tmp.text;
-
-                      setFilterRent(tmp);
-                    }
+                    setFilterRent({
+                      ...filterRent,
+                      text: val || "",
+                    });
                   }}
                 />
               </Flex>
@@ -979,17 +902,10 @@ const ErpFilter = ({
                 <SelectAddr
                   value={filterRent.areaCode || ""}
                   onChange={(val: any) => {
-                    if (val && val !== "total") {
-                      setFilterRent({
-                        ...filterRent,
-                        areaCode: val,
-                      });
-                    } else {
-                      const tmp = { ...filterRent };
-                      delete tmp.areaCode;
-
-                      setFilterRent(tmp);
-                    }
+                    setFilterRent({
+                      ...filterRent,
+                      areaCode: val || "",
+                    });
                   }}
                 />
               </Flex>
@@ -1017,17 +933,10 @@ const ErpFilter = ({
                 chkValue={filterRent.rentType || []}
                 activeTotal={true}
                 onChange={(val: any) => {
-                  if (val.length === 0) {
-                    const tmp = { ...filterRent };
-                    delete tmp.rentType;
-
-                    setFilterRent(tmp);
-                  } else {
-                    setFilterRent({
-                      ...filterRent,
-                      rentType: val,
-                    });
-                  }
+                  setFilterRent({
+                    ...filterRent,
+                    rentType: val.length === 0 ? [] : val,
+                  });
                 }}
                 groupProps={{
                   w: "max-content",

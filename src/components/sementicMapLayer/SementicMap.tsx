@@ -2,7 +2,7 @@
 import { useContext, useState, useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import Map from "@src/lib/src/components/Map";
-import { Box } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 //  Components
 import MapFlowEnter from "@components/sementicMapLayer/elementMap/MapFlowEnter";
 import MapFlowSigungu from "@components/sementicMapLayer/elementMap/MapFlowSigungu";
@@ -11,9 +11,10 @@ import MapFlowCustom from "@components/sementicMapLayer/elementMap/MapFlowCustom
 import MapFlowFind from "@components/sementicMapLayer/elementMap/MapFlowFind";
 import MapFlowInit from "@components/sementicMapLayer/elementMap/MapFlowInit";
 import MapFlowErp from "@components/sementicMapLayer/elementMap/MapFlowErp";
-import DecoFilterBg from "@components/sementicMapLayer/elementDeco/DecoFilterBg";
 //  State
 import { atomFilterFlow } from "@states/sementicMap/stateFilter";
+//  Deco
+import { DecoFilterBg } from "@components/sementicMapLayer/elementDeco/Deco";
 
 type Props = {};
 
@@ -25,7 +26,6 @@ const SementicMap = (props: Props) => {
       {flow !== "init" && flow !== "find" && (
         <DecoFilterBg position={{ top: 0, left: 0, right: 0 }} />
       )}
-      <DecoFilterBg position={{ bottom: 0, left: 0, right: 0 }} />
       <Map
         ncpClientId="ypiwp561ux"
         className="map"

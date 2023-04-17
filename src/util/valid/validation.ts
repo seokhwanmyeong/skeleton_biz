@@ -17,9 +17,10 @@ const validateEmail = (value: any) => {
   let error;
   if (!value) {
     error = "이메일을 입력해주세요.";
-  } else if (!emailRegExp.test(value)) {
-    error = "이메일을 다시 확인해주세요.";
   }
+  // else if (!emailRegExp.test(value)) {
+  //   error = "이메일을 다시 확인해주세요.";
+  // }
   return error;
 };
 

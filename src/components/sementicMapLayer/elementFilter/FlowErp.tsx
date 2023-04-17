@@ -5,10 +5,11 @@ import { NaverMapContext } from "@src/lib/src";
 //  Component
 import ErpFilter from "@components/sementicMapLayer/elementFilter/ErpFilter";
 import BtnReset from "@components/sementicMapLayer/elementFilter/BtnReset";
-import DecoTop from "@components/sementicMapLayer/elementDeco/DecoTop";
 import ModalDaumAddr from "@components/modal/common/ModalDaumAddr";
 //  Icon
 import { IcoDoubleSquere } from "@assets/icons/icon";
+//  Deco
+import { DecoTop } from "@components/sementicMapLayer/elementDeco/Deco";
 
 const FlowErp = () => {
   const { state, dispatch } = useContext(NaverMapContext);

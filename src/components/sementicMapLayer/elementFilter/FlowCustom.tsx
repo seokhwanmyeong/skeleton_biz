@@ -6,12 +6,13 @@ import { Box, Button, Flex, useDisclosure } from "@chakra-ui/react";
 import UpjonListBox from "@components/sementicMapLayer/elementFilter/UpjongListBox";
 import NiceFilterDepth from "@components/sementicMapLayer/elementFilter/NiceFilterDepth";
 import BtnReset from "@components/sementicMapLayer/elementFilter/BtnReset";
-import DecoTop from "@components/sementicMapLayer/elementDeco/DecoTop";
 //  State
 import { atomSlctCustom } from "@states/sementicMap/stateMap";
+import { sementicViewState } from "@states/sementicMap/stateView";
 //  Icon
 import { IcoBarChart, IcoFilter } from "@assets/icons/icon";
-import { sementicViewState } from "@states/sementicMap/stateView";
+//  Deco
+import { DecoTop } from "@components/sementicMapLayer/elementDeco/Deco";
 
 type Props = {};
 

@@ -51,8 +51,10 @@ const Login = () => {
     setLoadingChk(true);
 
     login({
-      username: ei,
-      password: ep,
+      username: username,
+      password: password,
+      // username: ei,
+      // password: ep,
     })
       .then((res: any) => {
         console.log(res);

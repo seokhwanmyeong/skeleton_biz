@@ -12,7 +12,6 @@ import { NaverMapContext } from "@src/lib/src";
 //  Component
 import BtnReset from "@components/sementicMapLayer/elementFilter/BtnReset";
 import BtnBack from "@components/sementicMapLayer/elementFilter/BtnBack";
-import DecoTop from "@components/sementicMapLayer/elementDeco/DecoTop";
 import AreaListBox from "@components/sementicMapLayer/elementFilter/AreaListBox";
 import UpjongListBox from "@components/sementicMapLayer/elementFilter/UpjongListBox";
 //  Api
@@ -25,7 +24,9 @@ import {
   atomSigunguLi,
 } from "@states/sementicMap/stateMap";
 //  Icon
-import { IcoBarChart, IcoErp, IcoFilter } from "@assets/icons/icon";
+import { IcoFilter } from "@assets/icons/icon";
+//  Deco
+import { DecoTop } from "@components/sementicMapLayer/elementDeco/Deco";
 //  Sample
 import sidoData from "@util/data/area/sido.json";
 import sigunguListData from "@util/data/area/sigungu.json";

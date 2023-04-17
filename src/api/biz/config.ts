@@ -92,7 +92,7 @@ instance.interceptors.request.use((req: any) => {
     if (req.headers.Authorization) {
       return req;
     } else {
-      req.headers.Authorization = tk;
+      req.headers.Authorization = `Bearer ${tk}`;
 
       return req;
     }

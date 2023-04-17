@@ -15,7 +15,6 @@ import { SwitchFilter } from "@components/common/Switch";
 import { BtnFilterSearch } from "@components/common/Btn";
 import { Select } from "@components/common/Select";
 import { Input } from "@components/common/Input";
-import DecoCardBg from "@components/sementicMapLayer/elementDeco/DecoCardBg";
 //  State
 import {
   infoComFlowDepth,
@@ -25,7 +24,6 @@ import {
   atomUpjongState,
 } from "@states/sementicMap/stateFilter";
 //  Icon
-import { Deco01 } from "@assets/deco/DecoSvg";
 import {
   IcoFileSearch,
   IcoHeatMap,
@@ -36,6 +34,9 @@ import {
   IcoSync,
   IcoTextB,
 } from "@assets/icons/icon";
+//  Deco
+import { Deco01 } from "@assets/deco/DecoSvg";
+import { DecoCardBg } from "@components/sementicMapLayer/elementDeco/Deco";
 
 type Props = {
   areaCode?: string;

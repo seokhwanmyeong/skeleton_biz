@@ -4,7 +4,9 @@ import { Box, Button } from "@chakra-ui/react";
 //  State
 import { atomFilterFlow } from "@states/sementicMap/stateFilter";
 //  Icon
-import { IcoDoubleSquere, IcoErp, IcoFilter } from "@src/assets/icons/icon";
+import { IcoDoubleSquere, IcoErp, IcoFilter } from "@assets/icons/icon";
+//  Deco
+import { DecoFilterGap } from "@components/sementicMapLayer/elementDeco/Deco";
 
 const FlowController = () => {
   const setFlow = useSetRecoilState(atomFilterFlow);
@@ -22,6 +24,7 @@ const FlowController = () => {
         </Box>
         분석필터
       </Button>
+      <DecoFilterGap />
       <Button
         variant="filterTop"
         onClick={() => {
@@ -33,6 +36,7 @@ const FlowController = () => {
         </Box>
         영역분석
       </Button>
+      <DecoFilterGap />
       <Button
         variant="filterTop"
         onClick={() => {

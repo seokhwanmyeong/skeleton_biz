@@ -10,13 +10,14 @@ import ErpFilter from "@components/sementicMapLayer/elementFilter/ErpFilter";
 import BtnReset from "@components/sementicMapLayer/elementFilter/BtnReset";
 import BtnBack from "@components/sementicMapLayer/elementFilter/BtnBack";
 import DrawTools from "@components/sementicMapLayer/elementFilter/DrawTools";
-import DecoTop from "@components/sementicMapLayer/elementDeco/DecoTop";
 //  State
 import { atomFilterFlow } from "@states/sementicMap/stateFilter";
 import { atomFlowEnterArea, atomSlctDong } from "@states/sementicMap/stateMap";
 import { sementicViewState } from "@states/sementicMap/stateView";
 //  Icon
 import { IcoBarChart, IcoErp, IcoFilter } from "@assets/icons/icon";
+//  Deco
+import { DecoTop } from "@components/sementicMapLayer/elementDeco/Deco";
 
 type Props = {};
 

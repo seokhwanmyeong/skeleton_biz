@@ -32,6 +32,7 @@ const SementicSearchEngine = () => {
       ) : flow === "erp" ? (
         <FlowErp />
       ) : null}
+      <Flex></Flex>
     </Flex>
   );
 };

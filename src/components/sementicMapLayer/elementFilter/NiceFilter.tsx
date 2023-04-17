@@ -13,7 +13,6 @@ import {
 import { CheckboxGroup } from "@components/common/CheckBox";
 import { SwitchFilter } from "@components/common/Switch";
 import { BtnFilterSearch } from "@components/common/Btn";
-import DecoCardBg from "@components/sementicMapLayer/elementDeco/DecoCardBg";
 //  State
 import {
   atomUpjongState,
@@ -25,8 +24,9 @@ import {
   infoComSale,
   resetNice,
 } from "@states/sementicMap/stateFilter";
+//  Api
+import { getSigunguPopInfo } from "@api/niceApi/config";
 //  Icon
-import { Deco01 } from "@assets/deco/DecoSvg";
 import {
   IcoAppStore,
   IcoBank,
@@ -38,7 +38,9 @@ import {
   IcoResident,
   IcoSync,
 } from "@assets/icons/icon";
-import { getSigunguPopInfo } from "@src/api/niceApi/config";
+//  Deco
+import { Deco01 } from "@assets/deco/DecoSvg";
+import { DecoCardBg } from "@components/sementicMapLayer/elementDeco/Deco";
 
 type Props = {
   areaCode: string;

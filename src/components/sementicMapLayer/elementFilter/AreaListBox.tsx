@@ -1,6 +1,10 @@
 import { Box, Button, Flex, Grid, Heading } from "@chakra-ui/react";
 //  Deco
-import { Deco01, DecoBoxR, DecoBoxL } from "@assets/deco/DecoSvg";
+import { Deco01 } from "@assets/deco/DecoSvg";
+import {
+  DecoBoxR,
+  DecoBoxL,
+} from "@components/sementicMapLayer/elementDeco/Deco";
 
 type Props = {
   title: string;

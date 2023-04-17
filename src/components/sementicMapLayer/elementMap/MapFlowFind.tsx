@@ -3,16 +3,17 @@ import { useContext, useEffect, useState, useRef, Fragment } from "react";
 import { useResetRecoilState, useSetRecoilState } from "recoil";
 import { Box, Button, Flex, useDisclosure } from "@chakra-ui/react";
 import { NaverMapContext } from "@src/lib/src";
+import OverlayView from "@src/lib/src/components/Overlay/OverlayView";
 //  Components
-import DecoTop from "@components/sementicMapLayer/elementDeco/DecoTop";
 import ModalDaumAddr from "@components/modal/common/ModalDaumAddr";
 //  State
 import { atomFilterFlow } from "@states/sementicMap/stateFilter";
 import { atomSlctCustom } from "@states/sementicMap/stateMap";
 //  Icons
-import { IcoAppStore, IcoCheck, IcoReset } from "@assets/icons/icon";
+import { IcoAppStore, IcoReset } from "@assets/icons/icon";
 import markerIcon from "@assets/icons/marker.png";
-import OverlayView from "@src/lib/src/components/Overlay/OverlayView";
+//  Deco
+import { DecoTop } from "@components/sementicMapLayer/elementDeco/Deco";
 
 const ToggleButtonGroup = () => {
   const { state } = useContext(NaverMapContext);

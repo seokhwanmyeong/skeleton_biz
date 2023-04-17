@@ -17,8 +17,7 @@ import {
 } from "@chakra-ui/react";
 //  State
 import { atomUpjongState } from "@src/states/sementicMap/stateFilter";
-//  Deco
-import { Deco01, DecoBoxR, DecoBoxL } from "@assets/deco/DecoSvg";
+//  Icon
 import {
   IcoAppStore,
   IcoArrowNext,
@@ -30,6 +29,12 @@ import {
   IcoUpjongTop5,
   IcoUpjongTop6,
 } from "@assets/icons/icon";
+//  Deco
+import { Deco01 } from "@assets/deco/DecoSvg";
+import {
+  DecoBoxR,
+  DecoBoxL,
+} from "@components/sementicMapLayer/elementDeco/Deco";
 
 type Props = {
   isOpen?: boolean;
