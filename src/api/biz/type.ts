@@ -71,32 +71,49 @@ type TypeMapRentSearch = {
 };
 
 type TypeMapSido = {
-  req: TypeFilterRent;
   res: {
-    _id: string;
-    rentName: string;
-    lat: number;
-    lng: number;
+    data: {
+      sido: {
+        name: string;
+        code: string;
+        lat: number;
+        lng: number;
+        zoomLev: string;
+        path: any[];
+      }[];
+    };
   };
 };
 
 type TypeMapSigungu = {
-  req: TypeFilterRent;
+  req: { code: string };
   res: {
-    _id: string;
-    rentName: string;
-    lat: number;
-    lng: number;
+    data: {
+      sigungu: {
+        name: string;
+        code: string;
+        lat: number;
+        lng: number;
+        zoomLev: string;
+        path: any[];
+      }[];
+    };
   };
 };
 
 type TypeMapDong = {
-  req: TypeFilterRent;
+  req: { code: string };
   res: {
-    _id: string;
-    rentName: string;
-    lat: number;
-    lng: number;
+    data: {
+      dong: {
+        name: string;
+        code: string;
+        lat: number;
+        lng: number;
+        zoomLev: string;
+        path: any[];
+      }[];
+    };
   };
 };
 

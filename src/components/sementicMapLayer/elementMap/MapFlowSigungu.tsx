@@ -2,8 +2,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { NaverMapContext } from "@src/lib/src";
-import { Image } from "@chakra-ui/react";
-import OverlayView from "@src/lib/src/components/Overlay/OverlayView";
 //  Components
 import GuPanel from "./GuPanel";
 import InteractArea from "./InteractArea";
@@ -14,8 +12,6 @@ import {
   atomFlowEnterArea,
   atomSlctDong,
 } from "@states/sementicMap/stateMap";
-//  Deco
-import Rounding from "@assets/rounding.svg";
 
 type Props = {};
 
@@ -27,7 +23,6 @@ const MapFlowSigungu = (props: Props) => {
   const setDong = useSetRecoilState(atomSlctDong);
   const [slctDong, setSlctDong] = useState(-1);
   const filterData = useRecoilValue(dataCollector);
-  const [center, setCenter] = useState<any>(null);
   const [range, setRange] = useState({
     xMax: 0,
     xMin: 0,
@@ -56,28 +51,9 @@ const MapFlowSigungu = (props: Props) => {
   };
 
   useEffect(() => {
-    if (sigungu?.slctPath) {
-      state.map?.setOptions({
-        minZoom: 0,
-        maxZoom: 16,
-      });
-      state.map?.fitBounds(sigungu.slctPath);
-
-      let curZoom = state.map?.getZoom();
-      let curCenter = state.map?.getCenter();
-
-      if (curCenter) {
-        setCenter([curCenter.x, curCenter.y]);
-      }
-
-      if (curZoom) {
-        state.map?.setZoom(curZoom);
-
-        state.map?.setOptions({
-          minZoom: curZoom,
-          maxZoom: curZoom,
-        });
-      }
+    if (sigungu?.slctCode && sigungu?.slctName && sigungu?.slctPath) {
+      console.log("시군구 진입");
+      state.map?.fitBounds(sigungu.slctPath[0]);
 
       let xyRange = {
         xMax: 0,
@@ -177,24 +153,6 @@ const MapFlowSigungu = (props: Props) => {
           selectDong={slctDong}
         />
       ) : null}
-      {center && (
-        <OverlayView
-          id={"Over1"}
-          position={{
-            y: center[1],
-            x: center[0],
-          }}
-          pointerevent={false}
-        >
-          <Image
-            src={Rounding}
-            transform={"translate(-50%, -50%)"}
-            width={"800px"}
-            height={"800px"}
-            alt="testB"
-          />
-        </OverlayView>
-      )}
     </>
   );
 };

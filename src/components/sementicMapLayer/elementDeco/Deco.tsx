@@ -1,6 +1,10 @@
 //  Lib
+import { useEffect, useRef } from "react";
 import type { ReactNode } from "react";
 import { Box, Icon, Flex } from "@chakra-ui/react";
+import { motion } from "framer-motion";
+//  Animation
+import {} from "@styles/animation/keyFremes";
 
 type DecoProps = {
   position: {
@@ -168,7 +172,7 @@ const DecoBotBox = ({ children }: { children: ReactNode }) => {
   );
 };
 
-const DecoCenterBox01 = (iconProps: any) => {
+const DecoCenterBox = (iconProps: any) => {
   return (
     <Icon
       width="235"
@@ -204,11 +208,33 @@ const DecoCenterBox02 = (iconProps: any) => {
   );
 };
 
+const DecoCenterBox03 = (iconProps: any) => {
+  return (
+    <Icon
+      width="780"
+      height="744"
+      viewBox="0 0 780 744"
+      fill="none"
+      {...iconProps}
+    >
+      <path
+        d="M225.832 6.69507C146.884 43.9303 82.9781 106.951 44.6461 185.372C6.31409 263.793 -4.15645 352.933 14.9601 438.102C34.0767 523.271 81.6395 599.386 149.81 653.901C217.98 708.417 302.69 738.081 389.978 738.004C477.265 737.927 561.922 708.113 629.996 653.477C698.07 598.84 745.498 522.642 764.464 437.44C783.43 352.237 772.802 263.115 734.331 184.762C695.86 106.41 631.843 43.5015 552.83 6.40597"
+        stroke="white"
+        strokeOpacity="0.5"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="bevel"
+        shapeRendering="crispEdges"
+      />
+    </Icon>
+  );
+};
+
 const DecoFrameL = ({ children }: { children?: ReactNode }) => {
   return (
     <Flex
       p="6rem 0"
-      w="12.875rem"
+      w="20%"
       h="100%"
       direction="column"
       justify="space-between"
@@ -235,7 +261,7 @@ const DecoFrameR = ({ children }: { children?: ReactNode }) => {
   return (
     <Flex
       p="6rem 0"
-      w="12.875rem"
+      w="20%"
       h="100%"
       direction="column"
       justify="space-between"
@@ -259,11 +285,13 @@ const DecoFrameR = ({ children }: { children?: ReactNode }) => {
 };
 
 const DecoFrameCenter = () => {
+  const boxRef = useRef<HTMLDivElement | null>(null);
+
   return (
     <Flex
       pos="relative"
       p="6rem 0"
-      w="100%"
+      w="80%"
       h="100%"
       direction="row"
       justify="space-between"
@@ -291,6 +319,7 @@ const DecoFrameCenter = () => {
         flex: "none",
       }}
     >
+      {/* 좌측 박스 */}
       <Box
         pos="relative"
         w="16px"
@@ -320,95 +349,201 @@ const DecoFrameCenter = () => {
           flex: "none",
         }}
       />
-      <Flex pos="relative" w="100%" h="auto" pointerEvents="none">
+      {/* 중앙 박스 */}
+      <Flex ref={boxRef} pos="relative" w="100%" h="auto" pointerEvents="none">
+        {/* 중앙 원형 */}
         <Box
+          as={motion.div}
           pos="absolute"
           top="50%"
           left="50%"
+          maxW="90vh"
+          maxH="90vh"
           transform="translate(-50%, -50%)"
-          w="60vw"
-          h="60vw"
           borderRadius="50%"
           border="1px solid"
           borderColor="#26232380"
           boxShadow="0px 0px 10px 2px #00000040"
-        />
-        <Box
-          pos="absolute"
-          top="50%"
-          left="50%"
-          transform="translate(-50%, -50%)"
-          w="55vw"
-          h="55vw"
-          borderRadius="50%"
-          border="1px solid"
-          borderTop="none"
-          borderColor="#26232380"
+          transition="0.3s easeIn"
+          initial={{
+            width: 0,
+            height: 0,
+          }}
+          animate={{
+            width: "60vw",
+            height: "60vw",
+          }}
+          exit={{
+            width: "60vw",
+            height: "60vw",
+          }}
         >
-          <DecoCenterBox01
-            pos="absolute"
-            bottom="-33%"
-            left="50%"
-            transform="translateX(-48%) rotate(266deg)"
-            width="92%"
-            height="92%"
-            filter="drop-shadow(0px 0px 10px 0px #00000040)"
-          />
-          <DecoCenterBox01
-            pos="absolute"
-            bottom="-33%"
-            left="50%"
-            transform="translateX(-52%) rotate(271.4deg)"
-            width="92%"
-            height="92%"
-            filter="drop-shadow(0px 0px 10px 0px #00000040)"
-          />
-        </Box>
-        <Box
-          pos="absolute"
-          top="50%"
-          left="50%"
-          transform="translate(-50%, -50%)"
-          w="50vw"
-          h="50vw"
-          borderRadius="50%"
-          border="1px solid"
-          borderColor="#26232380"
-          borderTop="none"
-          borderBottom="none"
-        >
+          {/* 중앙 미들 원형 */}
           <Box
+            as={motion.div}
             pos="absolute"
             top="50%"
             left="50%"
             transform="translate(-50%, -50%)"
-            w="95%"
-            h="95%"
-            borderRadius="50%"
-            border="1px dashed"
-            borderColor="#26232380"
+            w="93%"
+            h="93%"
+            transition="0.3s linear"
+            initial={{
+              opacity: 0,
+            }}
+            animate={{
+              opacity: 1,
+            }}
           >
-            <DecoCenterBox02
+            <DecoCenterBox03
               pos="absolute"
-              top="-5%"
+              top="50%"
               left="50%"
-              transform="translateX(-50%) rotate(1.5deg)"
-              width="50%"
-              height="8%"
-              filter="drop-shadow(0px 0px 10px 0px #00000040)"
+              transform="translate(-50%, -48%)"
+              width="100%"
+              height="100%"
+              filter="drop-shadow(0px 0px 4px #00000080)"
             />
-            <DecoCenterBox02
+            {/* 중앙 좌측 미들 박스 */}
+            <Flex
+              as={motion.div}
               pos="absolute"
-              bottom="-5%"
+              top="0"
+              left="0"
+              width="100%"
+              height="100%"
+              transition="0.2s linear"
+              initial={{
+                transform: "rotate(0deg)",
+              }}
+              animate={{
+                transform: "rotate(-90deg)",
+              }}
+            >
+              <DecoCenterBox
+                position="absolute"
+                bottom="-32%"
+                left="50%"
+                transform="translateX(-52%) rotate(271.4deg)"
+                width="92%"
+                height="92%"
+                filter="drop-shadow(0px 0px 10px #00000040)"
+              />
+            </Flex>
+            {/* 중앙 우측 미들 박스 */}
+            <Flex
+              as={motion.div}
+              pos="absolute"
+              top="0"
+              left="0"
+              width="100%"
+              height="100%"
+              transition="0.2s linear"
+              initial={{
+                transform: "rotate(0deg)",
+              }}
+              animate={{
+                transform: "rotate(84deg)",
+              }}
+            >
+              <DecoCenterBox
+                position="absolute"
+                bottom="-32%"
+                left="50%"
+                transform="translateX(-52%) rotate(271.4deg)"
+                width="92%"
+                height="92%"
+                filter="drop-shadow(0px 0px 10px #00000040)"
+              />
+            </Flex>
+            {/* 중앙 중심 원형 */}
+            <Box
+              as={motion.div}
+              pos="absolute"
+              top="50%"
               left="50%"
-              transform="translateX(-50%) rotate(181.5deg)"
-              width="50%"
-              height="8%"
-              filter="drop-shadow(0px 0px 10px 0px #00000040)"
-            />
+              transform="translate(-50%, -50%)"
+              w="90%"
+              h="90%"
+              borderRadius="50%"
+              border="3px solid"
+              borderColor="#26232380"
+              borderTop="none"
+              borderBottom="none"
+              transition="0.2s 0.2s linear"
+              initial={{
+                opacity: 0,
+              }}
+              animate={{
+                opacity: 1,
+              }}
+            >
+              <Flex
+                as={motion.div}
+                pos="absolute"
+                top="0"
+                left="0"
+                width="100%"
+                height="100%"
+                transition="0.3s 0.1s linear"
+                initial={{
+                  transform: "rotate(0deg)",
+                }}
+                animate={{
+                  transform: "rotate(89deg)",
+                }}
+              >
+                <DecoCenterBox02
+                  pos="absolute"
+                  top="-2%"
+                  left="50%"
+                  transform="translateX(-50%) rotate(1.5deg)"
+                  width="50%"
+                  height="8%"
+                  filter="drop-shadow(0px 0px 10px #00000040)"
+                />
+              </Flex>
+              <Flex
+                as={motion.div}
+                pos="absolute"
+                bottom="0"
+                left="0"
+                width="100%"
+                height="100%"
+                transition="0.3s 0.1s linear"
+                initial={{
+                  transform: "rotate(0deg)",
+                }}
+                animate={{
+                  transform: "rotate(89deg)",
+                }}
+              >
+                <DecoCenterBox02
+                  pos="absolute"
+                  bottom="-2%"
+                  left="50%"
+                  transform="translateX(-50%) rotate(181.5deg)"
+                  width="50%"
+                  height="8%"
+                  filter="drop-shadow(0px 0px 10px 0px #00000040)"
+                />
+              </Flex>
+              <Box
+                pos="absolute"
+                top="50%"
+                left="50%"
+                transform="translate(-50%, -50%)"
+                w="95%"
+                h="95%"
+                borderRadius="50%"
+                border="1px dashed"
+                borderColor="#26232380"
+              />
+            </Box>
           </Box>
         </Box>
       </Flex>
+      {/* 우측 박스 */}
       <Box
         pos="relative"
         w="16px"

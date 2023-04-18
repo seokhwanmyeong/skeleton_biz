@@ -5,21 +5,14 @@ import {
   DecoBoxR,
   DecoBoxL,
 } from "@components/sementicMapLayer/elementDeco/Deco";
+//  Type
+import type { SlctProps, AreaProps } from "@states/sementicMap/stateMap";
 
 type Props = {
   title: string;
   isOpen: boolean;
-  list: {
-    name: string;
-    code: string;
-    path: never[] | any[];
-  }[];
-  setSlctArea: (props: {
-    slctName: string;
-    slctCode: string;
-    slctIdx: string;
-    slctPath: any;
-  }) => any;
+  list: AreaProps[];
+  setSlctArea: (props: SlctProps) => any;
   onClick?: (props?: any) => any;
 };
 
@@ -48,35 +41,28 @@ const AreaListBox = ({ title, isOpen, list, setSlctArea, onClick }: Props) => {
       </Heading>
       <Deco01 margin="0.625rem 0 1.375rem" width="100%" height="4px" />
       <Grid w="100%" templateColumns="repeat(5, calc(20% - 0.8rem))" gap="1rem">
-        {list.map(
-          ({
-            name,
-            code,
-            path,
-          }: {
-            name: string;
-            code: string;
-            path: never[] | any[];
-          }) => {
-            return (
-              <Button
-                variant="slctArea"
-                key={`key-${code}`}
-                onClick={() => {
-                  setSlctArea({
-                    slctName: name,
-                    slctCode: code,
-                    slctIdx: `area${code}`,
-                    slctPath: path,
-                  });
-                  onClick && onClick();
-                }}
-              >
-                {name}
-              </Button>
-            );
-          }
-        )}
+        {list.map(({ name, code, path, lat, lng, zoomLev }: AreaProps) => {
+          return (
+            <Button
+              variant="slctArea"
+              key={`key-${code}`}
+              onClick={() => {
+                setSlctArea({
+                  slctName: name,
+                  slctCode: code,
+                  slctIdx: `area${code}`,
+                  slctPath: path,
+                  slctLat: lat,
+                  slctLng: lng,
+                  slctZoom: zoomLev,
+                });
+                onClick && onClick();
+              }}
+            >
+              {name}
+            </Button>
+          );
+        })}
       </Grid>
       <Flex
         position="absolute"

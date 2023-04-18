@@ -161,11 +161,17 @@ const apiErpMap = {
 };
 
 const apiMapArea = {
-  getSidoList: () => instance.get(MAP_SIDO_GET_LIST),
+  getSidoList: () => instance.get<TypeMapSido["res"]>(MAP_SIDO_GET_LIST),
   getSigunguList: (req: TypeMapSigungu["req"]) =>
-    instance.post<TypeMapSigungu["req"], any>(MAP_SIGUNGU_GET_LIST, req),
+    instance.post<TypeMapSigungu["req"], TypeMapSigungu["res"]>(
+      MAP_SIGUNGU_GET_LIST,
+      req
+    ),
   getDongList: (req: TypeMapDong["req"]) =>
-    instance.post<TypeMapDong["req"], any>(MAP_DONG_GET_LIST, req),
+    instance.post<TypeMapDong["req"], TypeMapSigungu["res"]>(
+      MAP_DONG_GET_LIST,
+      req
+    ),
 };
 
 const apiCommon = {

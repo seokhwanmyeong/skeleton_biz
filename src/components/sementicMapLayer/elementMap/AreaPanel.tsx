@@ -22,7 +22,6 @@ import InteractDong from "./InteractDong";
 import areaData from "@util/data/area/sido.json";
 import sidoData from "@util/data/area/sigungu.json";
 import dongData from "@util/data/area/dong.json";
-import Rounding from "@assets/round1.svg";
 
 interface areaLocal {
   name: string;
@@ -405,12 +404,12 @@ const AreaPanel = ({ localEvent, num, selectDong }: AreaPanelProps) => {
               }}
               pointerevent={false}
             >
-              <img
+              {/* <img
                 src={Rounding}
                 width={"700px"}
                 height={"700px"}
                 alt="testB"
-              />
+              /> */}
             </OverlayView>
           ) : (
             <>
@@ -422,12 +421,12 @@ const AreaPanel = ({ localEvent, num, selectDong }: AreaPanelProps) => {
                 }}
                 pointerevent={false}
               >
-                <img
+                {/* <img
                   src={Rounding}
                   width={"800px"}
                   height={"800px"}
                   alt="testA"
-                />
+                /> */}
               </OverlayView>
             </>
           )}

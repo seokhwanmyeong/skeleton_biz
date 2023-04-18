@@ -1,49 +1,30 @@
 import { atom, selector } from "recoil";
 
-type AreaListProps = {
+export type AreaProps = {
   name: string;
   code: string;
   path: never[] | any[];
-}[];
+  lat?: number;
+  lng?: number;
+  zoomLev?: string;
+};
 
-type SlctAreaProps = {
-  sido?: {
-    slctName: string;
-    slctCode: string;
-    slctIdx: string;
-    slctPath: any[] | never[];
-  };
-  sigungu?: {
-    slctName: string;
-    slctCode: string;
-    slctIdx: string;
-    slctPath: any[] | never[];
-  };
+export type SlctProps = {
+  slctName: string;
+  slctCode: string;
+  slctIdx: string;
+  slctPath: any[] | never[];
+  slctLat?: number;
+  slctLng?: number;
+  slctZoom?: string;
+};
+
+export type SlctAreaProps = {
+  sido?: SlctProps;
+  sigungu?: SlctProps;
 };
 
 // ==================== 지역선택 Flow ====================
-
-export const atomAreaState = atom<{ [key: string]: any }>({
-  key: "sementicAreaState",
-  default: {
-    type: "area", // area, custom
-    pointer: {
-      points: "",
-      address: "",
-      isCheck: false,
-    },
-    area: {
-      polygon: {},
-      sidoCode: "",
-      sidoName: "",
-      sigunguCode: "",
-      sigunguName: "",
-      areaCode: "",
-      isCheck: false,
-    },
-  },
-});
-
 export const atomFlowEnterArea = atom<SlctAreaProps>({
   key: "flowEnterArea",
   default: {
@@ -52,22 +33,26 @@ export const atomFlowEnterArea = atom<SlctAreaProps>({
       slctCode: "",
       slctIdx: "",
       slctPath: [],
+      slctLat: undefined,
+      slctLng: undefined,
     },
     sigungu: {
       slctName: "",
       slctCode: "",
       slctIdx: "",
       slctPath: [],
+      slctLat: undefined,
+      slctLng: undefined,
     },
   },
 });
 
-export const atomSidoLi = atom<AreaListProps>({
+export const atomSidoLi = atom<AreaProps[]>({
   key: "sidoLi",
   default: [],
 });
 
-export const atomSigunguLi = atom<AreaListProps>({
+export const atomSigunguLi = atom<AreaProps[]>({
   key: "sigunguLi",
   default: [],
 });

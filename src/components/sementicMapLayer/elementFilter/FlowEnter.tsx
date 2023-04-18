@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
 import {
   Box,
@@ -27,9 +27,8 @@ import {
 import { IcoFilter } from "@assets/icons/icon";
 //  Deco
 import { DecoTop } from "@components/sementicMapLayer/elementDeco/Deco";
-//  Sample
-import sidoData from "@util/data/area/sido.json";
-import sigunguListData from "@util/data/area/sigungu.json";
+//  Type
+import type { SlctProps, AreaProps } from "@states/sementicMap/stateMap";
 
 const FlowEnter = () => {
   const { getSidoList, getSigunguList } = apiMapArea;
@@ -42,52 +41,56 @@ const FlowEnter = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [filterType, setType] = useState("");
 
-  const pathTransHandler = (
-    areaList: { code: string; name: string; path: string }[]
-  ) => {
+  const pathTransHandler = (areaList: AreaProps[]) => {
     return areaList.map((area) => {
-      const paths = Object.values(JSON.parse(area.path)).map((latLng: any) => {
-        if (area.code === "28" || area.code === "46") {
-          return latLng.map(
-            (depth: any) => new naver.maps.LatLng(depth[1], depth[0])
-          );
-        } else {
-          return new naver.maps.LatLng(latLng[1], latLng[0]);
-        }
-      });
+      let paths;
 
-      return { code: area.code, name: area.name, path: paths };
+      if (
+        area.code === "11" ||
+        area.code === "22" ||
+        area.code === "24" ||
+        area.code === "25" ||
+        area.code === "26" ||
+        area.code === "29" ||
+        area.code.length > 2
+      ) {
+        paths = area.path.map((latLng: [number, number][]) => {
+          // if (area.code === "28" || area.code === "46") {
+          //   return latLng.map(
+          //     (depth: any) => new naver.maps.LatLng(depth[1], depth[0])
+          //   );
+          // } else {
+          //   return new naver.maps.LatLng(latLng[1], latLng[0]);
+          // }
+          return latLng.map((depth: any) => {
+            const trans = naver.maps.TransCoord.fromUTMKToLatLng(
+              new naver.maps.Point(depth[0], depth[1])
+            );
+            return [trans.x, trans.y];
+          });
+        });
+      } else {
+        paths = area.path;
+      }
+
+      return {
+        code: area.code,
+        name: area.name,
+        path: paths,
+        lat: area.lat,
+        lng: area.lng,
+        zoomLev: area.zoomLev,
+      };
     });
   };
 
   const getSidoHandler = () => {
-    const test = sidoData.map(({ code, name, polygon }) => {
-      return {
-        code: code,
-        name: name,
-        path: polygon,
-      };
-    });
-
-    const transData = pathTransHandler(test);
-
-    setSidoLi(transData);
-    return;
-
     getSidoList().then((res: any) => {
       console.log(res);
 
-      if (res.records && res.records.length > 0) {
-        const tmp = res.records.map(({ code, name, polygon }: any) => {
-          return {
-            code: code,
-            name: name,
-            path: polygon,
-          };
-        });
-
-        const transData = pathTransHandler(tmp);
-
+      if (res.sido && res.sido.length > 0) {
+        const transData = pathTransHandler(res.sido);
+        console.log("transData", transData);
         setSidoLi(transData);
         return;
       } else {
@@ -98,22 +101,19 @@ const FlowEnter = () => {
   };
 
   const getSigunguHandler = (slctCode: string) => {
-    let sigunguData: any = sigunguListData;
+    getSigunguList({ code: slctCode }).then((res: any) => {
+      console.log(res);
 
-    const tmp = sigunguData
-      .map(({ code, name, polygon, parent }: any) => {
-        return {
-          code: code,
-          name: name,
-          path: polygon,
-          parent: parent,
-        };
-      })
-      .filter((li: any) => li.parent === slctCode);
-
-    const transData = pathTransHandler(tmp);
-
-    setSigunguLi(transData);
+      if (res.sigungu && res.sigungu.length > 0) {
+        const transData = pathTransHandler(res.sigungu);
+        console.log("transData", transData);
+        setSigunguLi(transData);
+        return;
+      } else {
+        alert(`시/군/구 리스트를 불러올 수 없습니다. \n다시 시도해주세요`);
+        return;
+      }
+    });
   };
 
   useEffect(() => {
@@ -140,7 +140,7 @@ const FlowEnter = () => {
   }, [sigungu]);
 
   return (
-    <>
+    <Fragment>
       {/* ------------------------------ 상단 ------------------------------*/}
       <Flex
         pos="absolute"
@@ -190,12 +190,7 @@ const FlowEnter = () => {
               list={
                 sido?.slctCode && sigunguLi.length !== 0 ? sigunguLi : sidoLi
               }
-              setSlctArea={(val: {
-                slctName: string;
-                slctCode: string;
-                slctIdx: string;
-                slctPath: any;
-              }) => {
+              setSlctArea={(val: SlctProps) => {
                 if (sido?.slctCode && sigunguLi.length !== 0) {
                   setSlctArea({
                     sido,
@@ -248,7 +243,7 @@ const FlowEnter = () => {
         </Tooltip>
         <BtnReset />
       </Flex>
-    </>
+    </Fragment>
   );
 };
 

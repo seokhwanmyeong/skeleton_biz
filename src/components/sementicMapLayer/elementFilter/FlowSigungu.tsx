@@ -8,49 +8,95 @@ import UpjongListBox from "@components/sementicMapLayer/elementFilter/UpjongList
 import NiceFilter from "@components/sementicMapLayer/elementFilter/NiceFilter";
 import BtnReset from "@components/sementicMapLayer/elementFilter/BtnReset";
 import BtnBack from "@components/sementicMapLayer/elementFilter/BtnBack";
+//  Api
+import { apiMapArea } from "@api/biz/config";
 //  State
 import { atomFilterFlow } from "@states/sementicMap/stateFilter";
 import { atomFlowEnterArea, atomDongLi } from "@states/sementicMap/stateMap";
 //  Icon
 import { IcoFilter } from "@assets/icons/icon";
 //  Deco
-import { DecoTop } from "@components/sementicMapLayer/elementDeco/Deco";
+import {
+  DecoTop,
+  DecoFrameL,
+  DecoFrameCenter,
+  DecoFrameR,
+} from "@components/sementicMapLayer/elementDeco/Deco";
+//  Type
+import type { AreaProps } from "@states/sementicMap/stateMap";
 //  Sample
 import dongListData from "@util/data/area/dong.json";
 
-type Props = {};
-
-const FlowSigungu = (props: Props) => {
+const FlowSigungu = () => {
+  const { getDongList } = apiMapArea;
   const { state } = useContext(NaverMapContext);
   const setFlow = useSetRecoilState(atomFilterFlow);
   const [{ sido, sigungu }, setSlctArea] = useRecoilState(atomFlowEnterArea);
-  const [dongLi, setDongLi] = useRecoilState(atomDongLi);
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [isToolOpen, toolOpen] = useState(false);
+  const setDongLi = useSetRecoilState(atomDongLi);
   const [filterType, setType] = useState("");
 
-  const pathTransHandler = (
-    areaList: { code: string; name: string; num: number; path: string }[]
-  ) => {
-    return areaList.map((area) => {
-      const paths = Object.values(JSON.parse(area.path)).map((latLng: any) => {
-        if (area.code === "28" || area.code === "46") {
-          return latLng.map(
-            (depth: any) => new naver.maps.LatLng(depth[1], depth[0])
+  // const pathTransHandler = (
+  //   areaList: AreaProps[]
+  // ) => {
+  //   return areaList.map((area) => {
+  //     const paths = Object.values(JSON.parse(area.path)).map((latLng: any) => {
+  //       if (area.code === "28" || area.code === "46") {
+  //         return latLng.map(
+  //           (depth: any) => new naver.maps.LatLng(depth[1], depth[0])
+  //         );
+  //       } else {
+  //         return new naver.maps.LatLng(latLng[1], latLng[0]);
+  //       }
+  //     });
+
+  //     return { code: area.code, name: area.name, num: area.num, path: paths };
+  //   });
+  // };
+
+  const pathTransHandler = (areaList: AreaProps[]) => {
+    console.log(areaList);
+    return areaList.map((area, idx: number) => {
+      const paths = area.path.map((latLng: [number, number][]) => {
+        return latLng.map((depth: any) => {
+          const trans = naver.maps.TransCoord.fromUTMKToLatLng(
+            new naver.maps.Point(depth[0], depth[1])
           );
-        } else {
-          return new naver.maps.LatLng(latLng[1], latLng[0]);
-        }
+          return [trans.x, trans.y];
+        });
       });
 
-      return { code: area.code, name: area.name, num: area.num, path: paths };
+      return {
+        code: area.code,
+        name: area.name,
+        num: area.code,
+        path: paths,
+        lat: area.lat,
+        lng: area.lng,
+        zoomLev: area.zoomLev,
+      };
     });
   };
 
-  const getDongList = () => {
+  const getDongHandler = () => {
+    if (sigungu?.slctCode) {
+      getDongList({ code: sigungu.slctCode }).then((res: any) => {
+        console.log(res);
+
+        if (res.dong && res.dong.length > 0) {
+          const transData = pathTransHandler(res.dong);
+          setDongLi(transData);
+          return;
+        } else {
+          alert(`동 리스트를 불러올 수 없습니다. \n다시 시도해주세요`);
+          return;
+        }
+      });
+    }
+
+    return;
     if (sigungu?.slctName) {
       let dongData: any = dongListData;
-
+      console.log(dongData);
       const tmp = dongData
         .map(
           (
@@ -73,7 +119,7 @@ const FlowSigungu = (props: Props) => {
             };
           }
         )
-        .filter((li: any) => li.code.slice(0, 4) === sigungu.slctCode);
+        .filter((li: any) => li.code.slice(0, 4) === sigungu?.slctCode);
       const transData = pathTransHandler(tmp);
 
       setDongLi(transData);
@@ -81,61 +127,65 @@ const FlowSigungu = (props: Props) => {
   };
 
   useEffect(() => {
-    getDongList();
+    getDongHandler();
   }, [sigungu]);
 
   return (
     <>
       {/* ------------------------------ 상단 ------------------------------*/}
-      {!isToolOpen && (
+      <Flex
+        pos="absolute"
+        top="1%"
+        left="50%"
+        zIndex={999}
+        transform="translateX(-50%)"
+        gap={"7rem"}
+      >
+        <BtnBack
+          onClick={() => {
+            state.map?.setOptions({
+              minZoom: 0,
+              maxZoom: 16,
+              scrollWheel: false,
+            });
+            setSlctArea({
+              sido,
+              sigungu: {
+                slctName: "",
+                slctCode: "",
+                slctIdx: "",
+                slctPath: [],
+              },
+            });
+            setFlow("enter");
+          }}
+        />
         <Flex
-          pos="absolute"
-          top="1%"
-          left="50%"
-          zIndex={999}
-          transform="translateX(-50%)"
-          gap={"7rem"}
+          pos="relative"
+          pt="0.3rem"
+          direction="column"
+          justify="flex-start"
+          color="#000000"
+          gap="0.5rem"
         >
-          <BtnBack
-            onClick={() => {
-              state.map?.setOptions({
-                minZoom: 0,
-                maxZoom: 16,
-                scrollWheel: false,
-              });
-              setSlctArea({
-                sido,
-                sigungu: {
-                  slctName: "",
-                  slctCode: "",
-                  slctIdx: "",
-                  slctPath: [],
-                },
-              });
-              setFlow("enter");
-            }}
-          />
-          <Flex
-            pos="relative"
-            pt="0.3rem"
-            direction="column"
-            justify="flex-start"
-            color="#000000"
-            gap="0.5rem"
-          >
-            <Flex pos="relative" direction="column">
-              <Button variant="filterTopMain" cursor="unset">
-                {sigungu?.slctName.replace(sido?.slctName || "", "")}
-              </Button>
-              <DecoTop width="13rem" />
-            </Flex>
-            {sido?.slctName && (
-              <Text variant="filterTopArea">{sido.slctName}</Text>
-            )}
+          <Flex pos="relative" direction="column">
+            <Button variant="filterTopMain" cursor="unset">
+              {sigungu?.slctName.replace(sido?.slctName || "", "")}
+            </Button>
+            <DecoTop width="13rem" />
           </Flex>
-          <UpjongListBox />
+          {sido?.slctName && (
+            <Text variant="filterTopArea">{sido.slctName}</Text>
+          )}
         </Flex>
-      )}
+        <UpjongListBox />
+      </Flex>
+      {/* --------------------------- 중단 Frame ---------------------------*/}
+      <Flex w="100%" h="100%" zIndex={1} gap="0.625rem" pointerEvents="none">
+        <DecoFrameL>test</DecoFrameL>
+        <DecoFrameCenter />
+        <DecoFrameR>test</DecoFrameR>
+      </Flex>
       {/* ------------------------------ 하단 ------------------------------*/}
       <Flex
         pos="absolute"

@@ -13,6 +13,8 @@ interface InteractAreaProps {
   hoverStyle?: any;
   onMouse?: any;
   onMouseOut?: any;
+  onMouseUp?: any;
+  onMouseDown?: any;
   setClickable?: boolean;
 }
 
@@ -25,6 +27,8 @@ const InteractArea = ({
   hoverStyle,
   onMouse,
   onMouseOut,
+  onMouseUp,
+  onMouseDown,
   setClickable = true,
 }: InteractAreaProps) => {
   const { state, dispatch } = useContext(NaverMapContext);
@@ -39,7 +43,7 @@ const InteractArea = ({
       zIndex: 1,
       ...hoverStyle,
     });
-    onMouse && onMouse();
+    onMouse && onMouse(e);
   };
   const onMouseOutArea = (e: PointerEvent) => {
     // state.objects.get(areaId)?.set("fillColor", "#0305F2");
@@ -50,12 +54,21 @@ const InteractArea = ({
       zIndex: 0,
       ...style,
     });
-    onMouseOut && onMouseOut();
+    onMouseOut && onMouseOut(e);
   };
+
+  const onMouseUpArea = (e: PointerEvent) => {
+    onMouseUp && onMouseUp(e);
+  };
+  const onMouseDownArea = (e: PointerEvent) => {
+    onMouseDown && onMouseDown(e);
+  };
+
   useEffect(() => {
     //const center = polylabel(path, 1.0);
     //console.log();
   }, []);
+
   return (
     <>
       <Polygon
@@ -63,6 +76,8 @@ const InteractArea = ({
         onClick={onClick}
         onMouseOver={(e: any) => onMouseOverArea(e)}
         onMouseOut={(e: any) => onMouseOutArea(e)}
+        onMouseUp={(e: any) => onMouseUpArea(e)}
+        onMouseDown={(e: any) => onMouseDownArea(e)}
         opts={{
           paths: path,
           fillColor: "#4446ff",
