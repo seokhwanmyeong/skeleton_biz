@@ -3,8 +3,8 @@ import { defineStyle } from "@chakra-ui/react";
 const themeHeading = {
   baseStyle: {
     mb: 0,
-    fontFamily: "Roboto",
-    fontStyle: "noemal",
+    fontFamily: "main",
+    fontStyle: "normal",
     fontWeight: "strong",
     color: "font.primary",
   },

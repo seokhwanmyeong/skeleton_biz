@@ -105,6 +105,27 @@ const themeAccordion = {
       },
       icon: {},
     },
+    slctUpjong: {
+      root: {},
+      container: {
+        _last: {
+          div: {
+            p: 0,
+          },
+        },
+      },
+      button: {
+        p: "0",
+        justifyContent: "center",
+        textStyle: "base",
+        fontSize: "sm",
+        fontWeight: "strong",
+        color: "font.primary",
+      },
+      panel: {
+        p: "0rem 0rem 1.25rem",
+      },
+    },
   },
   defaultProps: { variant: "" },
 };

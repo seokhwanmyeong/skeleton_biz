@@ -36,6 +36,9 @@ const MapFlowEnter = (props: Props) => {
       sido.slctLat &&
         sido.slctLng &&
         state.map?.setCenter(new naver.maps.LatLng(sido.slctLat, sido.slctLng));
+      state.map?.setOptions({
+        draggable: false,
+      });
     } else {
       console.log("진입 2");
       state.map?.setOptions({
@@ -46,13 +49,27 @@ const MapFlowEnter = (props: Props) => {
         zoom: 8,
         minZoom: 0,
         maxZoom: 16,
-        scrollWheel: true,
+        scrollWheel: false,
+        draggable: true,
+        disableDoubleClickZoom: true,
+        disableDoubleTapZoom: true,
+        disableTwoFingerTapZoom: true,
       });
     }
   }, [sido, sigungu]);
 
-  const test = useCallback((e: any) => {
-    console.log(e?.clientX, e?.clientY);
+  const cursorHandler = useCallback((e: any) => {
+    setCursorPo({ x: e?.clientX, y: e?.clientY });
+
+    return () => {
+      setCursorPo(null);
+    };
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      window.removeEventListener("mousemove", cursorHandler);
+    };
   }, []);
 
   return (
@@ -63,7 +80,6 @@ const MapFlowEnter = (props: Props) => {
               <InteractArea
                 key={sido.code}
                 onClick={() => {
-                  console.log("click");
                   setSlctArea({
                     sido: {
                       slctName: sido.name,
@@ -101,7 +117,6 @@ const MapFlowEnter = (props: Props) => {
               <InteractArea
                 key={sigungu.code}
                 onClick={() => {
-                  console.log("click");
                   setSlctArea({
                     sido,
                     sigungu: {
@@ -117,16 +132,16 @@ const MapFlowEnter = (props: Props) => {
                   setFlow("sigungu");
                 }}
                 onMouse={() => {
-                  setInfoArea(sigungu.name);
+                  setInfoArea(sigungu.name.split(" ")[1]);
                   onOpen();
 
-                  window.addEventListener("mousemove", test);
+                  window.addEventListener("mousemove", cursorHandler);
                 }}
                 onMouseOut={() => {
                   setInfoArea("");
                   onClose();
 
-                  window.removeEventListener("mousemove", test);
+                  window.removeEventListener("mousemove", cursorHandler);
                 }}
                 name={sigungu.name}
                 num={Number(sigungu.code)}
@@ -148,23 +163,28 @@ const MapFlowEnter = (props: Props) => {
           })
         : null}
       {isOpen && cursorPo && (
-        <OverlayView id={`infoBox`} position={cursorPo}>
-          <Flex
-            pos="relative"
-            top="5px"
-            left="5px"
-            w="10rem"
-            h="3rem"
-            bgColor="#FFFFFF"
-            justify="center"
-            align="center"
-            textStyle="base"
-            fontSize="xs"
-            pointerEvents="none"
-          >
-            {infoArea}
-          </Flex>
-        </OverlayView>
+        <Flex
+          pos="relative"
+          top={cursorPo.y - 10}
+          left={cursorPo.x + 10}
+          p="0 0.75rem"
+          w="-webkit-fit-content"
+          h="1.875rem"
+          boxSizing="border-box"
+          justify="center"
+          align="center"
+          bgColor="neutral.gray1"
+          border="1px solid"
+          borderRadius="base"
+          borderColor="neutral.gray6"
+          pointerEvents="none"
+          textStyle="base"
+          fontSize="xs"
+          fontWeight="strong"
+          lineHeight="1.875rem"
+        >
+          {infoArea}
+        </Flex>
       )}
     </>
   );

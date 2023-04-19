@@ -28,12 +28,7 @@ const MapFlowDong = (props: Props) => {
 
   useEffect(() => {
     if (dong.slctPath) {
-      state.map?.setOptions({
-        minZoom: 0,
-        maxZoom: 16,
-      });
       state.map?.fitBounds(dong.slctPath);
-
       let curZoom = state.map?.getZoom();
 
       if (curZoom) {
@@ -42,7 +37,12 @@ const MapFlowDong = (props: Props) => {
 
         state.map?.setOptions({
           minZoom: curZoom,
-          maxZoom: curZoom,
+          maxZoom: 16,
+          scrollWheel: true,
+          draggable: true,
+          disableDoubleClickZoom: false,
+          disableDoubleTapZoom: false,
+          disableTwoFingerTapZoom: false,
         });
       }
 

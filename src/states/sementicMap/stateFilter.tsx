@@ -14,14 +14,54 @@ export const atomFilterFlow = atom<TypeFlow>({
   default: "init",
 });
 
+// ==================== Nice 업종 리스트 ====================
+
 export const atomUpjongState = atom({
   key: "upjongState",
   default: {
-    top: "",
-    mid: "",
-    bot: "",
+    top: {
+      name: "",
+      code: "",
+    },
+    mid: {
+      name: "",
+      code: "",
+    },
+    bot: {
+      name: "",
+      code: "",
+    },
   },
 });
+
+export const atomUpjongTopList = atom<any[]>({
+  key: "atomUpjongTopList",
+  default: [],
+});
+
+export const atomUpjongMidList = atom<any[]>({
+  key: "atomUpjongMidList",
+  default: [],
+});
+
+export const atomUpjongBotList = atom<any[]>({
+  key: "atomUpjongBotList",
+  default: [],
+});
+
+// export const setUpjongList = selector({
+//   key: "setUpjongList",
+//   get: () => {},
+//   set: ({ get, set }, position: "top" | "mid" | "bot") => {
+//     if (position === "top") {
+//       return null;
+//     } else if (position === "mid") {
+//       return null;
+//     } else if (position === "bot") {
+//       return null;
+//     }
+//   },
+// });
 
 // ==================== Nice 필터 리스트 ====================
 

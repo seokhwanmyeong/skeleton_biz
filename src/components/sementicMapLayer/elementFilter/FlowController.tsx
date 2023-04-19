@@ -6,7 +6,7 @@ import { atomFilterFlow } from "@states/sementicMap/stateFilter";
 //  Icon
 import { IcoDoubleSquere, IcoErp, IcoFilter } from "@assets/icons/icon";
 //  Deco
-import { DecoFilterGap } from "@components/sementicMapLayer/elementDeco/Deco";
+import { DecoFilterDivider } from "@components/sementicMapLayer/elementDeco/Deco";
 
 const FlowController = () => {
   const setFlow = useSetRecoilState(atomFilterFlow);
@@ -24,7 +24,7 @@ const FlowController = () => {
         </Box>
         분석필터
       </Button>
-      <DecoFilterGap />
+      <DecoFilterDivider />
       <Button
         variant="filterTop"
         onClick={() => {
@@ -36,7 +36,7 @@ const FlowController = () => {
         </Box>
         영역분석
       </Button>
-      <DecoFilterGap />
+      <DecoFilterDivider />
       <Button
         variant="filterTop"
         onClick={() => {

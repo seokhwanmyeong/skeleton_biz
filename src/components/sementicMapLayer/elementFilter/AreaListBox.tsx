@@ -1,9 +1,10 @@
-import { Box, Button, Flex, Grid, Heading } from "@chakra-ui/react";
+import { Button, Grid, Heading } from "@chakra-ui/react";
 //  Deco
 import { Deco01 } from "@assets/deco/DecoSvg";
 import {
-  DecoBoxR,
   DecoBoxL,
+  DecoBoxR,
+  DecoTopFilterModal,
 } from "@components/sementicMapLayer/elementDeco/Deco";
 //  Type
 import type { SlctProps, AreaProps } from "@states/sementicMap/stateMap";
@@ -18,30 +19,26 @@ type Props = {
 
 const AreaListBox = ({ title, isOpen, list, setSlctArea, onClick }: Props) => {
   return (
-    <Flex
-      pos="absolute"
-      top="4rem"
-      left="50%"
-      transform="translateX(-50%)"
-      p="0.6875rem 0.6875rem 1.4375rem"
-      display={isOpen ? "flex" : "none"}
-      direction="column"
-      justify="center"
-      border="1px solid #BFBFBF"
-    >
+    <DecoTopFilterModal isOpen={isOpen}>
       <Heading
         as={"h5"}
+        bg="none"
         fontSize="md"
         lineHeight="1.5rem"
         color="font.title"
         textAlign="center"
-        bg="none"
       >
         {title}
       </Heading>
-      <Deco01 margin="0.625rem 0 1.375rem" width="100%" height="4px" />
-      <Grid w="100%" templateColumns="repeat(5, calc(20% - 0.8rem))" gap="1rem">
+      <Deco01 margin="0.125rem 0rem 1.5rem" width="100%" height="4px" />
+      <Grid
+        w="100%"
+        templateColumns="repeat(5, calc(20% - 0.2rem))"
+        gap="0.75rem 0.25rem"
+      >
         {list.map(({ name, code, path, lat, lng, zoomLev }: AreaProps) => {
+          const nameSplit = name.split(" ");
+          console.log(nameSplit);
           return (
             <Button
               variant="slctArea"
@@ -59,39 +56,17 @@ const AreaListBox = ({ title, isOpen, list, setSlctArea, onClick }: Props) => {
                 onClick && onClick();
               }}
             >
-              {name}
+              {nameSplit.length > 1 ? nameSplit[1] : name}
             </Button>
           );
         })}
       </Grid>
-      <Flex
-        position="absolute"
-        top="-4.6%"
-        left="50%"
-        transform="translateX(-50%)"
-        gap="0.25rem"
-      >
-        <Box
-          boxSizing="border-box"
-          w="0.25rem"
-          h="0.25rem"
-          background="#FFFFFF"
-          border="1px solid #FFFFFF"
-        ></Box>
-        <Box
-          boxSizing="border-box"
-          w="0.25rem"
-          h="0.25rem"
-          background="#FFFFFF"
-          border="1px solid #FFFFFF"
-        ></Box>
-      </Flex>
       <DecoBoxL
         position="absolute"
         top="50%"
         left="-0.5rem"
         transform="translateY(-50%)"
-        width="3.6%"
+        width="5%"
         height="107%"
         color="#FFFFFF"
       />
@@ -100,23 +75,11 @@ const AreaListBox = ({ title, isOpen, list, setSlctArea, onClick }: Props) => {
         top="50%"
         right="-0.5rem"
         transform="translateY(-50%)"
-        width="3.6%"
+        width="5%"
         height="107%"
         color="#FFFFFF"
       />
-      <Box
-        zIndex={-1}
-        position="absolute"
-        top={0}
-        left={0}
-        display="block"
-        width="100%"
-        height="100%"
-        bg="rgba(255, 255, 255, 0.75)"
-        backdropFilter="blur(5px)"
-        userSelect="none"
-      ></Box>
-    </Flex>
+    </DecoTopFilterModal>
   );
 };
 

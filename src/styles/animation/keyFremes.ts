@@ -1,10 +1,16 @@
 import { keyframes } from "@chakra-ui/react";
 
-const alertframes = keyframes`
+const alertFrames = keyframes`
   0% { opacity: 0 }
   100% { opacity: 1 }
 `;
 
-const alertAnimation = `${alertframes} 0.3s ease-in-out`;
+const boxBaseFrames = keyframes`
+0% { opacity: 0 }
+100% { opacity: 1 }
+`;
 
-export { alertAnimation };
+const alertAnimation = `${alertFrames} 0.3s ease-in-out`;
+const boxBaseAnimation = `${boxBaseFrames} 0.2s ease-in-out`;
+
+export { alertAnimation, boxBaseAnimation };

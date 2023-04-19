@@ -12,7 +12,7 @@ const BtnBack = ({ onClick, disabled = false }: Props) => {
   return (
     <Button variant="filterTop" disabled={disabled} onClick={onClick}>
       <Box>
-        <IcoAreaBack width="1.125rem" height="1.125rem" />
+        <IcoAreaBack width="0.75rem" height="0.75rem" />
       </Box>
       뒤로가기
     </Button>

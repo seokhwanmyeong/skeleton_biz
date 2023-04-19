@@ -1,20 +1,12 @@
 //  Lib
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import type { ReactNode } from "react";
 import { Box, Icon, Flex } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 //  Animation
-import {} from "@styles/animation/keyFremes";
+import { boxBaseAnimation } from "@styles/animation/keyFremes";
 
-type DecoProps = {
-  position: {
-    top?: number;
-    left?: number;
-    right?: number;
-    bottom?: number;
-  };
-};
-
+//  상단 필터 모달 Element
 const DecoBoxL = (iconProps: any) => {
   return (
     <Icon viewBox="0 0 17 260" fill="none" {...iconProps}>
@@ -25,6 +17,7 @@ const DecoBoxL = (iconProps: any) => {
   );
 };
 
+//  상단 필터 모달 Element
 const DecoBoxR = (iconProps: any) => {
   return (
     <Icon viewBox="0 0 17 260" fill="none" {...iconProps}>
@@ -35,40 +28,71 @@ const DecoBoxR = (iconProps: any) => {
   );
 };
 
-const DecoFilterGap = (iconProps: any) => {
+//  상단 필터 모달
+const DecoTopFilterModal = ({
+  isOpen,
+  children,
+  ...rest
+}: {
+  isOpen: boolean;
+  children: ReactNode;
+  [x: string]: any;
+}) => {
   return (
-    <Icon width="2px" height="3.375rem" viewBox="0 0 2 60" {...iconProps}>
-      <g opacity="0.5">
-        <path
-          d="M1 0.5L0.999998 53.3598"
-          stroke="#262323"
-          strokeOpacity="0.8"
-          strokeWidth="0.5"
+    <Flex
+      as={motion.div}
+      animation={boxBaseAnimation}
+      pos="absolute"
+      top="4.8rem"
+      left="50%"
+      transform="translateX(-50%)"
+      p="0.75rem 0.5rem 0.75rem"
+      display={isOpen ? "flex" : "none"}
+      direction="column"
+      justify="center"
+      border="1px solid #BFBFBF"
+      {...rest}
+    >
+      {children}
+      <Flex
+        position="absolute"
+        top="-4.6%"
+        left="50%"
+        transform="translateX(-50%)"
+        gap="0.25rem"
+      >
+        <Box
+          boxSizing="border-box"
+          w="0.25rem"
+          h="0.25rem"
+          background="#FFFFFF"
+          border="1px solid #FFFFFF"
         />
-        <path d="M1 0.5L1 3.02381" stroke="#262323" />
-        <path d="M1 50.9761L1 53.4999" stroke="#262323" />
-      </g>
-    </Icon>
+        <Box
+          boxSizing="border-box"
+          w="0.25rem"
+          h="0.25rem"
+          background="#FFFFFF"
+          border="1px solid #FFFFFF"
+        />
+      </Flex>
+      <Box
+        zIndex={-1}
+        position="absolute"
+        top={0}
+        left={0}
+        display="block"
+        width="100%"
+        height="100%"
+        bg="rgba(255, 255, 255, 0.75)"
+        backdropFilter="blur(5px)"
+        userSelect="none"
+      />
+    </Flex>
   );
 };
 
-const DecoCardBg = () => {
-  return (
-    <Box
-      zIndex={-1}
-      position="absolute"
-      top={0}
-      left={0}
-      display="block"
-      width="100%"
-      height="100%"
-      bg="rgba(255, 255, 255, 0.75)"
-      backdropFilter="blur(5px)"
-      userSelect="none"
-    />
-  );
-};
-
+//  상단 필터 Element
 const DecoTop = ({ width }: { width?: any }) => {
   return (
     <Flex
@@ -108,50 +132,17 @@ const DecoTop = ({ width }: { width?: any }) => {
   );
 };
 
-const DecoFilterBg = ({ position }: DecoProps) => {
+//  상단 필터 Backgroun Deco
+const DecoFilterBg = (props?: any) => {
   return (
     <Box
       pos="absolute"
-      w="100vw"
-      h="5rem"
+      w="80vw"
+      h="4.25rem"
       bg="linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, #ffffff 50%, rgba(255, 255, 255, 0) 100%)"
       zIndex="1"
-      {...position}
+      {...props}
     ></Box>
-  );
-};
-
-const DecoBotRoof = (iconProps: any) => {
-  return (
-    <Icon
-      width="238"
-      height="10"
-      viewBox="0 0 238 10"
-      fill="none"
-      {...iconProps}
-    >
-      <g filter="url(#filter0_b_687_231352)">
-        <path
-          fillRule="evenodd"
-          clipRule="evenodd"
-          d="M7.37089 0H230.629L237.869 9.5H0.130859L7.37089 0Z"
-          fill="white"
-        />
-        <path
-          d="M0.635712 9.25L7.49468 0.25H230.505L237.364 9.25H0.635712Z"
-          stroke="#BFBFBF"
-          strokeWidth="0.5"
-        />
-      </g>
-      <g filter="url(#filter1_b_687_231352)">
-        <path
-          fillRule="evenodd"
-          clipRule="evenodd"
-          d="M10.3431 3H229.362L232.352 7H7.35254L10.3431 3Z"
-          fill="#8C8C8C"
-        />
-      </g>
-    </Icon>
   );
 };
 
@@ -172,6 +163,43 @@ const DecoBotBox = ({ children }: { children: ReactNode }) => {
   );
 };
 
+//  하단 뎁스 필터 Divider
+const DecoFilterDivider = (iconProps: any) => {
+  return (
+    <Icon width="2px" height="3.375rem" viewBox="0 0 2 60" {...iconProps}>
+      <g opacity="0.5">
+        <path
+          d="M1 0.5L0.999998 53.3598"
+          stroke="#262323"
+          strokeOpacity="0.8"
+          strokeWidth="0.5"
+        />
+        <path d="M1 0.5L1 3.02381" stroke="#262323" />
+        <path d="M1 50.9761L1 53.4999" stroke="#262323" />
+      </g>
+    </Icon>
+  );
+};
+
+//  하단 뎁스 필터 Background
+const DecoCardBg = () => {
+  return (
+    <Box
+      zIndex={-1}
+      position="absolute"
+      top={0}
+      left={0}
+      display="block"
+      width="100%"
+      height="100%"
+      bg="rgba(255, 255, 255, 0.75)"
+      backdropFilter="blur(5px)"
+      userSelect="none"
+    />
+  );
+};
+
+//  중앙 포커스 라운드 Element
 const DecoCenterBox = (iconProps: any) => {
   return (
     <Icon
@@ -189,6 +217,7 @@ const DecoCenterBox = (iconProps: any) => {
   );
 };
 
+//  중앙 포커스 라운드 Element
 const DecoCenterBox02 = (iconProps: any) => {
   return (
     <Icon
@@ -208,6 +237,7 @@ const DecoCenterBox02 = (iconProps: any) => {
   );
 };
 
+//  중앙 포커스 라운드 Element
 const DecoCenterBox03 = (iconProps: any) => {
   return (
     <Icon
@@ -230,6 +260,7 @@ const DecoCenterBox03 = (iconProps: any) => {
   );
 };
 
+//  상세 좌측 Frame
 const DecoFrameL = ({ children }: { children?: ReactNode }) => {
   return (
     <Flex
@@ -257,7 +288,14 @@ const DecoFrameL = ({ children }: { children?: ReactNode }) => {
   );
 };
 
-const DecoFrameR = ({ children }: { children?: ReactNode }) => {
+//  상세 우측 Frame
+const DecoFrameR = ({
+  children,
+  ...rest
+}: {
+  children?: ReactNode;
+  [x: string]: any;
+}) => {
   return (
     <Flex
       p="6rem 0"
@@ -266,6 +304,7 @@ const DecoFrameR = ({ children }: { children?: ReactNode }) => {
       direction="column"
       justify="space-between"
       pointerEvents="fill"
+      {...rest}
     >
       <Box
         w="100%"
@@ -284,6 +323,7 @@ const DecoFrameR = ({ children }: { children?: ReactNode }) => {
   );
 };
 
+//  중앙 포커스 라운드
 const DecoFrameCenter = () => {
   const boxRef = useRef<HTMLDivElement | null>(null);
 
@@ -364,18 +404,24 @@ const DecoFrameCenter = () => {
           border="1px solid"
           borderColor="#26232380"
           boxShadow="0px 0px 10px 2px #00000040"
-          transition="0.3s easeIn"
+          // transition="0.2s ease"
           initial={{
             width: 0,
             height: 0,
+            maxWidth: "90vh",
+            maxHeight: "90vh",
           }}
           animate={{
             width: "60vw",
             height: "60vw",
+            maxWidth: "90vh",
+            maxHeight: "90vh",
           }}
           exit={{
             width: "60vw",
             height: "60vw",
+            maxWidth: "90vh",
+            maxHeight: "90vh",
           }}
         >
           {/* 중앙 미들 원형 */}
@@ -387,7 +433,7 @@ const DecoFrameCenter = () => {
             transform="translate(-50%, -50%)"
             w="93%"
             h="93%"
-            transition="0.3s linear"
+            transition="0.3s 0.2s linear"
             initial={{
               opacity: 0,
             }}
@@ -412,7 +458,7 @@ const DecoFrameCenter = () => {
               left="0"
               width="100%"
               height="100%"
-              transition="0.2s linear"
+              transition="0.2s 0.4s linear"
               initial={{
                 transform: "rotate(0deg)",
               }}
@@ -438,7 +484,7 @@ const DecoFrameCenter = () => {
               left="0"
               width="100%"
               height="100%"
-              transition="0.2s linear"
+              transition="0.3s 0.4s linear"
               initial={{
                 transform: "rotate(0deg)",
               }}
@@ -470,7 +516,7 @@ const DecoFrameCenter = () => {
               borderColor="#26232380"
               borderTop="none"
               borderBottom="none"
-              transition="0.2s 0.2s linear"
+              transition="0.3s 0.4s linear"
               initial={{
                 opacity: 0,
               }}
@@ -485,7 +531,7 @@ const DecoFrameCenter = () => {
                 left="0"
                 width="100%"
                 height="100%"
-                transition="0.3s 0.1s linear"
+                transition="0.3s 0.6s linear"
                 initial={{
                   transform: "rotate(0deg)",
                 }}
@@ -510,7 +556,7 @@ const DecoFrameCenter = () => {
                 left="0"
                 width="100%"
                 height="100%"
-                transition="0.3s 0.1s linear"
+                transition="0.3s 0.6s linear"
                 initial={{
                   transform: "rotate(0deg)",
                 }}
@@ -580,10 +626,11 @@ const DecoFrameCenter = () => {
 export {
   DecoBoxL,
   DecoBoxR,
-  DecoFilterGap,
-  DecoCardBg,
+  DecoTopFilterModal,
   DecoTop,
   DecoFilterBg,
+  DecoFilterDivider,
+  DecoCardBg,
   DecoBotBox,
   DecoFrameL,
   DecoFrameR,

@@ -36,6 +36,9 @@ import {
   MAP_SIDO_GET_LIST,
   MAP_SIGUNGU_GET_LIST,
   MAP_DONG_GET_LIST,
+  MAP_UPJONG_TOP,
+  MAP_UPJONG_MID,
+  MAP_UPJONG_BOT,
 } from "@api/biz/url";
 //  Type
 import {
@@ -47,6 +50,8 @@ import {
   TypeMapSido,
   TypeMapSigungu,
   TypeMapDong,
+  TypeUpjongGet,
+  TypeUpjongPost,
 } from "@api/biz/type";
 
 let localStorage = window.localStorage;
@@ -174,6 +179,20 @@ const apiMapArea = {
     ),
 };
 
+const apiUpjong = {
+  getTopList: () => instance.get<TypeUpjongGet["res"]>(MAP_UPJONG_TOP),
+  getMidList: (req: TypeUpjongPost["req"]) =>
+    instance.post<TypeUpjongPost["req"], TypeUpjongPost["res"]>(
+      MAP_UPJONG_MID,
+      req
+    ),
+  getBotList: (req: TypeUpjongPost["req"]) =>
+    instance.post<TypeUpjongPost["req"], TypeUpjongPost["res"]>(
+      MAP_UPJONG_BOT,
+      req
+    ),
+};
+
 const apiCommon = {
   checkCode: (req: any) => instance.post(ERP_CODE_CHECKER, req),
   getAvailableErpLinkLi: (req: any) => instance.post(ERP_LINK_GET, req),
@@ -189,4 +208,5 @@ export {
   apiErpMap,
   apiCommon,
   apiMapArea,
+  apiUpjong,
 };

@@ -38,6 +38,10 @@ const BtnReset = ({ activeReset = true, onClick }: Props) => {
             minZoom: 0,
             maxZoom: 16,
             scrollWheel: true,
+            draggable: true,
+            disableDoubleClickZoom: false,
+            disableDoubleTapZoom: false,
+            disableTwoFingerTapZoom: false,
           });
 
           resetSlctArea();

@@ -144,7 +144,7 @@ const FlowEnter = () => {
       {/* ------------------------------ 상단 ------------------------------*/}
       <Flex
         pos="absolute"
-        top="1%"
+        top="0.75rem"
         left="50%"
         zIndex={999}
         transform="translateX(-50%)"
@@ -163,7 +163,6 @@ const FlowEnter = () => {
         />
         <Flex
           pos="relative"
-          pt="0.3rem"
           direction="column"
           justify="flex-start"
           color="#000000"
@@ -185,7 +184,7 @@ const FlowEnter = () => {
           )}
           {sidoLi.length !== 0 && (
             <AreaListBox
-              title="시/도 선택"
+              title={sido?.slctCode ? "시/군/구 선택" : "시/도 선택"}
               isOpen={isOpen}
               list={
                 sido?.slctCode && sigunguLi.length !== 0 ? sigunguLi : sidoLi
@@ -208,7 +207,7 @@ const FlowEnter = () => {
             />
           )}
         </Flex>
-        <UpjongListBox />
+        <UpjongListBox relateOpen={isOpen} relateSetClose={onClose} />
       </Flex>
       {/* ------------------------------ 하단 ------------------------------*/}
       <Flex

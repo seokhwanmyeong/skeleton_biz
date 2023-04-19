@@ -1,27 +1,31 @@
 //  Lib
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { useRecoilState } from "recoil";
 import {
+  Accordion,
+  AccordionButton,
+  AccordionItem,
+  AccordionPanel,
   Box,
   Button,
+  Divider,
   Flex,
   Grid,
   Heading,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  Text,
   useDisclosure,
 } from "@chakra-ui/react";
 //  State
-import { atomUpjongState } from "@src/states/sementicMap/stateFilter";
+import {
+  atomUpjongBotList,
+  atomUpjongMidList,
+  atomUpjongState,
+  atomUpjongTopList,
+} from "@states/sementicMap/stateFilter";
+//  Api
+import { apiUpjong } from "@api/biz/config";
 //  Icon
 import {
   IcoAppStore,
-  IcoArrowNext,
-  IcoStepTrue,
   IcoUpjongTop1,
   IcoUpjongTop2,
   IcoUpjongTop3,
@@ -32,34 +36,54 @@ import {
 //  Deco
 import { Deco01 } from "@assets/deco/DecoSvg";
 import {
-  DecoBoxR,
   DecoBoxL,
+  DecoBoxR,
+  DecoTopFilterModal,
 } from "@components/sementicMapLayer/elementDeco/Deco";
 
 type Props = {
   isOpen?: boolean;
-  onClick?: (props?: any) => any;
   relateOpen?: boolean;
+  isDisabled?: boolean;
+  relateSetClose?: (props?: any) => any;
+  onClick?: (props?: any) => any;
 };
 
-const UpjonListBox = ({ relateOpen = false }: Props) => {
+const UpjonListBox = ({
+  relateOpen = false,
+  relateSetClose,
+  isDisabled = false,
+}: Props) => {
+  const { getTopList, getMidList, getBotList } = apiUpjong;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [tabIdx, setTabIdx] = useState(0);
   const [{ top, mid, bot }, setUpjong] = useRecoilState(atomUpjongState);
+  const [topList, setTopList] = useRecoilState(atomUpjongTopList);
+  const [midList, setMidList] = useRecoilState(atomUpjongMidList);
+  const [botList, setBotList] = useRecoilState(atomUpjongBotList);
   const [localUpjong, setLocal] = useState({
-    top: top || "",
-    mid: mid || "",
-    bot: bot || "",
+    top: {
+      name: top.name || "",
+      code: top.code || "",
+    },
+    mid: {
+      name: mid.name || "",
+      code: mid.code || "",
+    },
+    bot: {
+      name: bot.name || "",
+      code: bot.code || "",
+    },
   });
 
   const upjong: any = {
     top: [
-      { text: "생활서비스", icon: <IcoUpjongTop1 /> },
-      { text: "소매/유통", icon: <IcoUpjongTop2 /> },
-      { text: "여가/오락", icon: <IcoUpjongTop3 /> },
-      { text: "음식", icon: <IcoUpjongTop4 /> },
-      { text: "의료/건강", icon: <IcoUpjongTop5 /> },
-      { text: "학문/교육", icon: <IcoUpjongTop6 /> },
+      { text: "소매/유통", icon: <IcoUpjongTop1 /> },
+      { text: "생활서비스", icon: <IcoUpjongTop2 /> },
+      { text: "음식", icon: <IcoUpjongTop3 /> },
+      { text: "여가/오락", icon: <IcoUpjongTop4 /> },
+      { text: "학문/교육", icon: <IcoUpjongTop5 /> },
+      { text: "의료/건강", icon: <IcoUpjongTop6 /> },
     ],
     mid: {
       생활서비스: [
@@ -128,26 +152,82 @@ const UpjonListBox = ({ relateOpen = false }: Props) => {
     },
   };
 
+  const upjongIcon = {
+    D: <IcoUpjongTop1 />,
+    F: <IcoUpjongTop2 />,
+    Q: <IcoUpjongTop3 />,
+    O: <IcoUpjongTop4 />,
+    R: <IcoUpjongTop5 />,
+    S: <IcoUpjongTop6 />,
+  };
+
+  const upjongMidHandler = (code: string) => {
+    if (code) {
+      getMidList({ code: code }).then((res: any) => {
+        console.log(res);
+        if (res.data && res.data.length > 0) {
+          setMidList(res.data);
+          setTabIdx(1);
+        }
+      });
+    }
+  };
+
+  const upjongBotHandler = (code: string) => {
+    if (code) {
+      getBotList({ code: code }).then((res: any) => {
+        console.log(res);
+        if (res.data && res.data.length > 0) {
+          setBotList(res.data);
+          setTabIdx(2);
+        }
+      });
+    }
+  };
+
   useEffect(() => {
     setLocal({
-      top: top,
-      mid: mid,
-      bot: bot,
+      top: { name: top.name, code: top.code },
+      mid: { name: mid.name, code: mid.code },
+      bot: { name: bot.name, code: bot.code },
     });
 
-    if (top && mid && bot) {
+    if (top?.code && mid?.code && bot?.code) {
       setTabIdx(2);
     } else {
       setTabIdx(0);
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    if (relateOpen) {
+      isOpen && onClose();
+    }
+  }, [relateOpen]);
+
+  useEffect(() => {
+    if (topList.length === 0) {
+      getTopList().then((res: any) => {
+        if (res.data && res.data.length > 0) {
+          setTopList(res.data);
+        }
+      });
+    }
+  }, []);
+
   return (
-    <>
+    <Fragment>
       <Button
         onClick={() => {
-          isOpen ? onClose() : onOpen();
+          if (isOpen) {
+            onClose();
+          } else {
+            onOpen();
+            relateOpen && relateSetClose && relateSetClose();
+          }
         }}
+        isDisabled={isDisabled}
+        isActive={isOpen}
         variant="filterTop"
       >
         <Box>
@@ -155,254 +235,180 @@ const UpjonListBox = ({ relateOpen = false }: Props) => {
         </Box>
         업종
       </Button>
-      {isOpen && (
-        <Flex
-          pos="absolute"
-          top="4rem"
-          left="50%"
-          transform="translateX(-50%)"
-          p="1rem 0rem 0rem"
-          display={isOpen ? "flex" : "none"}
-          direction="column"
-          justify="center"
-          border="1px solid #BFBFBF"
-        >
-          <Flex p="0 1.3125rem" align="center" gap="1rem">
-            <Heading
-              as={"h5"}
-              fontSize="sm"
-              lineHeight="normal"
-              color="font.title"
-              bg="none"
-            >
-              업종선택
-            </Heading>
-            <IcoAppStore width="0.875rem" height="0.875rem" />
-          </Flex>
+      {isOpen && !isDisabled && (
+        <DecoTopFilterModal isOpen={isOpen} w="29.5rem">
+          <Heading
+            as={"h5"}
+            bg="none"
+            fontSize="md"
+            lineHeight="1.5rem"
+            color="font.title"
+            textAlign="center"
+          >
+            업종선택
+          </Heading>
           <Deco01
             margin="0.25rem 0 1.3125rem"
             p="0 1.3125rem"
             width="100%"
             height="auto"
           />
-          <Tabs
-            variant="upjongBox"
+          <Accordion
+            variant="slctUpjong"
             defaultIndex={0}
             index={tabIdx}
             onChange={(idx: number) => setTabIdx(idx)}
           >
-            <TabList>
-              <Tab key="tab-top">
-                {localUpjong.top && tabIdx !== 0 ? (
-                  <IcoStepTrue color="primary.type7" />
-                ) : (
-                  <Flex
-                    w="1.125rem"
-                    h="1.125rem"
-                    align="center"
-                    justify="center"
-                    borderRadius="50%"
-                    border="1px solid"
-                    fontFamily="main"
-                    fontWeight="regular"
-                    fontSize="10px"
-                    borderColor={tabIdx === 0 ? "#FFFFFF" : "font.disabled"}
-                    bgColor={tabIdx === 0 ? "primary.type7" : "transparent"}
-                    color={tabIdx === 0 ? "#FFFFFF" : "font.disabled"}
-                  >
-                    1
-                  </Flex>
-                )}
-                <Text>대분류</Text>
-                <IcoArrowNext
-                  position="absolute"
-                  right="0"
-                  transform="translateX(50%)"
-                  width="0.4rem"
-                  height="0.8rem"
-                  color="font.disabled"
-                />
-              </Tab>
-              <Tab isDisabled={localUpjong.top ? false : true} key="tab-mid">
-                <Flex
-                  w="1.125rem"
-                  h="1.125rem"
-                  align="center"
-                  justify="center"
-                  borderRadius="50%"
-                  border="1px solid"
-                  fontFamily="main"
-                  fontWeight="regular"
-                  fontSize="10px"
-                  borderColor={tabIdx === 1 ? "#FFFFFF" : "font.disabled"}
-                  bgColor={tabIdx === 1 ? "primary.type7" : "transparent"}
-                  color={tabIdx === 1 ? "#FFFFFF" : "font.disabled"}
-                >
-                  2
-                </Flex>
-                <Text>중분류</Text>
-                <IcoArrowNext
-                  position="absolute"
-                  right="0"
-                  transform="translateX(50%)"
-                  width="0.4rem"
-                  height="0.8rem"
-                  color="font.disabled"
-                />
-              </Tab>
-              <Tab isDisabled={localUpjong.mid ? false : true} key="tab-bot">
-                <Flex
-                  w="1.125rem"
-                  h="1.125rem"
-                  align="center"
-                  justify="center"
-                  borderRadius="50%"
-                  border="1px solid"
-                  fontFamily="main"
-                  fontWeight="regular"
-                  fontSize="10px"
-                  borderColor={tabIdx === 2 ? "#FFFFFF" : "font.disabled"}
-                  bgColor={tabIdx === 2 ? "primary.type7" : "transparent"}
-                  color={tabIdx === 2 ? "#FFFFFF" : "font.disabled"}
-                >
-                  3
-                </Flex>
-                <Text>소분류</Text>
-              </Tab>
-            </TabList>
-            <TabPanels>
-              <TabPanel
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
+            <AccordionItem>
+              <AccordionButton
+                color={localUpjong.top ? "primary.type8" : "font.primary"}
+                _hover={{
+                  color: "primary.type8",
+                }}
               >
-                <Flex
-                  justify="center"
-                  align="center"
-                  w="100%"
-                  h="100%"
-                  gap="1rem"
-                >
-                  {upjong.top.map(
-                    ({ text, icon }: { text: string; icon: any }) => {
+                {localUpjong.top.name ? localUpjong.top.name : "대분류"}
+              </AccordionButton>
+              <Divider m="0.25rem 0rem 1rem" borderColor="neutral.gray6" />
+              <AccordionPanel>
+                <Flex justify="space-between" align="center" w="100%">
+                  {topList?.map(
+                    ({
+                      name,
+                      code,
+                    }: {
+                      name: string;
+                      code: "D" | "F" | "O" | "Q" | "R" | "S";
+                    }) => {
                       return (
                         <Button
-                          variant="slctTopUpjong"
-                          key={`key-${text}`}
-                          isActive={localUpjong.top === text}
+                          variant="filterTop02"
+                          key={`key-${code}`}
+                          isActive={localUpjong.top.code === code}
                           onClick={() => {
                             setLocal({
-                              top: text,
-                              mid: "",
-                              bot: "",
+                              top: {
+                                name: name,
+                                code: code,
+                              },
+                              mid: {
+                                name: "",
+                                code: "",
+                              },
+                              bot: {
+                                name: "",
+                                code: "",
+                              },
                             });
-                            setTabIdx(1);
+                            upjongMidHandler(code);
                           }}
                         >
-                          {icon && (
-                            <Flex
-                              align="center"
-                              justify="center"
-                              w="2.5rem"
-                              h="2.5rem"
-                              bg={
-                                localUpjong.top === text
-                                  ? "linear-gradient(180deg, #D4B106 0%, rgba(212, 177, 6, 0) 100%)"
-                                  : "linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 100%)"
-                              }
-                              filter={
-                                localUpjong.top === text
-                                  ? "drop-shadow(0px 4px 4px rgba(212, 177, 6, 0))"
-                                  : "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))"
-                              }
-                              backdropFilter="blur(5px)"
-                              border="1px solid"
-                              borderColor={
-                                localUpjong.top === text ? "#FFFFFF" : "#898989"
-                              }
-                              borderRadius="8px"
-                              box-shadow="0px 4px 4px 0 rgb(0 0 0 / 25%)"
-                              sx={{
-                                svg: {
-                                  color:
-                                    localUpjong.top === text
-                                      ? "#FFFFFF"
-                                      : "font.primary",
-                                },
-                              }}
-                            >
-                              {icon}
-                            </Flex>
-                          )}
-                          {text}
+                          {upjongIcon[code] && <Box>{upjongIcon[code]}</Box>}
+                          {name}
                         </Button>
                       );
                     }
                   )}
                 </Flex>
-              </TabPanel>
-              <TabPanel>
+              </AccordionPanel>
+            </AccordionItem>
+            <AccordionItem isDisabled={localUpjong.top ? false : true}>
+              <AccordionButton
+                color={localUpjong.mid ? "primary.type8" : "font.primary"}
+                _hover={{
+                  color: "primary.type8",
+                }}
+              >
+                {localUpjong.mid.name ? localUpjong.mid.name : "중분류"}
+              </AccordionButton>
+              <Divider m="0.25rem 0rem 1rem" borderColor="neutral.gray6" />
+              <AccordionPanel>
                 <Grid
                   w="100%"
                   templateColumns="repeat(5, calc(20% - 0.3rem))"
                   gap="0.375rem"
                 >
                   {localUpjong.top &&
-                    upjong.mid[localUpjong.top]?.map((text: string) => {
-                      return (
-                        <Button
-                          variant="slctUpjong"
-                          isActive={localUpjong.mid === text}
-                          key={`key-${text}`}
-                          onClick={() => {
-                            setLocal({
-                              top: localUpjong.top,
-                              mid: text,
-                              bot: "",
-                            });
-                            setTabIdx(2);
-                          }}
-                        >
-                          {text}
-                        </Button>
-                      );
-                    })}
+                    midList?.map(
+                      ({ name, code }: { name: string; code: string }) => {
+                        return (
+                          <Button
+                            variant="slctUpjong"
+                            isActive={localUpjong.mid.code === code}
+                            key={`key-${code}`}
+                            onClick={() => {
+                              setLocal({
+                                top: localUpjong.top,
+                                mid: {
+                                  name: name,
+                                  code: code,
+                                },
+                                bot: {
+                                  name: "",
+                                  code: "",
+                                },
+                              });
+                              upjongBotHandler(code);
+                            }}
+                          >
+                            {name}
+                          </Button>
+                        );
+                      }
+                    )}
                 </Grid>
-              </TabPanel>
-              <TabPanel
-                display="flex"
-                flexDirection="column"
-                justifyContent="space-between"
+              </AccordionPanel>
+            </AccordionItem>
+            <AccordionItem isDisabled={localUpjong.mid ? false : true}>
+              <AccordionButton
+                color={localUpjong.bot.code ? "primary.type8" : "font.primary"}
+                _hover={{
+                  color: "primary.type8",
+                }}
               >
+                {localUpjong.bot.name ? localUpjong.bot.name : "소분류"}
+              </AccordionButton>
+              <Divider m="0.25rem 0rem 1rem" borderColor="neutral.gray6" />
+              <AccordionPanel>
                 <Grid
                   w="100%"
                   templateColumns="repeat(5, calc(20% - 0.3rem))"
                   gap="0.375rem"
                 >
                   {localUpjong.mid &&
-                    upjong.bot[localUpjong.mid]?.map(
-                      ({ text, code }: { text: string; code: string }) => {
+                    botList?.map(
+                      ({ name, code }: { name: string; code: string }) => {
                         return (
                           <Button
                             variant="slctUpjong"
-                            isActive={localUpjong.bot === code}
+                            isActive={localUpjong.bot.code === code}
                             key={`key-${code}`}
                             onClick={() => {
                               setLocal({
                                 top: localUpjong.top,
                                 mid: localUpjong.mid,
-                                bot: code,
+                                bot: {
+                                  name: name,
+                                  code: code,
+                                },
                               });
-                              onClose;
+                              setUpjong({
+                                top: localUpjong.top,
+                                mid: localUpjong.mid,
+                                bot: {
+                                  name: name,
+                                  code: code,
+                                },
+                              });
+                              onClose();
                             }}
                           >
-                            {text}
+                            {name}
                           </Button>
                         );
                       }
                     )}
                 </Grid>
-                {tabIdx === 2 && (
+                {/* {tabIdx === 2 && (
                   <Button
                     variant="slctUpjong"
                     isDisabled={
@@ -423,38 +429,16 @@ const UpjonListBox = ({ relateOpen = false }: Props) => {
                   >
                     설정완료
                   </Button>
-                )}
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
-          <Flex
-            position="absolute"
-            top="-4.6%"
-            left="50%"
-            transform="translateX(-50%)"
-            gap="0.25rem"
-          >
-            <Box
-              boxSizing="border-box"
-              w="0.25rem"
-              h="0.25rem"
-              background="#FFFFFF"
-              border="1px solid #FFFFFF"
-            ></Box>
-            <Box
-              boxSizing="border-box"
-              w="0.25rem"
-              h="0.25rem"
-              background="#FFFFFF"
-              border="1px solid #FFFFFF"
-            ></Box>
-          </Flex>
+                )} */}
+              </AccordionPanel>
+            </AccordionItem>
+          </Accordion>
           <DecoBoxL
             position="absolute"
             top="50%"
             left="-0.5rem"
             transform="translateY(-50%)"
-            width="3.6%"
+            width="5%"
             height="107%"
             color="#FFFFFF"
           />
@@ -463,25 +447,13 @@ const UpjonListBox = ({ relateOpen = false }: Props) => {
             top="50%"
             right="-0.5rem"
             transform="translateY(-50%)"
-            width="3.6%"
+            width="5%"
             height="107%"
             color="#FFFFFF"
           />
-          <Box
-            zIndex={-1}
-            position="absolute"
-            top={0}
-            left={0}
-            display="block"
-            width="100%"
-            height="100%"
-            bg="rgba(255, 255, 255, 0.75)"
-            backdropFilter="blur(5px)"
-            userSelect="none"
-          ></Box>
-        </Flex>
+        </DecoTopFilterModal>
       )}
-    </>
+    </Fragment>
   );
 };
 

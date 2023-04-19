@@ -117,6 +117,29 @@ type TypeMapDong = {
   };
 };
 
+type TypeUpjongGet = {
+  res: {
+    data: {
+      dong: {
+        code: string;
+        name: string;
+      }[];
+    };
+  };
+};
+
+type TypeUpjongPost = {
+  req: { code: string };
+  res: {
+    data: {
+      dong: {
+        code: string;
+        name: string;
+      }[];
+    };
+  };
+};
+
 export type {
   BixApiInstance,
   TypeLogin,
@@ -126,4 +149,6 @@ export type {
   TypeMapSido,
   TypeMapSigungu,
   TypeMapDong,
+  TypeUpjongGet,
+  TypeUpjongPost,
 };
