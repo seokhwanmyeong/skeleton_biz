@@ -129,6 +129,15 @@ const MapFlowEnter = (props: Props) => {
                       slctZoom: sigungu.zoomLev,
                     },
                   });
+                  state.map?.setOptions({
+                    minZoom: 0,
+                    maxZoom: 16,
+                    scrollWheel: true,
+                    draggable: true,
+                    disableDoubleClickZoom: true,
+                    disableDoubleTapZoom: true,
+                    disableTwoFingerTapZoom: true,
+                  });
                   setFlow("sigungu");
                 }}
                 onMouse={() => {

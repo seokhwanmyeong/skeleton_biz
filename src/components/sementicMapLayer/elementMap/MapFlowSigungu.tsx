@@ -24,10 +24,10 @@ const MapFlowSigungu = (props: Props) => {
   const [slctDong, setSlctDong] = useState(-1);
   const filterData = useRecoilValue(dataCollector);
   const [range, setRange] = useState({
-    xMax: 0,
-    xMin: 0,
-    yMax: 0,
-    yMin: 0,
+    latMax: 0,
+    latMin: 0,
+    lngMax: 0,
+    lngMin: 0,
   });
 
   const getCenterPath = (path: any) => {
@@ -52,30 +52,31 @@ const MapFlowSigungu = (props: Props) => {
 
   useEffect(() => {
     if (sigungu?.slctCode && sigungu?.slctName && sigungu?.slctPath) {
-      console.log("시군구 진입");
       state.map?.fitBounds(sigungu.slctPath[0]);
 
-      let xyRange = {
-        xMax: 0,
-        xMin: 0,
-        yMax: 0,
-        yMin: 0,
+      let latLngRange = {
+        latMax: 0,
+        latMin: 0,
+        lngMax: 0,
+        lngMin: 0,
       };
 
-      sigungu.slctPath.map((xy: any) => {
-        if (xy.x > xyRange.xMax || xyRange.xMax === 0) {
-          xyRange.xMax = xy.x;
-        } else if (xy.x < xyRange.xMin || xyRange.xMin === 0) {
-          xyRange.xMin = xy.x;
+      sigungu.slctPath[0].map((lngLat: any) => {
+        console.log(lngLat);
+        if (lngLat[1] > latLngRange.latMax || latLngRange.latMax === 0) {
+          latLngRange.latMax = lngLat[1];
+        } else if (lngLat[1] < latLngRange.latMin || latLngRange.latMin === 0) {
+          latLngRange.latMin = lngLat[1];
         }
 
-        if (xy.y > xyRange.yMax || xyRange.yMax === 0) {
-          xyRange.yMax = xy.y;
-        } else if (xy.y < xyRange.yMin || xyRange.yMin === 0) {
-          xyRange.yMin = xy.y;
+        if (lngLat[0] > latLngRange.lngMax || latLngRange.lngMax === 0) {
+          latLngRange.lngMax = lngLat[0];
+        } else if (lngLat[0] < latLngRange.lngMin || latLngRange.lngMin === 0) {
+          latLngRange.lngMin = lngLat[0];
         }
       });
-      setRange(xyRange);
+
+      setRange(latLngRange);
     }
   }, [sigungu]);
 

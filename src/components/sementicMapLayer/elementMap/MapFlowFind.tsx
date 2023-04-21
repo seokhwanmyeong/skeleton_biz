@@ -1,8 +1,8 @@
 //  Lib
 import { useContext, useEffect, useState, useRef, Fragment } from "react";
 import { useResetRecoilState, useSetRecoilState } from "recoil";
-import { Box, Button, Flex, useDisclosure } from "@chakra-ui/react";
-import { NaverMapContext } from "@src/lib/src";
+import { Box, Button, Flex, Text, useDisclosure } from "@chakra-ui/react";
+import { InfoWindow, NaverMapContext } from "@src/lib/src";
 import OverlayView from "@src/lib/src/components/Overlay/OverlayView";
 //  Components
 import ModalDaumAddr from "@components/modal/common/ModalDaumAddr";
@@ -10,7 +10,11 @@ import ModalDaumAddr from "@components/modal/common/ModalDaumAddr";
 import { atomFilterFlow } from "@states/sementicMap/stateFilter";
 import { atomSlctCustom } from "@states/sementicMap/stateMap";
 //  Icons
-import { IcoAppStore, IcoReset } from "@assets/icons/icon";
+import {
+  IcoAppStore,
+  IcoExclamationCircle,
+  IcoReset,
+} from "@assets/icons/icon";
 import markerIcon from "@assets/icons/marker.png";
 //  Deco
 import { DecoTop } from "@components/sementicMapLayer/elementDeco/Deco";
@@ -512,139 +516,167 @@ const ToggleButtonGroup = () => {
           onComplete={addrSlctHandler}
         />
         {isConOpen && cursorPo && activeIdx !== -1 && (
-          <OverlayView id={`confirmBox`} position={cursorPo}>
+          <OverlayView id={`confirmBox`} position={cursorPo} pane="floatPane">
             <Flex
-              gap="1rem"
-              w="15rem"
-              h="3rem"
-              bgColor="#FFFFFF"
-              justify="center"
-              align="center"
+              pos="relative"
+              top="0.5rem"
+              left="0.5rem"
+              p="1rem"
+              w="fit-content"
+              direction="column"
+              gap="0.5rem"
+              bgColor="#FFFFFFD9"
+              border="1px solid"
+              borderColor="neutral.gray6"
+              borderRadius="base"
             >
-              <Button
-                variant="filterSearch"
-                aria-label="영역확정"
-                onClick={() => {
-                  if (activeIdx === 0) {
-                    // const path: any = poly?.getPath();
-                    // const bounds: any = poly?.getBounds();
-                    const path: any = polyRef.current?.getPath();
-                    const bounds: any = polyRef.current?.getBounds();
-                    const center: any = bounds?.getCenter();
-                    // @ts-ignore
-                    const geocoder = new kakao.maps.services.Geocoder();
-
-                    if (!path || path.length - 1 <= 2) {
-                      alert("영역을 제대로 설정해주세요");
-                      return;
-                    }
-
-                    geocoder.coord2RegionCode(
-                      center?._lng,
-                      center?._lat,
-                      (result: any) => {
-                        setSlceCustom({
-                          slctName: result[0].address_name || "",
-                          slctPath: path._array,
-                          range: undefined,
-                          center: center,
-                          pathType: "bounds",
-                        });
-                        onConClose();
-                        resetAllElement();
-                        setFlow("custom");
-                      }
-                    );
-                  } else if (activeIdx === 1) {
-                    if (!circleRef.current) {
-                      alert("범위를 설정해주세요");
-                      return;
-                    }
-                    const bounds: any = circleRef.current?.getBounds();
-                    const range = circleRef.current?.getRadius();
-                    const center: any = circleRef.current?.getCenter();
-                    // @ts-ignore
-                    const geocoder = new kakao.maps.services.Geocoder();
-
-                    geocoder.coord2RegionCode(
-                      center?._lng,
-                      center?._lat,
-                      (result: any) => {
-                        console.log({
-                          slctName: result[0].address_name || "",
-                          slctPath: bounds,
-                          range: range,
-                          center: center,
-                          pathType: "circle",
-                        });
-
-                        setSlceCustom({
-                          slctName: result[0].address_name || "",
-                          slctPath: bounds,
-                          range: range,
-                          center: center,
-                          pathType: "circle",
-                        });
-                        onConClose();
-                        resetAllElement();
-                        setFlow("custom");
-                      }
-                    );
-                  } else if (activeIdx === 2) {
-                    if (!circleRef.current) {
-                      alert("범위를 설정해주세요");
-                      return;
-                    }
-                    const bounds: any = circleRef.current?.getBounds();
-                    const range = circleRef.current?.getRadius();
-                    const center: any = circleRef.current?.getCenter();
-
-                    setSlceCustom({
-                      slctName: addr.address,
-                      slctPath: bounds,
-                      range: range,
-                      center: center,
-                      pathType: "circle",
-                    });
-
+              <Flex
+                w="13.375rem"
+                justify="flex-start"
+                align="center"
+                gap="0.5rem"
+                textStyle="base"
+                fontSize="sm"
+                fontWeight="regular"
+                color="font.primary"
+              >
+                <IcoExclamationCircle color="primary.type7" />
+                영역을 지정하시겠습니까?
+              </Flex>
+              <Flex justify="flex-end" align="center" gap="0.5rem">
+                <Button
+                  variant="infoBox"
+                  aria-label="다시 그리기"
+                  onClick={() => {
+                    resetDraw();
                     onConClose();
-                    resetAllElement();
-                    setFlow("custom");
-                  }
-                }}
-              >
-                설정완료
-              </Button>
-              <Button
-                variant="filterSearch"
-                aria-label="다시 그리기"
-                onClick={() => {
-                  resetDraw();
-                  onConClose();
-                }}
-                top="1px"
-              >
-                <IcoReset
-                  width="0.875rem"
-                  height="0.875rem"
-                  color="primary.inverse"
-                />
-                다시 그리기
-              </Button>
+                  }}
+                >
+                  <Text>다시 그리기</Text>
+                </Button>
+                <Button
+                  variant="infoBox"
+                  aria-label="영역확정"
+                  isActive
+                  onClick={() => {
+                    if (activeIdx === 0) {
+                      // const path: any = poly?.getPath();
+                      // const bounds: any = poly?.getBounds();
+                      const path: any = polyRef.current?.getPath();
+                      const bounds: any = polyRef.current?.getBounds();
+                      const center: any = bounds?.getCenter();
+                      // @ts-ignore
+                      const geocoder = new kakao.maps.services.Geocoder();
+
+                      if (!path || path.length - 1 <= 2) {
+                        alert("영역을 제대로 설정해주세요");
+                        return;
+                      }
+
+                      geocoder.coord2RegionCode(
+                        center?._lng,
+                        center?._lat,
+                        (result: any) => {
+                          setSlceCustom({
+                            slctName: result[0].address_name || "",
+                            slctPath: path._array,
+                            range: undefined,
+                            center: center,
+                            pathType: "bounds",
+                          });
+                          onConClose();
+                          resetAllElement();
+                          setFlow("custom");
+                        }
+                      );
+                    } else if (activeIdx === 1) {
+                      if (!circleRef.current) {
+                        alert("범위를 설정해주세요");
+                        return;
+                      }
+                      const bounds: any = circleRef.current?.getBounds();
+                      const range = circleRef.current?.getRadius();
+                      const center: any = circleRef.current?.getCenter();
+                      // @ts-ignore
+                      const geocoder = new kakao.maps.services.Geocoder();
+
+                      geocoder.coord2RegionCode(
+                        center?._lng,
+                        center?._lat,
+                        (result: any) => {
+                          console.log({
+                            slctName: result[0].address_name || "",
+                            slctPath: bounds,
+                            range: range,
+                            center: center,
+                            pathType: "circle",
+                          });
+
+                          setSlceCustom({
+                            slctName: result[0].address_name || "",
+                            slctPath: bounds,
+                            range: range,
+                            center: center,
+                            pathType: "circle",
+                          });
+                          onConClose();
+                          resetAllElement();
+                          setFlow("custom");
+                        }
+                      );
+                    } else if (activeIdx === 2) {
+                      if (!circleRef.current) {
+                        alert("범위를 설정해주세요");
+                        return;
+                      }
+                      const bounds: any = circleRef.current?.getBounds();
+                      const range = circleRef.current?.getRadius();
+                      const center: any = circleRef.current?.getCenter();
+
+                      setSlceCustom({
+                        slctName: addr.address,
+                        slctPath: bounds,
+                        range: range,
+                        center: center,
+                        pathType: "circle",
+                      });
+
+                      onConClose();
+                      resetAllElement();
+                      setFlow("custom");
+                    }
+                  }}
+                >
+                  <Text>설정완료</Text>
+                </Button>
+              </Flex>
             </Flex>
           </OverlayView>
         )}
         {isInfoOpen && cursorPo && activeIdx !== -1 && (
-          <OverlayView id={`infoBox`} position={cursorPo}>
+          <OverlayView
+            id={`infoBox`}
+            position={cursorPo}
+            pane="floatPane"
+            anchorPoint={{ x: 16, y: 16 }}
+          >
             <Flex
-              w="10rem"
-              h="3rem"
-              bgColor="#FFFFFF"
-              justify="center"
+              pos="relative"
+              p="1rem"
+              w="18rem"
+              bgColor="#FFFFFFD9"
+              justify="flex-start"
               align="center"
+              gap="0.5rem"
+              border="1px solid"
+              borderColor="neutral.gray6"
+              borderRadius="base"
               textStyle="base"
-              fontSize="xs"
+              fontSize="sm"
+              fontWeight="regular"
+              color="font.primary"
             >
+              <IcoExclamationCircle color="primary.type7" />
               완료되셨으면 마우스 우측을 눌러주세요
             </Flex>
           </OverlayView>

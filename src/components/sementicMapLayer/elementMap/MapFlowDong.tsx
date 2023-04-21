@@ -25,7 +25,7 @@ const MapFlowDong = (props: Props) => {
     yMax: 0,
     yMin: 0,
   });
-
+  console.log("dong");
   useEffect(() => {
     if (dong.slctPath) {
       state.map?.fitBounds(dong.slctPath);

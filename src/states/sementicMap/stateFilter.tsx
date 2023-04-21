@@ -68,6 +68,7 @@ export const atomUpjongBotList = atom<any[]>({
 export const infoComFloatPop = atom<{
   filter: any;
   data: any;
+  search: "on" | "off";
   active: boolean;
 }>({
   key: "infoComFloatPop",
@@ -77,6 +78,7 @@ export const infoComFloatPop = atom<{
       age: [],
     },
     data: {},
+    search: "off",
     active: false,
   },
 });
@@ -84,6 +86,7 @@ export const infoComFloatPop = atom<{
 export const infoComResiPop = atom<{
   filter: any;
   data: any;
+  search: "on" | "off";
   active: boolean;
 }>({
   key: "infoComResiPop",
@@ -93,6 +96,7 @@ export const infoComResiPop = atom<{
       age: [],
     },
     data: {},
+    search: "off",
     active: false,
   },
 });
@@ -100,6 +104,7 @@ export const infoComResiPop = atom<{
 export const infoComJobPop = atom<{
   filter: any;
   data: any;
+  search: "on" | "off";
   active: boolean;
 }>({
   key: "infoComJobPop",
@@ -109,30 +114,46 @@ export const infoComJobPop = atom<{
       age: [],
     },
     data: {},
+    search: "off",
     active: false,
   },
 });
 
-export const infoComHousehold = atom<any>({
+export const infoComHousehold = atom<{
+  data: any;
+  search: "on" | "off";
+  active: boolean;
+}>({
   key: "infoComHousehold",
   default: {
     data: {},
+    search: "off",
     active: false,
   },
 });
 
-export const infoComSale = atom<any>({
+export const infoComSale = atom<{
+  data: any;
+  search: "on" | "off";
+  active: boolean;
+}>({
   key: "infoComSale",
   default: {
     data: {},
+    search: "off",
     active: false,
   },
 });
 
-export const infoComUpjongCnt = atom<any>({
+export const infoComUpjongCnt = atom<{
+  data: any;
+  search: "on" | "off";
+  active: boolean;
+}>({
   key: "infoComUpjongCnt",
   default: {
     data: {},
+    search: "off",
     active: false,
   },
 });

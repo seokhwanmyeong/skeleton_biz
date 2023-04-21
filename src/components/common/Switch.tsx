@@ -181,6 +181,7 @@ const SwitchFilter = ({
             fontWeight="regular"
             lineHeight="2rem"
             color="font.primary"
+            cursor={isDisabled ? "not-allowed" : "pointer"}
             onClick={(e) => {
               if (isDisabled) return;
               e.stopPropagation();
@@ -201,6 +202,7 @@ const SwitchFilter = ({
             textStyle="base"
             fontSize="xs"
             fontWeight="regular"
+            cursor={isDisabled ? "not-allowed" : "pointer"}
             onClick={(e) => {
               if (isDisabled) return;
               e.stopPropagation();

@@ -264,10 +264,12 @@ export interface OverlayViewProps {
   pane?: MapPanes;
   pointerevent?: boolean;
   children: React.ReactNode;
+  anchorPoint?: { x?: number; y?: number };
   position:
     | naver.maps.PointLiteral
     | naver.maps.CoordLiteral
     | naver.maps.LatLngLiteral;
+  zIndex?: string;
   onClick?: (this: GlobalEventHandlers, ev: MouseEvent) => any;
   onDoubleClick?: (this: GlobalEventHandlers, ev: MouseEvent) => any;
   onMouseDown?: (this: GlobalEventHandlers, ev: MouseEvent) => any;

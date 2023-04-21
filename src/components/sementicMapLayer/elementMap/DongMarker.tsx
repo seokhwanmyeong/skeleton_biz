@@ -382,17 +382,17 @@ const DongMarker = ({
                       <path
                         d="M0.666626 1.00049H126.333"
                         stroke="#262323"
-                        stroke-opacity="0.8"
+                        strokeOpacity="0.8"
                       />
                       <path
                         d="M0.666626 1.00049H6.66663"
                         stroke="#262323"
-                        stroke-width="2"
+                        strokeWidth="2"
                       />
                       <path
                         d="M120.667 1.00049H126.667"
                         stroke="#262323"
-                        stroke-width="2"
+                        strokeWidth="2"
                       />
                     </g>
                   </svg>
@@ -480,12 +480,12 @@ const DongMarker = ({
                       <path
                         d="M0.666626 1.00049H6.66663"
                         stroke="#262323"
-                        stroke-width="2"
+                        strokeWidth="2"
                       />
                       <path
                         d="M120.667 1.00049H126.667"
                         stroke="#262323"
-                        stroke-width="2"
+                        strokeWidth="2"
                       />
                     </g>
                   </svg>

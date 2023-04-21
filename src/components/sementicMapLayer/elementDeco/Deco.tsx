@@ -458,7 +458,7 @@ const DecoFrameCenter = () => {
               left="0"
               width="100%"
               height="100%"
-              transition="0.2s 0.4s linear"
+              transition="0.2s 0.5s linear"
               initial={{
                 transform: "rotate(0deg)",
               }}
@@ -484,7 +484,7 @@ const DecoFrameCenter = () => {
               left="0"
               width="100%"
               height="100%"
-              transition="0.3s 0.4s linear"
+              transition="0.3s 0.5s linear"
               initial={{
                 transform: "rotate(0deg)",
               }}
@@ -516,7 +516,7 @@ const DecoFrameCenter = () => {
               borderColor="#26232380"
               borderTop="none"
               borderBottom="none"
-              transition="0.3s 0.4s linear"
+              transition="0.3s 0.6s linear"
               initial={{
                 opacity: 0,
               }}
@@ -531,7 +531,7 @@ const DecoFrameCenter = () => {
                 left="0"
                 width="100%"
                 height="100%"
-                transition="0.3s 0.6s linear"
+                transition="0.3s 0.9s linear"
                 initial={{
                   transform: "rotate(0deg)",
                 }}
@@ -556,7 +556,7 @@ const DecoFrameCenter = () => {
                 left="0"
                 width="100%"
                 height="100%"
-                transition="0.3s 0.6s linear"
+                transition="0.3s 0.9s linear"
                 initial={{
                   transform: "rotate(0deg)",
                 }}

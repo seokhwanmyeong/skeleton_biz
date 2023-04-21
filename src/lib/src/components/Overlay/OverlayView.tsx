@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useContext, useState, useEffect } from "react";
+// @ts-ignore
 import { v1 as uuid } from "uuid";
 import ReactDom from "react-dom";
 import { OverlayViewProps } from "../../common/types";
@@ -9,6 +10,7 @@ const OverlayView = ({
   pane = "overlayLayer",
   pointerevent,
   position,
+  anchorPoint,
   children,
   onClick,
   onDoubleClick,
@@ -19,9 +21,9 @@ const OverlayView = ({
   onTouchEnd,
   onTouchStart,
   onPointOver,
-  //disableMapHits = true,
- // disableMapHitsAndGestures = true,
-}: OverlayViewProps): React.ReactPortal | null => {
+}: //disableMapHits = true,
+// disableMapHitsAndGestures = true,
+OverlayViewProps): React.ReactPortal | null => {
   const { state, dispatch } = useContext(NaverMapContext);
   const [container] = useState<HTMLDivElement>(document.createElement("div"));
   const [markerId] = useState(id ? id : `marker-${uuid()}`);
@@ -41,16 +43,15 @@ const OverlayView = ({
     const overlay = new naver.maps.OverlayView();
     // 오버레이 추가
     overlay.onAdd = () => {
-      
-      if(pointerevent === false){
+      if (pointerevent === false) {
         container.style.position = "relative";
         container.style.pointerEvents = "none";
         container.style.zIndex = "1";
-      }else{
+      } else {
         container.style.position = "absolute";
         container.style.zIndex = "2";
       }
-      
+
       container.onclick = onClick || null;
       container.ondblclick = onDoubleClick || null;
       container.onmousedown = onMouseDown || null;
@@ -60,7 +61,7 @@ const OverlayView = ({
       container.ontouchend = onTouchEnd || null;
       container.ontouchstart = onTouchStart || null;
 
-/*       if (disableMapHitsAndGestures)
+      /*       if (disableMapHitsAndGestures)
         (naver.maps.OverlayView as any).preventMapHitsAndGesturesFrom(
           container
         );
@@ -76,16 +77,22 @@ const OverlayView = ({
     overlay.setMap(state.map);
     setOverlay(overlay);
     addMarker(overlay);
-    return () =>{ removeMarker();overlay.setMap(null); }
+    return () => {
+      removeMarker();
+      overlay.setMap(null);
+    };
   }, [state.map]);
   // 위치가 바뀔때 효과
   useEffect(() => {
     if (overlay !== undefined) {
       overlay.setMap(null);
       overlay.draw = () => {
+        // @ts-ignore
         const location = overlay.getProjection().fromCoordToOffset(position);
-        container.style.left = JSON.stringify(location.x) + "px";
-        container.style.top = JSON.stringify(location.y) + "px";
+        container.style.left =
+          JSON.stringify(location.x + (anchorPoint?.x || 0)) + "px";
+        container.style.top =
+          JSON.stringify(location.y + (anchorPoint?.y || 0)) + "px";
       };
       overlay.setMap(state.map || null);
     }

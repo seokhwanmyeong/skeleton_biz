@@ -147,6 +147,10 @@ const FlowSigungu = () => {
               minZoom: 0,
               maxZoom: 16,
               scrollWheel: false,
+              draggable: false,
+              disableDoubleClickZoom: false,
+              disableDoubleTapZoom: false,
+              disableTwoFingerTapZoom: false,
             });
             setSlctArea({
               sido,

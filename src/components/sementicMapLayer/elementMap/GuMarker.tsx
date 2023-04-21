@@ -24,7 +24,7 @@ interface GuMarkerProps {
   num: number;
   selectDong: number;
   range: any;
-  direction?: {
+  direction: {
     direct: "left" | "right";
     idx: number;
   };
@@ -54,12 +54,11 @@ const GuMarker = ({
   const [cont, setCont] = useState(0);
   const [contY, setConstY] = useState(0);
   const boxRef = useRef<any>(null);
-  const [mapCenter, SetMapCenter] = useState<any>();
-  const [onleft, SetOnLeft] = useState(false);
+  const [mapCenter, setMapCenter] = useState<any>();
+  const [onleft, setOnLeft] = useState(false);
   const [onsetMap, setOnsetMap] = useState(false);
   const [active, setActive] = useState(false);
   const [over, setOver] = useState(-1);
-
   useEffect(() => {
     if (state.map === undefined) return;
     const curCenter = state.map.getCenter();
@@ -68,23 +67,19 @@ const GuMarker = ({
       x: curCenter.x,
       y: curCenter.y,
     };
-    SetMapCenter(mapcent);
+    setMapCenter(mapcent);
     if (mapcent?.x > position.x) {
-      SetOnLeft(true);
+      setOnLeft(true);
     } else {
-      SetOnLeft(false);
+      setOnLeft(false);
     }
     setOnsetMap(true);
   }, [state.map]);
 
   useEffect(() => {
-    if (direction) {
-      let setnum = 0.014 * direction.idx;
-      setCont(parseFloat(setnum.toString()));
-    } else {
-      let setnum = 0.0101 * num;
-      setCont(parseFloat(setnum.toString()));
-    }
+    console.log(direction.idx);
+    let setnum = 0.014 * direction.idx;
+    setCont(parseFloat(setnum.toString()));
   }, [num]);
 
   useEffect(() => {
@@ -188,7 +183,7 @@ const GuMarker = ({
       }
     }
   }, [data]);
-
+  console.log(range);
   return (
     <>
       {onsetMap && active ? (
@@ -202,13 +197,9 @@ const GuMarker = ({
                       lat: Number(position.y) - 0.0012,
                       lng: Number(position.x) + 0.0013,
                     },
-                    // {
-                    //   y: (range.yMax + range.yMin) / 2 + cont - 0.034,
-                    //   x: range.xMin - 0.014,
-                    // },
                     {
-                      y: (range.yMax + range.yMin) / 2 + cont - 0.034,
-                      x: range.xMin - 0.036,
+                      y: (range.latMax + range.latMin) / 2 + cont - 0.034,
+                      x: range.lngMin - 0.036,
                     },
                   ]
                 : [
@@ -216,13 +207,9 @@ const GuMarker = ({
                       lat: Number(position.y) - 0.0012,
                       lng: Number(position.x) + 0.0013,
                     },
-                    // {
-                    //   y: (range.yMax + range.yMin) / 2 + cont - 0.034,
-                    //   x: range.xMax + 0.0075,
-                    // },
                     {
-                      y: (range.yMax + range.yMin) / 2 + cont - 0.034,
-                      x: range.xMax + 0.036,
+                      y: (range.latMax + range.latMin) / 2 + cont - 0.034,
+                      x: range.lngMax + 0.036,
                     },
                   ],
               strokeColor: "#BFBFBF",
@@ -382,17 +369,17 @@ const GuMarker = ({
                       <path
                         d="M0.666626 1.00049H126.333"
                         stroke="#262323"
-                        stroke-opacity="0.8"
+                        strokeOpacity="0.8"
                       />
                       <path
                         d="M0.666626 1.00049H6.66663"
                         stroke="#262323"
-                        stroke-width="2"
+                        strokeWidth="2"
                       />
                       <path
                         d="M120.667 1.00049H126.667"
                         stroke="#262323"
-                        stroke-width="2"
+                        strokeWidth="2"
                       />
                     </g>
                   </svg>
@@ -475,17 +462,17 @@ const GuMarker = ({
                       <path
                         d="M0.666626 1.00049H126.333"
                         stroke="#262323"
-                        stroke-opacity="0.8"
+                        strokeOpacity="0.8"
                       />
                       <path
                         d="M0.666626 1.00049H6.66663"
                         stroke="#262323"
-                        stroke-width="2"
+                        strokeWidth="2"
                       />
                       <path
                         d="M120.667 1.00049H126.667"
                         stroke="#262323"
-                        stroke-width="2"
+                        strokeWidth="2"
                       />
                     </g>
                   </svg>
@@ -629,12 +616,12 @@ const GuMarker = ({
             position={
               onleft
                 ? {
-                    y: (range.yMax + range.yMin) / 2 + cont - 0.03345,
-                    x: range.xMin - 0.037,
+                    y: (range.latMax + range.latMin) / 2 + cont - 0.03345,
+                    x: range.lngMin - 0.037,
                   }
                 : {
-                    y: (range.yMax + range.yMin) / 2 + cont - 0.03345,
-                    x: range.xMax + 0.035,
+                    y: (range.latMax + range.latMin) / 2 + cont - 0.03345,
+                    x: range.lngMax + 0.035,
                   }
             }
           >

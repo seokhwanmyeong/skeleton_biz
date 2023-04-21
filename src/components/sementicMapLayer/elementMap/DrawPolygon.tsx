@@ -3,7 +3,6 @@ import { NaverMapContext, Polygon } from "@src/lib/src";
 import { NaverMapShape } from "@src/lib/src/common/types";
 import CustomControl from "@src/lib/src/components/Control/CustomControl";
 import { IconButton, ButtonGroup, Button, Flex, Text } from "@chakra-ui/react";
-import PolyIcon from "../assets/polygon.svg";
 import { IcoAim } from "@src/assets/icons/icon";
 
 interface ToggleButtonProps {

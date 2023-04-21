@@ -37,7 +37,7 @@ const FlowDong = (props: Props) => {
       resetSv();
     };
   }, []);
-
+  console.log("dong");
   return (
     <>
       {!isToolOpen && (
@@ -65,6 +65,10 @@ const FlowDong = (props: Props) => {
                     minZoom: 0,
                     maxZoom: 16,
                     scrollWheel: false,
+                    draggable: false,
+                    disableDoubleClickZoom: false,
+                    disableDoubleTapZoom: false,
+                    disableTwoFingerTapZoom: false,
                   });
                   setFlow("sigungu");
                 }}

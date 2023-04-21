@@ -38,7 +38,7 @@ const AreaListBox = ({ title, isOpen, list, setSlctArea, onClick }: Props) => {
       >
         {list.map(({ name, code, path, lat, lng, zoomLev }: AreaProps) => {
           const nameSplit = name.split(" ");
-          console.log(nameSplit);
+
           return (
             <Button
               variant="slctArea"

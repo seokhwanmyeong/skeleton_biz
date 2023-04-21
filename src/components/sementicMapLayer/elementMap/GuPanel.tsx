@@ -11,6 +11,7 @@ import GuMarker from "./GuMarker";
 import { dataCollector } from "@src/states/sementicMap/stateFilter";
 //  Sample
 import dongData from "@util/data/area/dong.json";
+import { atomFlowEnterArea } from "@src/states/sementicMap/stateMap";
 
 interface GuPanelProps {
   onClickArea: (num: number) => any;
@@ -25,24 +26,26 @@ const GuPanel = ({
   selectDong,
 }: GuPanelProps) => {
   const { state, dispatch } = useContext(NaverMapContext);
+  const { sigungu } = useRecoilValue(atomFlowEnterArea);
   const [dongarea, setDongArea] = useState<any>([]);
   const [leftIdx, setLeftIdx] = useState(0);
   const [rightIdx, setRightIdx] = useState(0);
   const filterData = useRecoilValue(dataCollector);
 
   const getCenterPath = (path: any) => {
-    const length = path.length;
+    const slctPath = path[0];
+    const length = slctPath.length;
     let xcos = 0;
     let ycos = 0;
     let area = 0;
 
     for (let i = 0, len = length, j = length - 1; i < len; j = i++) {
-      let p1 = path[i];
-      let p2 = path[j];
+      let p1 = slctPath[i];
+      let p2 = slctPath[j];
+      let f = p1[1] * p2[0] - p2[1] * p1[0];
 
-      let f = p1.y * p2.x - p2.y * p1.x;
-      xcos += (p1.x + p2.x) * f;
-      ycos += (p1.y + p2.y) * f;
+      xcos += (p1[0] + p2[0]) * f;
+      ycos += (p1[1] + p2[1]) * f;
       area += f * 3;
     }
     return {
@@ -68,7 +71,7 @@ const GuPanel = ({
 
   useEffect(() => {
     if (state.map === undefined) return;
-    const curCenter = state.map.getCenter();
+    // const curCenter = state.map.getCenter();
 
     let initDirect = {
       left: -1,
@@ -77,13 +80,9 @@ const GuPanel = ({
 
     const putCenter = dongList.map(({ code, name, num, path }: any) => {
       const { center } = getCenterPath(path);
+      const { center: sigunguCenter } = getCenterPath(sigungu?.slctPath);
 
-      const mapcent = {
-        x: curCenter.x,
-        y: curCenter.y,
-      };
-
-      if (mapcent?.x > center[0]) {
+      if (sigunguCenter[0] > center[0]) {
         initDirect.left++;
 
         return {
@@ -126,7 +125,7 @@ const GuPanel = ({
     setRightIdx(initDirect.right);
     setDongArea(putCenter);
   }, [dongList, state.map, filterData]);
-
+  console.log(dongarea);
   return (
     <div>
       <ul style={{ position: "absolute" }}>

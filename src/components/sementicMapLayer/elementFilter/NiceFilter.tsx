@@ -1,5 +1,5 @@
 //  Lib
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useRecoilState, useResetRecoilState, useRecoilValue } from "recoil";
 import {
   Box,
@@ -25,7 +25,6 @@ import {
   resetNice,
 } from "@states/sementicMap/stateFilter";
 //  Api
-import { getSigunguPopInfo } from "@api/niceApi/config";
 //  Icon
 import {
   IcoAppStore,
@@ -57,59 +56,39 @@ const NiceFilter = ({ areaCode }: Props) => {
   const [jobPop, setJobPop] = useRecoilState(infoComJobPop);
   const [filterJob, setFilterJob] = useState(jobPop.filter);
   const [household, setHouse] = useRecoilState(infoComHousehold);
-  const [filterHouse, setFilterHouse] = useState(household.filter);
   const [upjongCnt, setUpjong] = useRecoilState(infoComUpjongCnt);
-  const [filterUpjong, setFilterUpjong] = useState(upjongCnt.filter);
   const [sale, setSale] = useRecoilState(infoComSale);
-  const [filterSale, setFilterSale] = useState(sale.filter);
   const reset = useResetRecoilState(resetNice);
-  const [niceD, setNiceD] = useState<any[]>([]);
 
   //  유동인구 필터 변화 및 액티브
   const searchPopHandler = () => {
-    setFlowPop(filterPop);
+    setFlowPop({ ...flowPop, filter: filterPop, search: "on", active: true });
   };
 
   //  거주인구 필터 변화 및 액티브
   const searchResiHandler = () => {
-    setResiPop(filterResi);
+    setResiPop({ ...resiPop, filter: filterResi, search: "on", active: true });
   };
 
   //  직장인구 필터 변화 및 액티브
   const searchJobHandler = () => {
-    setJobPop(filterJob);
+    setJobPop({ ...jobPop, filter: filterJob, search: "on", active: true });
   };
 
   //  세대수 필터 변화 및 액티브
   const searchHouseHandler = () => {
-    setHouse(filterHouse);
+    setHouse({ ...household, search: "on", active: true });
   };
 
   //  매출액 필터 변화 및 액티브
   const searchSaleHandler = () => {
-    setSale(filterSale);
+    setSale({ ...sale, search: "on", active: true });
   };
 
   //  업종수 필터 변화 및 액티브
   const searchUpjongHandler = () => {
-    setUpjong(filterUpjong);
+    setUpjong({ ...upjongCnt, search: "on", active: true });
   };
-
-  useEffect(() => {
-    if (niceD.length === 0) {
-      getSigunguPopInfo({ upjongCode: bot, sigunguCode: areaCode }).then(
-        (res: any) => {
-          console.log(res);
-
-          if (res.result === "success") {
-            console.log(res.data);
-
-            setNiceD(res.data);
-          }
-        }
-      );
-    }
-  }, []);
 
   return (
     <Flex
@@ -131,7 +110,7 @@ const NiceFilter = ({ areaCode }: Props) => {
       {/* ============================== infoCom의 필터 버튼 ============================== */}
       <Button
         variant="filterTop02"
-        isActive={flowPop.active}
+        isActive={openIdx === 1 || flowPop.active}
         onClick={() => {
           if (openIdx === 1) {
             setOpenIdx(0);
@@ -147,7 +126,7 @@ const NiceFilter = ({ areaCode }: Props) => {
       </Button>
       <Button
         variant="filterTop02"
-        isActive={resiPop.active}
+        isActive={openIdx === 2 || resiPop.active}
         onClick={() => {
           if (openIdx === 2) {
             setOpenIdx(0);
@@ -163,7 +142,7 @@ const NiceFilter = ({ areaCode }: Props) => {
       </Button>
       <Button
         variant="filterTop02"
-        isActive={jobPop.active}
+        isActive={openIdx === 3 || jobPop.active}
         onClick={() => {
           if (openIdx === 3) {
             setOpenIdx(0);
@@ -179,7 +158,9 @@ const NiceFilter = ({ areaCode }: Props) => {
       </Button>
       <Button
         variant="filterTop02"
-        isActive={household.active || sale.active || upjongCnt.active}
+        isActive={
+          openIdx === 4 || household.active || sale.active || upjongCnt.active
+        }
         onClick={() => {
           if (openIdx === 4) {
             setOpenIdx(0);
@@ -232,12 +213,17 @@ const NiceFilter = ({ areaCode }: Props) => {
             </Flex>
             <Flex align="center" gap="0.5rem">
               <SwitchFilter
+                isDisabled={flowPop.search === "off"}
                 isChecked={flowPop.active}
                 onChange={() => {
                   setFlowPop({ ...flowPop, active: !flowPop.active });
                 }}
               />
-              <BtnFilterSearch onClick={searchPopHandler} />
+              <BtnFilterSearch
+                onClick={() => {
+                  searchPopHandler();
+                }}
+              />
             </Flex>
           </Flex>
           <Deco01 margin="0.25rem 0 0.75rem" width="100%" height="0.3125rem" />
@@ -338,12 +324,17 @@ const NiceFilter = ({ areaCode }: Props) => {
             </Flex>
             <Flex align="center" gap="0.5rem">
               <SwitchFilter
+                isDisabled={resiPop.search === "off"}
                 isChecked={resiPop.active}
                 onChange={() => {
                   setResiPop({ ...resiPop, active: !resiPop.active });
                 }}
               />
-              <BtnFilterSearch onClick={searchResiHandler} />
+              <BtnFilterSearch
+                onClick={() => {
+                  searchResiHandler();
+                }}
+              />
             </Flex>
           </Flex>
           <Deco01 margin="0.25rem 0 0.75rem" width="100%" height="0.3125rem" />
@@ -444,12 +435,17 @@ const NiceFilter = ({ areaCode }: Props) => {
             </Flex>
             <Flex align="center" gap="0.5rem">
               <SwitchFilter
+                isDisabled={jobPop.search === "off"}
                 isChecked={jobPop.active}
                 onChange={() => {
                   setJobPop({ ...jobPop, active: !jobPop.active });
                 }}
               />
-              <BtnFilterSearch onClick={searchPopHandler} />
+              <BtnFilterSearch
+                onClick={() => {
+                  searchJobHandler();
+                }}
+              />
             </Flex>
           </Flex>
           {/* ============================== 박스 데코 ============================== */}
@@ -509,7 +505,7 @@ const NiceFilter = ({ areaCode }: Props) => {
                   { text: "50대", value: "gen50" },
                   { text: "60대 이상", value: "gen60" },
                 ]}
-                chkValue={filterJob?.filter?.age}
+                chkValue={filterJob?.age}
                 activeTotal={true}
                 onChange={(val: any) =>
                   setFilterJob({
@@ -555,12 +551,17 @@ const NiceFilter = ({ areaCode }: Props) => {
             </Flex>
             <Flex align="center" gap="0.5rem">
               <SwitchFilter
+                isDisabled={household.search === "off"}
                 isChecked={household?.active}
                 onChange={() => {
                   setHouse({ ...household, active: !household?.active });
                 }}
               />
-              <BtnFilterSearch onClick={searchPopHandler} />
+              <BtnFilterSearch
+                onClick={() => {
+                  searchHouseHandler();
+                }}
+              />
             </Flex>
           </Flex>
           {/* ============================== 박스 데코 ============================== */}
@@ -574,7 +575,7 @@ const NiceFilter = ({ areaCode }: Props) => {
             </Flex>
             <Tooltip
               hasArrow
-              isDisabled={bot ? true : false}
+              isDisabled={bot.code ? true : false}
               placement="auto"
               label="업종을 선택하셔야 합니다."
               p="1rem"
@@ -582,15 +583,19 @@ const NiceFilter = ({ areaCode }: Props) => {
             >
               <Flex align="center" gap="0.5rem">
                 <SwitchFilter
-                  isDisabled={bot ? false : true}
-                  isChecked={filterSale?.active}
+                  isDisabled={
+                    sale.search === "off" || (bot.code ? false : true)
+                  }
+                  isChecked={sale?.active}
                   onChange={() => {
-                    setSale({ ...filterSale, active: !filterSale?.active });
+                    setSale({ ...sale, active: !sale?.active });
                   }}
                 />
                 <BtnFilterSearch
-                  isDisabled={bot ? false : true}
-                  onClick={searchPopHandler}
+                  isDisabled={bot.code ? false : true}
+                  onClick={() => {
+                    searchSaleHandler();
+                  }}
                 />
               </Flex>
             </Tooltip>
@@ -610,7 +615,7 @@ const NiceFilter = ({ areaCode }: Props) => {
             </Flex>
             <Tooltip
               hasArrow
-              isDisabled={bot ? true : false}
+              isDisabled={bot.code ? true : false}
               placement="auto"
               label="업종을 선택하셔야 합니다."
               p="1rem"
@@ -618,15 +623,19 @@ const NiceFilter = ({ areaCode }: Props) => {
             >
               <Flex align="center" gap="0.5rem">
                 <SwitchFilter
-                  isDisabled={bot ? false : true}
+                  isDisabled={
+                    upjongCnt.search === "off" || (bot.code ? false : true)
+                  }
                   isChecked={upjongCnt?.active}
                   onChange={() => {
                     setUpjong({ ...upjongCnt, active: !upjongCnt?.active });
                   }}
                 />
                 <BtnFilterSearch
-                  isDisabled={bot ? false : true}
-                  onClick={searchPopHandler}
+                  isDisabled={bot.code ? false : true}
+                  onClick={() => {
+                    searchUpjongHandler();
+                  }}
                 />
               </Flex>
             </Tooltip>
