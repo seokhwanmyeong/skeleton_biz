@@ -29,13 +29,15 @@ import {
 import {
   IcoAppStore,
   IcoBank,
-  IcoMy,
-  IcoNice1,
+  IcoGroup,
   IcoNice2,
   IcoNice3,
   IcoNice4,
   IcoResident,
-  IcoSync,
+  IcoRefresh,
+  IcoFilter02,
+  IcoWorkspace,
+  IcoMonitoring,
 } from "@assets/icons/icon";
 //  Deco
 import { Deco01 } from "@assets/deco/DecoSvg";
@@ -98,7 +100,7 @@ const NiceFilter = ({ areaCode }: Props) => {
       left="50%"
       zIndex={999}
       transform="translateX(-50%)"
-      p="0.5rem 0"
+      p="0.75rem 0 0.5rem"
       w="29.5rem"
       justify="center"
       gap="1.5rem"
@@ -120,7 +122,7 @@ const NiceFilter = ({ areaCode }: Props) => {
         }}
       >
         <Box>
-          <IcoNice1 color="#262323cc" />
+          <IcoGroup width="1.125rem" height="1.125rem" color="font.primary" />
         </Box>
         유동인구
       </Button>
@@ -136,7 +138,7 @@ const NiceFilter = ({ areaCode }: Props) => {
         }}
       >
         <Box>
-          <IcoNice2 color="#262323cc" />
+          <IcoNice2 width="1.25rem" height="1.25rem" color="font.primary" />
         </Box>
         거주인구
       </Button>
@@ -152,7 +154,7 @@ const NiceFilter = ({ areaCode }: Props) => {
         }}
       >
         <Box>
-          <IcoNice3 color="#262323cc" />
+          <IcoNice3 width="1.25rem" height="1.25rem" color="font.primary" />
         </Box>
         직장인구
       </Button>
@@ -170,7 +172,7 @@ const NiceFilter = ({ areaCode }: Props) => {
         }}
       >
         <Box>
-          <IcoNice4 color="#262323cc" />
+          <IcoFilter02 width="1.25rem" height="1.25rem" color="font.primary" />
         </Box>
         추가필터
       </Button>
@@ -182,7 +184,7 @@ const NiceFilter = ({ areaCode }: Props) => {
         }}
       >
         <Box>
-          <IcoSync width="1.125rem" height="1.125rem" color="font.primary" />
+          <IcoRefresh width="1.125rem" height="1.125rem" color="font.primary" />
         </Box>
         필터초기화
       </Button>
@@ -205,11 +207,15 @@ const NiceFilter = ({ areaCode }: Props) => {
           border="1px solid #BFBFBF"
         >
           <Flex justify="space-between">
-            <Flex pl="0.25rem" align="center" gap="1rem">
+            <Flex pl="0.25rem" align="center" gap="0.5rem">
+              <IcoGroup
+                width="1.125rem"
+                height="1.125rem"
+                color="font.primary"
+              />
               <Heading as={"h5"} variant="filterBox">
                 유동인구
               </Heading>
-              <IcoMy width="0.875rem" height="0.875rem" color="font.title" />
             </Flex>
             <Flex align="center" gap="0.5rem">
               <SwitchFilter
@@ -316,11 +322,11 @@ const NiceFilter = ({ areaCode }: Props) => {
           border="1px solid #BFBFBF"
         >
           <Flex justify="space-between">
-            <Flex pl="0.25rem" align="center" gap="1rem">
-              <Heading as={"h5"} variant="filterBox">
+            <Flex pl="0.25rem" align="center" gap="0.5rem">
+              <IcoNice2 width="1rem" height="1rem" color="font.primary" />
+              <Heading as={"h5"} variant="filterBox" lineHeight={1}>
                 거주인구
               </Heading>
-              <IcoNice2 width="0.875rem" height="0.875rem" color="font.title" />
             </Flex>
             <Flex align="center" gap="0.5rem">
               <SwitchFilter
@@ -428,10 +434,10 @@ const NiceFilter = ({ areaCode }: Props) => {
         >
           <Flex justify="space-between">
             <Flex pl="0.25rem" align="center" gap="1rem">
+              <IcoNice3 width="1rem" height="1rem" color="font.primary" />
               <Heading as={"h5"} variant="filterBox">
                 직장인구
               </Heading>
-              <IcoNice3 width="0.875rem" height="0.875rem" color="font.title" />
             </Flex>
             <Flex align="center" gap="0.5rem">
               <SwitchFilter
@@ -539,15 +545,15 @@ const NiceFilter = ({ areaCode }: Props) => {
           border="1px solid #BFBFBF"
         >
           <Flex justify="space-between">
-            <Flex pl="0.25rem" align="center" gap="1rem">
-              <Heading as={"h5"} variant="filterBox">
-                세대수
-              </Heading>
+            <Flex pl="0.25rem" align="center" gap="0.5rem">
               <IcoResident
                 width="0.875rem"
                 height="0.875rem"
                 color="font.title"
               />
+              <Heading as={"h5"} variant="filterBox" lineHeight="normal">
+                세대수
+              </Heading>
             </Flex>
             <Flex align="center" gap="0.5rem">
               <SwitchFilter
@@ -567,51 +573,15 @@ const NiceFilter = ({ areaCode }: Props) => {
           {/* ============================== 박스 데코 ============================== */}
           <Deco01 margin="0.25rem 0 0.75rem" width="100%" height="0.3125rem" />
           <Flex justify="space-between">
-            <Flex pl="0.25rem" align="center" gap="1rem">
-              <Heading as={"h5"} variant="filterBox">
-                매출액
-              </Heading>
-              <IcoBank width="0.875rem" height="0.875rem" color="font.title" />
-            </Flex>
-            <Tooltip
-              hasArrow
-              isDisabled={bot.code ? true : false}
-              placement="auto"
-              label="업종을 선택하셔야 합니다."
-              p="1rem"
-              borderRadius="base"
-            >
-              <Flex align="center" gap="0.5rem">
-                <SwitchFilter
-                  isDisabled={
-                    sale.search === "off" || (bot.code ? false : true)
-                  }
-                  isChecked={sale?.active}
-                  onChange={() => {
-                    setSale({ ...sale, active: !sale?.active });
-                  }}
-                />
-                <BtnFilterSearch
-                  isDisabled={bot.code ? false : true}
-                  onClick={() => {
-                    searchSaleHandler();
-                  }}
-                />
-              </Flex>
-            </Tooltip>
-          </Flex>
-          {/* ============================== 박스 데코 ============================== */}
-          <Deco01 margin="0.25rem 0 0.75rem" width="100%" height="0.3125rem" />
-          <Flex justify="space-between">
-            <Flex pl="0.25rem" align="center" gap="1rem">
-              <Heading as={"h5"} variant="filterBox">
-                업종수
-              </Heading>
-              <IcoAppStore
+            <Flex pl="0.25rem" align="center" gap="0.5rem">
+              <IcoWorkspace
                 width="0.875rem"
                 height="0.875rem"
                 color="font.title"
               />
+              <Heading as={"h5"} variant="filterBox">
+                업소수
+              </Heading>
             </Flex>
             <Tooltip
               hasArrow
@@ -635,6 +605,46 @@ const NiceFilter = ({ areaCode }: Props) => {
                   isDisabled={bot.code ? false : true}
                   onClick={() => {
                     searchUpjongHandler();
+                  }}
+                />
+              </Flex>
+            </Tooltip>
+          </Flex>
+          {/* ============================== 박스 데코 ============================== */}
+          <Deco01 margin="0.25rem 0 0.75rem" width="100%" height="0.3125rem" />
+          <Flex justify="space-between">
+            <Flex pl="0.25rem" align="center" gap="0.5rem">
+              <IcoMonitoring
+                width="0.875rem"
+                height="0.875rem"
+                color="font.title"
+              />
+              <Heading as={"h5"} variant="filterBox">
+                매출액
+              </Heading>
+            </Flex>
+            <Tooltip
+              hasArrow
+              isDisabled={bot.code ? true : false}
+              placement="auto"
+              label="업종을 선택하셔야 합니다."
+              p="1rem"
+              borderRadius="base"
+            >
+              <Flex align="center" gap="0.5rem">
+                <SwitchFilter
+                  isDisabled={
+                    sale.search === "off" || (bot.code ? false : true)
+                  }
+                  isChecked={sale?.active}
+                  onChange={() => {
+                    setSale({ ...sale, active: !sale?.active });
+                  }}
+                />
+                <BtnFilterSearch
+                  isDisabled={bot.code ? false : true}
+                  onClick={() => {
+                    searchSaleHandler();
                   }}
                 />
               </Flex>

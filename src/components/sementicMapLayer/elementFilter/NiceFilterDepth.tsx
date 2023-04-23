@@ -27,10 +27,6 @@ import {
 import {
   IcoFileSearch,
   IcoHeatMap,
-  IcoNice1,
-  IcoNice2,
-  IcoNice3,
-  IcoNice5,
   IcoSync,
   IcoTextB,
 } from "@assets/icons/icon";

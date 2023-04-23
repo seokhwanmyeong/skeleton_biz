@@ -2185,6 +2185,11 @@
   "resolved" "https://registry.npmjs.org/@fontsource/noto-sans-kr/-/noto-sans-kr-4.5.12.tgz"
   "version" "4.5.12"
 
+"@fontsource/oxanium@^4.5.10":
+  "integrity" "sha512-AMoU6DA8DXd1+peWTw8gl5jcKnj1jHtpwX27aYNiKbpj45wuDyMWCtvw3CdKzowCRP4RWLHcC3BbZVxRmyJcVQ=="
+  "resolved" "https://registry.npmjs.org/@fontsource/oxanium/-/oxanium-4.5.10.tgz"
+  "version" "4.5.10"
+
 "@fontsource/roboto@^4.5.8":
   "integrity" "sha512-CnD7zLItIzt86q4Sj3kZUiLcBk1dSk81qcqgMGaZe7SQ1P8hFNxhMl5AZthK1zrDM5m74VVhaOpuMGIL4gagaA=="
   "resolved" "https://registry.npmjs.org/@fontsource/roboto/-/roboto-4.5.8.tgz"

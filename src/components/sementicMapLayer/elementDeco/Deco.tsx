@@ -261,15 +261,22 @@ const DecoCenterBox03 = (iconProps: any) => {
 };
 
 //  상세 좌측 Frame
-const DecoFrameL = ({ children }: { children?: ReactNode }) => {
+const DecoFrameL = ({
+  children,
+  ...rest
+}: {
+  children?: ReactNode;
+  [x: string]: any;
+}) => {
   return (
     <Flex
       p="6rem 0"
-      w="20%"
+      w="25%"
       h="100%"
       direction="column"
       justify="space-between"
       pointerEvents="fill"
+      {...rest}
     >
       <Box
         w="100%"
@@ -288,6 +295,53 @@ const DecoFrameL = ({ children }: { children?: ReactNode }) => {
   );
 };
 
+// 좌우측 랭킹 박스 태그
+const DecoRankTag = ({
+  children,
+  width,
+  height,
+  fillColor,
+  ...rest
+}: {
+  children?: ReactNode;
+  width?: any;
+  height?: any;
+  fillColor?: any;
+  [x: string]: any;
+}) => {
+  return (
+    <Flex
+      pos="relative"
+      width={width || "2.25rem"}
+      height={height || "1.125rem"}
+      justify="center"
+      gap="2px"
+      {...rest}
+    >
+      {children}
+      <Icon
+        pos="absolute"
+        top={0}
+        left={0}
+        width={width || "2.25rem"}
+        height={height || "1.125rem"}
+        viewBox="0 0 35 18"
+      >
+        <path
+          fillRule="evenodd"
+          clipRule="evenodd"
+          d="M1.19922 1H29.8764L34.1992 5.32282V17H5.52367L1.19922 12.6755V1Z"
+          fill={fillColor || "currentColor"}
+        />
+        <path
+          d="M29.8764 1L30.0532 0.823223L29.98 0.75H29.8764V1ZM1.19922 1V0.75H0.949219V1H1.19922ZM34.1992 5.32282H34.4492V5.21926L34.376 5.14604L34.1992 5.32282ZM34.1992 17V17.25H34.4492V17H34.1992ZM5.52367 17L5.34689 17.1768L5.42012 17.25H5.52367V17ZM1.19922 12.6755H0.949219V12.7791L1.02244 12.8523L1.19922 12.6755ZM29.8764 0.75H1.19922V1.25H29.8764V0.75ZM34.376 5.14604L30.0532 0.823223L29.6996 1.17678L34.0224 5.49959L34.376 5.14604ZM34.4492 17V5.32282H33.9492V17H34.4492ZM5.52367 17.25H34.1992V16.75H5.52367V17.25ZM1.02244 12.8523L5.34689 17.1768L5.70045 16.8232L1.376 12.4988L1.02244 12.8523ZM0.949219 1V12.6755H1.44922V1H0.949219Z"
+          fill="#595959"
+        />
+      </Icon>
+    </Flex>
+  );
+};
+
 //  상세 우측 Frame
 const DecoFrameR = ({
   children,
@@ -299,7 +353,7 @@ const DecoFrameR = ({
   return (
     <Flex
       p="6rem 0"
-      w="20%"
+      w="25%"
       h="100%"
       direction="column"
       justify="space-between"
@@ -331,7 +385,7 @@ const DecoFrameCenter = () => {
     <Flex
       pos="relative"
       p="6rem 0"
-      w="80%"
+      w="50%"
       h="100%"
       direction="row"
       justify="space-between"
@@ -397,8 +451,6 @@ const DecoFrameCenter = () => {
           pos="absolute"
           top="50%"
           left="50%"
-          maxW="90vh"
-          maxH="90vh"
           transform="translate(-50%, -50%)"
           borderRadius="50%"
           border="1px solid"
@@ -408,20 +460,20 @@ const DecoFrameCenter = () => {
           initial={{
             width: 0,
             height: 0,
-            maxWidth: "90vh",
-            maxHeight: "90vh",
+            maxWidth: "70vh",
+            maxHeight: "70vh",
           }}
           animate={{
             width: "60vw",
             height: "60vw",
-            maxWidth: "90vh",
-            maxHeight: "90vh",
+            maxWidth: "70vh",
+            maxHeight: "70vh",
           }}
           exit={{
             width: "60vw",
             height: "60vw",
-            maxWidth: "90vh",
-            maxHeight: "90vh",
+            maxWidth: "70vh",
+            maxHeight: "70vh",
           }}
         >
           {/* 중앙 미들 원형 */}
@@ -635,4 +687,5 @@ export {
   DecoFrameL,
   DecoFrameR,
   DecoFrameCenter,
+  DecoRankTag,
 };

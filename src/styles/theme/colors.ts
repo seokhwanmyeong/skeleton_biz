@@ -23,7 +23,7 @@ export const selectColorScheme = (type: string) => {
     type10: "#614700",
   };
   const secondary: { [key: string]: {} } = {
-    second1: {
+    second: {
       type1: "#E6FFFB",
       type2: "#B5F5EC",
       type3: "#87E8DE",
@@ -35,7 +35,7 @@ export const selectColorScheme = (type: string) => {
       type9: "#00474F",
       type10: "#002329",
     },
-    secon2: {
+    third: {
       type1: "#FFF2E8",
       type2: "#FFD8BF",
       type3: "#FFBB96",
@@ -97,6 +97,7 @@ export const selectColorScheme = (type: string) => {
         secondary: "#00000080",
         disabled: "#00000040",
         placeholder: "#00000040",
+        gray: "#615E83",
         section: {
           sub: "#26232380",
         },

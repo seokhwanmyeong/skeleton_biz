@@ -152,6 +152,53 @@ const themeTabs = {
         minH: "9.375rem",
       },
     },
+    depthListBox: {
+      root: {
+        display: "flex",
+        flexDirection: "column",
+        w: "100%",
+        h: "100%",
+        overflow: "hidden",
+      },
+      tablist: {
+        w: "100%",
+        justifyContent: "center",
+        gap: "0.5rem",
+      },
+      tab: {
+        p: "0",
+        w: "4rem",
+        h: "1.5rem",
+        bgColor: "#FFFFFF",
+        border: "1px solid",
+        borderRadius: "14px",
+        borderColor: "neutral.gray8",
+        textStyle: "base",
+        fontSize: "sm",
+        fontWeight: "strong",
+        color: "font.placeholder",
+        transition: "0.3s",
+        _selected: {
+          color: "font.title",
+        },
+      },
+      tabpanels: { w: "100%", h: "100%" },
+      tabpanel: {
+        p: "0rem 0rem 3rem",
+        w: "100%",
+        h: "100%",
+        overflowY: "scroll",
+        "::-webkit-scrollbar": {
+          w: "0",
+        },
+        "::-webkit-scrollbar-track-piece:end": {
+          bg: "transparent",
+        },
+        "::-webkit-scrollbar-track-piece:start": {
+          bg: "transparent",
+        },
+      },
+    },
   },
 };
 

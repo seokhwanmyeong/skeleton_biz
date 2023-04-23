@@ -2,7 +2,6 @@ import { Button, IconButton, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 //  Icon
 import {
-  IcoPlusSquare,
   IcoDelete,
   IcoDownload,
   IcoUpdate,
@@ -12,7 +11,7 @@ import {
   IcoCloseCircle,
   IcoDetail,
   IcoPlusSquare02,
-  IcoSearch,
+  IcoCheck,
 } from "@assets/icons/icon";
 
 type Props = {};
@@ -23,7 +22,7 @@ type BtnProps = {
   isActive?: boolean;
   text?: string;
   style?: any;
-  rest?: string[];
+  [x: string]: any;
 };
 
 interface BtnEditProps extends BtnProps {
@@ -134,9 +133,10 @@ const BtnFilterSearch = ({
       onClick={onClick}
       isDisabled={isDisabled}
       aria-label="조회하기"
+      lineHeight={1}
       {...rest}
     >
-      <IcoSearch width="0.875rem" height="0.875rem" color="primary.inverse" />
+      <IcoCheck width="0.875rem" height="0.875rem" color="primary.inverse" />
       {text}
     </Button>
   );
@@ -358,7 +358,7 @@ const IcoBtnPrev = ({ onClick, isDisabled, ...rest }: BtnProps) => {
       w="1rem"
       h="1rem"
       bg="transparent"
-      color="font.main"
+      color="font.primary"
       _hover={{
         bg: "transparent",
       }}

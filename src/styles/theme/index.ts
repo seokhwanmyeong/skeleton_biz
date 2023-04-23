@@ -21,6 +21,7 @@ import themeText from "@styles/theme/components/common/themeText";
 import themeTextArea from "@styles/theme/components/common/themeTextArea";
 import themeDrawer from "@styles/theme/components/modal/themeDrawer";
 import themeTabs from "@styles/theme/components/menu/themeTabs";
+import themeList from "@styles/theme/components/list/themeList";
 
 const createTheme = (name: string) => {
   const config: ThemeConfig = {
@@ -207,6 +208,7 @@ const createTheme = (name: string) => {
       TextArea: themeTextArea,
       Tabs: themeTabs,
       Text: themeText,
+      List: themeList,
     },
   });
 

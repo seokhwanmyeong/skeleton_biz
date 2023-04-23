@@ -10,7 +10,6 @@ import GuMarker from "./GuMarker";
 //  State
 import { dataCollector } from "@src/states/sementicMap/stateFilter";
 //  Sample
-import dongData from "@util/data/area/dong.json";
 import { atomFlowEnterArea } from "@src/states/sementicMap/stateMap";
 
 interface GuPanelProps {

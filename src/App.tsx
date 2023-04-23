@@ -12,6 +12,12 @@ import { NaverMapProvider } from "@src/lib/src";
 import { createTheme } from "@styles/theme/index";
 import "@fontsource/roboto/latin.css";
 import "@fontsource/noto-sans-kr/korean.css";
+import "@fontsource/oxanium/300.css";
+import "@fontsource/oxanium/400.css";
+import "@fontsource/oxanium/500.css";
+import "@fontsource/oxanium/600.css";
+import "@fontsource/oxanium/700.css";
+import "@fontsource/oxanium/800.css";
 
 const App = () => {
   const currentTheme = useRecoilValue(atomThemeColor);

@@ -24,8 +24,6 @@ import {
 } from "@components/sementicMapLayer/elementDeco/Deco";
 //  Type
 import type { AreaProps } from "@states/sementicMap/stateMap";
-//  Sample
-import dongListData from "@util/data/area/dong.json";
 
 const FlowSigungu = () => {
   const { getDongList } = apiMapArea;
@@ -94,36 +92,34 @@ const FlowSigungu = () => {
     }
 
     return;
-    if (sigungu?.slctName) {
-      let dongData: any = dongListData;
-      console.log(dongData);
-      const tmp = dongData
-        .map(
-          (
-            {
-              code,
-              name,
-              polygon,
-            }: {
-              code: number;
-              name: string;
-              polygon: string;
-            },
-            idx: number
-          ) => {
-            return {
-              code: String(code),
-              num: idx,
-              name: name,
-              path: polygon,
-            };
-          }
-        )
-        .filter((li: any) => li.code.slice(0, 4) === sigungu?.slctCode);
-      const transData = pathTransHandler(tmp);
-
-      setDongLi(transData);
-    }
+    // if (sigungu?.slctName) {
+    //   let dongData: any = dongListData;
+    //   console.log(dongData);
+    //   const tmp = dongData
+    //     .map(
+    //       (
+    //         {
+    //           code,
+    //           name,
+    //           polygon,
+    //         }: {
+    //           code: number;
+    //           name: string;
+    //           polygon: string;
+    //         },
+    //         idx: number
+    //       ) => {
+    //         return {
+    //           code: String(code),
+    //           num: idx,
+    //           name: name,
+    //           path: polygon,
+    //         };
+    //       }
+    //     )
+    //     .filter((li: any) => li.code.slice(0, 4) === sigungu?.slctCode);
+    //   const transData = pathTransHandler(tmp);
+    // }
   };
 
   useEffect(() => {
