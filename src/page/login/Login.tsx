@@ -51,7 +51,7 @@ const Login = () => {
     setLoadingChk(true);
 
     login({
-      username: username,
+      email: username,
       password: password,
       // username: ei,
       // password: ep,

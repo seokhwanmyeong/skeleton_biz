@@ -62,7 +62,6 @@ const MapFlowSigungu = (props: Props) => {
       };
 
       sigungu.slctPath[0].map((lngLat: any) => {
-        console.log(lngLat);
         if (lngLat[1] > latLngRange.latMax || latLngRange.latMax === 0) {
           latLngRange.latMax = lngLat[1];
         } else if (lngLat[1] < latLngRange.latMin || latLngRange.latMin === 0) {
@@ -108,7 +107,7 @@ const MapFlowSigungu = (props: Props) => {
             return (
               <InteractArea
                 key={dong.name}
-                onClick={(val) => {
+                onClick={() => {
                   console.log("click");
                   setDong({
                     slctName: dong.name,

@@ -140,6 +140,7 @@ const InputPwd = ({
   value,
   onChange,
   onKeyUp,
+  onKeyDown,
   groupProps,
   addonProps,
   inputProps,
@@ -168,6 +169,7 @@ const InputPwd = ({
           value={value}
           onChange={(e: any) => onChange(e.target.value)}
           onKeyUp={onKeyUp}
+          onKeyDown={onKeyDown}
           placeholder={placeholder}
           _placeholder={_placeholder}
           focusBorderColor={focusBorderColor}

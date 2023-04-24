@@ -4,14 +4,13 @@ import { useRecoilValue } from "recoil";
 import { NaverMapContext } from "@src/lib/src";
 import { NaverMapAction } from "@src/lib/src/common/types";
 import OverlayView from "@src/lib/src/components/Overlay/OverlayView";
+import { Flex, Heading, Text } from "@chakra-ui/react";
 //  Component
 import InteractiveMarker from "./InteractiveMarker";
 //  State
-import { dataCollector } from "@src/states/sementicMap/stateFilter";
-//  Sample
-import dongData from "@util/data/area/dong.json";
-import { Box, Flex, Heading, Text } from "@chakra-ui/react";
-import { Deco01 } from "@src/assets/deco/DecoSvg";
+import { atomFlowEnterArea } from "@states/sementicMap/stateMap";
+import { dataCollector } from "@states/sementicMap/stateFilter";
+//  Icon
 import {
   IcoFood,
   IcoHousehold,
@@ -19,8 +18,9 @@ import {
   IcoMoney,
   IcoPeople,
   IcoResi,
-} from "@src/assets/icons/icon";
-import { atomFlowEnterArea } from "@src/states/sementicMap/stateMap";
+} from "@assets/icons/icon";
+//  Deco
+import { Deco01 } from "@assets/deco/DecoSvg";
 
 interface DongPanelProps {
   onClickArea?: (num: number) => any;

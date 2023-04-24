@@ -1,15 +1,9 @@
-import React, {
-  useState,
-  useEffect,
-  useContext,
-  useRef,
-  useCallback,
-} from "react";
+import { useState, useEffect, useContext, useRef, useCallback } from "react";
+import { debounce } from "lodash";
 import { Marker, NaverMapContext, Polyline } from "@src/lib/src";
 import OverlayView from "@src/lib/src/components/Overlay/OverlayView";
 import Polygon from "@src/lib/src/components/Overlay/Polygon";
 import { Box, Flex, Heading, Text } from "@chakra-ui/react";
-import { Deco01 } from "@src/assets/deco/DecoSvg";
 import {
   IcoFood,
   IcoHousehold,
@@ -38,6 +32,7 @@ interface GuMarkerProps {
   leftIdx: number;
   data?: any;
 }
+
 const GuMarker = ({
   name,
   num,
@@ -59,6 +54,7 @@ const GuMarker = ({
   const [onsetMap, setOnsetMap] = useState(false);
   const [active, setActive] = useState(false);
   const [over, setOver] = useState(-1);
+
   useEffect(() => {
     if (state.map === undefined) return;
     const curCenter = state.map.getCenter();
@@ -77,7 +73,7 @@ const GuMarker = ({
   }, [state.map]);
 
   useEffect(() => {
-    console.log(direction.idx);
+    // console.log(direction.idx);
     let setnum = 0.014 * direction.idx;
     setCont(parseFloat(setnum.toString()));
   }, [num]);
@@ -120,6 +116,7 @@ const GuMarker = ({
       strokeStyle: "solid",
       strokeOpacity: 1,
       strokeWeight: 2,
+      zIndex: 7,
     });
 
     // if (boxRef?.current?.style) {
@@ -162,10 +159,6 @@ const GuMarker = ({
     setOver(-1);
   }, [state.objects]);
 
-  const OnClcikArea = () => {
-    onClickArea(num);
-  };
-
   useEffect(() => {
     if (data) {
       const { flow, resi, job, house, sale, upjong } = data;
@@ -183,7 +176,59 @@ const GuMarker = ({
       }
     }
   }, [data]);
-  console.log(range);
+
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+
+  // handleResize 함수를 debounce로 감싸고, 시간을 설정한다
+  // 1000ms = 1sec
+  const handleResize = debounce(() => {
+    setWindowSize({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
+  }, 1000);
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+    return () => {
+      // cleanup
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log(windowSize);
+    const test = state.objects.get("polyline_" + num) as naver.maps.Polyline;
+
+    if (!test) return;
+
+    if (onleft) {
+      test?.setPath([
+        {
+          lat: Number(position.y) - 0.0012,
+          lng: Number(position.x) + 0.0013,
+        },
+        {
+          y: range.latMin + ((range.latMax - range.latMin) / 5) * direction.idx,
+          x: range.lngMax - 1280 / windowSize.width / 60,
+        },
+      ]);
+    } else {
+      test?.setPath([
+        {
+          lat: Number(position.y) - 0.0012,
+          lng: Number(position.x) + 0.0013,
+        },
+        {
+          y: range.latMin + ((range.latMax - range.latMin) / 5) * direction.idx,
+          x: range.lngMax + 1280 / windowSize.width / 60,
+        },
+      ]);
+    }
+  }, [windowSize]);
   return (
     <>
       {onsetMap && active ? (
@@ -198,8 +243,10 @@ const GuMarker = ({
                       lng: Number(position.x) + 0.0013,
                     },
                     {
-                      y: (range.latMax + range.latMin) / 2 + cont - 0.034,
-                      x: range.lngMin - 0.036,
+                      y:
+                        range.latMin +
+                        ((range.latMax - range.latMin) / 5) * direction.idx,
+                      x: range.lngMin - windowSize.width / 1280 / 100,
                     },
                   ]
                 : [
@@ -208,8 +255,10 @@ const GuMarker = ({
                       lng: Number(position.x) + 0.0013,
                     },
                     {
-                      y: (range.latMax + range.latMin) / 2 + cont - 0.034,
-                      x: range.lngMax + 0.036,
+                      y:
+                        range.latMin +
+                        ((range.latMax - range.latMin) / 5) * direction.idx,
+                      x: range.lngMax,
                     },
                   ],
               strokeColor: "#BFBFBF",
@@ -219,369 +268,6 @@ const GuMarker = ({
               zIndex: 2,
             }}
           />
-          <OverlayView
-            id={`box${num}`}
-            // position={
-            //   onleft
-            //     ? {
-            //         y: mapCenter?.y + cont - 0.034,
-            //         x: mapCenter?.x - 0.08,
-            //       }
-            //     : {
-            //         y: mapCenter?.y + cont - 0.034,
-            //         x: mapCenter?.x + 0.06,
-            //       }
-            // }
-            position={
-              onleft
-                ? {
-                    y: (range.yMax + range.yMin) / 2 + cont - 0.037,
-                    x: range.xMin - 0.07,
-                  }
-                : {
-                    y: (range.yMax + range.yMin) / 2 + cont - 0.037,
-                    x: range.xMax + 0.04,
-                  }
-            }
-            onClick={OnClcikArea}
-            onMouseOver={OnOver}
-            onMouseOut={OnOut}
-          >
-            <Flex
-              ref={boxRef}
-              className="box"
-              pos="absolute"
-              left={0}
-              top={-15}
-              w="11.25rem"
-              zIndex={5}
-              direction="column"
-            >
-              <Flex
-                align="center"
-                mb="1px"
-                ml="0.875rem"
-                gap="3px"
-                bgColor="rgba(255, 255, 255, 0.75)"
-                border="1px solid #BFBFBF"
-                _before={{
-                  content: '""',
-                  display: "block",
-                  w: "0.625rem",
-                  h: "100%",
-                  flex: "none",
-                  borderRight: "1px solid",
-                  borderColor: "#BFBFBF",
-                }}
-              >
-                <Heading variant="sigunguTitle">
-                  {name.replace("서울특별시", "")}
-                </Heading>
-                <Deco01 margin="0" width="100%" height="4px" flexShrink="1" />
-              </Flex>
-              <Flex>
-                <Flex
-                  p="0.875rem 0 0 0.625rem"
-                  justify="center"
-                  align="center"
-                  flexGrow={1}
-                  direction="column"
-                  background="linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%)"
-                  // filter="blur(3.33333px)"
-                  backdropFilter="blur(1.21212px)"
-                >
-                  <Flex w="100%" justify="space-between" gap="3px">
-                    <Flex w="50%">
-                      <Flex
-                        pl="0.875rem"
-                        h="1rem"
-                        pos="relative"
-                        align="flex-end"
-                        border="1px solid #BFBFBF"
-                        boxSizing="border-box"
-                      >
-                        <IcoHuman
-                          position="absolute"
-                          top="0"
-                          left="0"
-                          width="0.7rem"
-                          height="auto"
-                        />
-                        <Text
-                          fontWeight="strong"
-                          fontSize="0.6875rem"
-                          color="rgba(38, 35, 35, 0.8)"
-                        >
-                          01
-                        </Text>
-                      </Flex>
-                      <Text
-                        w="100%"
-                        textAlign="center"
-                        fontWeight="medium"
-                        fontSize="xs"
-                      >
-                        {data.flow.data.inflowCustCnt ?? "-"}
-                      </Text>
-                    </Flex>
-                    <Flex w="50%">
-                      <Flex
-                        pl="0.875rem"
-                        h="1rem"
-                        pos="relative"
-                        align="flex-end"
-                        border="1px solid #BFBFBF"
-                        boxSizing="border-box"
-                      >
-                        <IcoFood
-                          position="absolute"
-                          top="0"
-                          left="0"
-                          width="0.7rem"
-                          height="auto"
-                        />
-                        <Text
-                          fontWeight="strong"
-                          fontSize="0.6875rem"
-                          color="rgba(38, 35, 35, 0.8)"
-                        >
-                          01
-                        </Text>
-                      </Flex>
-                      <Text
-                        w="100%"
-                        textAlign="center"
-                        fontWeight="medium"
-                        fontSize="xs"
-                      >
-                        {data.upjong.data.storeCnt ?? "-"}
-                      </Text>
-                    </Flex>
-                  </Flex>
-                  <svg
-                    width="110"
-                    height="2"
-                    viewBox="0 0 127 2"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <g opacity="0.5">
-                      <path
-                        d="M0.666626 1.00049H126.333"
-                        stroke="#262323"
-                        strokeOpacity="0.8"
-                      />
-                      <path
-                        d="M0.666626 1.00049H6.66663"
-                        stroke="#262323"
-                        strokeWidth="2"
-                      />
-                      <path
-                        d="M120.667 1.00049H126.667"
-                        stroke="#262323"
-                        strokeWidth="2"
-                      />
-                    </g>
-                  </svg>
-                  <Flex w="100%" justify="space-between" gap="3px">
-                    <Flex w="50%">
-                      <Flex
-                        pl="0.875rem"
-                        h="1rem"
-                        pos="relative"
-                        align="flex-end"
-                        border="1px solid #BFBFBF"
-                        boxSizing="border-box"
-                      >
-                        <IcoResi
-                          position="absolute"
-                          top="0"
-                          left="0"
-                          width="0.7rem"
-                          height="auto"
-                        />
-                        <Text
-                          fontWeight="strong"
-                          fontSize="0.6875rem"
-                          color="rgba(38, 35, 35, 0.8)"
-                        >
-                          01
-                        </Text>
-                      </Flex>
-                      <Text
-                        w="100%"
-                        textAlign="center"
-                        fontWeight="medium"
-                        fontSize="xs"
-                      >
-                        {data.resi.data.jobCustCnt ?? "-"}
-                      </Text>
-                    </Flex>
-                    <Flex w="50%">
-                      <Flex
-                        pl="0.875rem"
-                        h="1rem"
-                        pos="relative"
-                        align="flex-end"
-                        border="1px solid #BFBFBF"
-                        boxSizing="border-box"
-                      >
-                        <IcoMoney
-                          position="absolute"
-                          top="0"
-                          left="0"
-                          width="0.7rem"
-                          height="auto"
-                        />
-                        <Text
-                          fontWeight="strong"
-                          fontSize="0.6875rem"
-                          color="rgba(38, 35, 35, 0.8)"
-                        >
-                          01
-                        </Text>
-                      </Flex>
-                      <Text
-                        w="100%"
-                        textAlign="center"
-                        fontWeight="medium"
-                        fontSize="xs"
-                      >
-                        {data.sale.data.avgSalesAmt ?? "-"}
-                      </Text>
-                    </Flex>
-                  </Flex>
-                  <svg
-                    width="110"
-                    height="2"
-                    viewBox="0 0 127 2"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <g opacity="0.5">
-                      <path
-                        d="M0.666626 1.00049H126.333"
-                        stroke="#262323"
-                        strokeOpacity="0.8"
-                      />
-                      <path
-                        d="M0.666626 1.00049H6.66663"
-                        stroke="#262323"
-                        strokeWidth="2"
-                      />
-                      <path
-                        d="M120.667 1.00049H126.667"
-                        stroke="#262323"
-                        strokeWidth="2"
-                      />
-                    </g>
-                  </svg>
-                  <Flex w="100%" justify="space-between" gap="3px">
-                    <Flex w="50%">
-                      <Flex
-                        pl="0.875rem"
-                        h="1rem"
-                        pos="relative"
-                        align="flex-end"
-                        border="1px solid #BFBFBF"
-                        boxSizing="border-box"
-                      >
-                        <IcoPeople
-                          position="absolute"
-                          top="0"
-                          left="0"
-                          width="0.7rem"
-                          height="auto"
-                        />
-                        <Text
-                          fontWeight="strong"
-                          fontSize="0.6875rem"
-                          color="rgba(38, 35, 35, 0.8)"
-                        >
-                          01
-                        </Text>
-                      </Flex>
-                      <Text
-                        w="100%"
-                        textAlign="center"
-                        fontWeight="medium"
-                        fontSize="xs"
-                      >
-                        {data.job.data.housCustcnt ?? "-"}
-                      </Text>
-                    </Flex>
-                    <Flex w="50%">
-                      <Flex
-                        pl="0.875rem"
-                        h="1rem"
-                        pos="relative"
-                        align="flex-end"
-                        border="1px solid #BFBFBF"
-                        boxSizing="border-box"
-                      >
-                        <IcoHousehold
-                          position="absolute"
-                          top="0"
-                          left="0"
-                          width="0.7rem"
-                          height="auto"
-                        />
-                        <Text
-                          fontWeight="strong"
-                          fontSize="0.6875rem"
-                          color="rgba(38, 35, 35, 0.8)"
-                        >
-                          01
-                        </Text>
-                      </Flex>
-                      <Text
-                        w="100%"
-                        textAlign="center"
-                        fontWeight="medium"
-                        fontSize="xs"
-                      >
-                        {data.house.data.hous ?? "-"}
-                      </Text>
-                    </Flex>
-                  </Flex>
-                </Flex>
-                <Flex
-                  p="0.25rem 0.4375rem"
-                  align="center"
-                  direction="column"
-                  bgColor="rgba(255, 255, 255, 0.75)"
-                  border="1px solid #BFBFBF"
-                >
-                  <Text
-                    fontWeight={300}
-                    fontSize="0.6875rem"
-                    lineHeight="0.875rem"
-                    color="#262323"
-                  >
-                    total
-                  </Text>
-                  <Text
-                    fontWeight="medium"
-                    fontSize="0.8125rem"
-                    lineHeight="1.125rem"
-                    color="#262323"
-                    letterSpacing={0}
-                  >
-                    RANK
-                  </Text>
-                  <Text
-                    fontWeight="strong"
-                    fontSize="1.6875rem"
-                    lineHeight="2.1875rem"
-                    color="#262323"
-                    letterSpacing="-3px"
-                  >
-                    {String(num + 1).length === 1 ? `0${num + 1}` : num + 1}
-                  </Text>
-                </Flex>
-              </Flex>
-            </Flex>
-          </OverlayView>
           <OverlayView id={`marker01_${num}`} position={position}>
             <svg
               width="17"
@@ -597,7 +283,7 @@ const GuMarker = ({
                 height="11"
                 transform="rotate(-135 8.48523 16.2636)"
                 fill="white"
-                fill-opacity="0.5"
+                fillOpacity="0.5"
                 stroke="#BFBFBF"
               />
               <rect
@@ -616,12 +302,16 @@ const GuMarker = ({
             position={
               onleft
                 ? {
-                    y: (range.latMax + range.latMin) / 2 + cont - 0.03345,
-                    x: range.lngMin - 0.037,
+                    y:
+                      range.latMin +
+                      ((range.latMax - range.latMin) / 5) * direction.idx,
+                    x: range.lngMin,
                   }
                 : {
-                    y: (range.latMax + range.latMin) / 2 + cont - 0.03345,
-                    x: range.lngMax + 0.035,
+                    y:
+                      range.latMin +
+                      ((range.latMax - range.latMin) / 5) * direction.idx,
+                    x: range.lngMax,
                   }
             }
           >
@@ -639,7 +329,7 @@ const GuMarker = ({
                 height="7"
                 transform="rotate(-45 0.707107 5.65674)"
                 fill="white"
-                fill-opacity="0.5"
+                fillOpacity="0.5"
                 stroke="#595959"
               />
             </svg>

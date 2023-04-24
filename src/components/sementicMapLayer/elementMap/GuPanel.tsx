@@ -8,9 +8,8 @@ import OverlayView from "@src/lib/src/components/Overlay/OverlayView";
 import InteractiveMarker from "./InteractiveMarker";
 import GuMarker from "./GuMarker";
 //  State
-import { dataCollector } from "@src/states/sementicMap/stateFilter";
-//  Sample
-import { atomFlowEnterArea } from "@src/states/sementicMap/stateMap";
+import { dataCollector } from "@states/sementicMap/stateFilter";
+import { atomFlowEnterArea } from "@states/sementicMap/stateMap";
 
 interface GuPanelProps {
   onClickArea: (num: number) => any;
@@ -124,7 +123,7 @@ const GuPanel = ({
     setRightIdx(initDirect.right);
     setDongArea(putCenter);
   }, [dongList, state.map, filterData]);
-  console.log(dongarea);
+
   return (
     <div>
       <ul style={{ position: "absolute" }}>

@@ -2,7 +2,7 @@
 import { useContext, useEffect, useState, useRef, Fragment } from "react";
 import { useResetRecoilState, useSetRecoilState } from "recoil";
 import { Box, Button, Flex, Text, useDisclosure } from "@chakra-ui/react";
-import { InfoWindow, NaverMapContext } from "@src/lib/src";
+import { NaverMapContext } from "@src/lib/src";
 import OverlayView from "@src/lib/src/components/Overlay/OverlayView";
 //  Components
 import ModalDaumAddr from "@components/modal/common/ModalDaumAddr";
@@ -13,11 +13,16 @@ import { atomSlctCustom } from "@states/sementicMap/stateMap";
 import {
   IcoAppStore,
   IcoExclamationCircle,
-  IcoReset,
+  IcoPolyline,
+  IcoLineCurve,
+  IcoDistance,
 } from "@assets/icons/icon";
 import markerIcon from "@assets/icons/marker.png";
+import markerPoint from "@assets/icons/markerPoint.png";
+import markerWithPoint from "@assets/icons/markerWithPoint.png";
 //  Deco
-import { DecoTop } from "@components/sementicMapLayer/elementDeco/Deco";
+import { motion } from "framer-motion";
+import { alertAnimation } from "@src/styles/animation/keyFremes";
 
 const ToggleButtonGroup = () => {
   const { state } = useContext(NaverMapContext);
@@ -32,15 +37,19 @@ const ToggleButtonGroup = () => {
     onOpen: onInfoOpen,
     onClose: onInfoClose,
   } = useDisclosure();
+  const {
+    isOpen: isAddrOpen,
+    onOpen: onAddrOpen,
+    onClose: onAddrClose,
+  } = useDisclosure();
   const setFlow = useSetRecoilState(atomFilterFlow);
   const setSlceCustom = useSetRecoilState(atomSlctCustom);
-  const resetSlceCustom = useResetRecoilState(atomSlctCustom);
+  const resetSlctCustom = useResetRecoilState(atomSlctCustom);
   const [activeIdx, setActiveIdx] = useState(-1);
   const [event, setEvent] = useState<any>(null);
   const [moveEvent, setMoveEvent] = useState<any>(null);
   const [cursorPo, setCursorPo] = useState<any>(null);
   const [distance, setDistance] = useState<any>(null);
-  // const [poly, setpoly] = useState<naver.maps.Polyline | undefined>();
   const [rangeCenter, setRangeCenter] = useState<any>();
   const [addr, setAddr] = useState({
     address: "",
@@ -60,11 +69,6 @@ const ToggleButtonGroup = () => {
     markerRef.current = [];
     markerRangeRef.current?.setMap(null);
     markerRangeRef.current = null;
-    naver.maps.Event.removeListener(event);
-    naver.maps.Event.removeListener(moveEvent);
-    setEvent(null);
-    setMoveEvent(null);
-
     polyRef.current?.setMap(null);
     polyRef.current = new naver.maps.Polyline({
       map: state.map,
@@ -79,15 +83,30 @@ const ToggleButtonGroup = () => {
       map: state.map,
       center: new naver.maps.LatLng(0, 0),
       radius: 0,
-      strokeColor: "#5347AA",
-      strokeOpacity: 0.5,
-      strokeWeight: 2,
-      fillColor: "#E51D1A",
-      fillOpacity: 0.3,
+      strokeOpacity: 0,
+      strokeWeight: 0,
+      fillColor: "#000000",
+      fillOpacity: 0.5,
     });
     setDistance(0);
-    setActiveIdx(-1);
-    resetSlceCustom();
+    resetSlctCustom();
+  };
+
+  const resetAddr = () => {
+    console.log(addr);
+    markerAddrRef.current?.setMap(null);
+    markerAddrRef.current = null;
+    naver.maps.Event.removeListener(event);
+    naver.maps.Event.removeListener(moveEvent);
+    setEvent(null);
+    setMoveEvent(null);
+    setAddr({
+      address: "",
+      point: {
+        lat: 0,
+        lng: 0,
+      },
+    });
   };
 
   const resetAllElement = () => {
@@ -123,7 +142,10 @@ const ToggleButtonGroup = () => {
     return Math.round(ret); // 미터 단위
   };
 
-  const handleClick = (idx: number) => {
+  const handleClick = (idx: number, activeAddr: boolean = false) => {
+    if (activeIdx !== 2 && !activeAddr) {
+      resetAddr();
+    }
     if (activeIdx === idx) {
       setActiveIdx(-1);
     } else {
@@ -134,9 +156,27 @@ const ToggleButtonGroup = () => {
     markerRef.current = [];
     markerRangeRef.current = null;
     circleRef.current?.setRadius(0);
+    naver.maps.Event.removeListener(event);
+    naver.maps.Event.removeListener(moveEvent);
+    isAddrOpen && onAddrClose();
+
+    polyRef.current?.setMap(null);
+
+    const polyline = new naver.maps.Polyline({
+      map: state.map,
+      path: [],
+      strokeColor: "#000000",
+      strokeOpacity: 0.8,
+      strokeWeight: 3,
+      clickable: true,
+    });
+
+    polyRef.current = polyline;
 
     if (idx === 0) {
       console.log("폴리곤 그리기");
+      polyRef.current = polyline;
+
       const polyEvent = naver.maps.Event.addListener(
         state.map,
         "click",
@@ -144,30 +184,7 @@ const ToggleButtonGroup = () => {
       );
 
       setEvent(polyEvent);
-    } else {
-      if (event) {
-        naver.maps.Event.removeListener(event);
-        naver.maps.Event.removeListener(moveEvent);
-        setEvent(null);
-        setMoveEvent(null);
-      }
-
-      polyRef.current?.setMap(null);
-
-      const polyline = new naver.maps.Polyline({
-        map: state.map,
-        path: [],
-        strokeColor: "#000000",
-        strokeOpacity: 0.8,
-        strokeWeight: 3,
-        clickable: true,
-      });
-
-      polyRef.current = polyline;
-      // setpoly(polyline);
-    }
-
-    if (idx === 2) {
+    } else if (idx === 2) {
       if (addr.address) {
         state.map?.setCenter(addr.point);
         let distance = 0;
@@ -237,13 +254,22 @@ const ToggleButtonGroup = () => {
       path.push(point);
     }
 
+    markerRef.current.length > 0 &&
+      markerRef.current.forEach((marker) => {
+        marker.setIcon({
+          url: markerPoint,
+          size: new naver.maps.Size(8, 8),
+          anchor: new naver.maps.Point(4, 4),
+        });
+      });
+
     const marker = new naver.maps.Marker({
       map: state.map,
       position: point,
       icon: {
-        url: markerIcon,
-        size: new naver.maps.Size(21, 31),
-        anchor: new naver.maps.Point(9, 22),
+        url: markerWithPoint,
+        size: new naver.maps.Size(21, 39),
+        anchor: new naver.maps.Point(12, 34),
       },
     });
     markerRef.current.push(marker);
@@ -314,8 +340,8 @@ const ToggleButtonGroup = () => {
         });
       }
     });
-
     onClose();
+    onAddrOpen();
   };
 
   useEffect(() => {
@@ -399,11 +425,10 @@ const ToggleButtonGroup = () => {
       map: state.map,
       center: new naver.maps.LatLng(0, 0),
       radius: 0,
-      strokeColor: "#5347AA",
-      strokeOpacity: 0.5,
-      strokeWeight: 2,
-      fillColor: "#E51D1A",
-      fillOpacity: 0.3,
+      strokeOpacity: 0,
+      strokeWeight: 0,
+      fillColor: "#000000",
+      fillOpacity: 0.5,
     });
     const polyline = new naver.maps.Polyline({
       map: state.map,
@@ -417,12 +442,22 @@ const ToggleButtonGroup = () => {
     polyRef.current = polyline;
     // setpoly(polyline);
     markerRef.current = [];
-    resetSlceCustom();
+    resetSlctCustom();
 
     return () => {
       resetAllElement();
+      naver.maps.Event.removeListener(event);
+      naver.maps.Event.removeListener(moveEvent);
     };
   }, [state.map]);
+
+  useEffect(() => {
+    return () => {
+      resetAllElement();
+      naver.maps.Event.removeListener(event);
+      naver.maps.Event.removeListener(moveEvent);
+    };
+  }, []);
 
   return (
     <Fragment>
@@ -443,11 +478,12 @@ const ToggleButtonGroup = () => {
       >
         <Button
           variant="filterTop02"
-          isActive={activeIdx === 0}
+          isActive={activeIdx === 0 && !addr?.address}
           onClick={() => {
             if (activeIdx === 0) {
               handleClick(-1);
             } else {
+              resetAddr();
               handleClick(0);
             }
           }}
@@ -459,11 +495,12 @@ const ToggleButtonGroup = () => {
         </Button>
         <Button
           variant="filterTop02"
-          isActive={activeIdx === 1}
+          isActive={activeIdx === 1 && !addr?.address}
           onClick={() => {
             if (activeIdx === 1) {
               handleClick(-1);
             } else {
+              resetAddr();
               handleClick(1);
             }
           }}
@@ -475,16 +512,10 @@ const ToggleButtonGroup = () => {
         </Button>
         <Button
           variant="filterTop02"
-          isActive={activeIdx === 2}
+          isActive={activeIdx === 2 || addr?.address ? true : false}
           onClick={() => {
-            if (activeIdx === 2) {
-              handleClick(-1);
-            } else if (addr.address) {
-              handleClick(2);
-            } else {
-              alert("주소를 입력해주세요");
-              handleClick(-1);
-            }
+            handleClick(-1);
+            isOpen ? onClose() : onOpen();
           }}
         >
           <Box>
@@ -500,29 +531,25 @@ const ToggleButtonGroup = () => {
         transform="translateX(-50%)"
         direction="column"
       >
-        <Button
-          variant="filterTopMain"
-          onClick={() => {
-            isOpen ? onClose() : onOpen();
-          }}
-        >
-          {addr.address || "주소를 검색하세요."}
-        </Button>
-        <DecoTop width="13rem" />
         {/* ------------------------------ 모달 ------------------------------*/}
         <ModalDaumAddr
           isOpen={isOpen}
-          onClose={onClose}
+          onClose={() => {
+            onClose();
+            if (addr.address && !isAddrOpen) onAddrOpen();
+          }}
           onComplete={addrSlctHandler}
         />
         {isConOpen && cursorPo && activeIdx !== -1 && (
           <OverlayView id={`confirmBox`} position={cursorPo} pane="floatPane">
             <Flex
+              as={motion.div}
+              animation={alertAnimation}
               pos="relative"
               top="0.5rem"
               left="0.5rem"
               p="1rem"
-              w="fit-content"
+              w="13rem"
               direction="column"
               gap="0.5rem"
               bgColor="#FFFFFFD9"
@@ -530,26 +557,68 @@ const ToggleButtonGroup = () => {
               borderColor="neutral.gray6"
               borderRadius="base"
             >
-              <Flex
-                w="13.375rem"
-                justify="flex-start"
-                align="center"
-                gap="0.5rem"
-                textStyle="base"
-                fontSize="sm"
-                fontWeight="regular"
-                color="font.primary"
-              >
-                <IcoExclamationCircle color="primary.type7" />
-                영역을 지정하시겠습니까?
+              <Flex gap="0.5rem">
+                <Flex pt="0.25rem">
+                  {activeIdx === 0 && !addr?.address ? (
+                    <IcoPolyline
+                      width="0.875rem"
+                      height="0.875rem"
+                      color="primary.type8"
+                    />
+                  ) : activeIdx === 1 && !addr?.address ? (
+                    <IcoLineCurve
+                      width="0.875rem"
+                      height="0.875rem"
+                      color="primary.type8"
+                    />
+                  ) : (
+                    <IcoDistance
+                      width="0.875rem"
+                      height="0.875rem"
+                      color="primary.type8"
+                    />
+                  )}
+                </Flex>
+                <Flex
+                  p="0"
+                  direction="column"
+                  justify="flex-start"
+                  align="flex-start"
+                >
+                  <Text
+                    textStyle="base"
+                    fontSize="sm"
+                    fontWeight="strong"
+                    color="font.primary"
+                    lineHeight="normal"
+                  >
+                    {activeIdx === 0 ? "그리기" : "반경"}
+                  </Text>
+                  <Text
+                    textStyle="base"
+                    fontSize="sm"
+                    fontWeight="regular"
+                    color="font.primary"
+                    lineHeight="normal"
+                  >
+                    영역을 지정하시겠습니까?
+                  </Text>
+                </Flex>
               </Flex>
               <Flex justify="flex-end" align="center" gap="0.5rem">
                 <Button
                   variant="infoBox"
                   aria-label="다시 그리기"
                   onClick={() => {
-                    resetDraw();
-                    onConClose();
+                    if (activeIdx === 2 || addr.address) {
+                      onAddrOpen();
+                      // resetDraw();
+                      handleClick(-1, true);
+                      onConClose();
+                    } else {
+                      resetDraw();
+                      onConClose();
+                    }
                   }}
                 >
                   <Text>다시 그리기</Text>
@@ -647,7 +716,7 @@ const ToggleButtonGroup = () => {
                     }
                   }}
                 >
-                  <Text>설정완료</Text>
+                  <Text>영역지정</Text>
                 </Button>
               </Flex>
             </Flex>
@@ -661,23 +730,160 @@ const ToggleButtonGroup = () => {
             anchorPoint={{ x: 16, y: 16 }}
           >
             <Flex
+              as={motion.div}
               pos="relative"
               p="1rem"
-              w="18rem"
-              bgColor="#FFFFFFD9"
+              w="18.6rem"
               justify="flex-start"
-              align="center"
+              align="flex-start"
+              bgColor="#FFFFFFD9"
               gap="0.5rem"
               border="1px solid"
               borderColor="neutral.gray6"
               borderRadius="base"
-              textStyle="base"
-              fontSize="sm"
-              fontWeight="regular"
-              color="font.primary"
+              transition="0.3s"
             >
-              <IcoExclamationCircle color="primary.type7" />
-              완료되셨으면 마우스 우측을 눌러주세요
+              <Flex pt="0.25rem">
+                {activeIdx === 0 && !addr?.address ? (
+                  <IcoPolyline
+                    width="0.875rem"
+                    height="0.875rem"
+                    color="#000000"
+                  />
+                ) : activeIdx === 1 && !addr?.address ? (
+                  <IcoLineCurve
+                    width="0.875rem"
+                    height="0.875rem"
+                    color="#000000"
+                  />
+                ) : (
+                  <IcoDistance
+                    width="0.875rem"
+                    height="0.875rem"
+                    color="#000000"
+                  />
+                )}
+              </Flex>
+              <Flex
+                p="0"
+                direction="column"
+                justify="flex-start"
+                align="flex-start"
+              >
+                <Text
+                  textStyle="base"
+                  fontSize="sm"
+                  fontWeight="strong"
+                  lineHeight="normal"
+                  transition="0.3s"
+                  color={
+                    activeIdx !== 0 && distance > 1000
+                      ? "system.default.red"
+                      : "font.primary"
+                  }
+                >
+                  {activeIdx === 0 ? "그리기" : `반경 ${distance}m`}
+                </Text>
+                {activeIdx !== 0 && distance > 1000 && (
+                  <Text
+                    textStyle="base"
+                    fontSize="sm"
+                    fontWeight="regular"
+                    lineHeight="normal"
+                    transition="0.3s"
+                    color={
+                      activeIdx !== 0 && distance > 1000
+                        ? "system.default.red"
+                        : "font.primary"
+                    }
+                  >
+                    1000m를 넘기실 수 없습니다.
+                  </Text>
+                )}
+                <Text
+                  textStyle="base"
+                  fontSize="sm"
+                  fontWeight="regular"
+                  color="font.primary"
+                  lineHeight="normal"
+                >
+                  마우스 오른쪽 버튼으로 마칠 수 있습니다.
+                </Text>
+              </Flex>
+            </Flex>
+          </OverlayView>
+        )}
+        {isAddrOpen && addr?.address && (
+          <OverlayView
+            id={`infoBox`}
+            position={{ x: addr.point.lng, y: addr.point.lat }}
+            pane="floatPane"
+            anchorPoint={{ x: 16, y: -30 }}
+          >
+            <Flex
+              as={motion.div}
+              animation={alertAnimation}
+              pos="relative"
+              p="1rem"
+              w="22rem"
+              direction="column"
+              bgColor="#FFFFFFD9"
+              justify="center"
+              align="flex-start"
+              gap="0.5rem"
+              border="1px solid"
+              borderColor="neutral.gray6"
+              borderRadius="base"
+            >
+              <Flex align="center" gap="0.5rem">
+                <IcoDistance
+                  width="0.875rem"
+                  height="0.875rem"
+                  color="primary.type7"
+                />
+                <Text
+                  textStyle="base"
+                  fontSize="sm"
+                  fontWeight="strong"
+                  color="font.primary"
+                >
+                  현재 주소지: {addr.address}
+                </Text>
+              </Flex>
+              <Flex gap="0.5rem" ml="0.5rem">
+                <Button
+                  variant="infoBox"
+                  aria-label="주소 재지정"
+                  onClick={() => {
+                    onAddrClose();
+                    isOpen ? onClose() : onOpen();
+                  }}
+                >
+                  <Text>주소지 재지정</Text>
+                </Button>
+                <Button
+                  variant="infoBox"
+                  isActive
+                  aria-label="주소위치 영역그리기"
+                  onClick={() => {
+                    onAddrClose();
+                    handleClick(0, true);
+                  }}
+                >
+                  <Text>영역그리기</Text>
+                </Button>
+                <Button
+                  variant="infoBox"
+                  isActive
+                  aria-label="주소반경 그리기"
+                  onClick={() => {
+                    onAddrClose();
+                    handleClick(2, true);
+                  }}
+                >
+                  <Text>주소지 반경 설정</Text>
+                </Button>
+              </Flex>
             </Flex>
           </OverlayView>
         )}

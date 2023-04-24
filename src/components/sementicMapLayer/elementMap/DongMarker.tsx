@@ -610,7 +610,7 @@ const DongMarker = ({
                 height="11"
                 transform="rotate(-135 8.48523 16.2636)"
                 fill="white"
-                fill-opacity="0.5"
+                fillOpacity="0.5"
                 stroke="#BFBFBF"
               />
               <rect
@@ -652,7 +652,7 @@ const DongMarker = ({
                 height="7"
                 transform="rotate(-45 0.707107 5.65674)"
                 fill="white"
-                fill-opacity="0.5"
+                fillOpacity="0.5"
                 stroke="#595959"
               />
             </svg>

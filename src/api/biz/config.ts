@@ -39,6 +39,7 @@ import {
   MAP_UPJONG_TOP,
   MAP_UPJONG_MID,
   MAP_UPJONG_BOT,
+  MAP_NICE_FLOWPOP,
 } from "@api/biz/url";
 //  Type
 import {
@@ -52,6 +53,7 @@ import {
   TypeMapDong,
   TypeUpjongGet,
   TypeUpjongPost,
+  TypeSigunguRank,
 } from "@api/biz/type";
 
 let localStorage = window.localStorage;
@@ -179,6 +181,14 @@ const apiMapArea = {
     ),
 };
 
+const apiMapNice = {
+  getSigunguRank: (req: TypeSigunguRank["req"]) =>
+    instance.post<TypeSigunguRank["req"], TypeSigunguRank["res"]>(
+      MAP_NICE_FLOWPOP,
+      req
+    ),
+};
+
 const apiUpjong = {
   getTopList: () => instance.get<TypeUpjongGet["res"]>(MAP_UPJONG_TOP),
   getMidList: (req: TypeUpjongPost["req"]) =>
@@ -208,5 +218,6 @@ export {
   apiErpMap,
   apiCommon,
   apiMapArea,
+  apiMapNice,
   apiUpjong,
 };

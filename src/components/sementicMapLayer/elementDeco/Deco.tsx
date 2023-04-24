@@ -276,6 +276,7 @@ const DecoFrameL = ({
       direction="column"
       justify="space-between"
       pointerEvents="fill"
+      zIndex={2}
       {...rest}
     >
       <Box
@@ -358,6 +359,7 @@ const DecoFrameR = ({
       direction="column"
       justify="space-between"
       pointerEvents="fill"
+      zIndex={2}
       {...rest}
     >
       <Box
@@ -378,7 +380,13 @@ const DecoFrameR = ({
 };
 
 //  중앙 포커스 라운드
-const DecoFrameCenter = () => {
+const DecoFrameCenter = ({
+  isOpen = true,
+  activeAni = true,
+}: {
+  isOpen?: boolean;
+  activeAni?: boolean;
+}) => {
   const boxRef = useRef<HTMLDivElement | null>(null);
 
   return (
@@ -390,6 +398,7 @@ const DecoFrameCenter = () => {
       direction="row"
       justify="space-between"
       gap="0.625rem"
+      zIndex={1}
       _before={{
         content: '""',
         pos: "absolute",
@@ -444,131 +453,56 @@ const DecoFrameCenter = () => {
         }}
       />
       {/* 중앙 박스 */}
-      <Flex ref={boxRef} pos="relative" w="100%" h="auto" pointerEvents="none">
+      <Flex
+        ref={boxRef}
+        pos="relative"
+        w="100%"
+        h="auto"
+        zIndex={-1}
+        pointerEvents="none"
+      >
         {/* 중앙 원형 */}
-        <Box
-          as={motion.div}
-          pos="absolute"
-          top="50%"
-          left="50%"
-          transform="translate(-50%, -50%)"
-          borderRadius="50%"
-          border="1px solid"
-          borderColor="#26232380"
-          boxShadow="0px 0px 10px 2px #00000040"
-          // transition="0.2s ease"
-          initial={{
-            width: 0,
-            height: 0,
-            maxWidth: "70vh",
-            maxHeight: "70vh",
-          }}
-          animate={{
-            width: "60vw",
-            height: "60vw",
-            maxWidth: "70vh",
-            maxHeight: "70vh",
-          }}
-          exit={{
-            width: "60vw",
-            height: "60vw",
-            maxWidth: "70vh",
-            maxHeight: "70vh",
-          }}
-        >
-          {/* 중앙 미들 원형 */}
+        {isOpen && (
           <Box
             as={motion.div}
             pos="absolute"
             top="50%"
             left="50%"
             transform="translate(-50%, -50%)"
-            w="93%"
-            h="93%"
-            transition="0.3s 0.2s linear"
+            borderRadius="50%"
+            border="1px solid"
+            borderColor="#26232380"
+            boxShadow="0px 0px 10px 2px #00000040"
+            // transition="0.2s ease"
             initial={{
-              opacity: 0,
+              width: 0,
+              height: 0,
+              maxWidth: "70vh",
+              maxHeight: "70vh",
             }}
             animate={{
-              opacity: 1,
+              width: "60vw",
+              height: "60vw",
+              maxWidth: "70vh",
+              maxHeight: "70vh",
+            }}
+            exit={{
+              width: "60vw",
+              height: "60vw",
+              maxWidth: "70vh",
+              maxHeight: "70vh",
             }}
           >
-            <DecoCenterBox03
-              pos="absolute"
-              top="50%"
-              left="50%"
-              transform="translate(-50%, -48%)"
-              width="100%"
-              height="100%"
-              filter="drop-shadow(0px 0px 4px #00000080)"
-            />
-            {/* 중앙 좌측 미들 박스 */}
-            <Flex
-              as={motion.div}
-              pos="absolute"
-              top="0"
-              left="0"
-              width="100%"
-              height="100%"
-              transition="0.2s 0.5s linear"
-              initial={{
-                transform: "rotate(0deg)",
-              }}
-              animate={{
-                transform: "rotate(-90deg)",
-              }}
-            >
-              <DecoCenterBox
-                position="absolute"
-                bottom="-32%"
-                left="50%"
-                transform="translateX(-52%) rotate(271.4deg)"
-                width="92%"
-                height="92%"
-                filter="drop-shadow(0px 0px 10px #00000040)"
-              />
-            </Flex>
-            {/* 중앙 우측 미들 박스 */}
-            <Flex
-              as={motion.div}
-              pos="absolute"
-              top="0"
-              left="0"
-              width="100%"
-              height="100%"
-              transition="0.3s 0.5s linear"
-              initial={{
-                transform: "rotate(0deg)",
-              }}
-              animate={{
-                transform: "rotate(84deg)",
-              }}
-            >
-              <DecoCenterBox
-                position="absolute"
-                bottom="-32%"
-                left="50%"
-                transform="translateX(-52%) rotate(271.4deg)"
-                width="92%"
-                height="92%"
-                filter="drop-shadow(0px 0px 10px #00000040)"
-              />
-            </Flex>
-            {/* 중앙 중심 원형 */}
+            {/* 중앙 미들 원형 */}
             <Box
               as={motion.div}
               pos="absolute"
               top="50%"
               left="50%"
               transform="translate(-50%, -50%)"
-              w="90%"
-              h="90%"
-              borderRadius="50%"
-              border="3px solid"
-              borderColor="#26232380"
-              borderTop="none"
-              borderBottom="none"
-              transition="0.3s 0.6s linear"
+              w="93%"
+              h="93%"
+              transition="0.3s 0.2s linear"
               initial={{
                 opacity: 0,
               }}
@@ -576,6 +510,16 @@ const DecoFrameCenter = () => {
                 opacity: 1,
               }}
             >
+              <DecoCenterBox03
+                pos="absolute"
+                top="50%"
+                left="50%"
+                transform="translate(-50%, -48%)"
+                width="100%"
+                height="100%"
+                filter="drop-shadow(0px 0px 4px #00000080)"
+              />
+              {/* 중앙 좌측 미들 박스 */}
               <Flex
                 as={motion.div}
                 pos="absolute"
@@ -583,63 +527,137 @@ const DecoFrameCenter = () => {
                 left="0"
                 width="100%"
                 height="100%"
-                transition="0.3s 0.9s linear"
+                transition="0.2s 0.5s linear"
                 initial={{
                   transform: "rotate(0deg)",
                 }}
                 animate={{
-                  transform: "rotate(89deg)",
+                  transform: "rotate(-90deg)",
                 }}
               >
-                <DecoCenterBox02
-                  pos="absolute"
-                  top="-2%"
+                <DecoCenterBox
+                  position="absolute"
+                  bottom="-32%"
                   left="50%"
-                  transform="translateX(-50%) rotate(1.5deg)"
-                  width="50%"
-                  height="8%"
+                  transform="translateX(-52%) rotate(271.4deg)"
+                  width="92%"
+                  height="92%"
                   filter="drop-shadow(0px 0px 10px #00000040)"
                 />
               </Flex>
+              {/* 중앙 우측 미들 박스 */}
               <Flex
                 as={motion.div}
                 pos="absolute"
-                bottom="0"
+                top="0"
                 left="0"
                 width="100%"
                 height="100%"
-                transition="0.3s 0.9s linear"
+                transition="0.3s 0.5s linear"
                 initial={{
                   transform: "rotate(0deg)",
                 }}
                 animate={{
-                  transform: "rotate(89deg)",
+                  transform: "rotate(84deg)",
                 }}
               >
-                <DecoCenterBox02
-                  pos="absolute"
-                  bottom="-2%"
+                <DecoCenterBox
+                  position="absolute"
+                  bottom="-32%"
                   left="50%"
-                  transform="translateX(-50%) rotate(181.5deg)"
-                  width="50%"
-                  height="8%"
-                  filter="drop-shadow(0px 0px 10px 0px #00000040)"
+                  transform="translateX(-52%) rotate(271.4deg)"
+                  width="92%"
+                  height="92%"
+                  filter="drop-shadow(0px 0px 10px #00000040)"
                 />
               </Flex>
+              {/* 중앙 중심 원형 */}
               <Box
+                as={motion.div}
                 pos="absolute"
                 top="50%"
                 left="50%"
                 transform="translate(-50%, -50%)"
-                w="95%"
-                h="95%"
+                w="90%"
+                h="90%"
                 borderRadius="50%"
-                border="1px dashed"
+                border="3px solid"
                 borderColor="#26232380"
-              />
+                borderTop="none"
+                borderBottom="none"
+                transition="0.3s 0.6s linear"
+                initial={{
+                  opacity: 0,
+                }}
+                animate={{
+                  opacity: 1,
+                }}
+              >
+                <Flex
+                  as={motion.div}
+                  pos="absolute"
+                  top="0"
+                  left="0"
+                  width="100%"
+                  height="100%"
+                  transition="0.3s 0.9s linear"
+                  initial={{
+                    transform: "rotate(0deg)",
+                  }}
+                  animate={{
+                    transform: "rotate(89deg)",
+                  }}
+                >
+                  <DecoCenterBox02
+                    pos="absolute"
+                    top="-2%"
+                    left="50%"
+                    transform="translateX(-50%) rotate(1.5deg)"
+                    width="50%"
+                    height="8%"
+                    filter="drop-shadow(0px 0px 10px #00000040)"
+                  />
+                </Flex>
+                <Flex
+                  as={motion.div}
+                  pos="absolute"
+                  bottom="0"
+                  left="0"
+                  width="100%"
+                  height="100%"
+                  transition="0.3s 0.9s linear"
+                  initial={{
+                    transform: "rotate(0deg)",
+                  }}
+                  animate={{
+                    transform: "rotate(89deg)",
+                  }}
+                >
+                  <DecoCenterBox02
+                    pos="absolute"
+                    bottom="-2%"
+                    left="50%"
+                    transform="translateX(-50%) rotate(181.5deg)"
+                    width="50%"
+                    height="8%"
+                    filter="drop-shadow(0px 0px 10px 0px #00000040)"
+                  />
+                </Flex>
+                <Box
+                  pos="absolute"
+                  top="50%"
+                  left="50%"
+                  transform="translate(-50%, -50%)"
+                  w="95%"
+                  h="95%"
+                  borderRadius="50%"
+                  border="1px dashed"
+                  borderColor="#26232380"
+                />
+              </Box>
             </Box>
           </Box>
-        </Box>
+        )}
       </Flex>
       {/* 우측 박스 */}
       <Box

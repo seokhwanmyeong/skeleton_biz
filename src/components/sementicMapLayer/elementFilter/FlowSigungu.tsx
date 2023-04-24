@@ -8,6 +8,8 @@ import UpjongListBox from "@components/sementicMapLayer/elementFilter/UpjongList
 import NiceFilter from "@components/sementicMapLayer/elementFilter/NiceFilter";
 import BtnReset from "@components/sementicMapLayer/elementFilter/BtnReset";
 import BtnBack from "@components/sementicMapLayer/elementFilter/BtnBack";
+import { BoxRanking } from "@components/sementicMapLayer/elementFilter/BoxRanking";
+
 //  Api
 import { apiMapArea } from "@api/biz/config";
 //  State
@@ -52,7 +54,6 @@ const FlowSigungu = () => {
   // };
 
   const pathTransHandler = (areaList: AreaProps[]) => {
-    console.log(areaList);
     return areaList.map((area, idx: number) => {
       const paths = area.path.map((latLng: [number, number][]) => {
         return latLng.map((depth: any) => {
@@ -124,7 +125,7 @@ const FlowSigungu = () => {
 
   useEffect(() => {
     getDongHandler();
-  }, [sigungu]);
+  }, [sigungu?.slctCode]);
 
   return (
     <>
@@ -182,9 +183,39 @@ const FlowSigungu = () => {
       </Flex>
       {/* --------------------------- 중단 Frame ---------------------------*/}
       <Flex w="100%" h="100%" zIndex={1} gap="0.625rem" pointerEvents="none">
-        <DecoFrameL>test</DecoFrameL>
+        <DecoFrameL pl="1rem" align="flex-end">
+          <Flex
+            p="2px 0"
+            maxW="19.25rem"
+            h="100%"
+            direction="column"
+            justify="space-between"
+            gap="2px"
+          >
+            <BoxRanking />
+            <BoxRanking />
+            <BoxRanking />
+            <BoxRanking />
+            <BoxRanking />
+          </Flex>
+        </DecoFrameL>
         <DecoFrameCenter />
-        <DecoFrameR>test</DecoFrameR>
+        <DecoFrameR pr="1rem">
+          <Flex
+            p="2px 0"
+            maxW="19.25rem"
+            h="100%"
+            direction="column"
+            justify="space-between"
+            gap="2px"
+          >
+            <BoxRanking direction="right" />
+            <BoxRanking direction="right" />
+            <BoxRanking direction="right" />
+            <BoxRanking direction="right" />
+            <BoxRanking direction="right" />
+          </Flex>
+        </DecoFrameR>
       </Flex>
       {/* ------------------------------ 하단 ------------------------------*/}
       <Flex

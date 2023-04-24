@@ -27,9 +27,16 @@ const FlowInit = () => {
     <Fragment>
       {/* ------------------------------ 상단 ------------------------------*/}
       {/* --------------------------- 중단 Frame ---------------------------*/}
-      <Flex w="100%" h="100%" zIndex={1} gap="0.625rem" pointerEvents="none">
-        <DecoFrameL pl="1rem">
-          <Flex p="2px 0" h="100%" direction="column" gap="2px">
+      {/* <Flex w="100%" h="100%" zIndex={1} gap="0.625rem" pointerEvents="none">
+        <DecoFrameL pl="1rem" align="flex-end">
+          <Flex
+            p="2px 0"
+            w="19.25rem"
+            h="100%"
+            direction="column"
+            justify="space-between"
+            gap="2px"
+          >
             <BoxRanking />
             <BoxRanking />
             <BoxRanking />
@@ -39,7 +46,14 @@ const FlowInit = () => {
         </DecoFrameL>
         <DecoFrameCenter />
         <DecoFrameR pr="1rem">
-          <Flex p="2px 0" h="100%" direction="column" gap="2px">
+          <Flex
+            p="2px 0"
+            w="19.25rem"
+            h="100%"
+            direction="column"
+            justify="space-between"
+            gap="2px"
+          >
             <BoxRanking direction="right" />
             <BoxRanking direction="right" />
             <BoxRanking direction="right" />
@@ -48,11 +62,11 @@ const FlowInit = () => {
           </Flex>
         </DecoFrameR>
         <ModalBuilding onClose={onClose} isOpen={isOpen} />
-      </Flex>
+      </Flex> */}
       {/* ------------------------------ 하단 ------------------------------*/}
       <DecoBotBox>
         <FlowController />
-        <NiceFilter areaCode={"11010"} />
+        {/* <NiceFilter areaCode={"11010"} /> */}
       </DecoBotBox>
     </Fragment>
   );

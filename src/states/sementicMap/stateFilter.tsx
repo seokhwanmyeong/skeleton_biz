@@ -68,7 +68,7 @@ export const atomUpjongBotList = atom<any[]>({
 export const infoComFloatPop = atom<{
   filter: any;
   data: any;
-  search: "on" | "off";
+  show: boolean;
   active: boolean;
 }>({
   key: "infoComFloatPop",
@@ -78,7 +78,7 @@ export const infoComFloatPop = atom<{
       age: [],
     },
     data: {},
-    search: "off",
+    show: false,
     active: false,
   },
 });
@@ -86,7 +86,7 @@ export const infoComFloatPop = atom<{
 export const infoComResiPop = atom<{
   filter: any;
   data: any;
-  search: "on" | "off";
+  show: boolean;
   active: boolean;
 }>({
   key: "infoComResiPop",
@@ -96,7 +96,7 @@ export const infoComResiPop = atom<{
       age: [],
     },
     data: {},
-    search: "off",
+    show: false,
     active: false,
   },
 });
@@ -104,7 +104,7 @@ export const infoComResiPop = atom<{
 export const infoComJobPop = atom<{
   filter: any;
   data: any;
-  search: "on" | "off";
+  show: boolean;
   active: boolean;
 }>({
   key: "infoComJobPop",
@@ -114,46 +114,46 @@ export const infoComJobPop = atom<{
       age: [],
     },
     data: {},
-    search: "off",
+    show: false,
     active: false,
   },
 });
 
 export const infoComHousehold = atom<{
   data: any;
-  search: "on" | "off";
+  show: boolean;
   active: boolean;
 }>({
   key: "infoComHousehold",
   default: {
     data: {},
-    search: "off",
+    show: false,
     active: false,
   },
 });
 
 export const infoComSale = atom<{
   data: any;
-  search: "on" | "off";
+  show: boolean;
   active: boolean;
 }>({
   key: "infoComSale",
   default: {
     data: {},
-    search: "off",
+    show: false,
     active: false,
   },
 });
 
 export const infoComUpjongCnt = atom<{
   data: any;
-  search: "on" | "off";
+  show: boolean;
   active: boolean;
 }>({
   key: "infoComUpjongCnt",
   default: {
     data: {},
-    search: "off",
+    show: false,
     active: false,
   },
 });
@@ -193,6 +193,39 @@ export const dataCollector = selector({
     };
   },
   set: ({ set, reset }) => {},
+});
+
+//  나머지 filter getter
+export const filterFlowPopCollector = selector({
+  key: "filterCollector",
+  get: ({ get }) => {},
+  set: ({ set, get }) => {
+    const resi = get(infoComResiPop);
+    const job = get(infoComJobPop);
+    const house = get(infoComHousehold);
+    const sale = get(infoComSale);
+    const ubjongCnt = get(infoComUpjongCnt);
+
+    return {
+      resiPop: {
+        active: resi.active,
+        ...resi.filter,
+      },
+      jobPop: {
+        active: job.active,
+        ...job.filter,
+      },
+      sale: {
+        active: sale.active,
+      },
+      upjongCnt: {
+        active: ubjongCnt.active,
+      },
+      house: {
+        active: house.active,
+      },
+    };
+  },
 });
 
 // ==================== Nice : Depth 필터 리스트 ====================

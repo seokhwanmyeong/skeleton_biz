@@ -1,5 +1,5 @@
 //  Lib
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Formik, Form, Field } from "formik";
 import {
   Flex,
@@ -27,7 +27,6 @@ const FormLogin = forwardRef(
     const [capsShow, setCapsShow] = useState(false);
 
     const checkCapsLock = (e: any) => {
-      console.log(e);
       e.getModifierState("CapsLock")
         ? !capsShow && setCapsShow(true)
         : capsShow && setCapsShow(false);
@@ -45,6 +44,20 @@ const FormLogin = forwardRef(
         </Flex>
       );
     };
+
+    useEffect(() => {
+      const onKeyDown = (event: KeyboardEvent) =>
+        setCapsShow(
+          (pToggled) => event.getModifierState?.("CapsLock") ?? pToggled
+        );
+
+      document.addEventListener("keydown", onKeyDown);
+
+      return () => {
+        document.removeEventListener("keydown", onKeyDown);
+        setCapsShow(false);
+      };
+    }, []);
 
     return (
       <Formik
@@ -93,6 +106,7 @@ const FormLogin = forwardRef(
                         >
                           <Input
                             onKeyUp={checkCapsLock}
+                            onKeyDown={checkCapsLock}
                             zIndex="1"
                             w="100%"
                             h="2.5rem"
@@ -148,6 +162,7 @@ const FormLogin = forwardRef(
                         >
                           <InputPwd
                             onKeyUp={checkCapsLock}
+                            onKeyDown={checkCapsLock}
                             name="password"
                             value={form.getFieldProps("password").value}
                             onChange={(val: any) => {

@@ -25,7 +25,7 @@ interface BixApiInstance extends AxiosInstance {
 
 type TypeLogin = {
   req: {
-    username: string;
+    email: string;
     password: string;
   };
   res: {
@@ -140,6 +140,38 @@ type TypeUpjongPost = {
   };
 };
 
+type TypeSigunguRank = {
+  req: {
+    upjongCode: string;
+    code: string;
+    flowPop: {
+      active: boolean;
+      gender: ["man", "woman"];
+      age: ["20", "30", "40", "50", "60"];
+    };
+    resiPop: {
+      active: boolean;
+      gender: ["man", "woman"];
+      age: ["20", "30", "40", "50", "60"];
+    };
+    jobPop: {
+      active: boolean;
+      gender: ["man", "woman"];
+      age: ["20", "30", "40", "50", "60"];
+    };
+    sale: {
+      active: boolean;
+    };
+    upjongCnt: {
+      active: boolean;
+    };
+    house: {
+      active: boolean;
+    };
+  };
+  res: any;
+};
+
 export type {
   BixApiInstance,
   TypeLogin,
@@ -151,4 +183,5 @@ export type {
   TypeMapDong,
   TypeUpjongGet,
   TypeUpjongPost,
+  TypeSigunguRank,
 };

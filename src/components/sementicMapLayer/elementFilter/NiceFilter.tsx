@@ -25,14 +25,12 @@ import {
   resetNice,
 } from "@states/sementicMap/stateFilter";
 //  Api
+import { apiMapNice } from "@api/biz/config";
 //  Icon
 import {
-  IcoAppStore,
-  IcoBank,
   IcoGroup,
   IcoNice2,
   IcoNice3,
-  IcoNice4,
   IcoResident,
   IcoRefresh,
   IcoFilter02,
@@ -48,6 +46,7 @@ type Props = {
 };
 
 const NiceFilter = ({ areaCode }: Props) => {
+  const { getSigunguRank } = apiMapNice;
   const divRef = useRef<HTMLDivElement | null>(null);
   const [openIdx, setOpenIdx] = useState(0);
   const { bot } = useRecoilValue(atomUpjongState);
@@ -64,32 +63,86 @@ const NiceFilter = ({ areaCode }: Props) => {
 
   //  유동인구 필터 변화 및 액티브
   const searchPopHandler = () => {
-    setFlowPop({ ...flowPop, filter: filterPop, search: "on", active: true });
+    setFlowPop({ ...flowPop, filter: filterPop, show: true, active: true });
+    getSigunguRank({
+      upjongCode: bot.code || "D11002",
+      code: areaCode,
+      flowPop: {
+        active: true,
+        gender: ["man", "woman"],
+        age: ["20", "30", "40", "50", "60"],
+      },
+      resiPop: {
+        active: true,
+        gender: ["man", "woman"],
+        age: ["20", "30", "40", "50", "60"],
+      },
+      jobPop: {
+        active: true,
+        gender: ["man", "woman"],
+        age: ["20", "30", "40", "50", "60"],
+      },
+      sale: {
+        active: true,
+      },
+      upjongCnt: {
+        active: true,
+      },
+      house: {
+        active: true,
+      },
+      // flowPop: {
+      //   active: true,
+      //   gender: ["man", "woman"],
+      //   age: ["age20", "age30", "age40", "age50", "age60"],
+      // },
+      // resiPop: {
+      //   active: true,
+      //   gender: ["man", "woman"],
+      //   age: ["age20", "age30", "age40", "age50", "age60"],
+      // },
+      // jobPop: {
+      //   active: true,
+      //   gender: ["man", "woman"],
+      //   age: ["age20", "age30", "age40", "age50", "age60"],
+      // },
+      // sale: {
+      //   active: true,
+      // },
+      // upjongCnt: {
+      //   active: true,
+      // },
+      // house: {
+      //   active: true,
+      // },
+    }).then((res: any) => {
+      console.log(res);
+    });
   };
 
   //  거주인구 필터 변화 및 액티브
   const searchResiHandler = () => {
-    setResiPop({ ...resiPop, filter: filterResi, search: "on", active: true });
+    setResiPop({ ...resiPop, filter: filterResi, show: true, active: true });
   };
 
   //  직장인구 필터 변화 및 액티브
   const searchJobHandler = () => {
-    setJobPop({ ...jobPop, filter: filterJob, search: "on", active: true });
+    setJobPop({ ...jobPop, filter: filterJob, show: true, active: true });
   };
 
   //  세대수 필터 변화 및 액티브
   const searchHouseHandler = () => {
-    setHouse({ ...household, search: "on", active: true });
+    setHouse({ ...household, show: true, active: true });
   };
 
   //  매출액 필터 변화 및 액티브
   const searchSaleHandler = () => {
-    setSale({ ...sale, search: "on", active: true });
+    setSale({ ...sale, show: true, active: true });
   };
 
   //  업종수 필터 변화 및 액티브
   const searchUpjongHandler = () => {
-    setUpjong({ ...upjongCnt, search: "on", active: true });
+    setUpjong({ ...upjongCnt, show: true, active: true });
   };
 
   return (
@@ -219,10 +272,10 @@ const NiceFilter = ({ areaCode }: Props) => {
             </Flex>
             <Flex align="center" gap="0.5rem">
               <SwitchFilter
-                isDisabled={flowPop.search === "off"}
-                isChecked={flowPop.active}
+                isDisabled={!flowPop.active}
+                isChecked={flowPop.show}
                 onChange={() => {
-                  setFlowPop({ ...flowPop, active: !flowPop.active });
+                  setFlowPop({ ...flowPop, show: !flowPop.show });
                 }}
               />
               <BtnFilterSearch
@@ -330,10 +383,10 @@ const NiceFilter = ({ areaCode }: Props) => {
             </Flex>
             <Flex align="center" gap="0.5rem">
               <SwitchFilter
-                isDisabled={resiPop.search === "off"}
-                isChecked={resiPop.active}
+                isDisabled={!resiPop.active}
+                isChecked={resiPop.show}
                 onChange={() => {
-                  setResiPop({ ...resiPop, active: !resiPop.active });
+                  setResiPop({ ...resiPop, show: !resiPop.show });
                 }}
               />
               <BtnFilterSearch
@@ -433,7 +486,7 @@ const NiceFilter = ({ areaCode }: Props) => {
           border="1px solid #BFBFBF"
         >
           <Flex justify="space-between">
-            <Flex pl="0.25rem" align="center" gap="1rem">
+            <Flex pl="0.25rem" align="center" gap="0.5rem">
               <IcoNice3 width="1rem" height="1rem" color="font.primary" />
               <Heading as={"h5"} variant="filterBox">
                 직장인구
@@ -441,10 +494,10 @@ const NiceFilter = ({ areaCode }: Props) => {
             </Flex>
             <Flex align="center" gap="0.5rem">
               <SwitchFilter
-                isDisabled={jobPop.search === "off"}
-                isChecked={jobPop.active}
+                isDisabled={!jobPop.active}
+                isChecked={jobPop.show}
                 onChange={() => {
-                  setJobPop({ ...jobPop, active: !jobPop.active });
+                  setJobPop({ ...jobPop, show: !jobPop.show });
                 }}
               />
               <BtnFilterSearch
@@ -557,10 +610,10 @@ const NiceFilter = ({ areaCode }: Props) => {
             </Flex>
             <Flex align="center" gap="0.5rem">
               <SwitchFilter
-                isDisabled={household.search === "off"}
-                isChecked={household?.active}
+                isDisabled={!household.active}
+                isChecked={household?.show}
                 onChange={() => {
-                  setHouse({ ...household, active: !household?.active });
+                  setHouse({ ...household, show: !household?.show });
                 }}
               />
               <BtnFilterSearch
@@ -593,12 +646,10 @@ const NiceFilter = ({ areaCode }: Props) => {
             >
               <Flex align="center" gap="0.5rem">
                 <SwitchFilter
-                  isDisabled={
-                    upjongCnt.search === "off" || (bot.code ? false : true)
-                  }
-                  isChecked={upjongCnt?.active}
+                  isDisabled={!upjongCnt.active || (bot.code ? false : true)}
+                  isChecked={upjongCnt?.show}
                   onChange={() => {
-                    setUpjong({ ...upjongCnt, active: !upjongCnt?.active });
+                    setUpjong({ ...upjongCnt, show: !upjongCnt?.show });
                   }}
                 />
                 <BtnFilterSearch
@@ -633,12 +684,10 @@ const NiceFilter = ({ areaCode }: Props) => {
             >
               <Flex align="center" gap="0.5rem">
                 <SwitchFilter
-                  isDisabled={
-                    sale.search === "off" || (bot.code ? false : true)
-                  }
-                  isChecked={sale?.active}
+                  isDisabled={!sale.active || (bot.code ? false : true)}
+                  isChecked={sale?.show}
                   onChange={() => {
-                    setSale({ ...sale, active: !sale?.active });
+                    setSale({ ...sale, show: !sale?.show });
                   }}
                 />
                 <BtnFilterSearch

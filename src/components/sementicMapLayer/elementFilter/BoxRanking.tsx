@@ -20,9 +20,9 @@ const BoxRanking = ({ direction = "left" }: Props) => {
   return direction === "left" ? (
     <Flex
       pos="relative"
-      p="1rem 1.375rem 1rem"
+      p="1rem 1.375rem 0rem"
       w="100%"
-      h="20%"
+      h="fit-content"
       direction="column"
       border="1px solid"
       borderColor="neutral.gray6"
@@ -288,9 +288,9 @@ const BoxRanking = ({ direction = "left" }: Props) => {
   ) : (
     <Flex
       pos="relative"
-      p="1rem 1.375rem 1rem"
+      p="1rem 1.375rem 0rem"
       w="100%"
-      h="20%"
+      h="fit-content"
       direction="column"
       border="1px solid"
       borderColor="neutral.gray6"
@@ -561,7 +561,7 @@ const BoxRankingDong = () => {
     <Flex
       pos="relative"
       p="1rem 1.375rem 1rem"
-      w="100%"
+      w="19.25rem"
       direction="column"
       border="1px solid"
       borderColor="neutral.gray6"

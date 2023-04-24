@@ -38,7 +38,6 @@ const MapFlowCustom = (props: Props) => {
       }
     }
   }, [cutomArea]);
-  console.log(cutomArea);
 
   return (
     <>
