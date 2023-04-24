@@ -6,13 +6,16 @@ import { atomFilterFlow } from "@states/sementicMap/stateFilter";
 //  Icon
 import { IcoDoubleSquere, IcoErp, IcoFilter } from "@assets/icons/icon";
 //  Deco
-import { DecoFilterDivider } from "@components/sementicMapLayer/elementDeco/Deco";
+import {
+  DecoBotBox,
+  DecoFilterDivider,
+} from "@components/sementicMapLayer/elementDeco/Deco";
 
 const FlowController = () => {
   const setFlow = useSetRecoilState(atomFilterFlow);
 
   return (
-    <Fragment>
+    <DecoBotBox>
       <Button
         variant="filterTop"
         onClick={() => {
@@ -48,7 +51,7 @@ const FlowController = () => {
         </Box>
         브랜드 데이터
       </Button>
-    </Fragment>
+    </DecoBotBox>
   );
 };
 
