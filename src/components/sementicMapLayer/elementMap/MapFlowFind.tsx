@@ -534,6 +534,7 @@ const ToggleButtonGroup = () => {
         {/* ------------------------------ 모달 ------------------------------*/}
         <ModalDaumAddr
           isOpen={isOpen}
+          isCentered={true}
           onClose={() => {
             onClose();
             if (addr.address && !isAddrOpen) onAddrOpen();
@@ -782,7 +783,7 @@ const ToggleButtonGroup = () => {
                       : "font.primary"
                   }
                 >
-                  {activeIdx === 0 ? "그리기" : `반경 ${distance}m`}
+                  {activeIdx === 0 ? "그리기" : `반경 ${distance * 2}m`}
                 </Text>
                 {activeIdx !== 0 && distance > 1000 && (
                   <Text
@@ -898,7 +899,7 @@ const MapFlowFind = () => {
   useEffect(() => {
     state.map?.setOptions({
       minZoom: 0,
-      maxZoom: 16,
+      maxZoom: 22,
     });
   }, []);
 

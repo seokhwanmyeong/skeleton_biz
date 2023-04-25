@@ -6,12 +6,18 @@ type DaumAddrProps = {
   isOpen: boolean;
   onClose: () => void;
   onComplete: (props: any) => any;
+  isCentered?: boolean;
   style?: any;
 };
 
-const ModalDaumAddr = ({ isOpen, onClose, onComplete }: DaumAddrProps) => {
+const ModalDaumAddr = ({
+  isOpen,
+  onClose,
+  onComplete,
+  isCentered = false,
+}: DaumAddrProps) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} isCentered={isCentered} onClose={onClose}>
       <ModalContent w="50vw">
         <ModalBody
           p="0"
