@@ -11,12 +11,12 @@ import cubejsApi from "@api/cubeApi/config";
 import DebugObserver from "@util/debug/DebugObserver";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <StrictMode>
-    <RecoilRoot>
-      <DebugObserver />
-      <CubeProvider cubejsApi={cubejsApi}>
-        <App />
-      </CubeProvider>
-    </RecoilRoot>
-  </StrictMode>
+  <RecoilRoot>
+    <DebugObserver />
+    <CubeProvider cubejsApi={cubejsApi}>
+      <App />
+    </CubeProvider>
+  </RecoilRoot>
+  //   <StrictMode>
+  // </StrictMode>
 );
