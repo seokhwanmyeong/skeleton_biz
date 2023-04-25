@@ -34,7 +34,6 @@ const InteractArea = ({
   const { state, dispatch } = useContext(NaverMapContext);
   const [areaId] = useState("area" + num);
   const onMouseOverArea = (e: PointerEvent) => {
-    //console.log(name);
     const poly = state.objects.get(areaId) as naver.maps.Polygon;
     poly.setOptions({
       clickable: setClickable,
@@ -63,11 +62,6 @@ const InteractArea = ({
   const onMouseDownArea = (e: PointerEvent) => {
     onMouseDown && onMouseDown(e);
   };
-
-  useEffect(() => {
-    //const center = polylabel(path, 1.0);
-    //console.log();
-  }, []);
 
   return (
     <>

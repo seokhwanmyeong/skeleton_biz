@@ -61,6 +61,7 @@ const InteractDong = ({
     //const center = polylabel(path, 1.0);
     // console.log(state.objects);
   }, [num]);
+
   return (
     <>
       <Polygon

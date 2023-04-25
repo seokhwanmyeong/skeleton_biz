@@ -92,7 +92,6 @@ const ToggleButtonGroup = ({ toolOpen }: any) => {
   };
 
   const resetAllElement = () => {
-    console.log("unmount");
     markerRef.current.map((marker: any) => marker.setMap(null));
     markerRef.current = [];
     // poly?.setMap(null);
@@ -140,7 +139,6 @@ const ToggleButtonGroup = ({ toolOpen }: any) => {
     circleRef.current?.setRadius(0);
 
     if (idx === 0) {
-      console.log("폴리곤 그리기");
       const polyEvent = naver.maps.Event.addListener(
         state.map,
         "click",
@@ -195,13 +193,10 @@ const ToggleButtonGroup = ({ toolOpen }: any) => {
           state.map,
           "mousemove",
           (e) => {
-            console.log(e);
             if (markerAddrRef.current && e.latlng) {
               let point01 = markerAddrRef.current.getPosition();
               let point02 = e.latlng;
-
               distance = calDist(point01, point02);
-              console.log(distance);
               setDistance(distance);
             }
 
@@ -305,7 +300,6 @@ const ToggleButtonGroup = ({ toolOpen }: any) => {
       // @ts-ignore
       if (status === kakao.maps.services.Status.OK) {
         const { x, y } = result[0];
-        console.log(x, y);
         setAddr({
           address: address,
           point: {
@@ -548,7 +542,7 @@ const ToggleButtonGroup = ({ toolOpen }: any) => {
                   const path: any = polyRef.current?.getPath();
                   const bounds: any = polyRef.current?.getBounds();
                   const center: any = bounds?.getCenter();
-                  console.log(path);
+
                   if (!path || path.length - 1 <= 2) {
                     alert("영역을 제대로 설정해주세요");
                     return;
@@ -652,7 +646,7 @@ const DrawTools = ({ toolOpen }: any) => {
   useEffect(() => {
     state.map?.setOptions({
       minZoom: 0,
-      maxZoom: 16,
+      maxZoom: 22,
     });
   }, []);
 

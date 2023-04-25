@@ -26,6 +26,7 @@ import {
   DecoFrameR,
   DecoTop,
 } from "@components/sementicMapLayer/elementDeco/Deco";
+import sample from "@src/util/data/sampleBuilding";
 
 type Props = {};
 
@@ -84,7 +85,7 @@ const FlowDong = (props: Props) => {
                 onClick={() => {
                   state.map?.setOptions({
                     minZoom: 0,
-                    maxZoom: 16,
+                    maxZoom: 22,
                     scrollWheel: false,
                     draggable: false,
                     disableDoubleClickZoom: false,

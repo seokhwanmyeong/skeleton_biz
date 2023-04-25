@@ -126,7 +126,6 @@ const CheckboxGroup = ({
   const originArr = chkboxData.map((li) => li.value);
 
   const chkHandler = (val: (string | number)[]) => {
-    console.log(val);
     const exceptTotal = val.filter((l: string | number) => l !== "total");
 
     if (activeTotal) {
@@ -220,7 +219,7 @@ const CheckboxTagGroup = ({
 
   const chkHandler = (val: (string | number)[]) => {
     const exceptTotal = val.filter((l: string | number) => l !== "total");
-    console.log(val);
+
     if (activeTotal) {
       if (exceptTotal.length === originLength) {
         onChange(["total"]);
@@ -299,7 +298,7 @@ const FilterChkTagGroup = ({
 
   const chkHandler = (val: (string | number)[]) => {
     const exceptTotal = val.filter((l: string | number) => l !== "total");
-    console.log(val);
+
     if (activeTotal && val.includes("total")) {
       val.length <= chkboxData.length
         ? onChange(chkboxData.map((data) => data.value))

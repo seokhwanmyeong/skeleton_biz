@@ -19,9 +19,6 @@ const instance: BixApiInstance = axios.create({
 //  Daum Api interceptors
 instance.interceptors.request.use((req: any) => {
   const { url, data } = req;
-  // console.log("\nintercept Req\n", req);
-  // console.log("\nReq url\n", url);
-  // console.log("\nReq Data\n", data);
   return req;
 });
 

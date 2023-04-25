@@ -36,7 +36,7 @@ const BtnReset = ({ activeReset = true, onClick }: Props) => {
         if (activeReset) {
           state.map?.setOptions({
             minZoom: 0,
-            maxZoom: 16,
+            maxZoom: 22,
             scrollWheel: true,
             draggable: true,
             disableDoubleClickZoom: false,

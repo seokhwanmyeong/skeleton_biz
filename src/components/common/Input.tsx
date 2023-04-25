@@ -116,7 +116,6 @@ const Input = ({
       type={type}
       value={value}
       onChange={(e: any) => {
-        console.log(e.target.value);
         return onChange(e.target.value);
       }}
       variant={variant}
@@ -609,7 +608,6 @@ const InputImg = ({
   const fileRef = useRef<HTMLInputElement>(null);
   const [selectImg, setSelectImg] = useState<number>(0);
   const [imgList, setImgList] = useState<any[] | never[]>([]);
-  console.log(value);
   const uploadBtnHandler = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {

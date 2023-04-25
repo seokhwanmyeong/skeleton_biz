@@ -88,7 +88,6 @@ const UpjonListBox = ({
   const upjongMidHandler = (code: string) => {
     if (code) {
       getMidList({ code: code }).then((res: any) => {
-        console.log(res);
         if (res.data && res.data.length > 0) {
           setMidList(res.data);
           setTabIdx(1);
@@ -100,7 +99,6 @@ const UpjonListBox = ({
   const upjongBotHandler = (code: string) => {
     if (code) {
       getBotList({ code: code }).then((res: any) => {
-        console.log(res);
         if (res.data && res.data.length > 0) {
           setBotList(res.data);
           setTabIdx(2);
@@ -157,7 +155,7 @@ const UpjonListBox = ({
         <Box>
           <IcoAppStore />
         </Box>
-        업종
+        {bot.code && bot.name ? bot.name : "업종"}
       </Button>
       {isOpen && !isDisabled && (
         <DecoTopFilterModal isOpen={isOpen} w="29.5rem">

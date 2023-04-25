@@ -142,21 +142,21 @@ type TypeUpjongPost = {
 
 type TypeSigunguRank = {
   req: {
-    upjongCode: string;
+    upjongCd: string;
     code: string;
     flowPop: {
       active: boolean;
-      gender: ["man", "woman"];
+      sex: ("man" | "woman")[];
       age: ["20", "30", "40", "50", "60"];
     };
     resiPop: {
       active: boolean;
-      gender: ["man", "woman"];
+      sex: ("man" | "woman")[];
       age: ["20", "30", "40", "50", "60"];
     };
     jobPop: {
       active: boolean;
-      gender: ["man", "woman"];
+      sex: ("man" | "woman")[];
       age: ["20", "30", "40", "50", "60"];
     };
     sale: {

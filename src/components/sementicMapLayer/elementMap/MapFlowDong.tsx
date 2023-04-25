@@ -8,6 +8,7 @@ import DongPanel from "./DongPanel";
 //  Atom
 import { atomFilterFlow } from "@states/sementicMap/stateFilter";
 import { atomSlctDong } from "@states/sementicMap/stateMap";
+import sample from "@src/util/data/sampleBuilding";
 
 type Props = {};
 
@@ -19,7 +20,7 @@ const MapFlowDong = (props: Props) => {
     if (dong.slctPath) {
       state.map?.setOptions({
         minZoom: 0,
-        maxZoom: 16,
+        maxZoom: 22,
         scrollWheel: true,
         draggable: true,
         disableDoubleClickZoom: true,
@@ -34,7 +35,7 @@ const MapFlowDong = (props: Props) => {
         state.map?.setZoom(curZoom);
         state.map?.setOptions({
           minZoom: curZoom,
-          maxZoom: 16,
+          maxZoom: 22,
         });
       }
     }
@@ -43,6 +44,69 @@ const MapFlowDong = (props: Props) => {
   const dongTopData = useMemo(() => {
     return dong.slctData || [];
   }, [dong]);
+
+  const [sampleData, setSampleData] = useState<any>([]);
+
+  const createPolyHandler = (coordinates: any) => {
+    return coordinates[0].map((coordinate: any) => {
+      return coordinate.map((arr: any) => {
+        return new naver.maps.LatLng(arr[1], arr[0]);
+      });
+    });
+  };
+
+  useEffect(() => {
+    console.log(sampleData.length);
+    let bCnt = 0;
+    let polyList: any[] = [];
+
+    sampleData.map((data: any, idx: number) => {
+      if (!data?.buildings || data?.buildings?.length === 0) return;
+      const buildings = data?.buildings;
+      bCnt += buildings.length;
+
+      if (buildings.length > 1) {
+        const test = buildings.map((b: any) => {
+          if (b.geometry) {
+            const coordinates = b.geometry.coordinates;
+            const path = createPolyHandler(coordinates);
+            const poly = new naver.maps.Polygon({
+              map: state.map,
+              paths: path,
+              fillColor: "#36CFC9",
+              fillOpacity: 0.75,
+              strokeColor: "#FFFFFF",
+              strokeOpacity: 0.6,
+              strokeWeight: 1,
+            });
+            polyList.push(poly);
+          }
+        });
+      } else {
+        if (buildings[0].geometry) {
+          const coordinates = buildings[0].geometry.coordinates;
+          const path = createPolyHandler(coordinates);
+          const poly = new naver.maps.Polygon({
+            map: state.map,
+            paths: path,
+            fillColor: "#36CFC9",
+            fillOpacity: 0.75,
+            strokeColor: "#FFFFFF",
+            strokeOpacity: 0.6,
+            strokeWeight: 1,
+          });
+          polyList.push(poly);
+        }
+      }
+    });
+
+    console.log(bCnt);
+    console.log(polyList);
+  }, [sampleData]);
+
+  useEffect(() => {
+    setSampleData(sample);
+  }, []);
 
   return (
     <>

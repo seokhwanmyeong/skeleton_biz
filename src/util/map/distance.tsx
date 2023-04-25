@@ -16,4 +16,16 @@ const calDist = (point01: any, point02: any) => {
   return Math.round(ret); // 미터 단위
 };
 
-export { calDist };
+const calcPolyDistance = (paths: naver.maps.LatLng[]) => {
+  const origin = { _lat: paths[0]?.x, _lng: paths[0]?.y };
+  let longDistance = 0;
+
+  for (let i = 1; i < paths.length; i++) {
+    let distance = calDist(origin, { _lat: paths[i]?.x, _lng: paths[i]?.y });
+    longDistance = distance > longDistance ? distance : longDistance;
+  }
+
+  return longDistance;
+};
+
+export { calDist, calcPolyDistance };

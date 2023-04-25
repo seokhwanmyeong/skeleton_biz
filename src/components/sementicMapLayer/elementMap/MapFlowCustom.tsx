@@ -20,7 +20,7 @@ const MapFlowCustom = (props: Props) => {
     if (cutomArea.slctPath) {
       state.map?.setOptions({
         minZoom: 0,
-        maxZoom: 16,
+        maxZoom: 22,
       });
 
       state.map?.fitBounds(cutomArea.slctPath);
@@ -33,7 +33,7 @@ const MapFlowCustom = (props: Props) => {
 
         state.map?.setOptions({
           minZoom: curZoom,
-          maxZoom: 16,
+          maxZoom: 22,
         });
       }
     }

@@ -1,6 +1,7 @@
 //  Lib
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Box, Button, Flex, Image } from "@chakra-ui/react";
+import { NaverMapContext } from "@src/lib/src";
 //  Component
 import ToolRound from "@components/sementicMapLayer/toolBox/ToolRound";
 import ToolDistance from "@components/sementicMapLayer/toolBox/ToolDistance";
@@ -8,11 +9,47 @@ import ToolDistance from "@components/sementicMapLayer/toolBox/ToolDistance";
 import icoDistance from "@assets/icons/ico_Distance.png";
 import icoRoadview from "@assets/icons/ico_Roadview.png";
 import icoRuler from "@assets/icons/ico_Ruler.png";
+import cursorDis from "@assets/icons/cursorDistance.png";
+import cursorRoad from "@assets/icons/cursorRoadview.png";
+import cursorRound from "@assets/icons/cursorRound.png";
 
 type Props = {};
 
 const ToolBox = (props: Props) => {
+  const { state } = useContext(NaverMapContext);
   const [activeIdx, setActiveIdx] = useState<number>(-1);
+
+  useEffect(() => {
+    if (!state?.map) return;
+    const doc = document
+      ?.getElementsByClassName("map")[0]
+      ?.getElementsByTagName("div")[0];
+
+    const cursorPoint = naver.maps.Event.addListener(
+      state?.map,
+      "mousemove",
+      (e) => {
+        if (activeIdx === 0) {
+          if (doc) doc.style.cursor = `url(${cursorDis}) 2 2, auto`;
+        } else if (activeIdx === 1) {
+          if (doc) doc.style.cursor = `url(${cursorRound}), auto`;
+        } else if (activeIdx === 2) {
+          if (doc) doc.style.cursor = `url(${cursorRoad}), auto`;
+        } else {
+          if (doc) doc.style.cursor = `auto`;
+          naver.maps.Event.removeListener(cursorPoint);
+        }
+      }
+    );
+
+    return () => {
+      naver.maps.Event.removeListener(cursorPoint);
+      const doc = document
+        ?.getElementsByClassName("map")[0]
+        ?.getElementsByTagName("div")[0];
+      if (doc) doc.style.cursor = `auto`;
+    };
+  }, [state?.map, activeIdx]);
 
   useEffect(() => {
     return () => {};
@@ -22,7 +59,7 @@ const ToolBox = (props: Props) => {
     <Flex
       pos="absolute"
       bottom="1%"
-      left="5%"
+      left="10%"
       zIndex={999}
       transform="translateX(-50%)"
       gap="2.625rem"
@@ -39,6 +76,7 @@ const ToolBox = (props: Props) => {
       </Button>
       <Button
         variant="filterTop"
+        isActive={activeIdx === 1}
         onClick={() => (activeIdx === 1 ? setActiveIdx(-1) : setActiveIdx(1))}
       >
         <Box>
@@ -48,6 +86,7 @@ const ToolBox = (props: Props) => {
       </Button>
       <Button
         variant="filterTop"
+        isActive={activeIdx === 2}
         onClick={() => (activeIdx === 2 ? setActiveIdx(-1) : setActiveIdx(2))}
       >
         <Box>

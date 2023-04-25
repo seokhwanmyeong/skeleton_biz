@@ -108,7 +108,6 @@ const MapFlowSigungu = (props: Props) => {
               <InteractArea
                 key={dong.name}
                 onClick={() => {
-                  console.log("click");
                   setDong({
                     slctName: dong.name,
                     slctCode: dong.code,

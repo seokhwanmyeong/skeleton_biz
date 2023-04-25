@@ -65,31 +65,31 @@ const NiceFilter = ({ areaCode }: Props) => {
   const searchPopHandler = () => {
     setFlowPop({ ...flowPop, filter: filterPop, show: true, active: true });
     getSigunguRank({
-      upjongCode: bot.code || "D11002",
+      upjongCd: bot.code || "D11002",
       code: areaCode,
       flowPop: {
         active: true,
-        gender: ["man", "woman"],
+        sex: ["man"],
         age: ["20", "30", "40", "50", "60"],
       },
       resiPop: {
         active: true,
-        gender: ["man", "woman"],
+        sex: ["man", "woman"],
         age: ["20", "30", "40", "50", "60"],
       },
       jobPop: {
         active: true,
-        gender: ["man", "woman"],
+        sex: ["man", "woman"],
         age: ["20", "30", "40", "50", "60"],
       },
       sale: {
         active: true,
       },
       upjongCnt: {
-        active: true,
+        active: false,
       },
       house: {
-        active: true,
+        active: false,
       },
       // flowPop: {
       //   active: true,

@@ -154,7 +154,7 @@ const FlowEnter = () => {
           onClick={() => {
             state.map?.setOptions({
               minZoom: 0,
-              maxZoom: 16,
+              maxZoom: 22,
               scrollWheel: false,
             });
             resetSlct();

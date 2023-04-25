@@ -31,7 +31,6 @@ const MapFlowEnter = (props: Props) => {
 
   useEffect(() => {
     if (sido?.slctCode && sido?.slctName && sido?.slctPath) {
-      console.log("진입 1");
       state.map?.fitBounds(sido.slctPath[0]);
       sido.slctLat &&
         sido.slctLng &&
@@ -40,7 +39,6 @@ const MapFlowEnter = (props: Props) => {
         draggable: false,
       });
     } else {
-      console.log("진입 2");
       state.map?.setOptions({
         center: {
           lat: 35.9223291,
@@ -48,7 +46,7 @@ const MapFlowEnter = (props: Props) => {
         },
         zoom: 8,
         minZoom: 0,
-        maxZoom: 16,
+        maxZoom: 22,
         scrollWheel: false,
         draggable: true,
         disableDoubleClickZoom: true,
@@ -131,7 +129,7 @@ const MapFlowEnter = (props: Props) => {
                   });
                   state.map?.setOptions({
                     minZoom: 0,
-                    maxZoom: 16,
+                    maxZoom: 22,
                     scrollWheel: true,
                     draggable: true,
                     disableDoubleClickZoom: true,

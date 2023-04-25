@@ -10,7 +10,7 @@ import ModalDaumAddr from "@components/modal/common/ModalDaumAddr";
 import { atomFilterFlow } from "@states/sementicMap/stateFilter";
 import { atomSlctCustom } from "@states/sementicMap/stateMap";
 //  Util
-import { calDist } from "@util/map/distance";
+import { calDist, calcPolyDistance } from "@util/map/distance";
 //  Icons
 import {
   IcoAppStore,
@@ -23,7 +23,8 @@ import markerPoint from "@assets/icons/markerPoint.png";
 import markerWithPoint from "@assets/icons/markerWithPoint.png";
 //  Deco
 import { motion } from "framer-motion";
-import { alertAnimation } from "@src/styles/animation/keyFremes";
+//  Ani
+import { alertAnimation } from "@styles/animation/keyFremes";
 
 const ToggleButtonGroup = () => {
   const { state } = useContext(NaverMapContext);
@@ -52,6 +53,7 @@ const ToggleButtonGroup = () => {
   const [cursorPo, setCursorPo] = useState<any>(null);
   const [distance, setDistance] = useState<any>(null);
   const [rangeCenter, setRangeCenter] = useState<any>();
+  const [isReady, setReady] = useState<boolean>(false);
   const [addr, setAddr] = useState({
     address: "",
     point: {
@@ -94,7 +96,6 @@ const ToggleButtonGroup = () => {
   };
 
   const resetAddr = () => {
-    console.log(addr);
     markerAddrRef.current?.setMap(null);
     markerAddrRef.current = null;
     naver.maps.Event.removeListener(event);
@@ -142,6 +143,7 @@ const ToggleButtonGroup = () => {
     naver.maps.Event.removeListener(event);
     naver.maps.Event.removeListener(moveEvent);
     isAddrOpen && onAddrClose();
+    setDistance(0);
 
     polyRef.current?.setMap(null);
 
@@ -157,9 +159,7 @@ const ToggleButtonGroup = () => {
     polyRef.current = polyline;
 
     if (idx === 0) {
-      console.log("폴리곤 그리기");
       polyRef.current = polyline;
-
       const polyEvent = naver.maps.Event.addListener(
         state.map,
         "click",
@@ -190,13 +190,11 @@ const ToggleButtonGroup = () => {
           state.map,
           "mousemove",
           (e) => {
-            console.log(e);
             if (markerAddrRef.current && e.latlng) {
               let point01 = markerAddrRef.current.getPosition();
               let point02 = e.latlng;
 
               distance = calDist(point01, point02);
-              console.log(distance);
               setDistance(distance);
             }
 
@@ -221,20 +219,21 @@ const ToggleButtonGroup = () => {
   };
 
   const OnDrawPolygon = (e: any) => {
+    naver.maps.Event.removeListener(moveEvent);
     if (polyRef.current === undefined) return;
     const point: naver.maps.LatLng = e.coord;
     const path: any = polyRef.current?.getPath();
+    const inputPoint = point.toPoint().add(-0.0005, 0.0005);
     setCursorPo(point);
     onInfoOpen();
-    if (markerRef.current.length === 2) {
-      path.push(point);
+
+    if (path.length <= 2) {
+      path.push(inputPoint);
       path.push(path._array[0]);
-    } else if (markerRef.current.length > 2) {
+    } else if (path.length > 2) {
       path.pop();
-      path.push(point);
+      path.push(inputPoint);
       path.push(path._array[0]);
-    } else {
-      path.push(point);
     }
 
     markerRef.current.length > 0 &&
@@ -248,7 +247,7 @@ const ToggleButtonGroup = () => {
 
     const marker = new naver.maps.Marker({
       map: state.map,
-      position: point,
+      position: inputPoint,
       icon: {
         url: markerWithPoint,
         size: new naver.maps.Size(21, 39),
@@ -257,22 +256,30 @@ const ToggleButtonGroup = () => {
     });
     markerRef.current.push(marker);
 
-    const moveEvent = naver.maps.Event.addListener(
+    const polyMoveEvent = naver.maps.Event.addListener(
       state.map,
       "mousemove",
       (e) => {
-        if (e.latlng) {
-        }
+        if (e.latlng) setCursorPo(e.latlng);
+        let curPoint = e.latlng.toPoint().add(-0.0005, 0.0005);
 
-        setCursorPo(e.latlng);
+        if (path.length === 1) {
+          path.push(curPoint);
+        } else if (path.length === 1 || path.length === 2) {
+          path.splice(1, 1, curPoint);
+        } else {
+          let distance = calcPolyDistance(path._array) || 0;
+          path.splice(path.length - 2, 1, curPoint);
+          setDistance(distance);
+        }
         onInfoOpen();
       }
     );
 
-    setMoveEvent(moveEvent);
+    setMoveEvent(polyMoveEvent);
 
     const tmp = naver.maps.Event?.addListener(state.map, "rightclick", () => {
-      naver.maps.Event.removeListener(moveEvent);
+      naver.maps.Event.removeListener(polyMoveEvent);
       naver.maps.Event.removeListener(tmp);
       onInfoClose();
       onConOpen();
@@ -308,7 +315,6 @@ const ToggleButtonGroup = () => {
       // @ts-ignore
       if (status === kakao.maps.services.Status.OK) {
         const { x, y } = result[0];
-        console.log(x, y);
         setAddr({
           address: address,
           point: {
@@ -383,11 +389,6 @@ const ToggleButtonGroup = () => {
   }, [addr, markerAddrRef]);
 
   useEffect(() => {
-    onConClose();
-    setCursorPo(undefined);
-  }, [activeIdx]);
-
-  useEffect(() => {
     if (addr.address && activeIdx === 2 && markerAddrRef?.current) {
       const center = markerAddrRef.current.getPosition();
 
@@ -401,6 +402,20 @@ const ToggleButtonGroup = () => {
       });
     }
   }, [addr, activeIdx, distance, markerAddrRef]);
+
+  useEffect(() => {
+    onConClose();
+    setCursorPo(undefined);
+  }, [activeIdx]);
+
+  useEffect(() => {
+    if (activeIdx === 0) {
+      const path: any = polyRef.current?.getPath();
+      if (path?.length && path.length > 3) {
+        path?.splice(path.length - 2, 1);
+      }
+    }
+  }, [isInfoOpen]);
 
   useEffect(() => {
     if (state.map === undefined) return;
@@ -419,7 +434,7 @@ const ToggleButtonGroup = () => {
       strokeColor: "#000000",
       strokeOpacity: 0.8,
       strokeWeight: 3,
-      clickable: true,
+      clickable: false,
     });
     circleRef.current = circle;
     polyRef.current = polyline;
@@ -533,7 +548,7 @@ const ToggleButtonGroup = () => {
               top="0.5rem"
               left="0.5rem"
               p="1rem"
-              w="13rem"
+              w={distance <= 1000 ? "13rem" : "20rem"}
               direction="column"
               gap="0.5rem"
               bgColor="#FFFFFFD9"
@@ -578,15 +593,27 @@ const ToggleButtonGroup = () => {
                   >
                     {activeIdx === 0 ? "그리기" : "반경"}
                   </Text>
-                  <Text
-                    textStyle="base"
-                    fontSize="sm"
-                    fontWeight="regular"
-                    color="font.primary"
-                    lineHeight="normal"
-                  >
-                    영역을 지정하시겠습니까?
-                  </Text>
+                  {distance <= 1000 ? (
+                    <Text
+                      textStyle="base"
+                      fontSize="sm"
+                      fontWeight="regular"
+                      color="font.primary"
+                      lineHeight="normal"
+                    >
+                      영역을 지정하시겠습니까?
+                    </Text>
+                  ) : (
+                    <Text
+                      textStyle="base"
+                      fontSize="sm"
+                      fontWeight="regular"
+                      color="font.primary"
+                      lineHeight="normal"
+                    >
+                      제한범위를 초과하셨습니다. 다시 그려주세요.
+                    </Text>
+                  )}
                 </Flex>
               </Flex>
               <Flex justify="flex-end" align="center" gap="0.5rem">
@@ -607,101 +634,95 @@ const ToggleButtonGroup = () => {
                 >
                   <Text>다시 그리기</Text>
                 </Button>
-                <Button
-                  variant="infoBox"
-                  aria-label="영역확정"
-                  isActive
-                  onClick={() => {
-                    if (activeIdx === 0) {
-                      // const path: any = poly?.getPath();
-                      // const bounds: any = poly?.getBounds();
-                      const path: any = polyRef.current?.getPath();
-                      const bounds: any = polyRef.current?.getBounds();
-                      const center: any = bounds?.getCenter();
-                      // @ts-ignore
-                      const geocoder = new kakao.maps.services.Geocoder();
+                {distance <= 1000 && (
+                  <Button
+                    variant="infoBox"
+                    aria-label="영역확정"
+                    isActive
+                    onClick={() => {
+                      if (activeIdx === 0) {
+                        // const path: any = poly?.getPath();
+                        // const bounds: any = poly?.getBounds();
+                        const path: any = polyRef.current?.getPath();
+                        const bounds: any = polyRef.current?.getBounds();
+                        const center: any = bounds?.getCenter();
+                        // @ts-ignore
+                        const geocoder = new kakao.maps.services.Geocoder();
 
-                      if (!path || path.length - 1 <= 2) {
-                        alert("영역을 제대로 설정해주세요");
-                        return;
-                      }
-
-                      geocoder.coord2RegionCode(
-                        center?._lng,
-                        center?._lat,
-                        (result: any) => {
-                          setSlceCustom({
-                            slctName: result[0].address_name || "",
-                            slctPath: path._array,
-                            range: undefined,
-                            center: center,
-                            pathType: "bounds",
-                          });
-                          onConClose();
-                          resetAllElement();
-                          setFlow("custom");
+                        if (!path || path.length - 1 <= 2) {
+                          alert("영역을 제대로 설정해주세요");
+                          return;
                         }
-                      );
-                    } else if (activeIdx === 1) {
-                      if (!circleRef.current) {
-                        alert("범위를 설정해주세요");
-                        return;
-                      }
-                      const bounds: any = circleRef.current?.getBounds();
-                      const range = circleRef.current?.getRadius();
-                      const center: any = circleRef.current?.getCenter();
-                      // @ts-ignore
-                      const geocoder = new kakao.maps.services.Geocoder();
 
-                      geocoder.coord2RegionCode(
-                        center?._lng,
-                        center?._lat,
-                        (result: any) => {
-                          console.log({
-                            slctName: result[0].address_name || "",
-                            slctPath: bounds,
-                            range: range,
-                            center: center,
-                            pathType: "circle",
-                          });
-
-                          setSlceCustom({
-                            slctName: result[0].address_name || "",
-                            slctPath: bounds,
-                            range: range,
-                            center: center,
-                            pathType: "circle",
-                          });
-                          onConClose();
-                          resetAllElement();
-                          setFlow("custom");
+                        geocoder.coord2RegionCode(
+                          center?._lng,
+                          center?._lat,
+                          (result: any) => {
+                            setSlceCustom({
+                              slctName: result[0].address_name || "",
+                              slctPath: path._array,
+                              range: undefined,
+                              center: center,
+                              pathType: "bounds",
+                            });
+                            onConClose();
+                            resetAllElement();
+                            setFlow("custom");
+                          }
+                        );
+                      } else if (activeIdx === 1) {
+                        if (!circleRef.current) {
+                          alert("범위를 설정해주세요");
+                          return;
                         }
-                      );
-                    } else if (activeIdx === 2) {
-                      if (!circleRef.current) {
-                        alert("범위를 설정해주세요");
-                        return;
+                        const bounds: any = circleRef.current?.getBounds();
+                        const range = circleRef.current?.getRadius();
+                        const center: any = circleRef.current?.getCenter();
+                        // @ts-ignore
+                        const geocoder = new kakao.maps.services.Geocoder();
+
+                        geocoder.coord2RegionCode(
+                          center?._lng,
+                          center?._lat,
+                          (result: any) => {
+                            setSlceCustom({
+                              slctName: result[0].address_name || "",
+                              slctPath: bounds,
+                              range: range,
+                              center: center,
+                              pathType: "circle",
+                            });
+                            onConClose();
+                            resetAllElement();
+                            setFlow("custom");
+                          }
+                        );
+                      } else if (activeIdx === 2) {
+                        if (!circleRef.current) {
+                          alert("범위를 설정해주세요");
+                          return;
+                        }
+                        const bounds: any = circleRef.current?.getBounds();
+                        const range = circleRef.current?.getRadius();
+                        const center: any = circleRef.current?.getCenter();
+
+                        setSlceCustom({
+                          slctName: addr.address,
+                          slctPath: bounds,
+                          range: range,
+                          center: center,
+                          pathType: "circle",
+                        });
+
+                        onConClose();
+                        resetAllElement();
+                        setFlow("custom");
                       }
-                      const bounds: any = circleRef.current?.getBounds();
-                      const range = circleRef.current?.getRadius();
-                      const center: any = circleRef.current?.getCenter();
-
-                      setSlceCustom({
-                        slctName: addr.address,
-                        slctPath: bounds,
-                        range: range,
-                        center: center,
-                        pathType: "circle",
-                      });
-
-                      onConClose();
-                      resetAllElement();
-                      setFlow("custom");
-                    }
-                  }}
-                >
-                  <Text>영역지정</Text>
-                </Button>
+                    }}
+                  >
+                    <Text>영역지정</Text>
+                  </Button>
+                )}
               </Flex>
             </Flex>
           </OverlayView>
@@ -761,14 +782,14 @@ const ToggleButtonGroup = () => {
                   lineHeight="normal"
                   transition="0.3s"
                   color={
-                    activeIdx !== 0 && distance > 1000
-                      ? "system.default.red"
-                      : "font.primary"
+                    distance > 1000 ? "system.default.red" : "font.primary"
                   }
                 >
-                  {activeIdx === 0 ? "그리기" : `반경 ${distance * 2}m`}
+                  {activeIdx === 0
+                    ? `그리기 (반경: ${distance * 2}m)`
+                    : `반경 ${distance * 2}m`}
                 </Text>
-                {activeIdx !== 0 && distance > 1000 && (
+                {distance > 1000 && (
                   <Text
                     textStyle="base"
                     fontSize="sm"
@@ -776,12 +797,10 @@ const ToggleButtonGroup = () => {
                     lineHeight="normal"
                     transition="0.3s"
                     color={
-                      activeIdx !== 0 && distance > 1000
-                        ? "system.default.red"
-                        : "font.primary"
+                      distance > 1000 ? "system.default.red" : "font.primary"
                     }
                   >
-                    1000m를 넘기실 수 없습니다.
+                    반경 2000m를 넘기실 수 없습니다.
                   </Text>
                 )}
                 <Text

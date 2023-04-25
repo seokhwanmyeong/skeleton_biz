@@ -36,7 +36,7 @@ const SementicMap = (props: Props) => {
           },
           zoom: 8,
           minZoom: 0,
-          maxZoom: 16,
+          maxZoom: 22,
         }}
         style={{
           position: "relative",
