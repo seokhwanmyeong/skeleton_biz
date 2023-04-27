@@ -1,7 +1,7 @@
 //  Lib
 import { useContext, useEffect, useState } from "react";
 import { Box, Button, Flex, Text, useDisclosure } from "@chakra-ui/react";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
 import { NaverMapContext } from "@src/lib/src";
 //  Component
 import UpjongListBox from "@components/sementicMapLayer/elementFilter/UpjongListBox";
@@ -13,7 +13,7 @@ import { BoxRanking } from "@components/sementicMapLayer/elementFilter/BoxRankin
 //  Api
 import { apiMapArea } from "@api/biz/config";
 //  State
-import { atomFilterFlow } from "@states/sementicMap/stateFilter";
+import { atomFilterFlow, resetNice } from "@states/sementicMap/stateFilter";
 import { atomFlowEnterArea, atomDongLi } from "@states/sementicMap/stateMap";
 //  Icon
 import { IcoFilter } from "@assets/icons/icon";
@@ -33,6 +33,7 @@ const FlowSigungu = () => {
   const setFlow = useSetRecoilState(atomFilterFlow);
   const [{ sido, sigungu }, setSlctArea] = useRecoilState(atomFlowEnterArea);
   const setDongLi = useSetRecoilState(atomDongLi);
+  const reset = useResetRecoilState(resetNice);
   const [filterType, setType] = useState("");
 
   // const pathTransHandler = (
@@ -93,34 +94,6 @@ const FlowSigungu = () => {
     }
 
     return;
-    // if (sigungu?.slctName) {
-    //   let dongData: any = dongListData;
-    //   console.log(dongData);
-    //   const tmp = dongData
-    //     .map(
-    //       (
-    //         {
-    //           code,
-    //           name,
-    //           polygon,
-    //         }: {
-    //           code: number;
-    //           name: string;
-    //           polygon: string;
-    //         },
-    //         idx: number
-    //       ) => {
-    //         return {
-    //           code: String(code),
-    //           num: idx,
-    //           name: name,
-    //           path: polygon,
-    //         };
-    //       }
-    //     )
-    //     .filter((li: any) => li.code.slice(0, 4) === sigungu?.slctCode);
-    //   const transData = pathTransHandler(tmp);
-    // }
   };
 
   useEffect(() => {
@@ -158,6 +131,7 @@ const FlowSigungu = () => {
                 slctPath: [],
               },
             });
+            reset();
             setFlow("enter");
           }}
         />

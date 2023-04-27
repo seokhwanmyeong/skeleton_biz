@@ -90,7 +90,6 @@ const ErpFilter = ({
   const searchStoreHandler = () => {
     console.log("store search");
     console.log(filterStore);
-
     getStoreList(filterStore).then((res: any) => {
       const { records } = res;
       console.log(records);

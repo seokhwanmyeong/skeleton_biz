@@ -147,17 +147,17 @@ type TypeSigunguRank = {
     flowPop: {
       active: boolean;
       sex: ("man" | "woman")[];
-      age: ["20", "30", "40", "50", "60"];
+      age: ("20" | "30" | "40" | "50" | "60")[];
     };
     resiPop: {
       active: boolean;
       sex: ("man" | "woman")[];
-      age: ["20", "30", "40", "50", "60"];
+      age: ("20" | "30" | "40" | "50" | "60")[];
     };
     jobPop: {
       active: boolean;
       sex: ("man" | "woman")[];
-      age: ["20", "30", "40", "50", "60"];
+      age: ("20" | "30" | "40" | "50" | "60")[];
     };
     sale: {
       active: boolean;

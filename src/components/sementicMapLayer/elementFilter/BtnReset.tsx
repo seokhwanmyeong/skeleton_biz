@@ -1,6 +1,6 @@
 //  Lib
 import { useContext } from "react";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { Box, Button } from "@chakra-ui/react";
 import { NaverMapContext } from "@src/lib/src";
 //  State
@@ -21,7 +21,7 @@ type Props = {
 
 const BtnReset = ({ activeReset = true, onClick }: Props) => {
   const { state } = useContext(NaverMapContext);
-  const setFlow = useSetRecoilState(atomFilterFlow);
+  const [flow, setFlow] = useRecoilState(atomFilterFlow);
   const resetSlctArea = useSetRecoilState(resetHandler);
   const resetNiceFilter = useSetRecoilState(resetNice);
   const resetNiceDepthFilter = useSetRecoilState(resetNiceDepth);
@@ -45,9 +45,9 @@ const BtnReset = ({ activeReset = true, onClick }: Props) => {
           });
 
           resetSlctArea();
-          resetNiceFilter();
           resetNiceDepthFilter();
           resetErpFilter();
+          flow === "sigungu" || (flow === "dong" && resetNiceFilter());
           setFlow("init");
         }
       }}

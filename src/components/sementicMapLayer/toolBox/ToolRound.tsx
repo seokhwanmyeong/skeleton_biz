@@ -14,9 +14,10 @@ import { alertAnimation } from "@styles/animation/keyFremes";
 
 type Props = {
   exitHandler: any;
+  mouseEvent: any;
 };
 
-const ToolRound = ({ exitHandler }: Props) => {
+const ToolRound = ({ exitHandler, mouseEvent }: Props) => {
   const { state } = useContext(NaverMapContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -157,6 +158,11 @@ const ToolRound = ({ exitHandler }: Props) => {
       markerCurRef.current,
       "rightclick",
       () => {
+        mouseEvent && naver.maps.Event.removeListener(mouseEvent);
+        const doc = document
+          ?.getElementsByClassName("map")[0]
+          ?.getElementsByTagName("div")[0];
+        doc.style.cursor = `auto`;
         naver.maps.Event.removeListener(rightHandler);
         naver.maps.Event.removeListener(eventRef.current);
         naver.maps.Event.removeListener(moveEventRef.current);

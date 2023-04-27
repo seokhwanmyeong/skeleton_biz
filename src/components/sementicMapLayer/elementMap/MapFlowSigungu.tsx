@@ -77,7 +77,7 @@ const MapFlowSigungu = (props: Props) => {
 
       setRange(latLngRange);
     }
-  }, [sigungu]);
+  }, [state.map]);
 
   const onClickArea = (areaIdx: number) => {
     setDong({

@@ -39,7 +39,7 @@ const MapFlowDong = (props: Props) => {
         });
       }
     }
-  }, []);
+  }, [state.map]);
 
   const dongTopData = useMemo(() => {
     return dong.slctData || [];

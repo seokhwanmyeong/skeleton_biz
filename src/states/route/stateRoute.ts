@@ -54,6 +54,7 @@ type SubRouteType = {
   children?: DepthRouteType[];
   page?: (props: any) => JSX.Element;
   isMenu: boolean;
+  isExternal?: boolean;
   icon?: (props?: IcoProps) => JSX.Element;
 };
 
@@ -62,6 +63,7 @@ type DepthRouteType = {
   path: string;
   page: (props: any) => JSX.Element;
   isMenu: boolean;
+  isExternal?: boolean;
 };
 
 type HEX = `#${string}`;
@@ -237,11 +239,11 @@ export const subRoute = atom<{
         page: ErpBrandCreate,
       },
       {
-        path: "smart",
+        path: "https://dev2.jober.io/redirect/single-sign-on?apiKey=Dsic2avnKQZV4acrdg7HM9AaW2bemGqvE23P8tcAVsMZf8BnuMoGfNriouGGVpfR&redirectUrl=https://dev2.jober.io/home&customIdentifyData=test",
         title: "Smart",
         isMenu: true,
+        isExternal: true,
         hasChild: false,
-        page: ErpSmart,
         icon: (props?: IcoProps) => IcoAudit(props),
       },
       {

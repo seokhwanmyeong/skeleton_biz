@@ -30,7 +30,10 @@ const MapFlowEnter = (props: Props) => {
   const [moveEvent, setMoveEvent] = useState<any>(null);
 
   useEffect(() => {
+    if (!state.map) return;
+
     if (sido?.slctCode && sido?.slctName && sido?.slctPath) {
+      console.log("시 진입");
       state.map?.fitBounds(sido.slctPath[0]);
       sido.slctLat &&
         sido.slctLng &&
@@ -54,7 +57,7 @@ const MapFlowEnter = (props: Props) => {
         disableTwoFingerTapZoom: true,
       });
     }
-  }, [sido, sigungu]);
+  }, [state.map, sido, sigungu]);
 
   const cursorHandler = useCallback((e: any) => {
     setCursorPo({ x: e?.clientX, y: e?.clientY });

@@ -32,24 +32,27 @@ const RouterOutlet = () => {
                 element={<FrameSub />}
               >
                 {subRoute[main.root]?.map((sub: SubRouteType) => {
-                  return sub.hasChild
-                    ? sub.children &&
-                        sub.children.map((depth: DepthRouteType) => (
+                  if (sub.isExternal) return;
+                  else {
+                    return sub.hasChild
+                      ? sub.children &&
+                          sub.children.map((depth: DepthRouteType) => (
+                            <Route
+                              index={indexChecker(depth.path)}
+                              key={`route-${depth.path}`}
+                              path={indexChecker(depth.path) ? "" : depth.path}
+                              element={<depth.page />}
+                            />
+                          ))
+                      : sub.page && (
                           <Route
-                            index={indexChecker(depth.path)}
-                            key={`route-${depth.path}`}
-                            path={indexChecker(depth.path) ? "" : depth.path}
-                            element={<depth.page />}
+                            index={indexChecker(sub.path)}
+                            key={`route-${sub.path}`}
+                            path={indexChecker(sub.path) ? "" : sub.path}
+                            element={<sub.page />}
                           />
-                        ))
-                    : sub.page && (
-                        <Route
-                          index={indexChecker(sub.path)}
-                          key={`route-${sub.path}`}
-                          path={indexChecker(sub.path) ? "" : sub.path}
-                          element={<sub.page />}
-                        />
-                      );
+                        );
+                  }
                 })}
               </Route>
             ) : (

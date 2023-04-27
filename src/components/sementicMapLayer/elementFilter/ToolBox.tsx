@@ -1,5 +1,5 @@
 //  Lib
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Box, Button, Flex, Image } from "@chakra-ui/react";
 import { NaverMapContext } from "@src/lib/src";
 //  Component
@@ -18,6 +18,7 @@ type Props = {};
 const ToolBox = (props: Props) => {
   const { state } = useContext(NaverMapContext);
   const [activeIdx, setActiveIdx] = useState<number>(-1);
+  const mouseEventRef = useRef<any>(null);
 
   useEffect(() => {
     if (!state?.map) return;
@@ -41,9 +42,11 @@ const ToolBox = (props: Props) => {
         }
       }
     );
+    mouseEventRef.current = cursorPoint;
 
     return () => {
       naver.maps.Event.removeListener(cursorPoint);
+      mouseEventRef.current = null;
       const doc = document
         ?.getElementsByClassName("map")[0]
         ?.getElementsByTagName("div")[0];
@@ -95,7 +98,12 @@ const ToolBox = (props: Props) => {
         로드뷰
       </Button>
       {activeIdx === 0 && <ToolDistance exitHandler={() => setActiveIdx(-1)} />}
-      {activeIdx === 1 && <ToolRound exitHandler={() => setActiveIdx(-1)} />}
+      {activeIdx === 1 && (
+        <ToolRound
+          exitHandler={() => setActiveIdx(-1)}
+          mouseEvent={mouseEventRef.current}
+        />
+      )}
     </Flex>
   );
 };

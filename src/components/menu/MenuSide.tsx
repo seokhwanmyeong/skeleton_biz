@@ -40,6 +40,10 @@ const MenuSide = () => {
     }
   };
 
+  const handleClick = (path: string) => {
+    window.open(path, "_blank");
+  };
+
   return (
     <Flex
       zIndex={1}
@@ -63,12 +67,36 @@ const MenuSide = () => {
       >
         {subMenu &&
           subMenu.map((menuLi: SubRouteType) => {
-            return menuLi.isMenu ? (
+            return menuLi.isMenu && !menuLi?.isExternal ? (
               <Button
                 variant="subMenu"
                 key={menuLi.title}
                 isActive={pathChecker(menuLi.path)}
                 onClick={() => navigator(menuLi.path)}
+              >
+                {menuLi.icon && (
+                  <Flex
+                    w="2.5rem"
+                    h="2.5rem"
+                    align="center"
+                    justify="center"
+                    // bg="#FFFFFF"
+                    borderRadius="70px"
+                    boxShadow="0px 0px 4px 0px #00000040"
+                    border="1px solid #FFFFFF"
+                    bg="linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%)"
+                  >
+                    {menuLi.icon({ width: "1.125rem", height: "1.125rem" })}
+                  </Flex>
+                )}
+                {menuLi.title}
+              </Button>
+            ) : menuLi?.isExternal ? (
+              <Button
+                variant="subMenu"
+                key={menuLi.title}
+                // isActive={pathChecker(menuLi.path)}
+                onClick={() => handleClick(menuLi.path)}
               >
                 {menuLi.icon && (
                   <Flex

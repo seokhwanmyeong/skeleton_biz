@@ -9,6 +9,11 @@ type TypeFlow =
   | "erp"
   | "custom";
 
+type TypeNiceFilter = {
+  sex: ("man" | "woman")[];
+  age: ("20" | "30" | "40" | "50" | "60")[];
+};
+
 export const atomFilterFlow = atom<TypeFlow>({
   key: "sementicFilterFlow",
   default: "init",
@@ -66,93 +71,81 @@ export const atomUpjongBotList = atom<any[]>({
 // ==================== Nice 필터 리스트 ====================
 
 export const infoComFloatPop = atom<{
-  filter: any;
-  data: any;
+  filter: TypeNiceFilter;
   show: boolean;
   active: boolean;
 }>({
   key: "infoComFloatPop",
   default: {
     filter: {
-      gender: [],
-      age: [],
+      sex: ["man", "woman"],
+      age: ["20", "30", "40", "50", "60"],
     },
-    data: {},
     show: false,
     active: false,
   },
 });
 
 export const infoComResiPop = atom<{
-  filter: any;
-  data: any;
+  filter: TypeNiceFilter;
   show: boolean;
   active: boolean;
 }>({
   key: "infoComResiPop",
   default: {
     filter: {
-      gender: [],
-      age: [],
+      sex: ["man", "woman"],
+      age: ["20", "30", "40", "50", "60"],
     },
-    data: {},
     show: false,
     active: false,
   },
 });
 
 export const infoComJobPop = atom<{
-  filter: any;
-  data: any;
+  filter: TypeNiceFilter;
   show: boolean;
   active: boolean;
 }>({
   key: "infoComJobPop",
   default: {
     filter: {
-      gender: [],
-      age: [],
+      sex: ["man", "woman"],
+      age: ["20", "30", "40", "50", "60"],
     },
-    data: {},
     show: false,
     active: false,
   },
 });
 
 export const infoComHousehold = atom<{
-  data: any;
   show: boolean;
   active: boolean;
 }>({
   key: "infoComHousehold",
   default: {
-    data: {},
     show: false,
     active: false,
   },
 });
 
 export const infoComSale = atom<{
-  data: any;
   show: boolean;
   active: boolean;
 }>({
   key: "infoComSale",
   default: {
-    data: {},
     show: false,
     active: false,
   },
 });
 
 export const infoComUpjongCnt = atom<{
-  data: any;
   show: boolean;
   active: boolean;
 }>({
   key: "infoComUpjongCnt",
   default: {
-    data: {},
     show: false,
     active: false,
   },

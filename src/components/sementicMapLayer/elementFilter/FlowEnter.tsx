@@ -128,16 +128,16 @@ const FlowEnter = () => {
     }
   }, [sido]);
 
-  useEffect(() => {
-    if (
-      sigungu?.slctCode &&
-      sigungu?.slctName &&
-      sigungu?.slctIdx &&
-      sido?.slctCode
-    ) {
-      getSigunguHandler(sido.slctCode);
-    }
-  }, [sigungu]);
+  // useEffect(() => {
+  //   if (
+  //     sigungu?.slctCode &&
+  //     sigungu?.slctName &&
+  //     sigungu?.slctIdx &&
+  //     sido?.slctCode
+  //   ) {
+  //     getSigunguHandler(sido.slctCode);
+  //   }
+  // }, [sigungu]);
 
   return (
     <Fragment>

@@ -18,10 +18,10 @@ export const MAP_UPJONG_BOT = "/v1/franchise_utils/low";
 export const ERP_STORE_GET_POINT = "/v1/Franchise_Branch/mapsearch";
 
 //  MAP_ERP_RENT
-export const ERP_RENT_GET_POINT = "/v1/Franchise_Unsoldsho/mapdetailsearch";
+export const ERP_RENT_GET_POINT = "/v1/Franchise_Unsoldsho/mapunsoldsearch";
 
 //  MAP_ERP_BSDIS
-export const ERP_BSDIS_GET_AREA = "/v1/Franchise_Branch";
+export const ERP_BSDIS_GET_AREA = "/v1/franchise_businessarea";
 
 //  ERP_STORE
 export const ERP_STORE_GET_LIST = "/v1/Franchise_Branch";

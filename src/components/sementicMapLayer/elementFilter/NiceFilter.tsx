@@ -51,98 +51,98 @@ const NiceFilter = ({ areaCode }: Props) => {
   const [openIdx, setOpenIdx] = useState(0);
   const { bot } = useRecoilValue(atomUpjongState);
   const [flowPop, setFlowPop] = useRecoilState(infoComFloatPop);
-  const [filterPop, setFilterPop] = useState(flowPop.filter);
   const [resiPop, setResiPop] = useRecoilState(infoComResiPop);
-  const [filterResi, setFilterResi] = useState(resiPop.filter);
   const [jobPop, setJobPop] = useRecoilState(infoComJobPop);
-  const [filterJob, setFilterJob] = useState(jobPop.filter);
   const [household, setHouse] = useRecoilState(infoComHousehold);
   const [upjongCnt, setUpjong] = useRecoilState(infoComUpjongCnt);
   const [sale, setSale] = useRecoilState(infoComSale);
+  const [filterPop, setFilterPop] = useState(flowPop.filter);
+  const [filterResi, setFilterResi] = useState(resiPop.filter);
+  const [filterJob, setFilterJob] = useState(jobPop.filter);
   const reset = useResetRecoilState(resetNice);
 
-  //  유동인구 필터 변화 및 액티브
-  const searchPopHandler = () => {
-    setFlowPop({ ...flowPop, filter: filterPop, show: true, active: true });
-    getSigunguRank({
+  const searchHandler = (
+    cate?: "flow" | "resi" | "job" | "house" | "upjong" | "sale"
+  ) => {
+    const filter = {
       upjongCd: bot.code || "D11002",
       code: areaCode,
       flowPop: {
-        active: true,
-        sex: ["man"],
-        age: ["20", "30", "40", "50", "60"],
+        active: flowPop.active,
+        ...filterPop,
       },
       resiPop: {
-        active: true,
-        sex: ["man", "woman"],
-        age: ["20", "30", "40", "50", "60"],
+        active: resiPop.active,
+        ...filterResi,
       },
       jobPop: {
-        active: true,
-        sex: ["man", "woman"],
-        age: ["20", "30", "40", "50", "60"],
+        active: jobPop.active,
+        ...filterJob,
       },
       sale: {
-        active: true,
+        active: sale.active,
       },
       upjongCnt: {
-        active: false,
+        active: upjongCnt.active,
       },
       house: {
-        active: false,
+        active: household.active,
       },
-      // flowPop: {
-      //   active: true,
-      //   gender: ["man", "woman"],
-      //   age: ["age20", "age30", "age40", "age50", "age60"],
-      // },
-      // resiPop: {
-      //   active: true,
-      //   gender: ["man", "woman"],
-      //   age: ["age20", "age30", "age40", "age50", "age60"],
-      // },
-      // jobPop: {
-      //   active: true,
-      //   gender: ["man", "woman"],
-      //   age: ["age20", "age30", "age40", "age50", "age60"],
-      // },
-      // sale: {
-      //   active: true,
-      // },
-      // upjongCnt: {
-      //   active: true,
-      // },
-      // house: {
-      //   active: true,
-      // },
-    }).then((res: any) => {
+    };
+
+    switch (cate) {
+      case "flow":
+        filter.flowPop = {
+          active: true,
+          sex: filterPop.sex.length > 0 ? filterPop.sex : ["man", "woman"],
+          age:
+            filterPop.age.length > 0
+              ? filterPop.age
+              : ["20", "30", "40", "50", "60"],
+        };
+        setFlowPop({ filter: filterPop, show: true, active: true });
+        break;
+      case "resi":
+        filter.resiPop = {
+          active: true,
+          sex: filterResi.sex.length > 0 ? filterResi.sex : ["man", "woman"],
+          age:
+            filterResi.age.length > 0
+              ? filterResi.age
+              : ["20", "30", "40", "50", "60"],
+        };
+        setResiPop({ filter: filterResi, show: true, active: true });
+        break;
+      case "job":
+        filter.jobPop = {
+          active: true,
+          sex: filterJob.sex.length > 0 ? filterJob.sex : ["man", "woman"],
+          age:
+            filterJob.age.length > 0
+              ? filterJob.age
+              : ["20", "30", "40", "50", "60"],
+        };
+        setJobPop({ filter: filterJob, show: true, active: true });
+        break;
+      case "house":
+        filter.house.active = true;
+        setHouse({ show: true, active: true });
+        break;
+      case "upjong":
+        filter.upjongCnt.active = true;
+        setUpjong({ show: true, active: true });
+        break;
+      case "sale":
+        filter.sale.active = true;
+        setSale({ show: true, active: true });
+        break;
+      default:
+        break;
+    }
+    console.log(filter);
+    getSigunguRank(filter).then((res: any) => {
       console.log(res);
     });
-  };
-
-  //  거주인구 필터 변화 및 액티브
-  const searchResiHandler = () => {
-    setResiPop({ ...resiPop, filter: filterResi, show: true, active: true });
-  };
-
-  //  직장인구 필터 변화 및 액티브
-  const searchJobHandler = () => {
-    setJobPop({ ...jobPop, filter: filterJob, show: true, active: true });
-  };
-
-  //  세대수 필터 변화 및 액티브
-  const searchHouseHandler = () => {
-    setHouse({ ...household, show: true, active: true });
-  };
-
-  //  매출액 필터 변화 및 액티브
-  const searchSaleHandler = () => {
-    setSale({ ...sale, show: true, active: true });
-  };
-
-  //  업종수 필터 변화 및 액티브
-  const searchUpjongHandler = () => {
-    setUpjong({ ...upjongCnt, show: true, active: true });
   };
 
   return (
@@ -278,11 +278,7 @@ const NiceFilter = ({ areaCode }: Props) => {
                   setFlowPop({ ...flowPop, show: !flowPop.show });
                 }}
               />
-              <BtnFilterSearch
-                onClick={() => {
-                  searchPopHandler();
-                }}
-              />
+              <BtnFilterSearch onClick={() => searchHandler("flow")} />
             </Flex>
           </Flex>
           <Deco01 margin="0.25rem 0 0.75rem" width="100%" height="0.3125rem" />
@@ -306,12 +302,12 @@ const NiceFilter = ({ areaCode }: Props) => {
                   { text: "남자", value: "man" },
                   { text: "여자", value: "woman" },
                 ]}
-                chkValue={filterPop?.gender}
+                chkValue={filterPop?.sex}
                 activeTotal={true}
                 onChange={(val: any) =>
                   setFilterPop({
                     ...filterPop,
-                    gender: val,
+                    sex: val,
                   })
                 }
                 groupProps={{
@@ -335,11 +331,11 @@ const NiceFilter = ({ areaCode }: Props) => {
               </FormLabel>
               <CheckboxGroup
                 chkboxData={[
-                  { text: "20대", value: "gen20" },
-                  { text: "30대", value: "gen30" },
-                  { text: "40대", value: "gen40" },
-                  { text: "50대", value: "gen50" },
-                  { text: "60대 이상", value: "gen60" },
+                  { text: "20대", value: "20" },
+                  { text: "30대", value: "30" },
+                  { text: "40대", value: "40" },
+                  { text: "50대", value: "50" },
+                  { text: "60대 이상", value: "60" },
                 ]}
                 chkValue={filterPop?.age}
                 activeTotal={true}
@@ -389,11 +385,7 @@ const NiceFilter = ({ areaCode }: Props) => {
                   setResiPop({ ...resiPop, show: !resiPop.show });
                 }}
               />
-              <BtnFilterSearch
-                onClick={() => {
-                  searchResiHandler();
-                }}
-              />
+              <BtnFilterSearch onClick={() => searchHandler("resi")} />
             </Flex>
           </Flex>
           <Deco01 margin="0.25rem 0 0.75rem" width="100%" height="0.3125rem" />
@@ -417,12 +409,12 @@ const NiceFilter = ({ areaCode }: Props) => {
                   { text: "남자", value: "man" },
                   { text: "여자", value: "woman" },
                 ]}
-                chkValue={filterResi?.gender}
+                chkValue={filterResi?.sex}
                 activeTotal={true}
                 onChange={(val: any) =>
                   setFilterResi({
                     ...filterResi,
-                    gender: val,
+                    sex: val,
                   })
                 }
                 groupProps={{
@@ -446,11 +438,11 @@ const NiceFilter = ({ areaCode }: Props) => {
               </FormLabel>
               <CheckboxGroup
                 chkboxData={[
-                  { text: "20대", value: "gen20" },
-                  { text: "30대", value: "gen30" },
-                  { text: "40대", value: "gen40" },
-                  { text: "50대", value: "gen50" },
-                  { text: "60대 이상", value: "gen60" },
+                  { text: "20대", value: "20" },
+                  { text: "30대", value: "30" },
+                  { text: "40대", value: "40" },
+                  { text: "50대", value: "50" },
+                  { text: "60대 이상", value: "60" },
                 ]}
                 chkValue={filterResi?.age}
                 activeTotal={true}
@@ -500,11 +492,7 @@ const NiceFilter = ({ areaCode }: Props) => {
                   setJobPop({ ...jobPop, show: !jobPop.show });
                 }}
               />
-              <BtnFilterSearch
-                onClick={() => {
-                  searchJobHandler();
-                }}
-              />
+              <BtnFilterSearch onClick={() => searchHandler("job")} />
             </Flex>
           </Flex>
           {/* ============================== 박스 데코 ============================== */}
@@ -529,12 +517,12 @@ const NiceFilter = ({ areaCode }: Props) => {
                   { text: "남자", value: "man" },
                   { text: "여자", value: "woman" },
                 ]}
-                chkValue={filterJob?.gender}
+                chkValue={filterJob?.sex}
                 activeTotal={true}
                 onChange={(val: any) =>
                   setFilterJob({
                     ...filterJob,
-                    gender: val,
+                    sex: val,
                   })
                 }
                 groupProps={{
@@ -558,11 +546,11 @@ const NiceFilter = ({ areaCode }: Props) => {
               </FormLabel>
               <CheckboxGroup
                 chkboxData={[
-                  { text: "20대", value: "gen20" },
-                  { text: "30대", value: "gen30" },
-                  { text: "40대", value: "gen40" },
-                  { text: "50대", value: "gen50" },
-                  { text: "60대 이상", value: "gen60" },
+                  { text: "20대", value: "20" },
+                  { text: "30대", value: "30" },
+                  { text: "40대", value: "40" },
+                  { text: "50대", value: "50" },
+                  { text: "60대 이상", value: "60" },
                 ]}
                 chkValue={filterJob?.age}
                 activeTotal={true}
@@ -616,11 +604,7 @@ const NiceFilter = ({ areaCode }: Props) => {
                   setHouse({ ...household, show: !household?.show });
                 }}
               />
-              <BtnFilterSearch
-                onClick={() => {
-                  searchHouseHandler();
-                }}
-              />
+              <BtnFilterSearch onClick={() => searchHandler("house")} />
             </Flex>
           </Flex>
           {/* ============================== 박스 데코 ============================== */}
@@ -654,9 +638,7 @@ const NiceFilter = ({ areaCode }: Props) => {
                 />
                 <BtnFilterSearch
                   isDisabled={bot.code ? false : true}
-                  onClick={() => {
-                    searchUpjongHandler();
-                  }}
+                  onClick={() => searchHandler("upjong")}
                 />
               </Flex>
             </Tooltip>
@@ -692,9 +674,7 @@ const NiceFilter = ({ areaCode }: Props) => {
                 />
                 <BtnFilterSearch
                   isDisabled={bot.code ? false : true}
-                  onClick={() => {
-                    searchSaleHandler();
-                  }}
+                  onClick={() => searchHandler("sale")}
                 />
               </Flex>
             </Tooltip>
