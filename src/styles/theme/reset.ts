@@ -9,6 +9,7 @@ const themeReset = {
       margin: 0,
       padding: 0,
       border: 0,
+      fontFamily: "Roboto, sans-serif",
       fontSize: "100%",
       font: "inherit",
       verticalAlign: "baseline",

@@ -17,7 +17,7 @@ import ModalBuilding from "@src/components/modal/map/ModalBuilding";
 
 type Props = {};
 
-const DepthList = (props: Props) => {
+const DepthListBox = (props: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Flex
@@ -156,4 +156,4 @@ const DepthList = (props: Props) => {
   );
 };
 
-export default DepthList;
+export default DepthListBox;

@@ -12,7 +12,7 @@ import BtnBack from "@components/sementicMapLayer/elementFilter/BtnBack";
 import DrawTools from "@components/sementicMapLayer/elementFilter/DrawTools";
 import FlowPopInfo from "@components/sementicMapLayer/elementFilter/FlowPopInfo";
 import { BoxRankingDong } from "@components/sementicMapLayer/elementFilter/BoxRanking";
-import DepthList from "@components/sementicMapLayer/elementFilter/DepthList";
+import DepthListBox from "@src/components/sementicMapLayer/elementFilter/DepthListBox";
 //  State
 import { atomFilterFlow } from "@states/sementicMap/stateFilter";
 import { atomFlowEnterArea, atomSlctDong } from "@states/sementicMap/stateMap";
@@ -119,7 +119,7 @@ const FlowDong = (props: Props) => {
         </DecoFrameL>
         <DecoFrameCenter isOpen={centerView} activeAni={false} />
         <DecoFrameR pr="0.25rem">
-          <DepthList />
+          <DepthListBox />
         </DecoFrameR>
       </Flex>
       {/* ------------------------------ 하단 ------------------------------*/}
@@ -129,7 +129,7 @@ const FlowDong = (props: Props) => {
         left="50%"
         zIndex={999}
         transform="translateX(-50%)"
-        gap="1.25rem"
+        gap="5.625rem"
       >
         <Button
           variant="filterTop"
@@ -149,23 +149,6 @@ const FlowDong = (props: Props) => {
         </Button>
         <Button
           variant="filterTop"
-          isActive={filterType === "erp"}
-          onClick={() => {
-            if (filterType === "erp") {
-              setType("");
-            } else {
-              setType("erp");
-            }
-          }}
-        >
-          <Box>
-            <IcoErp />
-          </Box>
-          ERP 필터
-        </Button>
-        <BtnReset />
-        <Button
-          variant="filterTop"
           onClick={() => {
             setSv({ props: null, viewId: "eval" });
           }}
@@ -175,15 +158,9 @@ const FlowDong = (props: Props) => {
           </Box>
           리포트
         </Button>
+        <BtnReset />
       </Flex>
       {filterType === "anal" && <NiceFilterDepth areaCode={dong?.slctCode} />}
-      {filterType === "erp" && (
-        <ErpFilter
-          isToolOpen={isToolOpen}
-          toolOpen={toolOpen}
-          areaCode={sigungu?.slctCode}
-        />
-      )}
       {isToolOpen && <DrawTools />}
     </>
   );

@@ -8,7 +8,7 @@ import NiceFilterDepth from "@components/sementicMapLayer/elementFilter/NiceFilt
 import BtnReset from "@components/sementicMapLayer/elementFilter/BtnReset";
 import { BoxRankingDong } from "@components/sementicMapLayer/elementFilter/BoxRanking";
 import FlowPopInfo from "@components/sementicMapLayer/elementFilter/FlowPopInfo";
-import DepthList from "@components/sementicMapLayer/elementFilter/DepthList";
+import DepthList from "@src/components/sementicMapLayer/elementFilter/DepthListBox";
 //  State
 import { atomSlctCustom } from "@states/sementicMap/stateMap";
 import { sementicViewState } from "@states/sementicMap/stateView";

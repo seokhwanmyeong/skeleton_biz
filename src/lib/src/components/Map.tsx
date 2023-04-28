@@ -94,7 +94,8 @@ const Map = ({
       mapElementRef.current!!,
       JSON.parse(stringifiedOpts)
     );
-
+    containerRef.current.style.cssText =
+      "width: inherit;height: inherit;zIndex: 1;";
     map.getElement().appendChild(containerRef.current);
     setMap(map);
 

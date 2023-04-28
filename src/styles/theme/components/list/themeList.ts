@@ -1,7 +1,7 @@
 const themeList = {
   baseStyle: {},
   variants: {
-    modalBuilding: {
+    modalMoBileBuilding: {
       container: {
         p: "1.875rem 2.375rem 0",
         h: "100%",

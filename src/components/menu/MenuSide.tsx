@@ -41,7 +41,7 @@ const MenuSide = () => {
   };
 
   const handleClick = (path: string) => {
-    window.open(path, "_blank");
+    window.open(path, "_blank", "");
   };
 
   return (

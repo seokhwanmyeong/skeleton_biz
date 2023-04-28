@@ -11,6 +11,9 @@ import {
 } from "@states/sementicMap/stateFilter";
 //  Api
 import { apiErpMap } from "@api/biz/config";
+import { Flex } from "@chakra-ui/react";
+import { DecoFrameCenter, DecoFrameL, DecoFrameR } from "../elementDeco/Deco";
+import BrandListBox from "../elementFilter/BrandListBox";
 
 type Props = {};
 
@@ -31,6 +34,17 @@ const MapFlowErp = (props: Props) => {
 
   return (
     <Fragment>
+      <Flex
+        w="100%"
+        h="100%"
+        justify="flex-end"
+        zIndex={1}
+        pointerEvents="none"
+      >
+        <DecoFrameR pr="0.25rem">
+          <BrandListBox />
+        </DecoFrameR>
+      </Flex>
       {storeList?.length > 0 &&
         storeList.map((store) => {
           return (
