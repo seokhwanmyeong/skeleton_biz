@@ -235,8 +235,9 @@ const themeBtn = {
         alignItems: "center",
         w: "2.625rem",
         h: "1.6875rem",
+        bg: "linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%)",
+        filter: "drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25))",
         backdropFilter: "blur(5px)",
-        bg: "neutral.gray1",
         boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.25)",
         boxSizing: "border-box",
         border: "1px solid",
@@ -280,6 +281,31 @@ const themeBtn = {
         div: {
           bgColor: "primary.type7",
         },
+      },
+    },
+    filterInit: {
+      m: 0,
+      padding: 0,
+      w: "auto",
+      h: "auto",
+      bg: "none",
+      flexDirection: "column",
+      justifyContent: "center",
+      gap: "0.375rem",
+      textStyle: "base",
+      fontWeight: "regular",
+      fontSize: "sm",
+      lineHeight: "1.25rem",
+      color: "font.primary",
+      p: {
+        textStyle: "base",
+      },
+      _active: {
+        fontWeight: "strong",
+      },
+      _hover: {
+        bgColor: "none",
+        fontWeight: "strong",
       },
     },
     backBtn: {

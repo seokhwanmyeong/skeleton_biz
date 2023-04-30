@@ -43,7 +43,7 @@ const themeHeading = {
       w: "max-content",
       bg: "none",
       fontSize: "sm",
-      lineHeight: "1.46",
+      lineHeight: "normal",
       color: "font.title",
       textAlign: "left",
     },

@@ -1,5 +1,7 @@
 //  Lib
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
+import { useRecoilState } from "recoil";
+import { NaverMapContext } from "@src/lib/src";
 import {
   Flex,
   Heading,
@@ -18,18 +20,29 @@ import {
 import ModalStoreDetail from "@components/modal/map/ModalStoreDetail";
 import ModalBsDisDetail from "@components/modal/map/ModalBsDisDetail";
 import ModalRentDetail from "@components/modal/map/ModalRentDetail";
+import ModalBuilding from "@components/modal/map/ModalBuilding";
+//  State
+import { atomSlctErp } from "@states/sementicMap/stateMap";
+//  Util
+import { bsDisColor } from "@util/define/bsDis";
 //  Icon
 import markerStore from "@assets/icons/marker_store.png";
 import markerRent from "@assets/icons/marker_rent.png";
 //  Deco
 import { Deco01 } from "@assets/deco/DecoSvg";
-import ModalBuilding from "@src/components/modal/map/ModalBuilding";
 
-type Props = {};
+type Props = { store: any[]; rent: any[]; bsDis: any[] };
 
-const BrandListBox = (props: Props) => {
+const BrandListBox = ({ store, rent, bsDis }: Props) => {
+  const { state, dispatch } = useContext(NaverMapContext);
+  const [slctErp, setSlctErp] = useRecoilState(atomSlctErp);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [openIdx, setOpenIdx] = useState(-1);
+
+  useEffect(() => {
+    console.log(state);
+  }, [state]);
+  console.log(state);
   return (
     <Flex
       pos="relative"
@@ -65,346 +78,391 @@ const BrandListBox = (props: Props) => {
       <Deco01 margin="0.75rem 0 0.5rem" width="100%" height="auto" />
       <Tabs variant="depthListBox">
         <TabList mb="1rem" border="none">
-          <Tab>매장</Tab>
-          <Tab>상권</Tab>
-          <Tab>매물</Tab>
+          {store && store.length > 0 && <Tab>매장</Tab>}
+          {bsDis && bsDis.length > 0 && <Tab>상권</Tab>}
+          {rent && rent.length > 0 && <Tab>매물</Tab>}
         </TabList>
         <TabPanels>
-          <TabPanel>
-            <List display="flex" flexDirection="column" gap="1rem">
-              <ListItem
-                p="0rem 0rem 0.75rem"
-                display="flex"
-                alignItems="center"
-                gap="1.25rem"
-                borderBottom="1px solid"
-                borderColor="neutral.gray8"
-                _hover={{
-                  fontWeight: "strong",
-                  cursor: "pointer",
-                }}
-                onClick={() => {
-                  console.log("click");
-                  setOpenIdx(0);
-                  onOpen();
-                }}
-              >
-                <Flex justify="center" align="center" flex="none">
-                  <Image
-                    src={markerStore}
-                    w="auto"
-                    bg="transparent"
-                    border="0"
+          {store && store.length > 0 && (
+            <TabPanel>
+              <List display="flex" flexDirection="column" gap="1rem">
+                {store.map((li: any, idx: number) => {
+                  const { storeName, addr, storePhone } = li;
+
+                  return (
+                    <ListItem
+                      key={`storeList-${idx}`}
+                      p="0rem 0rem 0.75rem"
+                      display="flex"
+                      alignItems="center"
+                      gap="1.25rem"
+                      borderBottom="1px solid"
+                      borderColor="neutral.gray8"
+                      bgColor={
+                        `markerStore-${idx}` === slctErp?.hoverId
+                          ? "#EEEEEE"
+                          : "transparent"
+                      }
+                      _hover={{
+                        fontWeight: "strong",
+                        cursor: "pointer",
+                        bgColor: "#EEEEEE",
+                      }}
+                      onClick={() => {
+                        console.log("click");
+                        setOpenIdx(0);
+                        onOpen();
+                      }}
+                    >
+                      <Flex justify="center" align="center" flex="none">
+                        <Image
+                          src={markerStore}
+                          w="auto"
+                          bg="transparent"
+                          border="0"
+                        />
+                      </Flex>
+                      <Flex direction="column">
+                        <Text
+                          textStyle="base"
+                          fontSize="md"
+                          fontWeight="strong"
+                          lineHeight="1"
+                          color="font.primary"
+                        >
+                          {storeName}
+                        </Text>
+                        <Text
+                          mt="0.3rem"
+                          textStyle="base"
+                          fontSize="xs"
+                          fontWeight="regular"
+                          lineHeight="1"
+                          color="font.primary"
+                          noOfLines={1}
+                        >
+                          {addr}
+                        </Text>
+                        <Text
+                          mt="0.3rem"
+                          textStyle="base"
+                          fontSize="xs"
+                          fontWeight="regular"
+                          lineHeight="1"
+                          color="font.primary"
+                        >
+                          {storePhone}
+                        </Text>
+                      </Flex>
+                    </ListItem>
+                  );
+                })}
+              </List>
+            </TabPanel>
+          )}
+          {bsDis && bsDis.length > 0 && (
+            <TabPanel>
+              <List display="flex" flexDirection="column" gap="1rem">
+                {bsDis.map((dis: any, idx: number) => {
+                  const { bisName, bsDisType } = dis;
+
+                  return (
+                    <ListItem
+                      key={`bsDisList=${idx}`}
+                      p="0rem 0.25rem 1rem"
+                      display="flex"
+                      alignItems="center"
+                      gap="1rem"
+                      borderBottom="1px solid"
+                      borderColor="neutral.gray8"
+                      bgColor={
+                        `bsDisArea-${idx}` === slctErp?.hoverId
+                          ? "#EEEEEE"
+                          : "transparent"
+                      }
+                      _hover={{
+                        fontWeight: "strong",
+                        cursor: "pointer",
+                        bgColor: "#EEEEEE",
+                      }}
+                      onClick={() => {
+                        console.log("click");
+                        setOpenIdx(1);
+                        onOpen();
+                      }}
+                    >
+                      <Flex
+                        w="20px"
+                        h="20px"
+                        flex="none"
+                        justify="center"
+                        align="center"
+                        bgColor={bsDisColor[bsDisType]}
+                        borderRadius="50%"
+                      />
+                      <Flex direction="column">
+                        <Text
+                          textStyle="base"
+                          fontSize="md"
+                          fontWeight="strong"
+                          color="font.primary"
+                          noOfLines={1}
+                        >
+                          {bisName}
+                        </Text>
+                        <Text
+                          textStyle="base"
+                          fontSize="xs"
+                          fontWeight="regular"
+                          color="font.primary"
+                        >
+                          {bsDisType}
+                        </Text>
+                      </Flex>
+                    </ListItem>
+                  );
+                })}
+                <ListItem
+                  p="0rem 0.25rem 1rem"
+                  display="flex"
+                  alignItems="center"
+                  gap="1rem"
+                  borderBottom="1px solid"
+                  borderColor="neutral.gray8"
+                  _hover={{
+                    fontWeight: "strong",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    console.log("click");
+                  }}
+                >
+                  <Flex
+                    w="20px"
+                    h="20px"
+                    flex="none"
+                    justify="center"
+                    align="center"
+                    bgColor="#DE9F9F"
+                    borderRadius="50%"
                   />
-                </Flex>
-                <Flex direction="column">
-                  <Text
-                    textStyle="base"
-                    fontSize="md"
-                    fontWeight="strong"
-                    lineHeight="1"
-                    color="font.primary"
-                  >
-                    평창점
-                  </Text>
-                  <Text
-                    mt="0.3rem"
-                    textStyle="base"
-                    fontSize="xs"
-                    fontWeight="regular"
-                    lineHeight="1"
-                    color="font.primary"
-                    noOfLines={1}
-                  >
-                    서울 종로구 평창동 7-249
-                  </Text>
-                  <Text
-                    mt="0.3rem"
-                    textStyle="base"
-                    fontSize="xs"
-                    fontWeight="regular"
-                    lineHeight="1"
-                    color="font.primary"
-                  >
-                    02-715-6112
-                  </Text>
-                </Flex>
-              </ListItem>
-            </List>
-          </TabPanel>
-          <TabPanel>
-            <List display="flex" flexDirection="column" gap="1rem">
-              <ListItem
-                p="0rem 0.25rem 1rem"
-                display="flex"
-                alignItems="center"
-                gap="1rem"
-                borderBottom="1px solid"
-                borderColor="neutral.gray8"
-                _hover={{
-                  fontWeight: "strong",
-                  cursor: "pointer",
-                }}
-                onClick={() => {
-                  console.log("click");
-                  setOpenIdx(1);
-                  onOpen();
-                }}
-              >
-                <Flex
-                  w="20px"
-                  h="20px"
-                  flex="none"
-                  justify="center"
-                  align="center"
-                  bgColor="primary.type6"
-                  borderRadius="50%"
-                />
-                <Flex direction="column">
-                  <Text
-                    textStyle="base"
-                    fontSize="md"
-                    fontWeight="strong"
-                    color="font.primary"
-                    noOfLines={1}
-                  >
-                    영역1
-                  </Text>
-                  <Text
-                    textStyle="base"
-                    fontSize="xs"
-                    fontWeight="regular"
-                    color="font.primary"
-                  >
-                    상권1
-                  </Text>
-                </Flex>
-              </ListItem>
-              <ListItem
-                p="0rem 0.25rem 1rem"
-                display="flex"
-                alignItems="center"
-                gap="1rem"
-                borderBottom="1px solid"
-                borderColor="neutral.gray8"
-                _hover={{
-                  fontWeight: "strong",
-                  cursor: "pointer",
-                }}
-                onClick={() => {
-                  console.log("click");
-                }}
-              >
-                <Flex
-                  w="20px"
-                  h="20px"
-                  flex="none"
-                  justify="center"
-                  align="center"
-                  bgColor="#DE9F9F"
-                  borderRadius="50%"
-                />
-                <Flex direction="column">
-                  <Text
-                    textStyle="base"
-                    fontSize="md"
-                    fontWeight="strong"
-                    color="font.primary"
-                  >
-                    영역2
-                  </Text>
-                  <Text
-                    textStyle="base"
-                    fontSize="xs"
-                    fontWeight="regular"
-                    color="font.primary"
-                  >
-                    상권2
-                  </Text>
-                </Flex>
-              </ListItem>
-              <ListItem
-                p="0rem 0.25rem 1rem"
-                display="flex"
-                alignItems="center"
-                gap="1rem"
-                borderBottom="1px solid"
-                borderColor="neutral.gray8"
-                _hover={{
-                  fontWeight: "strong",
-                  cursor: "pointer",
-                }}
-                onClick={() => {
-                  console.log("click");
-                }}
-              >
-                <Flex
-                  w="20px"
-                  h="20px"
-                  flex="none"
-                  justify="center"
-                  align="center"
-                  bgColor="#74D8D2"
-                  borderRadius="50%"
-                />
-                <Flex direction="column">
-                  <Text
-                    textStyle="base"
-                    fontSize="md"
-                    fontWeight="strong"
-                    color="font.primary"
-                  >
-                    영역3
-                  </Text>
-                  <Text
-                    textStyle="base"
-                    fontSize="xs"
-                    fontWeight="regular"
-                    color="font.primary"
-                  >
-                    상권3
-                  </Text>
-                </Flex>
-              </ListItem>
-              <ListItem
-                p="0rem 0.25rem 1rem"
-                display="flex"
-                alignItems="center"
-                gap="1rem"
-                borderBottom="1px solid"
-                borderColor="neutral.gray8"
-                _hover={{
-                  fontWeight: "strong",
-                  cursor: "pointer",
-                }}
-                onClick={() => {
-                  console.log("click");
-                }}
-              >
-                <Flex
-                  w="20px"
-                  h="20px"
-                  flex="none"
-                  justify="center"
-                  align="center"
-                  bgColor="#B3FFB1"
-                  borderRadius="50%"
-                />
-                <Flex direction="column">
-                  <Text
-                    textStyle="base"
-                    fontSize="md"
-                    fontWeight="strong"
-                    color="font.primary"
-                  >
-                    영역4
-                  </Text>
-                  <Text
-                    textStyle="base"
-                    fontSize="xs"
-                    fontWeight="regular"
-                    color="font.primary"
-                  >
-                    상권4
-                  </Text>
-                </Flex>
-              </ListItem>
-              <ListItem
-                p="0rem 0.25rem 1rem"
-                display="flex"
-                alignItems="center"
-                gap="1rem"
-                borderBottom="1px solid"
-                borderColor="neutral.gray8"
-                _hover={{
-                  fontWeight: "strong",
-                  cursor: "pointer",
-                }}
-                onClick={() => {
-                  console.log("click");
-                }}
-              >
-                <Flex
-                  w="20px"
-                  h="20px"
-                  flex="none"
-                  justify="center"
-                  align="center"
-                  bgColor="#EFAEE1"
-                  borderRadius="50%"
-                />
-                <Flex direction="column">
-                  <Text
-                    textStyle="base"
-                    fontSize="md"
-                    fontWeight="strong"
-                    color="font.primary"
-                  >
-                    영역5
-                  </Text>
-                  <Text
-                    textStyle="base"
-                    fontSize="xs"
-                    fontWeight="regular"
-                    color="font.primary"
-                  >
-                    상권5
-                  </Text>
-                </Flex>
-              </ListItem>
-            </List>
-          </TabPanel>
-          <TabPanel>
-            <List display="flex" flexDirection="column" gap="1rem">
-              <ListItem
-                p="0rem 0rem 0.75rem"
-                display="flex"
-                alignItems="center"
-                gap="0.75rem"
-                borderBottom="1px solid"
-                borderColor="neutral.gray8"
-                _hover={{
-                  fontWeight: "strong",
-                  cursor: "pointer",
-                }}
-                onClick={() => {
-                  console.log("click");
-                  setOpenIdx(2);
-                  onOpen();
-                }}
-              >
-                <Flex justify="center" align="center" flex="none">
-                  <Image
-                    src={markerRent}
-                    w="auto"
-                    bg="transparent"
-                    border="0"
+                  <Flex direction="column">
+                    <Text
+                      textStyle="base"
+                      fontSize="md"
+                      fontWeight="strong"
+                      color="font.primary"
+                    >
+                      영역2
+                    </Text>
+                    <Text
+                      textStyle="base"
+                      fontSize="xs"
+                      fontWeight="regular"
+                      color="font.primary"
+                    >
+                      상권2
+                    </Text>
+                  </Flex>
+                </ListItem>
+                <ListItem
+                  p="0rem 0.25rem 1rem"
+                  display="flex"
+                  alignItems="center"
+                  gap="1rem"
+                  borderBottom="1px solid"
+                  borderColor="neutral.gray8"
+                  _hover={{
+                    fontWeight: "strong",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    console.log("click");
+                  }}
+                >
+                  <Flex
+                    w="20px"
+                    h="20px"
+                    flex="none"
+                    justify="center"
+                    align="center"
+                    bgColor="#74D8D2"
+                    borderRadius="50%"
                   />
-                </Flex>
-                <Flex direction="column" gap="0.5rem">
-                  <Text
-                    textStyle="base"
-                    fontSize="md"
-                    fontWeight="strong"
-                    lineHeight="1"
-                    color="font.primary"
-                  >
-                    매물명
-                  </Text>
-                  <Text
-                    textStyle="base"
-                    fontSize="xs"
-                    fontWeight="regular"
-                    lineHeight="1"
-                    color="font.primary"
-                    noOfLines={1}
-                  >
-                    서울 종로구 종로대로29길 60 매물 주소
-                  </Text>
-                </Flex>
-              </ListItem>
-            </List>
-          </TabPanel>
+                  <Flex direction="column">
+                    <Text
+                      textStyle="base"
+                      fontSize="md"
+                      fontWeight="strong"
+                      color="font.primary"
+                    >
+                      영역3
+                    </Text>
+                    <Text
+                      textStyle="base"
+                      fontSize="xs"
+                      fontWeight="regular"
+                      color="font.primary"
+                    >
+                      상권3
+                    </Text>
+                  </Flex>
+                </ListItem>
+                <ListItem
+                  p="0rem 0.25rem 1rem"
+                  display="flex"
+                  alignItems="center"
+                  gap="1rem"
+                  borderBottom="1px solid"
+                  borderColor="neutral.gray8"
+                  _hover={{
+                    fontWeight: "strong",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    console.log("click");
+                  }}
+                >
+                  <Flex
+                    w="20px"
+                    h="20px"
+                    flex="none"
+                    justify="center"
+                    align="center"
+                    bgColor="#B3FFB1"
+                    borderRadius="50%"
+                  />
+                  <Flex direction="column">
+                    <Text
+                      textStyle="base"
+                      fontSize="md"
+                      fontWeight="strong"
+                      color="font.primary"
+                    >
+                      영역4
+                    </Text>
+                    <Text
+                      textStyle="base"
+                      fontSize="xs"
+                      fontWeight="regular"
+                      color="font.primary"
+                    >
+                      상권4
+                    </Text>
+                  </Flex>
+                </ListItem>
+                <ListItem
+                  p="0rem 0.25rem 1rem"
+                  display="flex"
+                  alignItems="center"
+                  gap="1rem"
+                  borderBottom="1px solid"
+                  borderColor="neutral.gray8"
+                  _hover={{
+                    fontWeight: "strong",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    console.log("click");
+                  }}
+                >
+                  <Flex
+                    w="20px"
+                    h="20px"
+                    flex="none"
+                    justify="center"
+                    align="center"
+                    bgColor="#EFAEE1"
+                    borderRadius="50%"
+                  />
+                  <Flex direction="column">
+                    <Text
+                      textStyle="base"
+                      fontSize="md"
+                      fontWeight="strong"
+                      color="font.primary"
+                    >
+                      영역5
+                    </Text>
+                    <Text
+                      textStyle="base"
+                      fontSize="xs"
+                      fontWeight="regular"
+                      color="font.primary"
+                    >
+                      상권5
+                    </Text>
+                  </Flex>
+                </ListItem>
+              </List>
+            </TabPanel>
+          )}
+          {rent && rent.length > 0 && (
+            <TabPanel>
+              <List display="flex" flexDirection="column" gap="1rem">
+                {rent.map((li: any, idx: number) => {
+                  const { rentName, addr } = li;
+
+                  return (
+                    <ListItem
+                      key={`rentList-${idx}`}
+                      p="0rem 0rem 0.75rem"
+                      display="flex"
+                      alignItems="center"
+                      gap="0.75rem"
+                      borderBottom="1px solid"
+                      borderColor="neutral.gray8"
+                      bgColor={
+                        `markerRent-${idx}` === slctErp?.hoverId
+                          ? "#EEEEEE"
+                          : "transparent"
+                      }
+                      _hover={{
+                        fontWeight: "strong",
+                        cursor: "pointer",
+                        bgColor: "#EEEEEE",
+                      }}
+                      onClick={() => {
+                        console.log("click");
+                        setOpenIdx(2);
+                        onOpen();
+                      }}
+                    >
+                      <Flex justify="center" align="center" flex="none">
+                        <Image
+                          src={markerRent}
+                          w="auto"
+                          bg="transparent"
+                          border="0"
+                        />
+                      </Flex>
+                      <Flex direction="column" gap="0.5rem">
+                        <Text
+                          textStyle="base"
+                          fontSize="md"
+                          fontWeight="strong"
+                          lineHeight="1"
+                          color="font.primary"
+                        >
+                          {rentName}
+                        </Text>
+                        <Text
+                          textStyle="base"
+                          fontSize="xs"
+                          fontWeight="regular"
+                          lineHeight="1"
+                          color="font.primary"
+                          noOfLines={1}
+                        >
+                          {addr}
+                        </Text>
+                      </Flex>
+                    </ListItem>
+                  );
+                })}
+              </List>
+            </TabPanel>
+          )}
         </TabPanels>
       </Tabs>
       {openIdx === 0 && (

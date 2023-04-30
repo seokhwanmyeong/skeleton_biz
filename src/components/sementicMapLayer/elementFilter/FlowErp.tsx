@@ -6,10 +6,15 @@ import { NaverMapContext } from "@src/lib/src";
 import ErpFilter from "@components/sementicMapLayer/elementFilter/ErpFilter";
 import BtnReset from "@components/sementicMapLayer/elementFilter/BtnReset";
 import ModalDaumAddr from "@components/modal/common/ModalDaumAddr";
+import ToolBox from "@components/sementicMapLayer/toolBox/ToolBox";
 //  Icon
 import { IcoDoubleSquere } from "@assets/icons/icon";
 //  Deco
-import { DecoTop } from "@components/sementicMapLayer/elementDeco/Deco";
+import {
+  DecoBotHightBox,
+  DecoFilterDivider,
+  DecoTop,
+} from "@components/sementicMapLayer/elementDeco/Deco";
 
 const FlowErp = () => {
   const { state, dispatch } = useContext(NaverMapContext);
@@ -76,14 +81,7 @@ const FlowErp = () => {
         </Flex>
       )}
       {/* ------------------------------ 하단 ------------------------------*/}
-      <Flex
-        pos="absolute"
-        bottom="1%"
-        left="50%"
-        zIndex={999}
-        transform="translateX(-50%)"
-        gap="4.25rem"
-      >
+      <DecoBotHightBox>
         <Button
           variant="filterTop"
           isActive={true}
@@ -96,9 +94,11 @@ const FlowErp = () => {
           </Box>
           ERP 필터
         </Button>
+        <DecoFilterDivider />
         <BtnReset />
-      </Flex>
+      </DecoBotHightBox>
       <ErpFilter isToolOpen={isToolOpen} toolOpen={toolOpen} />
+      <ToolBox />
     </Fragment>
   );
 };

@@ -14,6 +14,7 @@ const themeCheckbox = {
     label: {
       textStyle: "chkBox",
       top: "-1px",
+      marginInlineStart: "0.25rem",
     },
     control: {
       w: "1rem",

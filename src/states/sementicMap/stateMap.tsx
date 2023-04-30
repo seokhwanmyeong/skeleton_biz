@@ -106,3 +106,19 @@ export const atomCreateArea = atom({
     center: null,
   },
 });
+
+// ==================== 매장/마커/상권 클릭 이벤트 ====================
+export const atomSlctErp = atom<{
+  erpType?: "store" | "rent" | "bsDis";
+  name: string;
+  id: string;
+  hoverId?: string;
+}>({
+  key: "atomSlctErp",
+  default: {
+    erpType: undefined,
+    name: "",
+    id: "",
+    hoverId: "",
+  },
+});

@@ -9,15 +9,15 @@ import { calDist } from "@util/map/distance";
 //  Icon
 import markerPointG from "@assets/icons/marker_point_green.png";
 import { IcoLineCurve, IcoPolyline } from "@assets/icons/icon";
+import cursorRound from "@assets/icons/cursorRound.png";
 //  Ani
 import { alertAnimation } from "@styles/animation/keyFremes";
 
 type Props = {
   exitHandler: any;
-  mouseEvent: any;
 };
 
-const ToolRound = ({ exitHandler, mouseEvent }: Props) => {
+const ToolRound = ({ exitHandler }: Props) => {
   const { state } = useContext(NaverMapContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -35,6 +35,7 @@ const ToolRound = ({ exitHandler, mouseEvent }: Props) => {
   const moveEventRef = useRef<any>();
   const eventRef = useRef<any>();
   const rightEventRef = useRef<any>();
+  const mouseEventRef = useRef<any>();
 
   const activeEvent = () => {
     markerRangeRef.current?.setMap(null);
@@ -89,6 +90,8 @@ const ToolRound = ({ exitHandler, mouseEvent }: Props) => {
       const center = marker.getPosition();
       setRangeCenter(center);
       markerRangeRef.current = marker;
+      naver.maps.Event.removeListener(mouseEventRef.current);
+      mouseEventRef.current = null;
     }
   };
 
@@ -151,14 +154,15 @@ const ToolRound = ({ exitHandler, mouseEvent }: Props) => {
       return;
 
     const center = markerRangeRef.current.getPosition();
-
     circleRef.current?.setCenter(center);
     circleRef.current?.setRadius(distance);
+
     const rightHandler = naver.maps.Event?.addListener(
       markerCurRef.current,
       "rightclick",
       () => {
-        mouseEvent && naver.maps.Event.removeListener(mouseEvent);
+        naver.maps.Event.removeListener(mouseEventRef.current);
+        mouseEventRef.current = null;
         const doc = document
           ?.getElementsByClassName("map")[0]
           ?.getElementsByTagName("div")[0];
@@ -176,6 +180,19 @@ const ToolRound = ({ exitHandler, mouseEvent }: Props) => {
 
   useEffect(() => {
     if (state.map === undefined) return;
+    const doc = document
+      ?.getElementsByClassName("map")[0]
+      ?.getElementsByTagName("div")[0];
+
+    const cursorPoint = naver.maps.Event.addListener(
+      state?.map,
+      "mousemove",
+      (e) => {
+        if (doc) doc.style.cursor = `url(${cursorRound}) 2 2, auto`;
+      }
+    );
+    mouseEventRef.current = cursorPoint;
+
     const polyline = new naver.maps.Polyline({
       map: state.map,
       path: [],
@@ -200,7 +217,15 @@ const ToolRound = ({ exitHandler, mouseEvent }: Props) => {
     activeEvent();
 
     return () => {
-      resetDraw();
+      if (state.map) {
+        resetDraw();
+        naver.maps.Event.removeListener(cursorPoint);
+        mouseEventRef.current = null;
+        const doc = document
+          ?.getElementsByClassName("map")[0]
+          ?.getElementsByTagName("div")[0];
+        if (doc) doc.style.cursor = `auto`;
+      }
     };
   }, [state.map]);
 

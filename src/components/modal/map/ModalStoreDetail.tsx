@@ -11,11 +11,22 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  Text,
 } from "@chakra-ui/react";
 //  Deco
 import { Deco01 } from "@assets/deco/DecoSvg";
 //  Type
-import { IcoLeft } from "@assets/icons/icon";
+import {
+  IcoAudit,
+  IcoBars,
+  IcoHistory,
+  IcoLeft,
+  IcoLineChart,
+} from "@assets/icons/icon";
+import StoreBasicInfo from "./elementStore/StoreBasicInfo";
+import StoreSale from "./elementStore/StoreSale";
+import StoreHistory from "./elementStore/StoreHistory";
+import StoreDoc from "./elementStore/StoreDoc";
 
 type Props = {
   isOpen: boolean;
@@ -57,16 +68,38 @@ const ModalStoreDetail = ({ isOpen, onClose }: Props) => {
               평창점
             </Heading>
             <Deco01 p="0 2rem" w="100%" h="auto" />
-            <Tabs>
-              <TabList mb="1rem" border="none">
-                <Tab>매장</Tab>
-                <Tab>상권</Tab>
-                <Tab>매물</Tab>
+            <Tabs variant="detailPage">
+              <TabList>
+                <Tab key="tab-info">
+                  <IcoBars />
+                  <Text>기본 정보</Text>
+                </Tab>
+                <Tab key="tab-sale" isDisabled={false}>
+                  <IcoLineChart />
+                  <Text>매출</Text>
+                </Tab>
+                <Tab key="tab-history" isDisabled={false}>
+                  <IcoHistory />
+                  <Text>히스토리 데이터</Text>
+                </Tab>
+                <Tab key="tab-doc" isDisabled={false}>
+                  <IcoAudit />
+                  <Text>문서보관함</Text>
+                </Tab>
               </TabList>
               <TabPanels>
-                <TabPanel bg="#000000"></TabPanel>
-                <TabPanel bg="#000000"></TabPanel>
-                <TabPanel bg="#000000"></TabPanel>
+                <TabPanel>
+                  <StoreBasicInfo />
+                </TabPanel>
+                <TabPanel w="800px">
+                  <StoreSale />
+                </TabPanel>
+                <TabPanel>
+                  <StoreHistory id="test" title="test" />
+                </TabPanel>
+                <TabPanel>
+                  <StoreDoc />
+                </TabPanel>
               </TabPanels>
             </Tabs>
           </Flex>

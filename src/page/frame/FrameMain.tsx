@@ -3,8 +3,6 @@ import { Outlet } from "react-router-dom";
 import { Flex } from "@chakra-ui/react";
 // Components
 import Header from "@components/header/Header";
-//  image
-import bgImg from "@assets/background.png";
 
 const FrameMain = () => (
   <Flex

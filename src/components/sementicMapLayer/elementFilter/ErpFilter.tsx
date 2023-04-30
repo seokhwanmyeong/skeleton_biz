@@ -52,6 +52,7 @@ import type {
   TypeFilterBsDis,
   TypeFilterRent,
 } from "@states/sementicMap/stateFilter";
+import { motion } from "framer-motion";
 
 type ErpFilterProps = {
   areaCode?: string;
@@ -90,6 +91,39 @@ const ErpFilter = ({
   const searchStoreHandler = () => {
     console.log("store search");
     console.log(filterStore);
+
+    const test = [
+      {
+        storeName: "매장1",
+        addr: "testtesttest",
+        storePhone: "01099999999",
+        lat: 37.61194845,
+        lng: 126.96876175,
+      },
+      {
+        storeName: "매장2",
+        addr: "testtesttest",
+        storePhone: "01099999999",
+        lat: 37.6113865,
+        lng: 126.9699406,
+      },
+      {
+        storeName: "매장3",
+        addr: "testtesttest",
+        storePhone: "01099999999",
+        lat: 37.6106991,
+        lng: 126.9671364,
+      },
+    ];
+
+    setErpStore({
+      filter: filterStore,
+      active: true,
+      data: test || [],
+    });
+
+    return;
+
     getStoreList(filterStore).then((res: any) => {
       const { records } = res;
       console.log(records);
@@ -109,6 +143,60 @@ const ErpFilter = ({
     console.log("bsD search");
     console.log(filterBsD);
 
+    const test = [
+      {
+        bisName: "상권01",
+        bsDisType: "A",
+        polygon: [
+          [126.9749089, 37.6164026],
+          [126.9719048, 37.6124932],
+          [126.9746514, 37.6102834],
+          [126.977398, 37.612731100000005],
+          [126.9767114, 37.6154847],
+          [126.9749089, 37.6164026],
+        ],
+        // center : [ Number, Number ]
+        polygonType: "single",
+      },
+      {
+        bisName: "상권02",
+        bsDisType: "B",
+        polygon: [
+          [126.9665286, 37.6142807],
+          [126.965284, 37.6136178],
+          [126.9638464, 37.6113231],
+          [126.9649407, 37.6112041],
+          [126.9667861, 37.611799000000005],
+          [126.9676229, 37.6134308],
+          [126.96766579999999, 37.6143317],
+          [126.9665286, 37.6142807],
+        ],
+        // center : [ Number, Number ]
+        polygonType: "single",
+      },
+      {
+        bisName: "상권03",
+        bsDisType: "C",
+        polygon: [
+          [126.96750109999999, 37.6128706],
+          [126.9677371, 37.6111878],
+          [126.9690353, 37.6110263],
+          [126.9699151, 37.6117827],
+          [126.97002239999999, 37.6128706],
+          [126.96750109999999, 37.6128706],
+        ],
+        // center : [ Number, Number ]
+        polygonType: "single",
+      },
+    ];
+
+    setErpBsD({
+      filter: filterBsD,
+      active: true,
+      data: test || [],
+    });
+
+    return;
     getBsDisList(filterBsD).then((res: any) => {
       const { records } = res;
       console.log(res);
@@ -126,6 +214,34 @@ const ErpFilter = ({
     console.log("rent search");
     console.log(filterRent);
 
+    const test = [
+      {
+        rentName: "매물1",
+        addr: "서울 종로구 종로대로29길 60 매물 주소",
+        lat: 37.6100245,
+        lng: 126.9693506,
+      },
+      {
+        rentName: "매물2",
+        addr: "서울 종로구 종로대로29길 60 매물 주소",
+        lat: 37.6101833,
+        lng: 126.9709566,
+      },
+      {
+        rentName: "매물3",
+        addr: "서울 종로구 종로대로29길 60 매물 주소",
+        lat: 37.6115745,
+        lng: 126.971027,
+      },
+    ];
+
+    setErpRent({
+      filter: filterRent,
+      active: true,
+      data: test,
+    });
+
+    return;
     getRentList(filterRent).then((res: any) => {
       const { records } = res;
       console.log(res);
@@ -160,9 +276,10 @@ const ErpFilter = ({
 
   return (
     <Flex
+      as={motion.div}
       ref={divRef}
       pos="absolute"
-      bottom="5.25rem"
+      // bottom="6.15rem"
       left="50%"
       zIndex={999}
       transform="translateX(-50%)"
@@ -174,6 +291,19 @@ const ErpFilter = ({
       border="1px solid"
       borderColor="neutral.gray6"
       borderRadius="34px"
+      transition="0.2s 0.1s linear"
+      initial={{
+        opacity: 0,
+        bottom: "-5rem",
+      }}
+      animate={{
+        opacity: 1,
+        bottom: "6.15rem",
+      }}
+      exit={{
+        opacity: 1,
+        bottom: "6.15rem",
+      }}
     >
       {/* ============================== infoCom의 필터 버튼 ============================== */}
       {isToolOpen ? (
@@ -266,11 +396,15 @@ const ErpFilter = ({
           border="1px solid #BFBFBF"
         >
           <Flex justify="space-between">
-            <Flex pl="0.25rem" align="center" gap="1rem">
+            <Flex pl="0.25rem" align="center" gap="0.5rem">
+              <IcoStore
+                width="0.625rem"
+                height="0.625rem"
+                color="font.primary"
+              />
               <Heading as={"h5"} variant="filterBox">
                 매장조회
               </Heading>
-              <IcoStore width="0.875rem" height="0.875rem" color="font.title" />
             </Flex>
             <Flex align="center" gap="0.5rem">
               <SwitchFilter
@@ -447,15 +581,15 @@ const ErpFilter = ({
           border="1px solid #BFBFBF"
         >
           <Flex justify="space-between">
-            <Flex pl="0.25rem" align="center" gap="1rem">
+            <Flex pl="0.25rem" align="center" gap="0.5rem">
+              <IcoDoubleSquere
+                width="0.625rem"
+                height="0.625rem"
+                color="font.primary"
+              />
               <Heading as={"h5"} variant="filterBox">
                 상권조회
               </Heading>
-              <IcoDoubleSquere
-                width="0.875rem"
-                height="0.875rem"
-                color="font.title"
-              />
             </Flex>
             <Flex align="center" gap="0.5rem">
               <SwitchFilter
@@ -595,15 +729,15 @@ const ErpFilter = ({
           border="1px solid #BFBFBF"
         >
           <Flex justify="space-between">
-            <Flex pl="0.25rem" align="center" gap="1rem">
+            <Flex pl="0.25rem" align="center" gap="0.5rem">
+              <IcoFileSearch
+                width="0.625rem"
+                height="0.625rem"
+                color="font.primary"
+              />
               <Heading as={"h5"} variant="filterBox">
                 매물조회
               </Heading>
-              <IcoFileSearch
-                width="0.875rem"
-                height="0.875rem"
-                color="font.title"
-              />
             </Flex>
             <Flex align="center" gap="0.5rem">
               <SwitchFilter

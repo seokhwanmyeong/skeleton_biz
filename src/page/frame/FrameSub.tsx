@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 //  Components
 import MenuSide from "@components/menu/MenuSide";
 //  image
-import bgImg from "@assets/background.png";
+import bgImg from "@assets/img/background.png";
 
 const FrameSub = () => {
   return (

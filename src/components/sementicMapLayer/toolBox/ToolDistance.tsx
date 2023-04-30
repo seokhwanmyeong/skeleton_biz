@@ -1,5 +1,12 @@
 // Lib
-import { Fragment, useContext, useEffect, useRef, useState } from "react";
+import {
+  Fragment,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Button, Flex, Text, useDisclosure } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { NaverMapContext } from "@src/lib/src";
@@ -7,6 +14,7 @@ import OverlayView from "@src/lib/src/components/Overlay/OverlayView";
 //  Icon
 import markerPointRed from "@assets/icons/marker_point_red.png";
 import { IcoLineCurve, IcoPolyline } from "@assets/icons/icon";
+import cursorDis from "@assets/icons/cursorDistance.png";
 //  Ani
 import { alertAnimation } from "@styles/animation/keyFremes";
 
@@ -27,6 +35,7 @@ const ToolDistance = ({ exitHandler }: Props) => {
   const polyRef = useRef<naver.maps.Polyline | undefined>();
   const markerRef = useRef<any[]>([]);
   const eventRef = useRef<any[]>([]);
+  const mouseEventRef = useRef<any>(null);
 
   const activeEvent = () => {
     markerRef.current.map((marker: any) => marker.setMap(null));
@@ -75,11 +84,8 @@ const ToolDistance = ({ exitHandler }: Props) => {
 
     const point: naver.maps.LatLng = e.coord;
     const path: any = polyRef.current?.getPath();
-    const inputPoint = point.toPoint().add(-0.0005, 0.0005);
     setCursorPo(point);
     onOpen();
-
-    path.push(point);
 
     const marker = new naver.maps.Marker({
       map: state.map,
@@ -90,7 +96,11 @@ const ToolDistance = ({ exitHandler }: Props) => {
         anchor: new naver.maps.Point(7, 7),
       },
     });
+
+    const markerEvent = markerClickHandler(marker);
+    const markerRightEvent = markerRightClickHandler(marker);
     markerRef.current.push(marker);
+    path.push(point);
 
     const polyMoveEvent = naver.maps.Event.addListener(
       state.map,
@@ -103,48 +113,77 @@ const ToolDistance = ({ exitHandler }: Props) => {
           setDistance(distance);
         }
 
-        let curPoint = e.latlng.toPoint().add(-0.0005, 0.0005);
-
         if (path.length === 1) {
-          path.push(curPoint);
+          const marker = new naver.maps.Marker({
+            map: state.map,
+            position: e.latlng,
+            icon: {
+              url: markerPointRed,
+              size: new naver.maps.Size(14, 14),
+              anchor: new naver.maps.Point(7, 7),
+            },
+          });
+          const markerEvent = markerClickHandler(marker);
+          const markerRightEvent = markerRightClickHandler(marker);
+
+          path.push(e.latlng);
+          markerRef.current.push(marker);
+          eventRef.current.push(markerEvent);
+          eventRef.current.push(markerRightEvent);
         } else if (path.length > 1) {
-          path.splice(path.length - 1, 1, curPoint);
+          path.splice(path.length - 1, 1, e.latlng);
+          const marker = markerRef.current[markerRef.current.length - 1];
+          if (!marker?.__event_relations__?.click) {
+            const markerEvent = markerClickHandler(marker);
+            const markerRightEvent = markerRightClickHandler(marker);
+
+            eventRef.current.push(markerEvent);
+            eventRef.current.push(markerRightEvent);
+          }
+          marker.setPosition(e.latlng);
         }
       }
     );
 
-    const mapRightClickHandler = naver.maps.Event?.addListener(
-      state.map,
-      "rightclick",
-      () => {
-        eventRef.current.map((event) => {
-          naver.maps.Event.removeListener(event);
-        });
-        eventRef.current = [];
-        naver.maps.Event.removeListener(mapRightClickHandler);
-        onClose();
-        onConOpen();
-      }
-    );
-
-    const polyRightClickHandler = naver.maps.Event?.addListener(
-      polyRef.current,
-      "rightclick",
-      () => {
-        eventRef.current.map((event) => {
-          naver.maps.Event.removeListener(event);
-        });
-        eventRef.current = [];
-        naver.maps.Event.removeListener(polyRightClickHandler);
-        onClose();
-        onConOpen();
-      }
-    );
-
     eventRef.current.push(polyMoveEvent);
-    eventRef.current.push(mapRightClickHandler);
-    eventRef.current.push(polyRightClickHandler);
+    eventRef.current.push(markerEvent);
+    eventRef.current.push(markerRightEvent);
   };
+
+  const markerClickHandler = useCallback(
+    (marker: any) =>
+      naver.maps.Event?.addListener(marker, "click", (e) => {
+        const path: any = polyRef.current?.getPath();
+        const point: naver.maps.LatLng = e.coord;
+        path.push(point);
+        const marker = new naver.maps.Marker({
+          map: state.map,
+          position: point,
+          icon: {
+            url: markerPointRed,
+            size: new naver.maps.Size(14, 14),
+            anchor: new naver.maps.Point(7, 7),
+          },
+        });
+        markerRef.current.push(marker);
+      }),
+    []
+  );
+
+  const markerRightClickHandler = useCallback(
+    (marker: any) =>
+      naver.maps.Event?.addListener(marker, "rightclick", () => {
+        const marker = markerRef.current[markerRef.current.length - 1];
+        marker.setMap(null);
+        eventRef.current.map((event) => {
+          naver.maps.Event.removeListener(event);
+        });
+        eventRef.current = [];
+        onClose();
+        onConOpen();
+      }),
+    []
+  );
 
   useEffect(() => {
     if (isConOpen) {
@@ -157,6 +196,18 @@ const ToolDistance = ({ exitHandler }: Props) => {
 
   useEffect(() => {
     if (state.map === undefined) return;
+    const doc = document
+      ?.getElementsByClassName("map")[0]
+      ?.getElementsByTagName("div")[0];
+
+    const cursorPoint = naver.maps.Event.addListener(
+      state?.map,
+      "mousemove",
+      (e) => {
+        if (doc) doc.style.cursor = `url(${cursorDis}) 2 2, auto`;
+      }
+    );
+    mouseEventRef.current = cursorPoint;
 
     const polyline = new naver.maps.Polyline({
       map: state.map,
@@ -173,6 +224,12 @@ const ToolDistance = ({ exitHandler }: Props) => {
 
     return () => {
       resetDraw();
+      naver.maps.Event.removeListener(cursorPoint);
+      mouseEventRef.current = null;
+      const doc = document
+        ?.getElementsByClassName("map")[0]
+        ?.getElementsByTagName("div")[0];
+      if (doc) doc.style.cursor = `auto`;
     };
   }, [state.map]);
 
