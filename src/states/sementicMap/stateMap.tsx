@@ -122,3 +122,19 @@ export const atomSlctErp = atom<{
     hoverId: "",
   },
 });
+
+// ==================== 나이스 클릭 이벤트 ====================
+export const atomSlctNice = atom<{
+  niceType?: "pop" | "brand";
+  name: string;
+  id: string;
+  hoverId?: string;
+}>({
+  key: "atomSlctErp",
+  default: {
+    niceType: undefined,
+    name: "",
+    id: "",
+    hoverId: "",
+  },
+});

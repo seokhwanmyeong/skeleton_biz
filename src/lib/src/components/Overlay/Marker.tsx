@@ -45,9 +45,9 @@ const Marker = ({
   const removeMarker = () => {
     dispatch({ type: "remove_object", id: markerId });
   };
+
   useEffect(() => {
     if (state.map === undefined && !id && !opts) return;
-    console.log(opts);
     const marker = new naver.maps.Marker({ ...opts, map: state.map });
     setMarker(marker);
     setPrevOpts(JSON.stringify(opts));

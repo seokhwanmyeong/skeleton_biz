@@ -230,7 +230,8 @@ export const infoComFlowDepth = atom<any>({
       gender: [],
       age: [],
     },
-    data: {},
+    data: [],
+    show: false,
     active: false,
   },
 });
@@ -238,10 +239,8 @@ export const infoComFlowDepth = atom<any>({
 export const infoComBrand = atom<any>({
   key: "infoComBrand",
   default: {
-    filter: {
-      brand: [],
-    },
-    data: {},
+    data: [],
+    show: false,
     active: false,
   },
 });
@@ -252,7 +251,8 @@ export const infoComBuilding = atom<any>({
     filter: {
       brand: [],
     },
-    data: {},
+    data: [],
+    show: false,
     active: false,
   },
 });
@@ -291,6 +291,7 @@ export type Infocome<Filter> = {
   filter: Filter;
   data: any[];
   active: boolean;
+  show: boolean;
 };
 
 export type TypeFilterStore = {
@@ -326,6 +327,7 @@ export const infoComErpStore = atom<Infocome<TypeFilterStore>>({
       storeStatus: [],
     },
     data: [],
+    show: false,
     active: false,
   },
 });
@@ -340,6 +342,7 @@ export const infoComErpBsnsD = atom<Infocome<TypeFilterBsDis>>({
       bsDType: [],
     },
     data: [],
+    show: false,
     active: false,
   },
 });
@@ -354,6 +357,7 @@ export const infoComErpRent = atom<Infocome<TypeFilterRent>>({
       rentType: [],
     },
     data: [],
+    show: false,
     active: false,
   },
 });

@@ -1,3 +1,7 @@
+//  Lib
+import { useContext } from "react";
+import { useRecoilState } from "recoil";
+import { NaverMapContext } from "@src/lib/src";
 import {
   Flex,
   Heading,
@@ -11,14 +15,31 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { Deco01 } from "@src/assets/deco/DecoSvg";
+//  Component
+import ModalBuilding from "@components/modal/map/ModalBuilding";
+//  State
+import { atomSlctNice } from "@states/sementicMap/stateMap";
+//  Icon
 import { IcoBuildingList, IcoVillage } from "@src/assets/icons/icon";
-import ModalBuilding from "@src/components/modal/map/ModalBuilding";
+//  Deco
+import { Deco01 } from "@assets/deco/DecoSvg";
 
-type Props = {};
+type Props = {
+  brandList: {
+    newAddr: string;
+    oldAddr: string;
+    storeNm: string;
+    upjongNm: string;
+    xAxis: number;
+    yAxis: number;
+  }[];
+};
 
-const DepthListBox = (props: Props) => {
+const DepthListBox = ({ brandList }: Props) => {
+  const { state } = useContext(NaverMapContext);
+  const [slctNice, setSlctNice] = useRecoilState(atomSlctNice);
   const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <Flex
       pos="relative"
@@ -54,50 +75,70 @@ const DepthListBox = (props: Props) => {
       <Deco01 margin="0.75rem 0 0.5rem" width="100%" height="auto" />
       <Tabs variant="depthListBox">
         <TabList mb="1rem" border="none">
-          <Tab>사업체</Tab>
+          {brandList && brandList.length > 0 && <Tab>사업체</Tab>}
           <Tab>건물</Tab>
         </TabList>
         <TabPanels>
-          <TabPanel>
-            <List display="flex" flexDirection="column" gap="1rem">
-              <ListItem
-                p="0rem 0rem 0.75rem"
-                display="flex"
-                alignItems="center"
-                gap="0.75rem"
-                borderBottom="1px solid"
-                borderColor="neutral.gray8"
-                _hover={{
-                  fontWeight: "strong",
-                  cursor: "pointer",
-                }}
-                onClick={() => {
-                  console.log("click");
-                }}
-              >
-                <Flex
-                  justify="center"
-                  align="center"
-                  w="2.5rem"
-                  h="2rem"
-                  bgColor="secondary.third.type5"
-                  border="1px solid"
-                  borderColor="neutral.gray8"
-                  borderRadius="2px"
-                >
-                  <IcoBuildingList color="#FFFFFFD9" />
-                </Flex>
-                <Text
-                  textStyle="base"
-                  fontSize="md"
-                  fontWeight="strong"
-                  color="font.primary"
-                >
-                  스타벅스 강남점
-                </Text>
-              </ListItem>
-            </List>
-          </TabPanel>
+          {brandList && brandList.length > 0 && (
+            <TabPanel>
+              <List display="flex" flexDirection="column">
+                {brandList.map(({ storeNm }, idx: number) => {
+                  return (
+                    <ListItem
+                      key={`brandList-${idx}`}
+                      p="1rem 0rem 0.75rem"
+                      display="flex"
+                      alignItems="center"
+                      gap="0.75rem"
+                      bg={
+                        slctNice?.hoverId === `markerBrand-${idx}`
+                          ? "linear-gradient(90deg, rgba(255, 236, 61, 0) 0%, #FFEC3D 36.2%, rgba(255, 236, 61, 0) 92.66%)"
+                          : "transparent"
+                      }
+                      borderBottom="1px solid"
+                      borderColor="neutral.gray8"
+                      transition="0.2s"
+                      _hover={{
+                        fontWeight: "strong",
+                        cursor: "pointer",
+                      }}
+                      onMouseEnter={() => {
+                        setSlctNice({
+                          ...slctNice,
+                          name: storeNm,
+                          hoverId: `markerBrand-${idx}`,
+                        });
+                      }}
+                      onMouseLeave={() => {
+                        setSlctNice({ ...slctNice, name: "", hoverId: "" });
+                      }}
+                    >
+                      <Flex
+                        justify="center"
+                        align="center"
+                        w="2.5rem"
+                        h="2rem"
+                        bgColor="secondary.third.type5"
+                        border="1px solid"
+                        borderColor="neutral.gray8"
+                        borderRadius="2px"
+                      >
+                        <IcoBuildingList color="#FFFFFFD9" />
+                      </Flex>
+                      <Text
+                        textStyle="base"
+                        fontSize="md"
+                        fontWeight="strong"
+                        color="font.primary"
+                      >
+                        {storeNm}
+                      </Text>
+                    </ListItem>
+                  );
+                })}
+              </List>
+            </TabPanel>
+          )}
           <TabPanel>
             <List display="flex" flexDirection="column" gap="1rem">
               <ListItem

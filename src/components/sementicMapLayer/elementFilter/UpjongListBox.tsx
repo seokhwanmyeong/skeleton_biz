@@ -49,7 +49,7 @@ type Props = {
   onClick?: (props?: any) => any;
 };
 
-const UpjonListBox = ({
+const UpjongListBox = ({
   relateOpen = false,
   relateSetClose,
   isDisabled = false,
@@ -379,4 +379,4 @@ const UpjonListBox = ({
   );
 };
 
-export default UpjonListBox;
+export default UpjongListBox;

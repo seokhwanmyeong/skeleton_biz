@@ -3,7 +3,7 @@ import { useState, useEffect, Fragment } from "react";
 import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
 import { Box, Button, Flex, useDisclosure } from "@chakra-ui/react";
 //  Component
-import UpjonListBox from "@components/sementicMapLayer/elementFilter/UpjongListBox";
+import UpjongListBox from "@components/sementicMapLayer/elementFilter/UpjongListBox";
 import NiceFilterDepth from "@components/sementicMapLayer/elementFilter/NiceFilterDepth";
 import BtnReset from "@components/sementicMapLayer/elementFilter/BtnReset";
 import { BoxRankingDong } from "@components/sementicMapLayer/elementFilter/BoxRanking";
@@ -64,7 +64,7 @@ const FlowCustom = (props: Props) => {
           </Flex>
         </Flex>
         <Flex pos="absolute" right="-4rem">
-          <UpjonListBox />
+          <UpjongListBox />
         </Flex>
       </Flex>
       {/* --------------------------- 중단 Frame ---------------------------*/}

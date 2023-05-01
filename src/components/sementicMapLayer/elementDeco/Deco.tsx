@@ -183,17 +183,14 @@ const DecoInitFilter = ({ children }: { children: ReactNode }) => {
       w="490px"
       h="153px"
       bg={`top no-repeat url(${Bg})`}
-      transition="0.3s linear"
+      transition="0.1s linear"
       initial={{
-        opacity: 0,
         bottom: "-200px",
       }}
       animate={{
-        opacity: 1,
         bottom: "0px",
       }}
       exit={{
-        opacity: 1,
         bottom: "0px",
       }}
     >
@@ -202,24 +199,24 @@ const DecoInitFilter = ({ children }: { children: ReactNode }) => {
         pos="relative"
         w="100%"
         h="100%"
-        transition="0.4s linear"
+        transition="0.2s 0.05s linear"
         initial={{
-          transform: "rotate(-45deg)",
-          top: "30%",
-          left: "-30%",
           opacity: 0,
+          transform: "rotate(-180deg)",
+          top: "70%",
+          left: "-30%",
         }}
         animate={{
+          opacity: 1,
           transform: "rotate(0deg)",
           top: "0",
           left: "0",
-          opacity: 1,
         }}
         exit={{
+          opacity: 1,
           transform: "rotate(0deg)",
           top: "0",
           left: "0",
-          opacity: 1,
         }}
       >
         {children}
@@ -229,7 +226,13 @@ const DecoInitFilter = ({ children }: { children: ReactNode }) => {
 };
 
 //  최하단 상위 필터
-const DecoBotHightBox = ({ children }: { children: ReactNode }) => {
+const DecoBotHightBox = ({
+  children,
+  gap,
+}: {
+  children: ReactNode;
+  gap?: string;
+}) => {
   return (
     <Flex
       as={motion.div}
@@ -242,9 +245,9 @@ const DecoBotHightBox = ({ children }: { children: ReactNode }) => {
       h="72px"
       justify="center"
       align="center"
-      gap="4.25rem"
+      gap={gap || "4.25rem"}
       bg={`center url(${botBg})`}
-      transition="0.3s linear"
+      transition="0.1s linear"
       initial={{
         bottom: "-72px",
         opacity: 0,

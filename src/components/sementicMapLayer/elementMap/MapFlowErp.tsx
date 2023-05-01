@@ -32,14 +32,13 @@ const MapFlowErp = (props: Props) => {
   const { getStoreList, getRentList, getBsDisList } = apiErpMap;
   const { state, dispatch } = useContext(NaverMapContext);
   const [slctErp, setSlctErp] = useRecoilState(atomSlctErp);
-  const { data: storeList } = useRecoilValue(infoComErpStore);
-  const { data: rentList } = useRecoilValue(infoComErpRent);
-  const { data: bsDisList } = useRecoilValue(infoComErpBsnsD);
+  const { show: storeShow, data: storeList } = useRecoilValue(infoComErpStore);
+  const { show: rentShow, data: rentList } = useRecoilValue(infoComErpRent);
+  const { show: bsDisShow, data: bsDisList } = useRecoilValue(infoComErpBsnsD);
   const [store, setStore] = useState<any[]>([]);
   const [rent, setRent] = useState<any[]>([]);
   const [bsDis, setBsDis] = useState<any[]>([]);
   const [cursorPo, setCursorPo] = useState<any>(null);
-  const [focusObj, setFosueObj] = useState<any>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
@@ -63,6 +62,24 @@ const MapFlowErp = (props: Props) => {
     } else setBsDis([]);
   }, [bsDisList]);
 
+  useEffect(() => {
+    if (!state?.objects && !slctErp?.hoverId && state.objects.size === 0) {
+      return;
+    } else if (slctErp?.hoverId) {
+      let marker: any;
+      marker = state?.objects.get(slctErp?.hoverId);
+
+      if (marker) {
+        const pos = marker.getPosition();
+        setCursorPo([pos.x, pos.y]);
+        onOpen();
+      }
+    } else {
+      cursorPo && setCursorPo(null);
+      onClose();
+    }
+  }, [slctErp.hoverId]);
+
   return (
     <Fragment>
       <Flex
@@ -72,15 +89,18 @@ const MapFlowErp = (props: Props) => {
         zIndex={1}
         pointerEvents="none"
       >
-        <DecoFrameR pr="0.25rem">
-          <BrandListBox
-            store={store || []}
-            rent={rent || []}
-            bsDis={bsDis || []}
-          />
-        </DecoFrameR>
+        {(store.length > 0 || rent.length > 0 || bsDis.length > 0) && (
+          <DecoFrameR pr="0.25rem">
+            <BrandListBox
+              store={store || []}
+              rent={rent || []}
+              bsDis={bsDis || []}
+            />
+          </DecoFrameR>
+        )}
       </Flex>
-      {store?.length > 0 &&
+      {storeShow &&
+        store?.length > 0 &&
         store.map((store, idx: number) => {
           const { storeName, lat, lng } = store;
           return (
@@ -95,20 +115,24 @@ const MapFlowErp = (props: Props) => {
               }}
               onClick={() => {}}
               onMouseOver={() => {
-                setFosueObj({ name: storeName, id: `markerStore-${idx}` });
                 setCursorPo([lng, lat]);
-                setSlctErp({ ...slctErp, hoverId: `markerStore-${idx}` });
+                setSlctErp({
+                  ...slctErp,
+                  name: storeName,
+                  hoverId: `markerStore-${idx}`,
+                });
                 onOpen();
               }}
               onMouseOut={() => {
                 onClose();
-                setFosueObj({});
-                setSlctErp({ ...slctErp, hoverId: "" });
+                setCursorPo(null);
+                setSlctErp({ ...slctErp, name: "", hoverId: "" });
               }}
             />
           );
         })}
-      {bsDis?.length > 0 &&
+      {bsDisShow &&
+        bsDis?.length > 0 &&
         bsDis.map((bs: any, idx: number) => {
           const { bisName, bsDisType, polygon } = bs;
           return (
@@ -139,7 +163,8 @@ const MapFlowErp = (props: Props) => {
             />
           );
         })}
-      {rent?.length > 0 &&
+      {rentShow &&
+        rent?.length > 0 &&
         rent.map((li, idx: number) => {
           const { rentName, lat, lng } = li;
 
@@ -158,15 +183,18 @@ const MapFlowErp = (props: Props) => {
                 console.log(rentName);
               }}
               onMouseOver={() => {
-                setFosueObj({ name: rentName, id: `markerRent-${idx}` });
                 setCursorPo([lng, lat]);
-                setSlctErp({ ...slctErp, hoverId: `markerRent-${idx}` });
+                setSlctErp({
+                  ...slctErp,
+                  name: rentName,
+                  hoverId: `markerRent-${idx}`,
+                });
                 onOpen();
               }}
               onMouseOut={() => {
                 onClose();
-                setFosueObj({});
-                setSlctErp({ ...slctErp, hoverId: "" });
+                setCursorPo(null);
+                setSlctErp({ ...slctErp, name: "", hoverId: "" });
               }}
             />
           );
@@ -180,8 +208,9 @@ const MapFlowErp = (props: Props) => {
         >
           <Flex
             pos="relative"
-            p="1rem"
-            minW="5rem"
+            top="-4.5rem"
+            left="-50%"
+            p="0.25rem 0.75rem"
             w="auto"
             justify="flex-start"
             align="flex-start"
@@ -191,40 +220,19 @@ const MapFlowErp = (props: Props) => {
             borderColor="neutral.gray6"
             borderRadius="base"
             transition="0.3s"
+            whiteSpace="nowrap"
           >
-            <Flex pt="0.25rem">
-              <IcoLineCurve
-                width="0.875rem"
-                height="0.875rem"
-                color="#000000"
-              />
-            </Flex>
-            <Flex
-              p="0"
-              direction="column"
-              justify="flex-start"
-              align="flex-start"
+            <Text
+              textStyle="base"
+              fontSize="sm"
+              fontWeight="strong"
+              lineHeight="normal"
+              transition="0.3s"
+              color="font.primary"
+              whiteSpace="nowrap"
             >
-              <Text
-                textStyle="base"
-                fontSize="sm"
-                fontWeight="strong"
-                lineHeight="normal"
-                transition="0.3s"
-                color="font.primary"
-              >
-                {focusObj?.name || ""}
-              </Text>
-              {/* <Text
-                textStyle="base"
-                fontSize="sm"
-                fontWeight="regular"
-                color="font.primary"
-                lineHeight="normal"
-              >
-                마우스 오른쪽 버튼으로 마칠 수 있습니다.
-              </Text> */}
-            </Flex>
+              {slctErp?.name || ""}
+            </Text>
           </Flex>
         </OverlayView>
       )}

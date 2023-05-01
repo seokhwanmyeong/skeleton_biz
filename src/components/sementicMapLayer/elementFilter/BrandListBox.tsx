@@ -1,7 +1,6 @@
 //  Lib
-import { useState, useContext, useEffect } from "react";
-import { useRecoilState } from "recoil";
-import { NaverMapContext } from "@src/lib/src";
+import { useState } from "react";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import {
   Flex,
   Heading,
@@ -23,6 +22,7 @@ import ModalRentDetail from "@components/modal/map/ModalRentDetail";
 import ModalBuilding from "@components/modal/map/ModalBuilding";
 //  State
 import { atomSlctErp } from "@states/sementicMap/stateMap";
+import { sementicViewState } from "@states/sementicMap/stateView";
 //  Util
 import { bsDisColor } from "@util/define/bsDis";
 //  Icon
@@ -34,15 +34,11 @@ import { Deco01 } from "@assets/deco/DecoSvg";
 type Props = { store: any[]; rent: any[]; bsDis: any[] };
 
 const BrandListBox = ({ store, rent, bsDis }: Props) => {
-  const { state, dispatch } = useContext(NaverMapContext);
+  const setSv = useSetRecoilState(sementicViewState);
   const [slctErp, setSlctErp] = useRecoilState(atomSlctErp);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [openIdx, setOpenIdx] = useState(-1);
 
-  useEffect(() => {
-    console.log(state);
-  }, [state]);
-  console.log(state);
   return (
     <Flex
       pos="relative"
@@ -77,7 +73,7 @@ const BrandListBox = ({ store, rent, bsDis }: Props) => {
       </Flex>
       <Deco01 margin="0.75rem 0 0.5rem" width="100%" height="auto" />
       <Tabs variant="depthListBox">
-        <TabList mb="1rem" border="none">
+        <TabList border="none">
           {store && store.length > 0 && <Tab>매장</Tab>}
           {bsDis && bsDis.length > 0 && <Tab>상권</Tab>}
           {rent && rent.length > 0 && <Tab>매물</Tab>}
@@ -85,33 +81,49 @@ const BrandListBox = ({ store, rent, bsDis }: Props) => {
         <TabPanels>
           {store && store.length > 0 && (
             <TabPanel>
-              <List display="flex" flexDirection="column" gap="1rem">
+              <List display="flex" flexDirection="column">
                 {store.map((li: any, idx: number) => {
                   const { storeName, addr, storePhone } = li;
 
                   return (
                     <ListItem
                       key={`storeList-${idx}`}
-                      p="0rem 0rem 0.75rem"
+                      p="1rem 0rem 0.75rem"
                       display="flex"
                       alignItems="center"
                       gap="1.25rem"
                       borderBottom="1px solid"
                       borderColor="neutral.gray8"
-                      bgColor={
+                      bg={
                         `markerStore-${idx}` === slctErp?.hoverId
-                          ? "#EEEEEE"
+                          ? "linear-gradient(90deg, rgba(255, 236, 61, 0) 0%, #FFEC3D 36.2%, rgba(255, 236, 61, 0) 92.66%)"
                           : "transparent"
                       }
                       _hover={{
                         fontWeight: "strong",
                         cursor: "pointer",
-                        bgColor: "#EEEEEE",
+                        bg: "linear-gradient(90deg, rgba(255, 236, 61, 0) 0%, #FFEC3D 36.2%, rgba(255, 236, 61, 0) 92.66%)",
                       }}
                       onClick={() => {
                         console.log("click");
-                        setOpenIdx(0);
-                        onOpen();
+                        // setOpenIdx(0);
+                        // onOpen();
+                        setSv({
+                          viewId: "storeInfo",
+                          props: {
+                            id: "test",
+                          },
+                        });
+                      }}
+                      onMouseEnter={() => {
+                        setSlctErp({
+                          ...slctErp,
+                          name: storeName,
+                          hoverId: `markerStore-${idx}`,
+                        });
+                      }}
+                      onMouseLeave={() => {
+                        setSlctErp({ ...slctErp, name: "", hoverId: "" });
                       }}
                     >
                       <Flex justify="center" align="center" flex="none">
@@ -399,33 +411,43 @@ const BrandListBox = ({ store, rent, bsDis }: Props) => {
           )}
           {rent && rent.length > 0 && (
             <TabPanel>
-              <List display="flex" flexDirection="column" gap="1rem">
+              <List display="flex" flexDirection="column">
                 {rent.map((li: any, idx: number) => {
                   const { rentName, addr } = li;
 
                   return (
                     <ListItem
                       key={`rentList-${idx}`}
-                      p="0rem 0rem 0.75rem"
+                      p="1rem 0rem 0.75rem"
                       display="flex"
                       alignItems="center"
                       gap="0.75rem"
                       borderBottom="1px solid"
                       borderColor="neutral.gray8"
-                      bgColor={
+                      bg={
                         `markerRent-${idx}` === slctErp?.hoverId
-                          ? "#EEEEEE"
+                          ? "linear-gradient(90deg, rgba(255, 236, 61, 0) 0%, #FFEC3D 36.2%, rgba(255, 236, 61, 0) 92.66%)"
                           : "transparent"
                       }
                       _hover={{
                         fontWeight: "strong",
                         cursor: "pointer",
-                        bgColor: "#EEEEEE",
+                        bg: "linear-gradient(90deg, rgba(255, 236, 61, 0) 0%, #FFEC3D 36.2%, rgba(255, 236, 61, 0) 92.66%)",
                       }}
                       onClick={() => {
                         console.log("click");
                         setOpenIdx(2);
                         onOpen();
+                      }}
+                      onMouseEnter={() => {
+                        setSlctErp({
+                          ...slctErp,
+                          name: rentName,
+                          hoverId: `markerRent-${idx}`,
+                        });
+                      }}
+                      onMouseLeave={() => {
+                        setSlctErp({ ...slctErp, name: "", hoverId: "" });
                       }}
                     >
                       <Flex justify="center" align="center" flex="none">
@@ -465,7 +487,7 @@ const BrandListBox = ({ store, rent, bsDis }: Props) => {
           )}
         </TabPanels>
       </Tabs>
-      {openIdx === 0 && (
+      {/* {openIdx === 0 && (
         <ModalStoreDetail
           isOpen={isOpen}
           onClose={() => {
@@ -473,7 +495,7 @@ const BrandListBox = ({ store, rent, bsDis }: Props) => {
             setOpenIdx(-1);
           }}
         />
-      )}
+      )} */}
       {openIdx === 1 && (
         <ModalBsDisDetail
           isOpen={isOpen}

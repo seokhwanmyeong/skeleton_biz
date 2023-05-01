@@ -1,7 +1,7 @@
 const themeDrawer = {
   baseStyle: {
     dialogContainer: {
-      zIndex: 3,
+      zIndex: 998,
       p: 0,
       w: "auto",
       overflow: "hidden",

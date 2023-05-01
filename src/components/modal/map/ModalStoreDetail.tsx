@@ -29,11 +29,13 @@ import StoreHistory from "./elementStore/StoreHistory";
 import StoreDoc from "./elementStore/StoreDoc";
 
 type Props = {
+  id: string;
   isOpen: boolean;
   onClose: (props?: any) => any;
 };
 
-const ModalStoreDetail = ({ isOpen, onClose }: Props) => {
+const ModalStoreDetail = ({ id, isOpen, onClose }: Props) => {
+  console.log("iin");
   return (
     <Drawer isOpen={isOpen} onClose={onClose} placement="right">
       <DrawerContent p="1rem 0" maxW="fit-content">

@@ -11,6 +11,7 @@ const boxBaseFrames = keyframes`
 `;
 
 const alertAnimation = `${alertFrames} 0.3s ease-in-out`;
+const toolAnimation = `${alertFrames} 0.3s linear`;
 const boxBaseAnimation = `${boxBaseFrames} 0.2s ease-in-out`;
 
-export { alertAnimation, boxBaseAnimation };
+export { alertAnimation, boxBaseAnimation, toolAnimation };

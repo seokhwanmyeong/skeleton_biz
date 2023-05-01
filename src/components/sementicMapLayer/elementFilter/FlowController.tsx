@@ -6,7 +6,7 @@ import { atomFilterFlow } from "@states/sementicMap/stateFilter";
 //  Icon
 import { IcoDoubleSquere, IcoErp, IcoFilter } from "@assets/icons/icon";
 //  Deco
-import { ImgBarLeft, ImgBarRight } from "@assets/img/Img";
+import { ImgBarLeft, ImgBarRight, ImgDotTop } from "@assets/img/Img";
 import { DecoInitFilter } from "@components/sementicMapLayer/elementDeco/Deco";
 
 const FlowController = () => {
@@ -65,23 +65,18 @@ const BtnInitFilter = ({
       onMouseEnter={() => onHover(true)}
       onMouseLeave={() => onHover(false)}
       {...rest}
+      fontWeight="inherit"
     >
+      <ImgDotTop />
       <Flex pos="relative" direction="column" align="center">
-        {isHover && (
-          <ImgBarLeft
-            pos="absolute"
-            top="50%"
-            left="-14px"
-            transform="translateY(-50%)"
-            color={color}
-          />
-        )}
+        {isHover && <ImgBarLeft />}
+        {isHover && <ImgBarRight />}
         <Flex
           justify="center"
           align="center"
           w="104px"
           h="104px"
-          bgColor={isHover ? color : "transparent"}
+          bgColor={color || "transparent"}
           border="1px solid"
           borderColor="neutral.gray7"
           borderRadius="50%"
@@ -116,8 +111,7 @@ const BtnInitFilter = ({
                 w="48px"
                 h="48px"
                 bg="linear-gradient(180deg, #FFFFFF 10%, rgba(255, 255, 255, 0) 100%)"
-                bgColor={isHover ? color : "auto"}
-                filter="drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25))"
+                bgColor={color}
                 backdropFilter="blur(5px)"
                 border="1px solid"
                 borderColor="neutral.gray8"
@@ -129,15 +123,6 @@ const BtnInitFilter = ({
             </Flex>
           </Flex>
         </Flex>
-        {isHover && (
-          <ImgBarRight
-            pos="absolute"
-            top="50%"
-            right="-14px"
-            transform="translateY(-50%)"
-            color={color}
-          />
-        )}
       </Flex>
       <Text
         pos="absolute"
@@ -158,7 +143,7 @@ const BtnInitFilter = ({
         borderRadius="14px"
         textStyle="base"
         fontSize="sm"
-        fontWeight="regular"
+        fontWeight="inherit"
         color="font.primary"
       >
         {text}

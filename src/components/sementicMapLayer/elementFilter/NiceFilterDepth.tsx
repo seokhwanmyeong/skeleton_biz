@@ -23,6 +23,8 @@ import {
   resetNiceDepth,
   atomUpjongState,
 } from "@states/sementicMap/stateFilter";
+//  Api
+import { apiMapNice } from "@api/bizSub/config";
 //  Icon
 import {
   IcoFileSearch,
@@ -33,53 +35,51 @@ import {
 //  Deco
 import { Deco01 } from "@assets/deco/DecoSvg";
 import { DecoCardBg } from "@components/sementicMapLayer/elementDeco/Deco";
+import {
+  atomFlowEnterArea,
+  atomSlctDong,
+} from "@src/states/sementicMap/stateMap";
 
-type Props = {
-  areaCode?: string;
-  path?: any;
-};
-
-const NiceFilterDepth = ({ areaCode, path }: Props) => {
+const NiceFilterDepth = () => {
+  const { getBrandList } = apiMapNice;
   const divRef = useRef<HTMLDivElement | null>(null);
   const [openIdx, setOpenIdx] = useState(0);
   const { bot } = useRecoilValue(atomUpjongState);
+  const { sigungu } = useRecoilValue(atomFlowEnterArea);
+  const { slctCode } = useRecoilValue(atomSlctDong);
   const [flowPop, setFlowPop] = useRecoilState(infoComFlowDepth);
   const [filterPop, setFilterPop] = useState(flowPop.filter);
   const [brandFilter, setBrandFilter] = useRecoilState(infoComBrand);
-  const [filterBrand, setFilterBrand] = useState(brandFilter.filter);
-  const [brandList, setBrandList] = useState<any>([]);
   const [buildingFilter, setBuildingFilter] = useRecoilState(infoComBuilding);
   const [filterBuilding, setFilterBuilding] = useState(buildingFilter.filter);
-
   const reset = useResetRecoilState(resetNiceDepth);
-
-  useEffect(() => {
-    console.log(areaCode);
-  }, []);
 
   //  세부 유동인구 필터 변화 및 액티브
   const searchPopHandler = () => {
     setFlowPop(filterPop);
   };
 
-  //  사업체 필터 변화 및 액티브
-  useEffect(() => {
-    if (bot) {
-      setBrandList([
-        { text: "스타벅스", value: "스타벅스" },
-        { text: "메가커피", value: "메가커피" },
-        { text: "컴포즈커피", value: "컴포즈커피" },
-      ]);
-    }
-  }, [bot]);
-
   const searchBrandHandler = () => {
-    setBrandFilter(filterBrand);
+    if (!bot.code || !bot.name || !sigungu?.slctCode || !slctCode) return;
+
+    getBrandList({
+      // ctyCd: sigungu.slctCode.slice(0, 4),
+      // admiCd: slctCode,
+      upjongCd: bot.code,
+      admiCd: "11110560",
+      ctyCd: "1111",
+      pageNo: 1,
+    }).then((res: any) => {
+      console.log(res);
+
+      if (res.data && res.data.length > 0)
+        setBrandFilter({ show: true, active: true, data: res.data || [] });
+    });
   };
 
   //  건물조회 필터 변화 및 액티브
   const searchBuildingHandler = () => {
-    setBrandFilter(filterBrand);
+    setBrandFilter(filterBuilding);
   };
 
   return (
@@ -102,7 +102,7 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
       {/* ============================== infoCom의 필터 버튼 ============================== */}
       <Button
         variant="filterTop02"
-        isActive={flowPop?.active}
+        isActive={flowPop?.active || openIdx === 1}
         onClick={() => {
           if (openIdx === 1) {
             setOpenIdx(0);
@@ -127,7 +127,7 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
         <Button
           variant="filterTop02"
           isDisabled={bot ? false : true}
-          isActive={brandFilter?.active}
+          isActive={brandFilter?.active || openIdx === 2}
           onClick={() => {
             if (openIdx === 2) {
               setOpenIdx(0);
@@ -144,7 +144,7 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
       </Tooltip>
       <Button
         variant="filterTop02"
-        isActive={buildingFilter?.active}
+        isActive={buildingFilter?.active || openIdx === 3}
         onClick={() => {
           if (openIdx === 3) {
             setOpenIdx(0);
@@ -310,23 +310,36 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
               </Heading>
               <IcoTextB width="0.875rem" height="0.875rem" color="font.title" />
             </Flex>
-            <Flex align="center" gap="0.5rem">
-              <SwitchFilter
-                isChecked={brandFilter.active}
-                onChange={() => {
-                  setBrandFilter({
-                    ...brandFilter,
-                    active: !brandFilter.active,
-                  });
-                }}
-                variant="filterControl"
-              />
-              <BtnFilterSearch onClick={searchBrandHandler} />
-            </Flex>
+            <Tooltip
+              hasArrow
+              isDisabled={bot.code ? true : false}
+              placement="auto"
+              label="업종을 선택하셔야 합니다."
+              p="1rem"
+              borderRadius="base"
+            >
+              <Flex align="center" gap="0.5rem">
+                <SwitchFilter
+                  isDisabled={!brandFilter.active || (bot.code ? false : true)}
+                  isChecked={brandFilter.active}
+                  onChange={() => {
+                    setBrandFilter({
+                      ...brandFilter,
+                      active: !brandFilter.active,
+                    });
+                  }}
+                  variant="filterControl"
+                />
+                <BtnFilterSearch
+                  isDisabled={bot.code ? false : true}
+                  onClick={searchBrandHandler}
+                />
+              </Flex>
+            </Tooltip>
           </Flex>
           {/* ============================== 박스 데코 ============================== */}
           <Deco01 margin="0.25rem 0 0.75rem" width="100%" height="0.3125rem" />
-          <Flex p="0 0.25rem" direction="column" gap="0.625rem">
+          {/* <Flex p="0 0.25rem" direction="column" gap="0.625rem">
             <Flex align="center">
               <FormLabel
                 display="flex"
@@ -355,7 +368,7 @@ const NiceFilterDepth = ({ areaCode, path }: Props) => {
                 }}
               />
             </Flex>
-          </Flex>
+          </Flex> */}
           <DecoCardBg />
         </Flex>
       ) : openIdx === 3 ? (

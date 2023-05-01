@@ -92,7 +92,7 @@ const FlowErp = () => {
           <Box>
             <IcoDoubleSquere width="1.125rem" height="1.125rem" />
           </Box>
-          ERP 필터
+          브랜드 데이터
         </Button>
         <DecoFilterDivider />
         <BtnReset />

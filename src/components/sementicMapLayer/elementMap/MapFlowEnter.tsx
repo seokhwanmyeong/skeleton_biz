@@ -157,13 +157,13 @@ const MapFlowEnter = (props: Props) => {
                 num={Number(sigungu.code)}
                 path={sigungu.path}
                 style={{
-                  fillColor: "#36CFC9",
-                  fillOpacity: 0.5,
+                  fillColor: "#fadb14",
+                  fillOpacity: 0.4,
                   strokeWeight: 1,
                   strokeColor: "#FFFFFF",
                 }}
                 hoverStyle={{
-                  fillColor: "#36CFC9",
+                  fillColor: "#fadb14",
                   fillOpacity: 0.75,
                   strokeWeight: 1,
                   strokeColor: "#FFFFFF",

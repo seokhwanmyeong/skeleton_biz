@@ -372,8 +372,12 @@ const NiceFilter = ({ areaCode }: Props) => {
         >
           <Flex justify="space-between">
             <Flex pl="0.25rem" align="center" gap="0.5rem">
-              <IcoNice2 width="1rem" height="1rem" color="font.primary" />
-              <Heading as={"h5"} variant="filterBox" lineHeight={1}>
+              <IcoNice2
+                width="1.125rem"
+                height="1.125rem"
+                color="font.primary"
+              />
+              <Heading as={"h5"} variant="filterBox">
                 거주인구
               </Heading>
             </Flex>

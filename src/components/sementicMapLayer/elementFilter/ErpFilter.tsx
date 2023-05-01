@@ -119,6 +119,7 @@ const ErpFilter = ({
     setErpStore({
       filter: filterStore,
       active: true,
+      show: true,
       data: test || [],
     });
 
@@ -132,6 +133,7 @@ const ErpFilter = ({
         setErpStore({
           filter: filterStore,
           active: true,
+          show: true,
           data: records || [],
         });
       }
@@ -193,6 +195,7 @@ const ErpFilter = ({
     setErpBsD({
       filter: filterBsD,
       active: true,
+      show: true,
       data: test || [],
     });
 
@@ -204,6 +207,7 @@ const ErpFilter = ({
       setErpBsD({
         filter: filterBsD,
         active: true,
+        show: true,
         data: records || [],
       });
     });
@@ -238,6 +242,7 @@ const ErpFilter = ({
     setErpRent({
       filter: filterRent,
       active: true,
+      show: true,
       data: test,
     });
 
@@ -249,6 +254,7 @@ const ErpFilter = ({
       setErpRent({
         filter: filterRent,
         active: true,
+        show: true,
         data: records || [],
       });
     });
@@ -312,7 +318,7 @@ const ErpFilter = ({
         <Fragment>
           <Button
             variant="filterTop02"
-            isActive={erpStore.active}
+            isActive={erpStore.active || openIdx === 1}
             onClick={() => (openIdx === 1 ? setOpenIdx(0) : setOpenIdx(1))}
           >
             <Box>
@@ -326,7 +332,7 @@ const ErpFilter = ({
           </Button>
           <Button
             variant="filterTop02"
-            isActive={erpBsD.active}
+            isActive={erpBsD.active || openIdx === 2}
             onClick={() => (openIdx === 2 ? setOpenIdx(0) : setOpenIdx(2))}
           >
             <Box>
@@ -340,7 +346,7 @@ const ErpFilter = ({
           </Button>
           <Button
             variant="filterTop02"
-            isActive={erpRent.active}
+            isActive={erpRent.active || openIdx === 3}
             onClick={() => (openIdx === 3 ? setOpenIdx(0) : setOpenIdx(3))}
           >
             <Box>
@@ -354,6 +360,7 @@ const ErpFilter = ({
           </Button>
           <Button
             variant="filterTop02"
+            isActive={openIdx === 4}
             onClick={() => (openIdx === 4 ? setOpenIdx(0) : setOpenIdx(4))}
           >
             <Box>
@@ -408,9 +415,9 @@ const ErpFilter = ({
             </Flex>
             <Flex align="center" gap="0.5rem">
               <SwitchFilter
-                isChecked={erpStore.active}
+                isChecked={erpStore.show}
                 onChange={() => {
-                  setErpStore({ ...erpStore, active: !erpStore.active });
+                  setErpStore({ ...erpStore, show: !erpStore.show });
                 }}
               />
               <BtnFilterSearch onClick={searchStoreHandler} />
@@ -593,9 +600,9 @@ const ErpFilter = ({
             </Flex>
             <Flex align="center" gap="0.5rem">
               <SwitchFilter
-                isChecked={erpBsD.active}
+                isChecked={erpBsD.show}
                 onChange={() => {
-                  setErpBsD({ ...erpBsD, active: !erpBsD.active });
+                  setErpBsD({ ...erpBsD, show: !erpBsD.show });
                 }}
                 variant="filterControl"
               />
@@ -741,9 +748,9 @@ const ErpFilter = ({
             </Flex>
             <Flex align="center" gap="0.5rem">
               <SwitchFilter
-                isChecked={erpRent.active}
+                isChecked={erpRent.show}
                 onChange={() => {
-                  setErpRent({ ...erpRent, active: !erpRent.active });
+                  setErpRent({ ...erpRent, show: !erpRent.show });
                 }}
                 variant="filterControl"
               />

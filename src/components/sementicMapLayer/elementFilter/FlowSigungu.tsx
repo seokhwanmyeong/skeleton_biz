@@ -9,7 +9,6 @@ import NiceFilter from "@components/sementicMapLayer/elementFilter/NiceFilter";
 import BtnReset from "@components/sementicMapLayer/elementFilter/BtnReset";
 import BtnBack from "@components/sementicMapLayer/elementFilter/BtnBack";
 import { BoxRanking } from "@components/sementicMapLayer/elementFilter/BoxRanking";
-
 //  Api
 import { apiMapArea } from "@api/biz/config";
 //  State
@@ -23,6 +22,8 @@ import {
   DecoFrameL,
   DecoFrameCenter,
   DecoFrameR,
+  DecoBotHightBox,
+  DecoFilterDivider,
 } from "@components/sementicMapLayer/elementDeco/Deco";
 //  Type
 import type { AreaProps } from "@states/sementicMap/stateMap";
@@ -192,14 +193,7 @@ const FlowSigungu = () => {
         </DecoFrameR>
       </Flex>
       {/* ------------------------------ 하단 ------------------------------*/}
-      <Flex
-        pos="absolute"
-        bottom="1%"
-        left="50%"
-        zIndex={999}
-        transform="translateX(-50%)"
-        gap="4.25rem"
-      >
+      <DecoBotHightBox>
         <Button
           variant="filterTop"
           isActive={filterType === "anal"}
@@ -216,8 +210,9 @@ const FlowSigungu = () => {
           </Box>
           분석필터
         </Button>
+        <DecoFilterDivider />
         <BtnReset />
-      </Flex>
+      </DecoBotHightBox>
       {filterType === "anal" && sigungu?.slctCode && (
         <NiceFilter areaCode={sigungu.slctCode} />
       )}

@@ -26,7 +26,11 @@ import {
 //  Icon
 import { IcoFilter } from "@assets/icons/icon";
 //  Deco
-import { DecoTop } from "@components/sementicMapLayer/elementDeco/Deco";
+import {
+  DecoBotHightBox,
+  DecoFilterDivider,
+  DecoTop,
+} from "@components/sementicMapLayer/elementDeco/Deco";
 //  Type
 import type { SlctProps, AreaProps } from "@states/sementicMap/stateMap";
 
@@ -210,14 +214,7 @@ const FlowEnter = () => {
         <UpjongListBox relateOpen={isOpen} relateSetClose={onClose} />
       </Flex>
       {/* ------------------------------ 하단 ------------------------------*/}
-      <Flex
-        pos="absolute"
-        bottom="1%"
-        left="50%"
-        zIndex={999}
-        transform="translateX(-50%)"
-        gap="4.25rem"
-      >
+      <DecoBotHightBox>
         <Tooltip
           hasArrow
           isDisabled={false}
@@ -240,8 +237,9 @@ const FlowEnter = () => {
             분석필터
           </Button>
         </Tooltip>
+        <DecoFilterDivider />
         <BtnReset />
-      </Flex>
+      </DecoBotHightBox>
     </Fragment>
   );
 };
