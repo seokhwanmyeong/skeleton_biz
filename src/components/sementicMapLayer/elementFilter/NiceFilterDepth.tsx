@@ -40,7 +40,7 @@ import {
   atomSlctDong,
 } from "@src/states/sementicMap/stateMap";
 
-const NiceFilterDepth = () => {
+const NiceFilterDepth = ({ path }: { path: any }) => {
   const { getBrandList } = apiMapNice;
   const divRef = useRef<HTMLDivElement | null>(null);
   const [openIdx, setOpenIdx] = useState(0);
@@ -60,7 +60,8 @@ const NiceFilterDepth = () => {
   };
 
   const searchBrandHandler = () => {
-    if (!bot.code || !bot.name || !sigungu?.slctCode || !slctCode) return;
+    // if (!bot.code || !bot.name || !sigungu?.slctCode || !slctCode) return;
+    if (!bot.code || !bot.name) return;
 
     getBrandList({
       // ctyCd: sigungu.slctCode.slice(0, 4),

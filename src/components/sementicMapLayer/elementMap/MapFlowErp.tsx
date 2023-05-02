@@ -1,6 +1,6 @@
 //  Lib
 import { Fragment, useContext, useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { Flex, Text, useDisclosure } from "@chakra-ui/react";
 import { Marker, NaverMapContext } from "@src/lib/src";
 import OverlayView from "@src/lib/src/components/Overlay/OverlayView";
@@ -9,7 +9,6 @@ import InteractArea from "@components/sementicMapLayer/elementMap/InteractArea";
 import BrandListBox from "@components/sementicMapLayer/elementFilter/BrandListBox";
 //  State
 import {
-  atomFilterFlow,
   infoComErpBsnsD,
   infoComErpRent,
   infoComErpStore,
@@ -19,7 +18,6 @@ import { apiErpMap } from "@api/biz/config";
 //  Icon
 import markerStore from "@assets/icons/marker_store.png";
 import markerRent from "@assets/icons/marker_rent.png";
-import { IcoLineCurve } from "@assets/icons/icon";
 //  Deco
 import { DecoFrameR } from "@components/sementicMapLayer/elementDeco/Deco";
 //  Util

@@ -1,22 +1,18 @@
 //  Lib
-import { Box, Button, Flex } from "@chakra-ui/react";
+import { Fragment } from "react";
+import { Box, Button } from "@chakra-ui/react";
 //  Component
 import BtnReset from "@components/sementicMapLayer/elementFilter/BtnReset";
 //  Icon
 import { IcoBorderOuter } from "@assets/icons/icon";
+//  Deco
+import { DecoBotHightBox } from "@components/sementicMapLayer/elementDeco/Deco";
 
 const FlowFind = () => {
   return (
-    <>
+    <Fragment>
       {/* ------------------------------ 하단 ------------------------------*/}
-      <Flex
-        pos="absolute"
-        bottom="1%"
-        left="50%"
-        zIndex={999}
-        transform="translateX(-50%)"
-        gap="4.25rem"
-      >
+      <DecoBotHightBox>
         <Button variant="filterTop" disabled={false} isActive={true}>
           <Box>
             <IcoBorderOuter width="1.125rem" height="1.125rem" />
@@ -24,8 +20,8 @@ const FlowFind = () => {
           영역 분석
         </Button>
         <BtnReset />
-      </Flex>
-    </>
+      </DecoBotHightBox>
+    </Fragment>
   );
 };
 

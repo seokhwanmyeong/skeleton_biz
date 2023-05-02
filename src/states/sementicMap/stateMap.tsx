@@ -130,7 +130,7 @@ export const atomSlctNice = atom<{
   id: string;
   hoverId?: string;
 }>({
-  key: "atomSlctErp",
+  key: "atomSlctNice",
   default: {
     niceType: undefined,
     name: "",

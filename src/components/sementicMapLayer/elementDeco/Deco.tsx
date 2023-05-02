@@ -442,6 +442,7 @@ const DecoRankTag = ({
       height={height || "1.125rem"}
       justify="center"
       gap="2px"
+      flex="none"
       {...rest}
     >
       {children}

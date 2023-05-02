@@ -102,9 +102,7 @@ export const resetSementicAtom = selector({
     reset(atomSementicUpjong);
     reset(atomInfoCom);
 
-    reset(infoComHousehold);
     reset(infoComUpjong);
-    reset(infoComSale);
     reset(infoComMyStore);
     reset(infoComMyBsns);
     reset(infoComMyRent);
@@ -250,30 +248,6 @@ export const atomArea = atom<any>({
   },
 });
 
-export const infoComResiPop = atom<any>({
-  key: "infoComResiPop",
-  default: {
-    data: {},
-    active: false,
-  },
-});
-
-export const infoComJobPop = atom<any>({
-  key: "infoComJobPop",
-  default: {
-    data: {},
-    active: false,
-  },
-});
-
-export const infoComHousehold = atom<any>({
-  key: "infoComHousehold",
-  default: {
-    data: {},
-    active: false,
-  },
-});
-
 export const infoComUpjong = atom<{ name: string | null; code: string | null }>(
   {
     key: "infoComUpjong",
@@ -284,76 +258,12 @@ export const infoComUpjong = atom<{ name: string | null; code: string | null }>(
   }
 );
 
-export const infoComUpjongCnt = atom<any>({
-  key: "infoComUpjongCnt",
-  default: {
-    data: {},
-    active: false,
-    // type: "externalData",
-    // category: "upjong",
-    // title: "업종 수",
-    // baseFilter: {},
-    // req: {},
-    // res: [],
-    // activeView: false,
-    // apiType: "nice",
-    // apiEvent: null,
-  },
-});
-
-export const infoComSale = atom<any>({
-  key: "infoComSale",
-  default: {
-    data: {},
-    active: false,
-    // type: "externalData",
-    // category: "sale",
-    // title: "매출",
-    // baseFilter: {},
-    // req: {},
-    // res: [],
-    // activeView: false,
-    // apiType: "nice",
-    // apiEvent: null,
-  },
-});
-
 export const infoComBrandStandard = atom<any>({
   key: "infoComBrandSet",
   default: {
     type: "externalData",
     category: "brandStandard",
     title: "브랜드 필터",
-    baseFilter: {},
-    req: {},
-    res: [],
-    activeView: false,
-    apiType: "nice",
-    apiEvent: null,
-  },
-});
-
-export const infoComBrand = atom<any>({
-  key: "infoComBrand",
-  default: {
-    type: "externalData",
-    category: "brand",
-    title: "사업체 조회",
-    baseFilter: {},
-    req: {},
-    res: [],
-    activeView: false,
-    apiType: "nice",
-    apiEvent: null,
-  },
-});
-
-export const infoComBuilding = atom<any>({
-  key: "infoComBuilding",
-  default: {
-    type: "externalData",
-    category: "building",
-    title: "건물조회",
     baseFilter: {},
     req: {},
     res: [],

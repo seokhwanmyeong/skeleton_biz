@@ -17,6 +17,7 @@ const calDist = (point01: any, point02: any) => {
 };
 
 const calcPolyDistance = (paths: naver.maps.LatLng[]) => {
+  console.log(paths);
   const origin = { _lat: paths[0]?.x, _lng: paths[0]?.y };
   let longDistance = 0;
 

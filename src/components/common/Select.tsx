@@ -127,12 +127,17 @@ const SelectAddr = ({
     mid: value?.slice(2, 5) || "",
     bot: value?.slice(5, 8) || "",
   });
+  const [addrTxt, setAddrTxt] = useState({
+    top: value || "",
+    mid: value || "",
+    bot: value || "",
+  });
   const [addrList, setAddrList] = useState<any>({
     top: [{ code: "", address: "전체" }, ...addrHCode],
     mid: [],
     bot: [],
   });
-  console.log(value);
+
   const selectAddrHandler = (val: any, step: "top" | "mid" | "bot") => {
     let result: string = "total";
 
@@ -155,11 +160,16 @@ const SelectAddr = ({
             bot: [],
           });
         }
+        addrList.top?.map((li: any) => {
+          if (li.code === val) {
+            setAddrTxt({ ...addrTxt, top: li.address });
+            onChange(li.address);
+          }
+        });
         result = val ? val : "total";
         break;
       case "mid":
         if (val) {
-          console.log(val);
           addrApiHandler(val).then((res) => {
             setAddr({ ...addr, mid: val.slice(2, 5), bot: "" });
             setAddrList({
@@ -174,17 +184,32 @@ const SelectAddr = ({
             bot: [],
           });
         }
+
+        addrList.mid?.map((li: any) => {
+          if (li.code === val) {
+            setAddrTxt({ ...addrTxt, mid: li.address });
+            onChange(addrTxt.top + " " + li.address);
+          }
+        });
         result = val ? val : addr.top;
         break;
       case "bot":
         setAddr({ ...addr, bot: val.slice(5, 8) });
+
+        addrList.bot?.map((li: any) => {
+          if (li.code === val) {
+            setAddrTxt({ ...addrTxt, bot: li.address });
+            onChange(addrTxt.top + " " + addrTxt.mid + " " + li.address);
+          }
+        });
         result = val ? val : addr.top + addr.mid;
         break;
       default:
         result = val;
         break;
     }
-    onChange(result);
+
+    // onChange(result);
   };
 
   return (

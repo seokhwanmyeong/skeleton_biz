@@ -15,7 +15,7 @@ export const MAP_UPJONG_MID = "/v1/franchise_utils/middle";
 export const MAP_UPJONG_BOT = "/v1/franchise_utils/low";
 
 //  MAP_ERP_STORE
-export const ERP_STORE_GET_POINT = "/v1/Franchise_Branch/mapsearch";
+export const ERP_STORE_GET_POINT = "/v1/Franchise_branch/mapsearch";
 
 //  MAP_ERP_RENT
 export const ERP_RENT_GET_POINT = "/v1/Franchise_Unsoldsho/mapunsoldsearch";

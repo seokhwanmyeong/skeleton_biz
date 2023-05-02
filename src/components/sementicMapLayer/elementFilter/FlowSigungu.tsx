@@ -1,7 +1,12 @@
 //  Lib
 import { useContext, useEffect, useState } from "react";
 import { Box, Button, Flex, Text, useDisclosure } from "@chakra-ui/react";
-import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
+import {
+  useRecoilState,
+  useRecoilValue,
+  useResetRecoilState,
+  useSetRecoilState,
+} from "recoil";
 import { NaverMapContext } from "@src/lib/src";
 //  Component
 import UpjongListBox from "@components/sementicMapLayer/elementFilter/UpjongListBox";
@@ -12,7 +17,11 @@ import { BoxRanking } from "@components/sementicMapLayer/elementFilter/BoxRankin
 //  Api
 import { apiMapArea } from "@api/biz/config";
 //  State
-import { atomFilterFlow, resetNice } from "@states/sementicMap/stateFilter";
+import {
+  atomFilterFlow,
+  infoComNiceRank,
+  resetNice,
+} from "@states/sementicMap/stateFilter";
 import { atomFlowEnterArea, atomDongLi } from "@states/sementicMap/stateMap";
 //  Icon
 import { IcoFilter } from "@assets/icons/icon";
@@ -31,29 +40,14 @@ import type { AreaProps } from "@states/sementicMap/stateMap";
 const FlowSigungu = () => {
   const { getDongList } = apiMapArea;
   const { state } = useContext(NaverMapContext);
-  const setFlow = useSetRecoilState(atomFilterFlow);
   const [{ sido, sigungu }, setSlctArea] = useRecoilState(atomFlowEnterArea);
+  const rankList = useRecoilValue(infoComNiceRank);
+  const setFlow = useSetRecoilState(atomFilterFlow);
   const setDongLi = useSetRecoilState(atomDongLi);
   const reset = useResetRecoilState(resetNice);
-  const [filterType, setType] = useState("");
-
-  // const pathTransHandler = (
-  //   areaList: AreaProps[]
-  // ) => {
-  //   return areaList.map((area) => {
-  //     const paths = Object.values(JSON.parse(area.path)).map((latLng: any) => {
-  //       if (area.code === "28" || area.code === "46") {
-  //         return latLng.map(
-  //           (depth: any) => new naver.maps.LatLng(depth[1], depth[0])
-  //         );
-  //       } else {
-  //         return new naver.maps.LatLng(latLng[1], latLng[0]);
-  //       }
-  //     });
-
-  //     return { code: area.code, name: area.name, num: area.num, path: paths };
-  //   });
-  // };
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [left, setLeft] = useState([]);
+  const [right, setRight] = useState([]);
 
   const pathTransHandler = (areaList: AreaProps[]) => {
     return areaList.map((area, idx: number) => {
@@ -98,8 +92,29 @@ const FlowSigungu = () => {
   };
 
   useEffect(() => {
-    getDongHandler();
+    if (sigungu?.slctCode) getDongHandler();
   }, [sigungu?.slctCode]);
+
+  useEffect(() => {
+    if (rankList.length > 0) {
+      let left: any = [];
+      let right: any = [];
+
+      rankList.map((li: any) => {
+        if (li.rank <= 5) {
+          left.push(li);
+        } else if (li.rank <= 10) {
+          right.push(li);
+        }
+      });
+
+      setLeft(left);
+      setRight(right);
+    } else {
+      setLeft([]);
+      setRight([]);
+    }
+  }, [rankList]);
 
   return (
     <>
@@ -167,28 +182,25 @@ const FlowSigungu = () => {
             justify="space-between"
             gap="2px"
           >
-            <BoxRanking />
-            <BoxRanking />
-            <BoxRanking />
-            <BoxRanking />
-            <BoxRanking />
+            {left.length > 0 &&
+              left.map((li: any) => {
+                return <BoxRanking rankData={li} />;
+              })}
           </Flex>
         </DecoFrameL>
         <DecoFrameCenter />
         <DecoFrameR pr="1rem">
           <Flex
             p="2px 0"
-            maxW="19.25rem"
             h="100%"
             direction="column"
             justify="space-between"
             gap="2px"
           >
-            <BoxRanking direction="right" />
-            <BoxRanking direction="right" />
-            <BoxRanking direction="right" />
-            <BoxRanking direction="right" />
-            <BoxRanking direction="right" />
+            {right.length > 0 &&
+              right.map((li: any) => {
+                return <BoxRanking rankData={li} direction="right" />;
+              })}
           </Flex>
         </DecoFrameR>
       </Flex>
@@ -196,14 +208,8 @@ const FlowSigungu = () => {
       <DecoBotHightBox>
         <Button
           variant="filterTop"
-          isActive={filterType === "anal"}
-          onClick={() => {
-            if (filterType === "anal") {
-              setType("");
-            } else {
-              setType("anal");
-            }
-          }}
+          isActive={isOpen}
+          onClick={() => (isOpen ? onClose() : onOpen())}
         >
           <Box>
             <IcoFilter width="1.125rem" height="1.125rem" />
@@ -213,7 +219,7 @@ const FlowSigungu = () => {
         <DecoFilterDivider />
         <BtnReset />
       </DecoBotHightBox>
-      {filterType === "anal" && sigungu?.slctCode && (
+      {isOpen && sigungu?.slctCode && (
         <NiceFilter areaCode={sigungu.slctCode} />
       )}
     </>

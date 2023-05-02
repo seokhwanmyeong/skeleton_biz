@@ -6,10 +6,10 @@ import { Box, Button, Flex, useDisclosure } from "@chakra-ui/react";
 import UpjongListBox from "@components/sementicMapLayer/elementFilter/UpjongListBox";
 import NiceFilterDepth from "@components/sementicMapLayer/elementFilter/NiceFilterDepth";
 import BtnReset from "@components/sementicMapLayer/elementFilter/BtnReset";
-import { BoxRankingDong } from "@components/sementicMapLayer/elementFilter/BoxRanking";
 import FlowPopInfo from "@components/sementicMapLayer/elementFilter/FlowPopInfo";
 import DepthList from "@src/components/sementicMapLayer/elementFilter/DepthListBox";
 //  State
+import { infoComBrand } from "@states/sementicMap/stateFilter";
 import { atomSlctCustom } from "@states/sementicMap/stateMap";
 import { sementicViewState } from "@states/sementicMap/stateView";
 //  Icon
@@ -20,11 +20,14 @@ import {
   DecoFrameCenter,
   DecoFrameL,
   DecoFrameR,
+  DecoBotHightBox,
+  DecoFilterDivider,
 } from "@components/sementicMapLayer/elementDeco/Deco";
 
 type Props = {};
 
 const FlowCustom = (props: Props) => {
+  const { data: brandList } = useRecoilValue(infoComBrand);
   const cutomArea = useRecoilValue(atomSlctCustom);
   const setSv = useSetRecoilState(sementicViewState);
   const resetSv = useResetRecoilState(sementicViewState);
@@ -70,23 +73,15 @@ const FlowCustom = (props: Props) => {
       {/* --------------------------- 중단 Frame ---------------------------*/}
       <Flex w="100%" h="100%" zIndex={1} gap="0.625rem" pointerEvents="none">
         <DecoFrameL pl="1rem" align="flex-end">
-          <BoxRankingDong />
           <FlowPopInfo />
         </DecoFrameL>
         <DecoFrameCenter />
         <DecoFrameR pr="0.25rem">
-          <DepthList />
+          <DepthList brandList={brandList || []} />
         </DecoFrameR>
       </Flex>
       {/* ------------------------------ 하단 ------------------------------*/}
-      <Flex
-        pos="absolute"
-        bottom="1%"
-        left="50%"
-        zIndex={999}
-        transform="translateX(-50%)"
-        gap="4.25rem"
-      >
+      <DecoBotHightBox gap="3rem">
         <Button
           variant="filterTop"
           isActive={isOpen}
@@ -97,6 +92,7 @@ const FlowCustom = (props: Props) => {
           </Box>
           마켓데이터
         </Button>
+        <DecoFilterDivider />
         <Button
           variant="filterTop"
           onClick={() => {
@@ -108,8 +104,9 @@ const FlowCustom = (props: Props) => {
           </Box>
           리포트
         </Button>
+        <DecoFilterDivider />
         <BtnReset />
-      </Flex>
+      </DecoBotHightBox>
       {isOpen && <NiceFilterDepth path={cutomArea.slctPath} />}
     </Fragment>
   );

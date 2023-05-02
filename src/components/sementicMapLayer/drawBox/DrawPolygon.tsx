@@ -21,6 +21,7 @@ import markerPoint from "@assets/icons/marker_point.png";
 import markerWithPoint from "@assets/icons/marker_pointSet.png";
 //  Ani
 import { alertAnimation } from "@styles/animation/keyFremes";
+import { calcPolyDistance } from "@src/util/map/distance";
 
 type Props = {};
 
@@ -210,11 +211,9 @@ const DrawPolygon = (props: Props) => {
         if (!markerRef.current) markerRef.current = [];
         if (!eventRef.current) eventRef.current = [];
         if (e.latlng) setCursorPo(e.latlng);
-        if (polyRef?.current) {
-          let distance = polyRef?.current.getDistance();
-          setDistance(distance);
-        }
         const path: any = polyRef.current?.getPath();
+        let distance = calcPolyDistance(path._array);
+        setDistance(distance);
 
         if (path.length === 1) {
           const marker = new naver.maps.Marker({

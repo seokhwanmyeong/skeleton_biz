@@ -2,7 +2,6 @@
 import { useContext, useEffect, useState, useRef, useCallback } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { NaverMapContext } from "@src/lib/src";
-import OverlayView from "@src/lib/src/components/Overlay/OverlayView";
 import { Flex, useDisclosure } from "@chakra-ui/react";
 //  Components
 import InteractArea from "./InteractArea";
@@ -19,7 +18,7 @@ import type { AreaProps } from "@states/sementicMap/stateMap";
 type Props = {};
 
 const MapFlowEnter = (props: Props) => {
-  const { state, dispatch } = useContext(NaverMapContext);
+  const { state } = useContext(NaverMapContext);
   const [{ sido, sigungu }, setSlctArea] = useRecoilState(atomFlowEnterArea);
   const sidoLi = useRecoilValue(atomSidoLi);
   const sigunguLi = useRecoilValue(atomSigunguLi);
@@ -27,7 +26,6 @@ const MapFlowEnter = (props: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [cursorPo, setCursorPo] = useState<any>(null);
   const [infoArea, setInfoArea] = useState<string>("");
-  const [moveEvent, setMoveEvent] = useState<any>(null);
 
   useEffect(() => {
     if (!state.map) return;
@@ -60,6 +58,7 @@ const MapFlowEnter = (props: Props) => {
   }, [state.map, sido, sigungu]);
 
   const cursorHandler = useCallback((e: any) => {
+    console.log(e);
     setCursorPo({ x: e?.clientX, y: e?.clientY });
 
     return () => {
@@ -133,11 +132,11 @@ const MapFlowEnter = (props: Props) => {
                   state.map?.setOptions({
                     minZoom: 0,
                     maxZoom: 22,
-                    scrollWheel: true,
-                    draggable: true,
-                    disableDoubleClickZoom: true,
-                    disableDoubleTapZoom: true,
-                    disableTwoFingerTapZoom: true,
+                    scrollWheel: false,
+                    draggable: false,
+                    disableDoubleClickZoom: false,
+                    disableDoubleTapZoom: false,
+                    disableTwoFingerTapZoom: false,
                   });
                   setFlow("sigungu");
                 }}

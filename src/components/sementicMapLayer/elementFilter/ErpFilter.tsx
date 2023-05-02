@@ -92,51 +92,56 @@ const ErpFilter = ({
     console.log("store search");
     console.log(filterStore);
 
-    const test = [
-      {
-        storeName: "매장1",
-        addr: "testtesttest",
-        storePhone: "01099999999",
-        lat: 37.61194845,
-        lng: 126.96876175,
-      },
-      {
-        storeName: "매장2",
-        addr: "testtesttest",
-        storePhone: "01099999999",
-        lat: 37.6113865,
-        lng: 126.9699406,
-      },
-      {
-        storeName: "매장3",
-        addr: "testtesttest",
-        storePhone: "01099999999",
-        lat: 37.6106991,
-        lng: 126.9671364,
-      },
-    ];
+    // const test = [
+    //   {
+    //     storeName: "매장1",
+    //     addr: "testtesttest",
+    //     storePhone: "01099999999",
+    //     lat: 37.61194845,
+    //     lng: 126.96876175,
+    //   },
+    //   {
+    //     storeName: "매장2",
+    //     addr: "testtesttest",
+    //     storePhone: "01099999999",
+    //     lat: 37.6113865,
+    //     lng: 126.9699406,
+    //   },
+    //   {
+    //     storeName: "매장3",
+    //     addr: "testtesttest",
+    //     storePhone: "01099999999",
+    //     lat: 37.6106991,
+    //     lng: 126.9671364,
+    //   },
+    // ];
 
-    setErpStore({
-      filter: filterStore,
-      active: true,
-      show: true,
-      data: test || [],
-    });
+    // setErpStore({
+    //   filter: filterStore,
+    //   active: true,
+    //   show: true,
+    //   data: test || [],
+    // });
 
-    return;
+    const tmp = { ...filterStore };
 
-    getStoreList(filterStore).then((res: any) => {
+    if (filterStore.storeType.length === 0)
+      tmp.storeType = ["A", "B", "C", "D", "E"];
+    if (filterStore.storeStatus.length === 0)
+      tmp.storeStatus = ["open", "ready", "rest", "close", "etc"];
+
+    getStoreList(tmp).then((res: any) => {
       const { records } = res;
       console.log(records);
 
-      if (records || records.length > 0) {
-        setErpStore({
-          filter: filterStore,
-          active: true,
-          show: true,
-          data: records || [],
-        });
-      }
+      // if (records || records.length > 0) {
+      //   setErpStore({
+      //     filter: filterStore,
+      //     active: true,
+      //     show: true,
+      //     data: records || [],
+      //   });
+      // }
     });
   };
 
@@ -491,7 +496,8 @@ const ErpFilter = ({
                   onChange={(val: any) => {
                     setFilterStore({
                       ...filterStore,
-                      areaCode: val || "",
+                      // areaCode: val || "",
+                      areaText: val,
                     });
                   }}
                 />

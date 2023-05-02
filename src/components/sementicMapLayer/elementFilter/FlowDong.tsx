@@ -14,10 +14,14 @@ import FlowPopInfo from "@components/sementicMapLayer/elementFilter/FlowPopInfo"
 import { BoxRankingDong } from "@components/sementicMapLayer/elementFilter/BoxRanking";
 import DepthListBox from "@src/components/sementicMapLayer/elementFilter/DepthListBox";
 //  State
-import { atomFilterFlow } from "@states/sementicMap/stateFilter";
+import {
+  atomFilterFlow,
+  infoComBrand,
+  infoComFlowDepth,
+  infoComNiceRank,
+} from "@states/sementicMap/stateFilter";
 import { atomFlowEnterArea, atomSlctDong } from "@states/sementicMap/stateMap";
 import { sementicViewState } from "@states/sementicMap/stateView";
-import { infoComBrand } from "@states/searchState/stateSearch";
 //  Icon
 import { IcoBarChart, IcoErp, IcoFilter } from "@assets/icons/icon";
 //  Deco
@@ -30,6 +34,8 @@ import {
   DecoTop,
 } from "@components/sementicMapLayer/elementDeco/Deco";
 import sample from "@src/util/data/sampleBuilding";
+//  Type
+import type { RankType } from "@states/sementicMap/stateFilter";
 
 type Props = {};
 
@@ -40,11 +46,25 @@ const FlowDong = (props: Props) => {
   const resetSv = useResetRecoilState(sementicViewState);
   const { sigungu } = useRecoilValue(atomFlowEnterArea);
   const dong = useRecoilValue(atomSlctDong);
+  const rankList = useRecoilValue(infoComNiceRank);
+  const { active, show } = useRecoilValue(infoComFlowDepth);
   const { data: brandList } = useRecoilValue(infoComBrand);
-  const [isToolOpen, toolOpen] = useState<boolean>(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [filterType, setType] = useState("");
   const [centerView, setCenterView] = useState<boolean>(true);
+  const [dongRank, setDongRank] = useState<RankType | null>(null);
+
+  useEffect(() => {
+    const dongName = dong.slctName.replace(`${sigungu?.slctName} `, "");
+    let rank;
+
+    for (let i = 0; i < rankList.length; i++) {
+      if (rankList[i].dongName === dongName) {
+        rank = rankList[i];
+        break;
+      }
+    }
+    if (rank) setDongRank(rank);
+  }, [rankList]);
 
   useEffect(() => {
     const zoomHandler = naver.maps.Event.addListener(
@@ -66,55 +86,53 @@ const FlowDong = (props: Props) => {
 
   return (
     <>
-      {!isToolOpen && (
+      <Flex
+        pos="absolute"
+        top="1%"
+        left="50%"
+        zIndex={999}
+        transform="translateX(-50%)"
+        gap={"7rem"}
+      >
+        <BtnBack
+          onClick={() => {
+            state.map?.setOptions({
+              minZoom: 0,
+              maxZoom: 22,
+              scrollWheel: false,
+              draggable: false,
+              disableDoubleClickZoom: false,
+              disableDoubleTapZoom: false,
+              disableTwoFingerTapZoom: false,
+            });
+            setFlow("sigungu");
+          }}
+        />
         <Flex
-          pos="absolute"
-          top="1%"
-          left="50%"
-          zIndex={999}
-          transform="translateX(-50%)"
-          gap={"7rem"}
+          pos="relative"
+          pt="0.3rem"
+          direction="column"
+          justify="flex-start"
+          color="#000000"
+          gap="0.5rem"
         >
-          <BtnBack
-            onClick={() => {
-              state.map?.setOptions({
-                minZoom: 0,
-                maxZoom: 22,
-                scrollWheel: false,
-                draggable: false,
-                disableDoubleClickZoom: false,
-                disableDoubleTapZoom: false,
-                disableTwoFingerTapZoom: false,
-              });
-              setFlow("sigungu");
-            }}
-          />
-          <Flex
-            pos="relative"
-            pt="0.3rem"
-            direction="column"
-            justify="flex-start"
-            color="#000000"
-            gap="0.5rem"
-          >
-            <Flex pos="relative" direction="column">
-              <Button variant="filterTopMain" cursor="unset">
-                {dong.slctName.replace(sigungu?.slctName, "")}
-              </Button>
-              <DecoTop width="13rem" />
-            </Flex>
-            {sigungu?.slctName && (
-              <Text variant="filterTopArea">{sigungu?.slctName}</Text>
-            )}
+          <Flex pos="relative" direction="column">
+            <Button variant="filterTopMain" cursor="unset">
+              {dong.slctName.replace(sigungu?.slctName, "")}
+            </Button>
+            <DecoTop width="13rem" />
           </Flex>
-          <UpjongListBox />
+          {sigungu?.slctName && (
+            <Text variant="filterTopArea">{sigungu?.slctName}</Text>
+          )}
         </Flex>
-      )}
+        <UpjongListBox />
+      </Flex>
       {/* --------------------------- 중단 Frame ---------------------------*/}
       <Flex w="100%" h="100%" zIndex={1} gap="0.625rem" pointerEvents="none">
         <DecoFrameL pl="1rem" align="flex-end">
-          <BoxRankingDong />
-          <FlowPopInfo />
+          {active && show && <FlowPopInfo />}
+          {dongRank && <BoxRankingDong rankData={dongRank} />}
         </DecoFrameL>
         <DecoFrameCenter isOpen={centerView} activeAni={false} />
         <DecoFrameR pr="0.25rem">
@@ -125,14 +143,8 @@ const FlowDong = (props: Props) => {
       <DecoBotHightBox gap="3rem">
         <Button
           variant="filterTop"
-          isActive={filterType === "anal"}
-          onClick={() => {
-            if (filterType === "anal") {
-              setType("");
-            } else {
-              setType("anal");
-            }
-          }}
+          isActive={isOpen}
+          onClick={() => (isOpen ? onClose() : onOpen())}
         >
           <Box>
             <IcoFilter />
@@ -154,8 +166,7 @@ const FlowDong = (props: Props) => {
         <DecoFilterDivider />
         <BtnReset />
       </DecoBotHightBox>
-      {filterType === "anal" && <NiceFilterDepth />}
-      {isToolOpen && <DrawTools />}
+      {isOpen && <NiceFilterDepth path={dong.slctPath} />}
     </>
   );
 };

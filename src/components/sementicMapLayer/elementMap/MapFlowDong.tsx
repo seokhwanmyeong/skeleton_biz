@@ -68,7 +68,7 @@ const MapFlowDong = (props: Props) => {
   };
 
   useEffect(() => {
-    console.log(sampleData.length);
+    // console.log(sampleData.length);
     let bCnt = 0;
     let polyList: any[] = [];
 

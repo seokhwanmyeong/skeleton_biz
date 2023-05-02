@@ -10,8 +10,16 @@ type TypeFlow =
   | "custom";
 
 type TypeNiceFilter = {
-  sex: ("man" | "woman")[];
-  age: ("20" | "30" | "40" | "50" | "60")[];
+  sex: ("male" | "female")[];
+  age: ("20s" | "30s" | "40s" | "50s" | "60s")[];
+};
+
+export type RankType = {
+  dongCode: string;
+  dongName: string;
+  rank: number;
+  sum: number;
+  categoryRanks: any;
 };
 
 export const atomFilterFlow = atom<TypeFlow>({
@@ -78,8 +86,8 @@ export const infoComFloatPop = atom<{
   key: "infoComFloatPop",
   default: {
     filter: {
-      sex: ["man", "woman"],
-      age: ["20", "30", "40", "50", "60"],
+      sex: ["male", "female"],
+      age: ["20s", "30s", "40s", "50s", "60s"],
     },
     show: false,
     active: false,
@@ -94,8 +102,8 @@ export const infoComResiPop = atom<{
   key: "infoComResiPop",
   default: {
     filter: {
-      sex: ["man", "woman"],
-      age: ["20", "30", "40", "50", "60"],
+      sex: ["male", "female"],
+      age: ["20s", "30s", "40s", "50s", "60s"],
     },
     show: false,
     active: false,
@@ -110,8 +118,8 @@ export const infoComJobPop = atom<{
   key: "infoComJobPop",
   default: {
     filter: {
-      sex: ["man", "woman"],
-      age: ["20", "30", "40", "50", "60"],
+      sex: ["male", "female"],
+      age: ["20s", "30s", "40s", "50s", "60s"],
     },
     show: false,
     active: false,
@@ -151,6 +159,11 @@ export const infoComUpjongCnt = atom<{
   },
 });
 
+export const infoComNiceRank = atom<RankType[]>({
+  key: "infoComUpjongCnt",
+  default: [],
+});
+
 // 전체 Reset 컨트롤
 export const resetNice = selector({
   key: "resetNice",
@@ -162,6 +175,7 @@ export const resetNice = selector({
     reset(infoComHousehold);
     reset(infoComSale);
     reset(infoComUpjongCnt);
+    reset(infoComNiceRank);
   },
 });
 
@@ -297,23 +311,26 @@ export type Infocome<Filter> = {
 export type TypeFilterStore = {
   searchType: "name" | "code" | "owner_name";
   text: string;
-  areaCode: string;
-  storeType: ["A" | "B" | "C" | "D" | "E"] | [];
-  storeStatus: ["open" | "ready" | "rest" | "close" | "etc"] | [];
+  // areaCode?: string;
+  areaText: string;
+  storeType: ("A" | "B" | "C" | "D" | "E")[];
+  storeStatus: ("open" | "ready" | "rest" | "close" | "etc")[];
 };
 
 export type TypeFilterBsDis = {
   searchType: "bsDName" | "bsDCode";
   text: string;
-  areaCode: string;
-  bsDType: ["A" | "B" | "C" | "D" | "E"] | [];
+  // areaCode?: string;
+  areaText: string;
+  bsDType: ("A" | "B" | "C" | "D" | "E")[];
 };
 
 export type TypeFilterRent = {
   searchType: "rentName" | "rentCode";
   text: string;
-  areaCode: string;
-  rentType: ["A" | "B" | "C" | "D" | "E"] | [];
+  // areaCode?: string;
+  areaText: string;
+  rentType: ("A" | "B" | "C" | "D" | "E")[];
 };
 
 export const infoComErpStore = atom<Infocome<TypeFilterStore>>({
@@ -322,9 +339,10 @@ export const infoComErpStore = atom<Infocome<TypeFilterStore>>({
     filter: {
       searchType: "name",
       text: "",
-      areaCode: "",
-      storeType: [],
-      storeStatus: [],
+      // areaCode: "",
+      areaText: "",
+      storeType: ["A", "B", "C", "D", "E"],
+      storeStatus: ["open", "ready", "rest", "close", "etc"],
     },
     data: [],
     show: false,
@@ -338,8 +356,9 @@ export const infoComErpBsnsD = atom<Infocome<TypeFilterBsDis>>({
     filter: {
       searchType: "bsDName",
       text: "",
-      areaCode: "",
-      bsDType: [],
+      // areaCode: "",
+      areaText: "",
+      bsDType: ["A", "B", "C", "D", "E"],
     },
     data: [],
     show: false,
@@ -353,8 +372,9 @@ export const infoComErpRent = atom<Infocome<TypeFilterRent>>({
     filter: {
       searchType: "rentName",
       text: "",
-      areaCode: "",
-      rentType: [],
+      // areaCode: "",
+      areaText: "",
+      rentType: ["A", "B", "C", "D", "E"],
     },
     data: [],
     show: false,

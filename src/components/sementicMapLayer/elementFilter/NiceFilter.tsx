@@ -1,6 +1,11 @@
 //  Lib
 import { useState, useRef } from "react";
-import { useRecoilState, useResetRecoilState, useRecoilValue } from "recoil";
+import {
+  useRecoilState,
+  useResetRecoilState,
+  useRecoilValue,
+  useSetRecoilState,
+} from "recoil";
 import {
   Box,
   Button,
@@ -22,10 +27,11 @@ import {
   infoComHousehold,
   infoComUpjongCnt,
   infoComSale,
+  infoComNiceRank,
   resetNice,
 } from "@states/sementicMap/stateFilter";
 //  Api
-import { apiMapNice } from "@api/biz/config";
+import { apiMapNice } from "@api/bizSub/config";
 //  Icon
 import {
   IcoGroup,
@@ -50,6 +56,7 @@ const NiceFilter = ({ areaCode }: Props) => {
   const divRef = useRef<HTMLDivElement | null>(null);
   const [openIdx, setOpenIdx] = useState(0);
   const { bot } = useRecoilValue(atomUpjongState);
+  const setRank = useSetRecoilState(infoComNiceRank);
   const [flowPop, setFlowPop] = useRecoilState(infoComFloatPop);
   const [resiPop, setResiPop] = useRecoilState(infoComResiPop);
   const [jobPop, setJobPop] = useRecoilState(infoComJobPop);
@@ -61,87 +68,114 @@ const NiceFilter = ({ areaCode }: Props) => {
   const [filterJob, setFilterJob] = useState(jobPop.filter);
   const reset = useResetRecoilState(resetNice);
 
+  const transFilter = (props: {
+    type: "hous" | "inflow" | "job";
+    sex: ("male" | "female")[];
+    age: ("20s" | "30s" | "40s" | "50s" | "60s")[];
+  }) => {
+    const { type, sex, age } = props;
+    let filter: any = {};
+
+    if (sex.length === 2 && age.length === 5) {
+      filter[`${type}CustCnt`] = {};
+    } else if (sex.length === 2 && age.length !== 5) {
+      filter[`${type}CustAgeCnt`] = age;
+    } else if (sex.length !== 2 && age.length === 5) {
+      filter[`${type}CustSexCnt`] = { sex: sex[0] };
+    } else {
+      let arr: any = [];
+
+      sex.map((gender) => {
+        let tmp = age.map((unit) => ({
+          sex: gender,
+          ageGroup: unit,
+        }));
+
+        arr = [...arr, ...tmp];
+      });
+
+      filter[`${type}CustSexAgeCnt`] = {
+        sexAgeGroups: arr,
+      };
+    }
+
+    return filter;
+  };
+
   const searchHandler = (
     cate?: "flow" | "resi" | "job" | "house" | "upjong" | "sale"
   ) => {
-    const filter = {
+    let filter: any = {
       upjongCd: bot.code || "D11002",
-      code: areaCode,
-      flowPop: {
-        active: flowPop.active,
-        ...filterPop,
-      },
-      resiPop: {
-        active: resiPop.active,
-        ...filterResi,
-      },
-      jobPop: {
-        active: jobPop.active,
-        ...filterJob,
-      },
-      sale: {
-        active: sale.active,
-      },
-      upjongCnt: {
-        active: upjongCnt.active,
-      },
-      house: {
-        active: household.active,
-      },
+      // code: areaCode,
+      // admiCd: "11530520",
+      ctyCd: "1111",
+      options: null,
     };
+
+    if (flowPop.active)
+      filter.options = {
+        ...filter.options,
+        ...transFilter({ type: "inflow", ...filterPop }),
+      };
+
+    if (resiPop.active)
+      filter.options = {
+        ...filter.options,
+        ...transFilter({ type: "hous", ...filterResi }),
+      };
+
+    if (jobPop.active)
+      filter.options = {
+        ...filter.options,
+        ...transFilter({ type: "job", ...filterJob }),
+      };
+    if (sale.active) filter.options.admiSaleAmt = {};
+    if (upjongCnt.active) filter.options.storeCnt = {};
+    if (household.active) filter.options.housCnt = {};
 
     switch (cate) {
       case "flow":
-        filter.flowPop = {
-          active: true,
-          sex: filterPop.sex.length > 0 ? filterPop.sex : ["man", "woman"],
-          age:
-            filterPop.age.length > 0
-              ? filterPop.age
-              : ["20", "30", "40", "50", "60"],
+        filter.options = {
+          ...filter.options,
+          ...transFilter({ type: "inflow", ...filterPop }),
         };
         setFlowPop({ filter: filterPop, show: true, active: true });
         break;
       case "resi":
-        filter.resiPop = {
-          active: true,
-          sex: filterResi.sex.length > 0 ? filterResi.sex : ["man", "woman"],
-          age:
-            filterResi.age.length > 0
-              ? filterResi.age
-              : ["20", "30", "40", "50", "60"],
+        filter.options = {
+          ...filter.options,
+          ...transFilter({ type: "hous", ...filterResi }),
         };
         setResiPop({ filter: filterResi, show: true, active: true });
         break;
       case "job":
-        filter.jobPop = {
-          active: true,
-          sex: filterJob.sex.length > 0 ? filterJob.sex : ["man", "woman"],
-          age:
-            filterJob.age.length > 0
-              ? filterJob.age
-              : ["20", "30", "40", "50", "60"],
+        filter.options = {
+          ...filter.options,
+          ...transFilter({ type: "job", ...filterJob }),
         };
         setJobPop({ filter: filterJob, show: true, active: true });
         break;
       case "house":
-        filter.house.active = true;
+        filter.options.housCnt = {};
         setHouse({ show: true, active: true });
         break;
       case "upjong":
-        filter.upjongCnt.active = true;
+        filter.options.storeCnt = {};
         setUpjong({ show: true, active: true });
         break;
       case "sale":
-        filter.sale.active = true;
+        filter.options.admiSaleAmt = {};
         setSale({ show: true, active: true });
         break;
       default:
         break;
     }
-    console.log(filter);
+
     getSigunguRank(filter).then((res: any) => {
-      console.log(res);
+      if (res?.data?.rank && res?.data?.rank.length > 0) {
+        setRank(res?.data?.rank);
+      }
     });
   };
 
@@ -299,8 +333,8 @@ const NiceFilter = ({ areaCode }: Props) => {
               </FormLabel>
               <CheckboxGroup
                 chkboxData={[
-                  { text: "남자", value: "man" },
-                  { text: "여자", value: "woman" },
+                  { text: "남자", value: "male" },
+                  { text: "여자", value: "female" },
                 ]}
                 chkValue={filterPop?.sex}
                 activeTotal={true}
@@ -331,11 +365,11 @@ const NiceFilter = ({ areaCode }: Props) => {
               </FormLabel>
               <CheckboxGroup
                 chkboxData={[
-                  { text: "20대", value: "20" },
-                  { text: "30대", value: "30" },
-                  { text: "40대", value: "40" },
-                  { text: "50대", value: "50" },
-                  { text: "60대 이상", value: "60" },
+                  { text: "20대", value: "20s" },
+                  { text: "30대", value: "30s" },
+                  { text: "40대", value: "40s" },
+                  { text: "50대", value: "50s" },
+                  { text: "60대 이상", value: "60s" },
                 ]}
                 chkValue={filterPop?.age}
                 activeTotal={true}
@@ -410,8 +444,8 @@ const NiceFilter = ({ areaCode }: Props) => {
               </FormLabel>
               <CheckboxGroup
                 chkboxData={[
-                  { text: "남자", value: "man" },
-                  { text: "여자", value: "woman" },
+                  { text: "남자", value: "male" },
+                  { text: "여자", value: "female" },
                 ]}
                 chkValue={filterResi?.sex}
                 activeTotal={true}
@@ -442,11 +476,11 @@ const NiceFilter = ({ areaCode }: Props) => {
               </FormLabel>
               <CheckboxGroup
                 chkboxData={[
-                  { text: "20대", value: "20" },
-                  { text: "30대", value: "30" },
-                  { text: "40대", value: "40" },
-                  { text: "50대", value: "50" },
-                  { text: "60대 이상", value: "60" },
+                  { text: "20대", value: "20s" },
+                  { text: "30대", value: "30s" },
+                  { text: "40대", value: "40s" },
+                  { text: "50대", value: "50s" },
+                  { text: "60대 이상", value: "60s" },
                 ]}
                 chkValue={filterResi?.age}
                 activeTotal={true}
@@ -518,8 +552,8 @@ const NiceFilter = ({ areaCode }: Props) => {
               </FormLabel>
               <CheckboxGroup
                 chkboxData={[
-                  { text: "남자", value: "man" },
-                  { text: "여자", value: "woman" },
+                  { text: "남자", value: "male" },
+                  { text: "여자", value: "female" },
                 ]}
                 chkValue={filterJob?.sex}
                 activeTotal={true}
@@ -550,11 +584,11 @@ const NiceFilter = ({ areaCode }: Props) => {
               </FormLabel>
               <CheckboxGroup
                 chkboxData={[
-                  { text: "20대", value: "20" },
-                  { text: "30대", value: "30" },
-                  { text: "40대", value: "40" },
-                  { text: "50대", value: "50" },
-                  { text: "60대 이상", value: "60" },
+                  { text: "20대", value: "20s" },
+                  { text: "30대", value: "30s" },
+                  { text: "40대", value: "40s" },
+                  { text: "50대", value: "50s" },
+                  { text: "60대 이상", value: "60s" },
                 ]}
                 chkValue={filterJob?.age}
                 activeTotal={true}
