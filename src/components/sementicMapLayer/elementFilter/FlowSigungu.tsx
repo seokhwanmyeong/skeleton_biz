@@ -183,8 +183,8 @@ const FlowSigungu = () => {
             gap="2px"
           >
             {left.length > 0 &&
-              left.map((li: any) => {
-                return <BoxRanking rankData={li} />;
+              left.map((li: any, idx: number) => {
+                return <BoxRanking key={`rank-left-${idx}`} rankData={li} />;
               })}
           </Flex>
         </DecoFrameL>
@@ -198,8 +198,14 @@ const FlowSigungu = () => {
             gap="2px"
           >
             {right.length > 0 &&
-              right.map((li: any) => {
-                return <BoxRanking rankData={li} direction="right" />;
+              right.map((li: any, idx: number) => {
+                return (
+                  <BoxRanking
+                    key={`rank-right-${idx}`}
+                    rankData={li}
+                    direction="right"
+                  />
+                );
               })}
           </Flex>
         </DecoFrameR>

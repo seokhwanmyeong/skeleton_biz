@@ -5,10 +5,18 @@ import { Flex, useColorMode } from "@chakra-ui/react";
 import { atomThemeColor } from "@states/theme/stateTheme";
 //  Components
 import { SwitchTheme } from "@components/common/Switch";
+import { useEffect } from "react";
 
 const ThemeBox = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const [themeColor, setThemeColor] = useRecoilState(atomThemeColor);
+
+  useEffect(() => {
+    if (themeColor !== colorMode) {
+      colorMode === "light" ? setThemeColor("light") : setThemeColor("dark");
+    }
+  }, []);
+
   return (
     <Flex position="relative" alignItems="center">
       <SwitchTheme

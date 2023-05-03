@@ -58,7 +58,6 @@ const MapFlowEnter = (props: Props) => {
   }, [state.map, sido, sigungu]);
 
   const cursorHandler = useCallback((e: any) => {
-    console.log(e);
     setCursorPo({ x: e?.clientX, y: e?.clientY });
 
     return () => {

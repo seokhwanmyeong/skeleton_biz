@@ -175,43 +175,25 @@ const MapFlowDong = () => {
         flowList?.length > 0 &&
         flowList.map((list: any, idx: number) => {
           // const { storeNm, xAxis, yAxis } = brand;
-          return list.map((li: TypeNiceFlowData, depthIdx: number) => {
-            const {
-              blkCd,
-              cumedist,
-              flowLv,
-              flowPop,
-              id,
-              label,
-              xAxis,
-              yAxis,
-            } = li;
+          const path = list.map((li: TypeNiceFlowData, depthIdx: number) => {
+            const { xAxis, yAxis } = li;
 
-            console.log(li);
-            return null;
-            return (
-              <Polyline
-                id={`${idx}-${depthIdx}`}
-                opts={{
-                  path: [
-                    positions[num],
-                    {
-                      lat: 37.55794136784555 + cont - 0.018,
-                      lng: 126.97319248899569 + 0.002,
-                    },
-                    {
-                      lat: 37.55794136784555 + cont - 0.017,
-                      lng: 126.97319248899569 - 0.001,
-                    },
-                  ],
-                  strokeColor: "#FF00DA",
-                  strokeStyle: "solid",
-                  strokeOpacity: 1,
-                  strokeWeight: 3,
-                }}
-              />
-            );
+            return { lat: yAxis, lng: xAxis };
           });
+          console.log(path);
+          return (
+            <Polyline
+              key={`flow-${idx}`}
+              id={`flow-${idx}`}
+              opts={{
+                path: path,
+                strokeColor: "#FF00DA",
+                strokeStyle: "solid",
+                strokeOpacity: 1,
+                strokeWeight: 3,
+              }}
+            />
+          );
         })}
       {brandActive &&
         brandShow &&

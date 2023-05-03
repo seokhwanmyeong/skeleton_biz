@@ -111,14 +111,14 @@ export const atomCreateArea = atom({
 export const atomSlctErp = atom<{
   erpType?: "store" | "rent" | "bsDis";
   name: string;
-  id: string;
+  cursorPo: any;
   hoverId?: string;
 }>({
   key: "atomSlctErp",
   default: {
     erpType: undefined,
+    cursorPo: null,
     name: "",
-    id: "",
     hoverId: "",
   },
 });

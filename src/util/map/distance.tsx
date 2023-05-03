@@ -29,7 +29,7 @@ const calcPolyDistance = (paths: naver.maps.LatLng[]) => {
   return longDistance;
 };
 
-const getCenterPolygon = (polygon: any) => {
+const getCenterPolygon = (polygon: any): [number, number] => {
   const bounds = polygon.getPath();
   const arr = bounds._array;
   const length = arr.length;

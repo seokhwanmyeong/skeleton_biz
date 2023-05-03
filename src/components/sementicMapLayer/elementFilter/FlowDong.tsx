@@ -131,8 +131,8 @@ const FlowDong = (props: Props) => {
       {/* --------------------------- 중단 Frame ---------------------------*/}
       <Flex w="100%" h="100%" zIndex={1} gap="0.625rem" pointerEvents="none">
         <DecoFrameL pl="1rem" align="flex-end">
-          {active && show && <FlowPopInfo />}
           {dongRank && <BoxRankingDong rankData={dongRank} />}
+          {active && show && <FlowPopInfo />}
         </DecoFrameL>
         <DecoFrameCenter isOpen={centerView} activeAni={false} />
         <DecoFrameR pr="0.25rem">

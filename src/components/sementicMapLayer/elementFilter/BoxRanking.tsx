@@ -291,8 +291,8 @@ const BoxRankingDong = ({ rankData }: { rankData: RankType }) => {
               />
             }
             fillColor="#FADB14"
-            amount={categoryRanks.inflowCustCnt.amount}
-            rank={categoryRanks.inflowCustCnt.rank}
+            amount={categoryRanks?.inflowCustCnt?.amount}
+            rank={categoryRanks?.inflowCustCnt?.rank}
           />
           <ElementListOne
             icon={
@@ -304,8 +304,8 @@ const BoxRankingDong = ({ rankData }: { rankData: RankType }) => {
               />
             }
             fillColor="#FADB14"
-            amount={categoryRanks.housCustCnt.amount}
-            rank={categoryRanks.housCustCnt.rank}
+            amount={categoryRanks?.housCustCnt?.amount}
+            rank={categoryRanks?.housCustCnt?.rank}
           />
           <ElementListOne
             icon={
@@ -317,8 +317,8 @@ const BoxRankingDong = ({ rankData }: { rankData: RankType }) => {
               />
             }
             fillColor="#36CFC9"
-            amount={categoryRanks.jobCustCnt.amount}
-            rank={categoryRanks.jobCustCnt.rank}
+            amount={categoryRanks?.jobCustCnt?.amount}
+            rank={categoryRanks?.jobCustCnt?.rank}
           />
           <ElementListOne
             icon={
@@ -330,8 +330,8 @@ const BoxRankingDong = ({ rankData }: { rankData: RankType }) => {
               />
             }
             fillColor="#FF7A45"
-            amount={categoryRanks.housCnt.amount}
-            rank={categoryRanks.housCnt.rank}
+            amount={categoryRanks?.housCnt?.amount}
+            rank={categoryRanks?.housCnt?.rank}
           />
           <ElementListOne
             icon={
@@ -343,8 +343,8 @@ const BoxRankingDong = ({ rankData }: { rankData: RankType }) => {
               />
             }
             fillColor="#36CFC9"
-            amount={categoryRanks.storeCnt.amount}
-            rank={categoryRanks.storeCnt.rank}
+            amount={categoryRanks?.storeCnt?.amount}
+            rank={categoryRanks?.storeCnt?.rank}
           />
           <ElementListOne
             icon={
@@ -356,8 +356,8 @@ const BoxRankingDong = ({ rankData }: { rankData: RankType }) => {
               />
             }
             fillColor="#D9D9D9"
-            amount={categoryRanks.admiSaleAmt.amount}
-            rank={categoryRanks.admiSaleAmt.rank}
+            amount={categoryRanks?.admiSaleAmt?.amount}
+            rank={categoryRanks?.admiSaleAmt?.rank}
             isSale={true}
           />
         </Flex>

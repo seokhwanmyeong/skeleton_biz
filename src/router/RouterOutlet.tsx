@@ -1,6 +1,8 @@
 //  Lib
-import { useRecoilValue } from "recoil";
+import { useEffect } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { Route, Routes } from "react-router-dom";
+import { useColorMode } from "@chakra-ui/react";
 //  Pages
 import ErrorPage from "@page/ErrorPage";
 //  Pages: Frame
@@ -15,10 +17,19 @@ import {
   SubRouteType,
   DepthRouteType,
 } from "@states/route/stateRoute";
+import { atomThemeColor } from "@states/theme/stateTheme";
 
 const RouterOutlet = () => {
   const mainRoute = useRecoilValue(mainRouteSelector);
   const subRoute = useRecoilValue(_subRoute);
+  const { colorMode, toggleColorMode } = useColorMode();
+  const [themeColor, setThemeColor] = useRecoilState(atomThemeColor);
+
+  useEffect(() => {
+    if (themeColor !== colorMode) {
+      colorMode === "light" ? setThemeColor("light") : setThemeColor("dark");
+    }
+  }, []);
 
   return (
     <Routes>
