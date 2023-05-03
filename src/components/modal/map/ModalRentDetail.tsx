@@ -1,32 +1,64 @@
 //  LIB
-import { Fragment } from "react";
+import { useState, useEffect } from "react";
 import {
   Drawer,
   DrawerBody,
   DrawerContent,
   Flex,
   Heading,
-  Divider,
-  Text,
   IconButton,
-  Grid,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Text,
 } from "@chakra-ui/react";
+//  Component
+import RentBasicInfo from "@components/modal/map/elementRent/RentBasicInfo";
+import ElementHistory from "@components/modal/map/elementCommon/ElementHistory";
+//  Api
+import { apiErpMap } from "@api/biz/config";
 //  Deco
 import { Deco01 } from "@assets/deco/DecoSvg";
+//  Icon
+import { IcoBars, IcoHistory, IcoLeft } from "@assets/icons/icon";
 //  Type
-import { IcoLeft } from "@assets/icons/icon";
+import type { TypeMapRentInfo } from "@api/biz/type";
 
 type Props = {
+  id: string;
+  name: string;
   isOpen: boolean;
   onClose: (props?: any) => any;
 };
 
-const ModalRentDetail = ({ isOpen, onClose }: Props) => {
+const ModalRentDetail = ({ id, name, isOpen, onClose }: Props) => {
+  const { getRentInfo } = apiErpMap;
+  const [infoData, setInfoData] = useState<TypeMapRentInfo["res"] | null>(null);
+  const [tabIdx, setTabIdx] = useState<number>(0);
+
+  useEffect(() => {
+    if (id && name) {
+      getRentInfo({ id: id }).then((res) => {
+        if (res) {
+          setInfoData(res);
+        }
+      });
+    }
+  }, [id]);
+
   return (
     <Drawer isOpen={isOpen} onClose={onClose} placement="right">
-      <DrawerContent p="1rem 0" maxW="fit-content">
-        <DrawerBody pos="relative" p="0" width="fit-content">
-          <Flex direction="column" justify="center" align="center" gap="1rem">
+      <DrawerContent p="0" maxW="fit-content">
+        <DrawerBody pos="relative" p="1rem 1.5rem" width="fit-content">
+          <Flex
+            pos="relative"
+            direction="column"
+            justify="center"
+            align="center"
+            gap="1.125rem"
+          >
             <IconButton
               aria-label="리스트로 돌아가기"
               onClick={onClose}
@@ -38,8 +70,8 @@ const ModalRentDetail = ({ isOpen, onClose }: Props) => {
                 />
               }
               position="absolute"
-              top="0.125rem"
-              left="3.2rem"
+              top="0rem"
+              left="0rem"
               bg="transparent"
               color="font.primary"
               _hover={{
@@ -53,9 +85,35 @@ const ModalRentDetail = ({ isOpen, onClose }: Props) => {
               color="font.primary"
               bg="none"
             >
-              평창점
+              {name}
             </Heading>
-            <Deco01 p="0 2rem" w="100%" h="auto" />
+            <Deco01 w="100%" h="auto" />
+            <Tabs
+              variant="detailPage"
+              index={tabIdx}
+              onChange={(index) => setTabIdx(index)}
+            >
+              <TabList>
+                <Tab key="tab-info">
+                  <IcoBars />
+                  <Text>기본 정보</Text>
+                </Tab>
+                <Tab key="tab-history" isDisabled={false}>
+                  <IcoHistory />
+                  <Text>히스토리 데이터</Text>
+                </Tab>
+              </TabList>
+              <TabPanels>
+                <TabPanel>
+                  {tabIdx === 0 && infoData !== null && (
+                    <RentBasicInfo info={infoData} />
+                  )}
+                </TabPanel>
+                <TabPanel>
+                  {tabIdx === 1 && <ElementHistory id={id} title={name} />}
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
           </Flex>
         </DrawerBody>
       </DrawerContent>

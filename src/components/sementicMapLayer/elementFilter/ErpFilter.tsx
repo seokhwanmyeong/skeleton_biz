@@ -9,6 +9,7 @@ import {
   Heading,
   useDisclosure,
 } from "@chakra-ui/react";
+import { motion } from "framer-motion";
 import { NaverMapContext } from "@src/lib/src";
 //  Component
 import { CheckboxGroup } from "@components/common/CheckBox";
@@ -52,7 +53,7 @@ import type {
   TypeFilterBsDis,
   TypeFilterRent,
 } from "@states/sementicMap/stateFilter";
-import { motion } from "framer-motion";
+import type { TypeMapStoreInfo, TypeMapRentSearch } from "@api/biz/type";
 
 type ErpFilterProps = {
   areaCode?: string;
@@ -92,56 +93,31 @@ const ErpFilter = ({
     console.log("store search");
     console.log(filterStore);
 
-    // const test = [
-    //   {
-    //     storeName: "매장1",
-    //     addr: "testtesttest",
-    //     storePhone: "01099999999",
-    //     lat: 37.61194845,
-    //     lng: 126.96876175,
-    //   },
-    //   {
-    //     storeName: "매장2",
-    //     addr: "testtesttest",
-    //     storePhone: "01099999999",
-    //     lat: 37.6113865,
-    //     lng: 126.9699406,
-    //   },
-    //   {
-    //     storeName: "매장3",
-    //     addr: "testtesttest",
-    //     storePhone: "01099999999",
-    //     lat: 37.6106991,
-    //     lng: 126.9671364,
-    //   },
-    // ];
-
-    // setErpStore({
-    //   filter: filterStore,
-    //   active: true,
-    //   show: true,
-    //   data: test || [],
-    // });
-
     const tmp = { ...filterStore };
+    delete tmp.areaCode;
 
     if (filterStore.storeType.length === 0)
       tmp.storeType = ["A", "B", "C", "D", "E"];
     if (filterStore.storeStatus.length === 0)
       tmp.storeStatus = ["open", "ready", "rest", "close", "etc"];
+    if (filterStore.areaText === "전체") tmp.areaText = "";
 
-    getStoreList(tmp).then((res: any) => {
+    getStoreList(tmp).then((res: { records: TypeMapStoreInfo["res"][] }) => {
       const { records } = res;
-      console.log(records);
 
-      // if (records || records.length > 0) {
-      //   setErpStore({
-      //     filter: filterStore,
-      //     active: true,
-      //     show: true,
-      //     data: records || [],
-      //   });
-      // }
+      records && records.length > 0
+        ? setErpStore({
+            filter: filterStore,
+            active: true,
+            show: true,
+            data: records,
+          })
+        : setErpStore({
+            filter: filterStore,
+            active: true,
+            show: true,
+            data: [],
+          });
     });
   };
 
@@ -150,62 +126,58 @@ const ErpFilter = ({
     console.log("bsD search");
     console.log(filterBsD);
 
-    const test = [
-      {
-        bisName: "상권01",
-        bsDisType: "A",
-        polygon: [
-          [126.9749089, 37.6164026],
-          [126.9719048, 37.6124932],
-          [126.9746514, 37.6102834],
-          [126.977398, 37.612731100000005],
-          [126.9767114, 37.6154847],
-          [126.9749089, 37.6164026],
-        ],
-        // center : [ Number, Number ]
-        polygonType: "single",
-      },
-      {
-        bisName: "상권02",
-        bsDisType: "B",
-        polygon: [
-          [126.9665286, 37.6142807],
-          [126.965284, 37.6136178],
-          [126.9638464, 37.6113231],
-          [126.9649407, 37.6112041],
-          [126.9667861, 37.611799000000005],
-          [126.9676229, 37.6134308],
-          [126.96766579999999, 37.6143317],
-          [126.9665286, 37.6142807],
-        ],
-        // center : [ Number, Number ]
-        polygonType: "single",
-      },
-      {
-        bisName: "상권03",
-        bsDisType: "C",
-        polygon: [
-          [126.96750109999999, 37.6128706],
-          [126.9677371, 37.6111878],
-          [126.9690353, 37.6110263],
-          [126.9699151, 37.6117827],
-          [126.97002239999999, 37.6128706],
-          [126.96750109999999, 37.6128706],
-        ],
-        // center : [ Number, Number ]
-        polygonType: "single",
-      },
-    ];
+    // const test = [
+    //   {
+    //     bisName: "상권01",
+    //     bsDisType: "A",
+    //     polygon: [
+    //       [126.9749089, 37.6164026],
+    //       [126.9719048, 37.6124932],
+    //       [126.9746514, 37.6102834],
+    //       [126.977398, 37.612731100000005],
+    //       [126.9767114, 37.6154847],
+    //       [126.9749089, 37.6164026],
+    //     ],
+    //     // center : [ Number, Number ]
+    //     polygonType: "single",
+    //   },
+    //   {
+    //     bisName: "상권02",
+    //     bsDisType: "B",
+    //     polygon: [
+    //       [126.9665286, 37.6142807],
+    //       [126.965284, 37.6136178],
+    //       [126.9638464, 37.6113231],
+    //       [126.9649407, 37.6112041],
+    //       [126.9667861, 37.611799000000005],
+    //       [126.9676229, 37.6134308],
+    //       [126.96766579999999, 37.6143317],
+    //       [126.9665286, 37.6142807],
+    //     ],
+    //     // center : [ Number, Number ]
+    //     polygonType: "single",
+    //   },
+    //   {
+    //     bisName: "상권03",
+    //     bsDisType: "C",
+    //     polygon: [
+    //       [126.96750109999999, 37.6128706],
+    //       [126.9677371, 37.6111878],
+    //       [126.9690353, 37.6110263],
+    //       [126.9699151, 37.6117827],
+    //       [126.97002239999999, 37.6128706],
+    //       [126.96750109999999, 37.6128706],
+    //     ],
+    //     // center : [ Number, Number ]
+    //     polygonType: "single",
+    //   },
+    // ];
+    const tmp = { ...filterBsD };
+    delete tmp.areaCode;
 
-    setErpBsD({
-      filter: filterBsD,
-      active: true,
-      show: true,
-      data: test || [],
-    });
+    if (filterBsD.areaText === "전체") tmp.areaText = "";
 
-    return;
-    getBsDisList(filterBsD).then((res: any) => {
+    getBsDisList(tmp).then((res: any) => {
       const { records } = res;
       console.log(res);
 
@@ -223,45 +195,28 @@ const ErpFilter = ({
     console.log("rent search");
     console.log(filterRent);
 
-    const test = [
-      {
-        rentName: "매물1",
-        addr: "서울 종로구 종로대로29길 60 매물 주소",
-        lat: 37.6100245,
-        lng: 126.9693506,
-      },
-      {
-        rentName: "매물2",
-        addr: "서울 종로구 종로대로29길 60 매물 주소",
-        lat: 37.6101833,
-        lng: 126.9709566,
-      },
-      {
-        rentName: "매물3",
-        addr: "서울 종로구 종로대로29길 60 매물 주소",
-        lat: 37.6115745,
-        lng: 126.971027,
-      },
-    ];
+    const tmp = { ...filterRent };
+    delete tmp.areaCode;
 
-    setErpRent({
-      filter: filterRent,
-      active: true,
-      show: true,
-      data: test,
-    });
+    if (filterRent.areaText === "전체") tmp.areaText = "";
 
-    return;
-    getRentList(filterRent).then((res: any) => {
+    getRentList(tmp).then((res: { records: TypeMapRentSearch["res"][] }) => {
       const { records } = res;
       console.log(res);
 
-      setErpRent({
-        filter: filterRent,
-        active: true,
-        show: true,
-        data: records || [],
-      });
+      records && records.length > 0
+        ? setErpRent({
+            filter: filterRent,
+            active: true,
+            show: true,
+            data: records,
+          })
+        : setErpRent({
+            filter: filterRent,
+            active: true,
+            show: true,
+            data: [],
+          });
     });
   };
 
@@ -274,6 +229,9 @@ const ErpFilter = ({
     onClose();
     toolOpen(false);
     reset();
+    // setFilterStore()
+    // setFilterBsD()
+    // setFilterRent()
   };
 
   const removeMarker = () => {
@@ -493,11 +451,11 @@ const ErpFilter = ({
               <Flex w="100%" gap="0.5rem">
                 <SelectAddr
                   value={filterStore.areaCode || ""}
-                  onChange={(val: any) => {
+                  onChange={(addr: string, code: string) => {
                     setFilterStore({
                       ...filterStore,
-                      // areaCode: val || "",
-                      areaText: val,
+                      areaCode: code || "",
+                      areaText: addr || "",
                     });
                   }}
                 />
@@ -632,8 +590,8 @@ const ErpFilter = ({
               <Flex w="100%" gap="0.5rem">
                 <Select
                   data={[
-                    { text: "상권명", value: "bsDName" },
-                    { text: "상권코드", value: "bsDCode" },
+                    { text: "상권명", value: "bsDisName" },
+                    { text: "상권코드", value: "bsDisCode" },
                   ]}
                   value={filterBsD.searchType}
                   opBaseTxt="text"
@@ -650,7 +608,7 @@ const ErpFilter = ({
                 <Input
                   inputProps={{ w: "100%" }}
                   placeholder={
-                    filterBsD.searchType === "bsDName"
+                    filterBsD.searchType === "bsDisName"
                       ? "상권명를 입력해주세요"
                       : "상권코드를 입력해주세요"
                   }
@@ -679,10 +637,11 @@ const ErpFilter = ({
               <Flex w="100%" gap="0.5rem">
                 <SelectAddr
                   value={filterBsD.areaCode || ""}
-                  onChange={(val: any) => {
+                  onChange={(addr: string, code: string) => {
                     setFilterBsD({
                       ...filterBsD,
-                      areaCode: val || "",
+                      areaCode: code || "",
+                      areaText: addr || "",
                     });
                   }}
                 />
@@ -708,12 +667,12 @@ const ErpFilter = ({
                   { text: "상권4", value: "D" },
                   { text: "상권5", value: "E" },
                 ]}
-                chkValue={filterBsD.bsDType || []}
+                chkValue={filterBsD.bsDisType || []}
                 activeTotal={true}
                 onChange={(val: any) => {
                   setFilterBsD({
                     ...filterBsD,
-                    bsDType: val.length === 0 ? [] : val,
+                    bsDisType: val.length === 0 ? [] : val,
                   });
                 }}
                 groupProps={{
@@ -827,10 +786,11 @@ const ErpFilter = ({
               <Flex w="100%" gap="0.5rem">
                 <SelectAddr
                   value={filterRent.areaCode || ""}
-                  onChange={(val: any) => {
+                  onChange={(addr: string, code: string) => {
                     setFilterRent({
                       ...filterRent,
-                      areaCode: val || "",
+                      areaCode: code || "",
+                      areaText: addr || "",
                     });
                   }}
                 />

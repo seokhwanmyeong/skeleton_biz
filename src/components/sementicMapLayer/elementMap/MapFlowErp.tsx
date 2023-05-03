@@ -2,8 +2,10 @@
 import { Fragment, useContext, useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Flex, Text, useDisclosure } from "@chakra-ui/react";
-import { Marker, NaverMapContext } from "@src/lib/src";
+import { motion } from "framer-motion";
+import { Marker, NaverMapContext, Polygon } from "@src/lib/src";
 import OverlayView from "@src/lib/src/components/Overlay/OverlayView";
+import Circle from "@src/lib/src/components/Overlay/Circle";
 //  Component
 import InteractArea from "@components/sementicMapLayer/elementMap/InteractArea";
 import BrandListBox from "@components/sementicMapLayer/elementFilter/BrandListBox";
@@ -13,70 +15,112 @@ import {
   infoComErpRent,
   infoComErpStore,
 } from "@states/sementicMap/stateFilter";
-//  Api
-import { apiErpMap } from "@api/biz/config";
+import { atomSlctErp } from "@states/sementicMap/stateMap";
+//  Util
+import { bsDisColor } from "@util/define/bsDis";
+import { getCenterPolygon } from "@util/map/distance";
 //  Icon
 import markerStore from "@assets/icons/marker_store.png";
 import markerRent from "@assets/icons/marker_rent.png";
 //  Deco
 import { DecoFrameR } from "@components/sementicMapLayer/elementDeco/Deco";
-//  Util
-import { bsDisColor } from "@util/define/bsDis";
-import { atomSlctErp } from "@src/states/sementicMap/stateMap";
+//  Ani
+import { infoAnimation, toolAnimation } from "@src/styles/animation/keyFremes";
 
-type Props = {};
-
-const MapFlowErp = (props: Props) => {
-  const { getStoreList, getRentList, getBsDisList } = apiErpMap;
-  const { state, dispatch } = useContext(NaverMapContext);
-  const [slctErp, setSlctErp] = useRecoilState(atomSlctErp);
+const MapFlowErp = () => {
+  const { state } = useContext(NaverMapContext);
+  // const [slctErp, setSlctErp] = useRecoilState(atomSlctErp);
+  const [slctErp, setSlctErp] = useState<{
+    erpType?: "store" | "rent" | "bsDis";
+    name: string;
+    hoverId?: string;
+    cursorPo: any;
+  }>({
+    erpType: undefined,
+    name: "",
+    hoverId: "",
+    cursorPo: null,
+  });
   const { show: storeShow, data: storeList } = useRecoilValue(infoComErpStore);
   const { show: rentShow, data: rentList } = useRecoilValue(infoComErpRent);
   const { show: bsDisShow, data: bsDisList } = useRecoilValue(infoComErpBsnsD);
-  const [store, setStore] = useState<any[]>([]);
-  const [rent, setRent] = useState<any[]>([]);
-  const [bsDis, setBsDis] = useState<any[]>([]);
-  const [cursorPo, setCursorPo] = useState<any>(null);
+  // const [cursorPo, setCursorPo] = useState<any>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  useEffect(() => {
-    if (storeList.length > 0) {
-      console.log(storeList);
-      setStore(storeList);
-    } else setStore([]);
-  }, [storeList]);
+  const resetSlct = () => {
+    setSlctErp({
+      erpType: undefined,
+      name: "",
+      hoverId: "",
+      cursorPo: null,
+    });
+  };
 
   useEffect(() => {
-    if (rentList.length > 0) {
-      console.log(rentList);
-      setRent(rentList);
-    } else setRent([]);
-  }, [rentList]);
+    isOpen && onClose();
 
-  useEffect(() => {
-    if (bsDisList.length > 0) {
-      console.log(bsDisList);
-      setBsDis(bsDisList);
-    } else setBsDis([]);
-  }, [bsDisList]);
-
-  useEffect(() => {
     if (!state?.objects && !slctErp?.hoverId && state.objects.size === 0) {
       return;
     } else if (slctErp?.hoverId) {
-      let marker: any;
-      marker = state?.objects.get(slctErp?.hoverId);
-
-      if (marker) {
-        const pos = marker.getPosition();
-        setCursorPo([pos.x, pos.y]);
-        onOpen();
+      let obj: any = state?.objects.get(slctErp?.hoverId);
+      if (
+        obj &&
+        (slctErp?.hoverId?.includes("markerStore") ||
+          slctErp?.hoverId?.includes("markerRent"))
+      ) {
+        const pos = obj.getPosition();
+        // setCursorPo([pos.x, pos.y]);
+        setSlctErp({ ...slctErp, cursorPo: [pos.x, pos.y] });
+      } else if (obj && slctErp?.hoverId?.includes("bsDisArea")) {
+        const pos = getCenterPolygon(obj);
+        // setCursorPo(pos);
+        setSlctErp({ ...slctErp, cursorPo: pos });
       }
+      onOpen();
     } else {
-      cursorPo && setCursorPo(null);
+      // cursorPo && setCursorPo(null);
+      resetSlct();
       onClose();
     }
+
+    return () => {
+      // setCursorPo(null);
+      resetSlct();
+    };
   }, [slctErp.hoverId]);
+
+  // useEffect(() => {
+  //   let single = 0;
+  //   let circle = 0;
+  //   let multi = 0;
+
+  //   bsDisList.map((bs: any, idx: number) => {
+  //     const { bisName, bsDisType, polygon, polygon_type, range, center } = bs;
+  //     if (polygon_type === "circle") {
+  //       if (!range || !center) {
+  //         console.log("no range or center!", bs);
+  //         console.log(range);
+  //         console.log(center);
+  //       } else {
+  //         circle++;
+  //       }
+  //     }
+
+  //     if (polygon_type === "single" && !polygon) {
+  //       console.log("no polygon!", bs);
+  //       console.log(polygon);
+  //     } else if (polygon_type === "single") {
+  //       single++;
+  //     }
+  //     if (polygon_type === "multi" && !polygon) {
+  //       console.log("no multi polygon!", bs);
+  //       console.log(polygon);
+  //     } else if (polygon_type === "multi") {
+  //       multi++;
+  //     }
+  //   });
+  //   console.log(single, circle, multi);
+  // }, [bsDisList]);
 
   return (
     <Fragment>
@@ -87,19 +131,24 @@ const MapFlowErp = (props: Props) => {
         zIndex={1}
         pointerEvents="none"
       >
-        {(store.length > 0 || rent.length > 0 || bsDis.length > 0) && (
+        {(storeList.length > 0 ||
+          rentList.length > 0 ||
+          bsDisList.length > 0) && (
           <DecoFrameR pr="0.25rem">
             <BrandListBox
-              store={store || []}
-              rent={rent || []}
-              bsDis={bsDis || []}
+              store={storeList || []}
+              rent={rentList || []}
+              bsDis={bsDisList || []}
+              slctErp={slctErp}
+              setSlctErp={setSlctErp}
+              reset={resetSlct}
             />
           </DecoFrameR>
         )}
       </Flex>
       {storeShow &&
-        store?.length > 0 &&
-        store.map((store, idx: number) => {
+        storeList?.length > 0 &&
+        storeList.map((store, idx: number) => {
           const { storeName, lat, lng } = store;
           return (
             <Marker
@@ -113,57 +162,96 @@ const MapFlowErp = (props: Props) => {
               }}
               onClick={() => {}}
               onMouseOver={() => {
-                setCursorPo([lng, lat]);
                 setSlctErp({
-                  ...slctErp,
+                  erpType: "store",
+                  cursorPo: null,
                   name: storeName,
                   hoverId: `markerStore-${idx}`,
                 });
-                onOpen();
               }}
               onMouseOut={() => {
-                onClose();
-                setCursorPo(null);
-                setSlctErp({ ...slctErp, name: "", hoverId: "" });
+                resetSlct();
               }}
             />
           );
         })}
       {bsDisShow &&
-        bsDis?.length > 0 &&
-        bsDis.map((bs: any, idx: number) => {
-          const { bisName, bsDisType, polygon } = bs;
-          return (
-            <InteractArea
-              key={`bsDisArea-${idx}`}
-              onClick={() => {
-                console.log("click");
+        bsDisList?.length > 0 &&
+        bsDisList.map((bs: any, idx: number) => {
+          const { bisName, bsDisType, polygon, polygon_type, range, center } =
+            bs;
+
+          // if (polygon_type === "circle") {
+          //   if (!range || !center) {
+          //     console.log("no range or center!", bs);
+          //     console.log(range);
+          //     console.log(center);
+          //   }
+          // }
+
+          // if (polygon_type === "single" && !polygon) {
+          //   console.log("no polygon!", bs);
+          //   console.log(polygon);
+          // } else if (polygon_type === "single") {
+          //   console.log("single polygon!", bs);
+          //   console.log(polygon);
+          // }
+
+          // if (polygon_type === "multi" && !polygon) {
+          //   console.log("no multi polygon!", bs);
+          //   console.log(polygon);
+          // } else if (polygon_type === "multi") {
+          //   console.log("multi polygon!", bs);
+          //   console.log(polygon);
+          // }
+          return polygon_type === "circle" ? (
+            <Circle
+              id={`circle-${idx}`}
+              key={`circle-${idx}`}
+              onMouseOver={(e: any) => {
+                setSlctErp({
+                  erpType: "bsDis",
+                  cursorPo: null,
+                  name: bisName,
+                  hoverId: `markerStore-${idx}`,
+                });
               }}
-              name={bisName}
-              num={idx}
-              path={polygon}
-              style={{
-                fillColor: bsDisColor[bsDisType] || "#FF7A45",
-                fillOpacity: 0.35,
-                strokeWeight: 0,
-              }}
-              hoverStyle={{
-                fillColor: bsDisColor[bsDisType] || "#FF7A45",
-                fillOpacity: 0.35,
-                strokeWeight: 0,
-              }}
-              onMouse={() => {
-                setSlctErp({ ...slctErp, hoverId: `bsDisArea-${idx}` });
-              }}
-              onMouseOut={() => {
-                setSlctErp({ ...slctErp, hoverId: "" });
+              onMouseOut={(e: any) => resetSlct()}
+              opts={{
+                fillColor: "#fadb14",
+                center: center,
+                radius: Number(range) || 0,
+                fillOpacity: 0.3,
+                strokeColor: "#FFFFFF",
+                strokeOpacity: 0.5,
               }}
             />
-          );
+          ) : polygon_type === "single" ? (
+            <Polygon
+              key={`bsDisArea-${idx}`}
+              id={`bsDisArea-${idx}`}
+              onMouseOver={(e: any) => {
+                setSlctErp({
+                  erpType: "bsDis",
+                  cursorPo: null,
+                  name: bisName,
+                  hoverId: `markerStore-${idx}`,
+                });
+              }}
+              onMouseOut={(e: any) => resetSlct()}
+              opts={{
+                paths: polygon,
+                fillColor: bsDisColor[bsDisType] || "#FF7A45",
+                fillOpacity: 0.35,
+                strokeWeight: 2,
+                clickable: false,
+              }}
+            />
+          ) : null;
         })}
       {rentShow &&
-        rent?.length > 0 &&
-        rent.map((li, idx: number) => {
+        rentList?.length > 0 &&
+        rentList.map((li, idx: number) => {
           const { rentName, lat, lng } = li;
 
           return (
@@ -181,30 +269,28 @@ const MapFlowErp = (props: Props) => {
                 console.log(rentName);
               }}
               onMouseOver={() => {
-                setCursorPo([lng, lat]);
                 setSlctErp({
                   ...slctErp,
                   name: rentName,
                   hoverId: `markerRent-${idx}`,
                 });
-                onOpen();
               }}
               onMouseOut={() => {
-                onClose();
-                setCursorPo(null);
                 setSlctErp({ ...slctErp, name: "", hoverId: "" });
               }}
             />
           );
         })}
-      {isOpen && cursorPo && (
+      {isOpen && slctErp?.cursorPo && slctErp?.name && (
         <OverlayView
           id={`infoBox`}
-          position={new naver.maps.LatLng(cursorPo)}
+          position={new naver.maps.LatLng(slctErp?.cursorPo)}
           pane="floatPane"
           anchorPoint={{ x: 0, y: 10 }}
         >
           <Flex
+            as={motion.div}
+            animation={infoAnimation}
             pos="relative"
             top="-4.5rem"
             left="-50%"
@@ -217,7 +303,6 @@ const MapFlowErp = (props: Props) => {
             border="1px solid"
             borderColor="neutral.gray6"
             borderRadius="base"
-            transition="0.3s"
             whiteSpace="nowrap"
           >
             <Text

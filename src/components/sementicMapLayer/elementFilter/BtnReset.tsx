@@ -47,7 +47,7 @@ const BtnReset = ({ activeReset = true, onClick }: Props) => {
           resetSlctArea();
           resetNiceDepthFilter();
           resetErpFilter();
-          flow === "sigungu" || (flow === "dong" && resetNiceFilter());
+          (flow === "sigungu" || flow === "dong") && resetNiceFilter();
           setFlow("init");
         }
       }}

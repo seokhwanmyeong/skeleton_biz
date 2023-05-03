@@ -41,14 +41,13 @@ import {
 } from "@src/states/sementicMap/stateMap";
 
 const NiceFilterDepth = ({ path }: { path: any }) => {
-  const { getBrandList } = apiMapNice;
+  const { getBrandList, getFlowPop } = apiMapNice;
   const divRef = useRef<HTMLDivElement | null>(null);
   const [openIdx, setOpenIdx] = useState(0);
   const { bot } = useRecoilValue(atomUpjongState);
   const { sigungu } = useRecoilValue(atomFlowEnterArea);
   const { slctCode } = useRecoilValue(atomSlctDong);
   const [flowPop, setFlowPop] = useRecoilState(infoComFlowDepth);
-  const [filterPop, setFilterPop] = useState(flowPop.filter);
   const [brandFilter, setBrandFilter] = useRecoilState(infoComBrand);
   const [buildingFilter, setBuildingFilter] = useRecoilState(infoComBuilding);
   const [filterBuilding, setFilterBuilding] = useState(buildingFilter.filter);
@@ -56,7 +55,18 @@ const NiceFilterDepth = ({ path }: { path: any }) => {
 
   //  세부 유동인구 필터 변화 및 액티브
   const searchPopHandler = () => {
-    setFlowPop(filterPop);
+    getFlowPop({
+      // ctyCd: sigungu.slctCode.slice(0, 4),
+      // admiCd: slctCode,
+      upjongCd: bot.code,
+      admiCd: "11110560",
+      ctyCd: "1111",
+    }).then((res: any) => {
+      console.log(res);
+
+      if (res.data && res.data.length > 0)
+        setFlowPop({ show: true, active: true, data: res.data || [] });
+    });
   };
 
   const searchBrandHandler = () => {
@@ -216,75 +226,6 @@ const NiceFilterDepth = ({ path }: { path: any }) => {
           </Flex>
           {/* ============================== 박스 데코 ============================== */}
           <Deco01 margin="0.25rem 0 0.75rem" width="100%" height="0.3125rem" />
-          <Flex p="0 0.25rem" direction="column" gap="0.625rem">
-            <Flex align="center">
-              <FormLabel
-                display="flex"
-                alignItems="center"
-                flex="none"
-                m="0"
-                w="2.8rem"
-                textStyle="base"
-                fontSize="xs"
-                fontWeight="strong"
-                color="font.secondary"
-              >
-                성별
-              </FormLabel>
-              <CheckboxGroup
-                chkboxData={[
-                  { text: "남자", value: "man" },
-                  { text: "여자", value: "woman" },
-                ]}
-                chkValue={filterPop?.gender}
-                activeTotal={true}
-                onChange={(val: any) =>
-                  setFilterPop({
-                    ...filterPop,
-                    gender: val,
-                  })
-                }
-                groupProps={{
-                  w: "max-content",
-                }}
-              />
-            </Flex>
-            <Flex align="center">
-              <FormLabel
-                display="flex"
-                alignItems="center"
-                flex="none"
-                m="0"
-                w="2.8rem"
-                textStyle="base"
-                fontSize="xs"
-                fontWeight="strong"
-                color="font.secondary"
-              >
-                나이대
-              </FormLabel>
-              <CheckboxGroup
-                chkboxData={[
-                  { text: "20대", value: "gen20" },
-                  { text: "30대", value: "gen30" },
-                  { text: "40대", value: "gen40" },
-                  { text: "50대", value: "gen50" },
-                  { text: "60대 이상", value: "gen60" },
-                ]}
-                chkValue={filterPop?.age}
-                activeTotal={true}
-                onChange={(val: any) =>
-                  setFilterPop({
-                    ...filterPop,
-                    age: val,
-                  })
-                }
-                groupProps={{
-                  w: "max-content",
-                }}
-              />
-            </Flex>
-          </Flex>
           <DecoCardBg />
         </Flex>
       ) : openIdx === 2 ? (

@@ -1,11 +1,11 @@
 import { Flex, FormLabel, Text } from "@chakra-ui/react";
 import React from "react";
 //  Type
-import type { TypeMapStoreInfo } from "@api/biz/type";
+import type { TypeMapRentInfo } from "@api/biz/type";
 
 type Props = {};
 
-const StoreBasicInfo = ({ info }: { info: TypeMapStoreInfo["res"] | null }) => {
+const RentBasicInfo = ({ info }: { info: TypeMapRentInfo["res"] | null }) => {
   console.log(info);
   return (
     <Flex w="100%" h="100%" direction="column">
@@ -18,19 +18,19 @@ const StoreBasicInfo = ({ info }: { info: TypeMapStoreInfo["res"] | null }) => {
         direction="column"
         gap="1.875rem"
       >
-        <ElementLine title="매장코드" content={info?.storeCode || "-"} />
-        <ElementLine title="매장타입" content={info?.storeType || "-"} />
-        <ElementLine title="매장상태" content={info?.storeStatus || "-"} />
-        <ElementLine title="매장 연락처" content={info?.storePhone || "-"} />
-        <ElementLine title="사업자 등록번호" content={info?.bsNum || "-"} />
-        <ElementLine title="대표자" content={info?.ownerName || "-"} />
-        <ElementLine title="대표자 연락처" content={info?.ownerPhone || "-"} />
+        <ElementLine title="매물타입" content={info?.rentType || ""} />
+        <ElementLine title="입점 가능일" content={info?.availableDay || ""} />
         <ElementLine
           title="주소"
           content={(info?.addr || "") + (info?.addrDetail || "")}
         />
-        <ElementLine title="" content={info?.addrDetail || "-"} />
-        <ElementLineList title="연동상권" content={info?.linkBsDis || []} />
+        <ElementLine title="현업종" content={info?.curUpjong || ""} />
+        <ElementLine title="실평수" content={info?.realArea || ""} />
+        <ElementLine title="층수" content={info?.floor || ""} />
+        <ElementLine title="권리금" content={info?.premiumFee || ""} />
+        <ElementLine title="관리비" content={info?.manageFee || ""} />
+        <ElementLine title="임대료" content={info?.rentalFee || ""} />
+        <ElementLine title="보증금" content={info?.depositFee || ""} />
       </Flex>
     </Flex>
   );
@@ -41,7 +41,7 @@ const ElementLine = ({
   content,
 }: {
   title: string;
-  content: string;
+  content: string | number;
 }) => {
   return (
     <Flex w="100%" align="center">
@@ -70,7 +70,7 @@ const ElementLine = ({
   );
 };
 
-const ElementLineList = ({
+const ElementImgList = ({
   title,
   content,
 }: {
@@ -111,4 +111,4 @@ const ElementLineList = ({
   );
 };
 
-export default StoreBasicInfo;
+export default RentBasicInfo;

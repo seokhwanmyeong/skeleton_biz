@@ -16,12 +16,16 @@ export const MAP_UPJONG_BOT = "/v1/franchise_utils/low";
 
 //  MAP_ERP_STORE
 export const ERP_STORE_GET_POINT = "/v1/Franchise_branch/mapsearch";
+export const MAP_ERP_STORE_GET_INFO = "/v1/Franchise_branch/mapdetailsearch";
 
 //  MAP_ERP_RENT
-export const ERP_RENT_GET_POINT = "/v1/Franchise_Unsoldsho/mapunsoldsearch";
+export const ERP_RENT_GET_POINT = "/v1/Franchise_unsoldshop/mapunsoldsearch";
+export const MAP_ERP_RENT_GET_INFO = "/v1/Franchise_unsoldshop/mapdetailsearch";
 
 //  MAP_ERP_BSDIS
-export const ERP_BSDIS_GET_AREA = "/v1/franchise_businessarea";
+export const ERP_BSDIS_GET_AREA = "/v1/Franchise_businessarea/mapbusisearch";
+export const MAP_ERP_BSDIS_GET_INFO =
+  "/v1/Franchise_unsoldshop/mapdetailsearch";
 
 //  ERP_STORE
 export const ERP_STORE_GET_LIST = "/v1/Franchise_Branch";

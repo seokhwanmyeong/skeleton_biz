@@ -71,7 +71,9 @@ const NiceFilter = ({ areaCode }: Props) => {
   const transFilter = (props: {
     type: "hous" | "inflow" | "job";
     sex: ("male" | "female")[];
-    age: ("20s" | "30s" | "40s" | "50s" | "60s")[];
+    age:
+      | ("10s" | "20s" | "30s" | "40s" | "50s")[]
+      | ("20s" | "30s" | "40s" | "50s" | "60s")[];
   }) => {
     const { type, sex, age } = props;
     let filter: any = {};
@@ -365,11 +367,11 @@ const NiceFilter = ({ areaCode }: Props) => {
               </FormLabel>
               <CheckboxGroup
                 chkboxData={[
-                  { text: "20대", value: "20s" },
-                  { text: "30대", value: "30s" },
-                  { text: "40대", value: "40s" },
-                  { text: "50대", value: "50s" },
-                  { text: "60대 이상", value: "60s" },
+                  { text: "20대", value: "10s" },
+                  { text: "30대", value: "20s" },
+                  { text: "40대", value: "30s" },
+                  { text: "50대", value: "40s" },
+                  { text: "60대 이상", value: "50s" },
                 ]}
                 chkValue={filterPop?.age}
                 activeTotal={true}

@@ -140,7 +140,7 @@ const SelectAddr = ({
 
   const selectAddrHandler = (val: any, step: "top" | "mid" | "bot") => {
     let result: string = "total";
-
+    console.log("click");
     switch (step) {
       case "top":
         if (val) {
@@ -163,7 +163,7 @@ const SelectAddr = ({
         addrList.top?.map((li: any) => {
           if (li.code === val) {
             setAddrTxt({ ...addrTxt, top: li.address });
-            onChange(li.address);
+            onChange(li.address, val);
           }
         });
         result = val ? val : "total";
@@ -188,7 +188,7 @@ const SelectAddr = ({
         addrList.mid?.map((li: any) => {
           if (li.code === val) {
             setAddrTxt({ ...addrTxt, mid: li.address });
-            onChange(addrTxt.top + " " + li.address);
+            onChange(addrTxt.top + " " + li.address.val);
           }
         });
         result = val ? val : addr.top;
@@ -199,7 +199,7 @@ const SelectAddr = ({
         addrList.bot?.map((li: any) => {
           if (li.code === val) {
             setAddrTxt({ ...addrTxt, bot: li.address });
-            onChange(addrTxt.top + " " + addrTxt.mid + " " + li.address);
+            onChange(addrTxt.top + " " + addrTxt.mid + " " + li.address, val);
           }
         });
         result = val ? val : addr.top + addr.mid;

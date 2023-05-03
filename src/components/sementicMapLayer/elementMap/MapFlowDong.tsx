@@ -1,12 +1,15 @@
 //  Lib
 import { useContext, useEffect, useState, useMemo, Fragment } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { Marker, NaverMapContext } from "@src/lib/src";
+import { Marker, NaverMapContext, Polyline } from "@src/lib/src";
 //  Components
 import InteractArea from "./InteractArea";
-import DongPanel from "./DongPanel";
 //  Atom
-import { atomFilterFlow, infoComBrand } from "@states/sementicMap/stateFilter";
+import {
+  atomFilterFlow,
+  infoComBrand,
+  infoComFlowDepth,
+} from "@states/sementicMap/stateFilter";
 import { atomSlctDong, atomSlctNice } from "@states/sementicMap/stateMap";
 import sample from "@src/util/data/sampleBuilding";
 //  Icon
@@ -14,17 +17,22 @@ import makerBrandL from "@assets/icons/marker_brand_large.png";
 import makerBrandS from "@assets/icons/marker_brand_small.png";
 import { Flex, Text, useDisclosure } from "@chakra-ui/react";
 import OverlayView from "@src/lib/src/components/Overlay/OverlayView";
+//  Type
+import type { TypeNiceFlowData } from "@api/bizSub/type";
 
-type Props = {};
-
-const MapFlowDong = (props: Props) => {
-  const { state, dispatch } = useContext(NaverMapContext);
+const MapFlowDong = () => {
+  const { state } = useContext(NaverMapContext);
   const dong = useRecoilValue(atomSlctDong);
   const {
     show: brandShow,
     active: brandActive,
     data: brandList,
   } = useRecoilValue(infoComBrand);
+  const {
+    show: flowShow,
+    active: flowActive,
+    data: flowList,
+  } = useRecoilValue(infoComFlowDepth);
   const [slctNice, setSlctNice] = useRecoilState(atomSlctNice);
   const [cursorPo, setCursorPo] = useState<any>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -162,6 +170,49 @@ const MapFlowDong = (props: Props) => {
           strokeOpacity: 0.5,
         }}
       />
+      {flowActive &&
+        flowShow &&
+        flowList?.length > 0 &&
+        flowList.map((list: any, idx: number) => {
+          // const { storeNm, xAxis, yAxis } = brand;
+          return list.map((li: TypeNiceFlowData, depthIdx: number) => {
+            const {
+              blkCd,
+              cumedist,
+              flowLv,
+              flowPop,
+              id,
+              label,
+              xAxis,
+              yAxis,
+            } = li;
+
+            console.log(li);
+            return null;
+            return (
+              <Polyline
+                id={`${idx}-${depthIdx}`}
+                opts={{
+                  path: [
+                    positions[num],
+                    {
+                      lat: 37.55794136784555 + cont - 0.018,
+                      lng: 126.97319248899569 + 0.002,
+                    },
+                    {
+                      lat: 37.55794136784555 + cont - 0.017,
+                      lng: 126.97319248899569 - 0.001,
+                    },
+                  ],
+                  strokeColor: "#FF00DA",
+                  strokeStyle: "solid",
+                  strokeOpacity: 1,
+                  strokeWeight: 3,
+                }}
+              />
+            );
+          });
+        })}
       {brandActive &&
         brandShow &&
         brandList?.length > 0 &&

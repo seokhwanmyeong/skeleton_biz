@@ -40,13 +40,18 @@ import {
   MAP_UPJONG_MID,
   MAP_UPJONG_BOT,
   MAP_NICE_FLOWPOP,
+  MAP_ERP_STORE_GET_INFO,
+  MAP_ERP_RENT_GET_INFO,
+  MAP_ERP_BSDIS_GET_INFO,
 } from "@api/biz/url";
 //  Type
-import {
+import type {
   BixApiInstance,
   TypeLogin,
   TypeMapBsDisSearch,
+  TypeMapStoreInfo,
   TypeMapRentSearch,
+  TypeMapRentInfo,
   TypeMapStoreSearch,
   TypeMapSido,
   TypeMapSigungu,
@@ -54,6 +59,7 @@ import {
   TypeUpjongGet,
   TypeUpjongPost,
   TypeSigunguRank,
+  TypeMapBsDisInfo,
 } from "@api/biz/type";
 
 let localStorage = window.localStorage;
@@ -165,6 +171,21 @@ const apiErpMap = {
     instance.post<TypeMapRentSearch["req"], any>(ERP_RENT_GET_POINT, req),
   getBsDisList: (req: TypeMapBsDisSearch["req"]) =>
     instance.post<TypeMapBsDisSearch["req"], any>(ERP_BSDIS_GET_AREA, req),
+  getStoreInfo: (req: TypeMapStoreInfo["req"]) =>
+    instance.post<TypeMapStoreInfo["req"], TypeMapStoreInfo["res"]>(
+      MAP_ERP_STORE_GET_INFO,
+      req
+    ),
+  getRentInfo: (req: TypeMapRentInfo["req"]) =>
+    instance.post<TypeMapRentInfo["req"], TypeMapRentInfo["res"]>(
+      MAP_ERP_RENT_GET_INFO,
+      req
+    ),
+  getBsDisInfo: (req: TypeMapBsDisInfo["req"]) =>
+    instance.post<TypeMapBsDisInfo["req"], TypeMapBsDisInfo["res"]>(
+      MAP_ERP_BSDIS_GET_INFO,
+      req
+    ),
 };
 
 const apiMapArea = {

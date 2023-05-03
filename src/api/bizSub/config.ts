@@ -5,17 +5,19 @@ import {
   MAP_SIDO_GET_LIST,
   MAP_SIGUNGU_GET_LIST,
   MAP_DONG_GET_LIST,
-  MAP_NICE_FLOWPOP,
+  MAP_NICE_RANKING,
   MAP_NICE_STORE,
+  MAP_NICE_FLOWPOP,
 } from "@api/bizSub/url";
 //  Type
-import {
+import type {
   BixApiInstance,
   TypeMapSido,
   TypeMapSigungu,
   TypeMapDong,
   TypeSigunguRank,
   TypeNiceStore,
+  TypeNiceFlowPop,
 } from "@api/bizSub/type";
 
 let localStorage = window.localStorage;
@@ -62,12 +64,17 @@ const apiMapArea = {
 const apiMapNice = {
   getSigunguRank: (req: TypeSigunguRank["req"]) =>
     instance.post<TypeSigunguRank["req"], TypeSigunguRank["res"]>(
-      MAP_NICE_FLOWPOP,
+      MAP_NICE_RANKING,
       req
     ),
   getBrandList: (req: TypeNiceStore["req"]) =>
     instance.post<TypeNiceStore["req"], TypeNiceStore["res"]>(
       MAP_NICE_STORE,
+      req
+    ),
+  getFlowPop: (req: TypeNiceFlowPop["req"]) =>
+    instance.post<TypeNiceFlowPop["req"], TypeNiceFlowPop["res"]>(
+      MAP_NICE_FLOWPOP,
       req
     ),
 };

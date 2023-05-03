@@ -11,7 +11,7 @@ import { BtnDelete, IcoBtnDelete } from "@components/common/Btn";
 import ModalHistoryEditor from "@src/components/modal/erp/ModalHistoryEditor";
 import Divider from "@src/components/common/Divider";
 
-const StoreHistory = ({
+const ElementHistory = ({
   id,
   title,
 }: {
@@ -133,4 +133,4 @@ const StoreHistory = ({
   );
 };
 
-export default StoreHistory;
+export default ElementHistory;

@@ -1,4 +1,5 @@
 //  LIB
+import { useState, useEffect } from "react";
 import {
   Drawer,
   DrawerBody,
@@ -13,34 +14,56 @@ import {
   Tabs,
   Text,
 } from "@chakra-ui/react";
+//  Component
+import StoreBasicInfo from "@components/modal/map/elementStore/StoreBasicInfo";
+import StoreSale from "@components/modal/map/elementStore/StoreSale";
+import ElementHistory from "@components/modal/map/elementCommon/ElementHistory";
+import StoreDoc from "@components/modal/map/elementStore/StoreDoc";
+
+//  Api
+import { apiErpMap } from "@api/biz/config";
 //  Deco
 import { Deco01 } from "@assets/deco/DecoSvg";
+//  Icon
+import { IcoBars, IcoHistory, IcoLeft, IcoLineChart } from "@assets/icons/icon";
 //  Type
-import {
-  IcoAudit,
-  IcoBars,
-  IcoHistory,
-  IcoLeft,
-  IcoLineChart,
-} from "@assets/icons/icon";
-import StoreBasicInfo from "./elementStore/StoreBasicInfo";
-import StoreSale from "./elementStore/StoreSale";
-import StoreHistory from "./elementStore/StoreHistory";
-import StoreDoc from "./elementStore/StoreDoc";
+import type { TypeMapStoreInfo } from "@api/biz/type";
 
 type Props = {
   id: string;
+  name: string;
   isOpen: boolean;
   onClose: (props?: any) => any;
 };
 
-const ModalStoreDetail = ({ id, isOpen, onClose }: Props) => {
-  console.log("iin");
+const ModalStoreDetail = ({ id, name, isOpen, onClose }: Props) => {
+  const { getStoreInfo } = apiErpMap;
+  const [infoData, setInfoData] = useState<TypeMapStoreInfo["res"] | null>(
+    null
+  );
+  const [tabIdx, setTabIdx] = useState<number>(0);
+
+  useEffect(() => {
+    if (id && name) {
+      getStoreInfo({ id: id }).then((res) => {
+        if (res) {
+          setInfoData(res);
+        }
+      });
+    }
+  }, [id]);
+
   return (
     <Drawer isOpen={isOpen} onClose={onClose} placement="right">
-      <DrawerContent p="1rem 0" maxW="fit-content">
-        <DrawerBody pos="relative" p="0" width="fit-content">
-          <Flex direction="column" justify="center" align="center" gap="1rem">
+      <DrawerContent p="0" maxW="fit-content">
+        <DrawerBody pos="relative" p="1rem 1.5rem" width="fit-content">
+          <Flex
+            pos="relative"
+            direction="column"
+            justify="center"
+            align="center"
+            gap="1.125rem"
+          >
             <IconButton
               aria-label="리스트로 돌아가기"
               onClick={onClose}
@@ -52,8 +75,8 @@ const ModalStoreDetail = ({ id, isOpen, onClose }: Props) => {
                 />
               }
               position="absolute"
-              top="0.125rem"
-              left="2rem"
+              top="0rem"
+              left="0rem"
               bg="transparent"
               color="font.primary"
               _hover={{
@@ -67,10 +90,14 @@ const ModalStoreDetail = ({ id, isOpen, onClose }: Props) => {
               color="font.primary"
               bg="none"
             >
-              평창점
+              {name}
             </Heading>
-            <Deco01 p="0 2rem" w="100%" h="auto" />
-            <Tabs variant="detailPage">
+            <Deco01 w="100%" h="auto" />
+            <Tabs
+              variant="detailPage"
+              index={tabIdx}
+              onChange={(index) => setTabIdx(index)}
+            >
               <TabList>
                 <Tab key="tab-info">
                   <IcoBars />
@@ -84,24 +111,27 @@ const ModalStoreDetail = ({ id, isOpen, onClose }: Props) => {
                   <IcoHistory />
                   <Text>히스토리 데이터</Text>
                 </Tab>
-                <Tab key="tab-doc" isDisabled={false}>
+                {/* <Tab key="tab-doc" isDisabled={false}>
                   <IcoAudit />
                   <Text>문서보관함</Text>
-                </Tab>
+                </Tab> */}
               </TabList>
               <TabPanels>
                 <TabPanel>
-                  <StoreBasicInfo />
+                  {tabIdx === 0 && infoData !== null && (
+                    <StoreBasicInfo info={infoData} />
+                  )}
                 </TabPanel>
                 <TabPanel w="800px">
+                  {tabIdx === 1 && <StoreSale />}
                   <StoreSale />
                 </TabPanel>
                 <TabPanel>
-                  <StoreHistory id="test" title="test" />
+                  {tabIdx === 2 && <ElementHistory id={id} title={name} />}
                 </TabPanel>
-                <TabPanel>
+                {/* <TabPanel>
                   <StoreDoc />
-                </TabPanel>
+                </TabPanel> */}
               </TabPanels>
             </Tabs>
           </Flex>

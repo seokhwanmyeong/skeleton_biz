@@ -11,7 +11,9 @@ type TypeFlow =
 
 type TypeNiceFilter = {
   sex: ("male" | "female")[];
-  age: ("20s" | "30s" | "40s" | "50s" | "60s")[];
+  age:
+    | ("10s" | "20s" | "30s" | "40s" | "50s")[]
+    | ("20s" | "30s" | "40s" | "50s" | "60s")[];
 };
 
 export type RankType = {
@@ -87,7 +89,7 @@ export const infoComFloatPop = atom<{
   default: {
     filter: {
       sex: ["male", "female"],
-      age: ["20s", "30s", "40s", "50s", "60s"],
+      age: ["10s", "20s", "30s", "40s", "50s"],
     },
     show: false,
     active: false,
@@ -160,7 +162,7 @@ export const infoComUpjongCnt = atom<{
 });
 
 export const infoComNiceRank = atom<RankType[]>({
-  key: "infoComUpjongCnt",
+  key: "infoComNiceRank",
   default: [],
 });
 
@@ -311,24 +313,24 @@ export type Infocome<Filter> = {
 export type TypeFilterStore = {
   searchType: "name" | "code" | "owner_name";
   text: string;
-  // areaCode?: string;
+  areaCode?: string;
   areaText: string;
   storeType: ("A" | "B" | "C" | "D" | "E")[];
   storeStatus: ("open" | "ready" | "rest" | "close" | "etc")[];
 };
 
 export type TypeFilterBsDis = {
-  searchType: "bsDName" | "bsDCode";
+  searchType: "bsDisName" | "bsDisCode";
   text: string;
-  // areaCode?: string;
+  areaCode?: string;
   areaText: string;
-  bsDType: ("A" | "B" | "C" | "D" | "E")[];
+  bsDisType: ("A" | "B" | "C" | "D" | "E")[];
 };
 
 export type TypeFilterRent = {
   searchType: "rentName" | "rentCode";
   text: string;
-  // areaCode?: string;
+  areaCode?: string;
   areaText: string;
   rentType: ("A" | "B" | "C" | "D" | "E")[];
 };
@@ -339,7 +341,7 @@ export const infoComErpStore = atom<Infocome<TypeFilterStore>>({
     filter: {
       searchType: "name",
       text: "",
-      // areaCode: "",
+      areaCode: "",
       areaText: "",
       storeType: ["A", "B", "C", "D", "E"],
       storeStatus: ["open", "ready", "rest", "close", "etc"],
@@ -354,11 +356,11 @@ export const infoComErpBsnsD = atom<Infocome<TypeFilterBsDis>>({
   key: "infoComErpBsnsD",
   default: {
     filter: {
-      searchType: "bsDName",
+      searchType: "bsDisName",
       text: "",
-      // areaCode: "",
+      areaCode: "",
       areaText: "",
-      bsDType: ["A", "B", "C", "D", "E"],
+      bsDisType: ["A", "B", "C", "D", "E"],
     },
     data: [],
     show: false,
@@ -372,7 +374,7 @@ export const infoComErpRent = atom<Infocome<TypeFilterRent>>({
     filter: {
       searchType: "rentName",
       text: "",
-      // areaCode: "",
+      areaCode: "",
       areaText: "",
       rentType: ["A", "B", "C", "D", "E"],
     },

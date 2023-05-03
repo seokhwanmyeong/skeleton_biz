@@ -100,7 +100,7 @@ const Table = ({
     getSelectData &&
       getSelectData(selectedData.map((list: any) => list._valuesCache));
   }, [selectedData]);
-  console.log("test");
+  console.log("table render");
   return (
     <>
       {/* <Section

@@ -29,4 +29,25 @@ const calcPolyDistance = (paths: naver.maps.LatLng[]) => {
   return longDistance;
 };
 
-export { calDist, calcPolyDistance };
+const getCenterPolygon = (polygon: any) => {
+  const bounds = polygon.getPath();
+  const arr = bounds._array;
+  const length = arr.length;
+  let xcos = 0;
+  let ycos = 0;
+  let area = 0;
+
+  for (let i = 0, len = length, j = length - 1; i < len; j = i++) {
+    let p1 = arr[i];
+    let p2 = arr[j];
+
+    let f = p1.y * p2.x - p2.y * p1.x;
+    xcos += (p1.x + p2.x) * f;
+    ycos += (p1.y + p2.y) * f;
+    area += f * 3;
+  }
+
+  return [xcos / area, ycos / area];
+};
+
+export { calDist, calcPolyDistance, getCenterPolygon };

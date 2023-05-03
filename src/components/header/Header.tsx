@@ -14,7 +14,7 @@ const Header = () => {
 
   return (
     <Flex
-      zIndex={999}
+      zIndex={1000}
       p="0 1rem"
       w="100%"
       h="2.875rem"

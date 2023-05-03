@@ -16,10 +16,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 //  Component
-import ModalStoreDetail from "@components/modal/map/ModalStoreDetail";
 import ModalBsDisDetail from "@components/modal/map/ModalBsDisDetail";
-import ModalRentDetail from "@components/modal/map/ModalRentDetail";
-import ModalBuilding from "@components/modal/map/ModalBuilding";
 //  State
 import { atomSlctErp } from "@states/sementicMap/stateMap";
 import { sementicViewState } from "@states/sementicMap/stateView";
@@ -31,11 +28,25 @@ import markerRent from "@assets/icons/marker_rent.png";
 //  Deco
 import { Deco01 } from "@assets/deco/DecoSvg";
 
-type Props = { store: any[]; rent: any[]; bsDis: any[] };
+type Props = {
+  store: any[];
+  rent: any[];
+  bsDis: any[];
+  slctErp: any;
+  setSlctErp: any;
+  reset: any;
+};
 
-const BrandListBox = ({ store, rent, bsDis }: Props) => {
+const BrandListBox = ({
+  store,
+  rent,
+  bsDis,
+  slctErp,
+  setSlctErp,
+  reset,
+}: Props) => {
   const setSv = useSetRecoilState(sementicViewState);
-  const [slctErp, setSlctErp] = useRecoilState(atomSlctErp);
+  // const [slctErp, setSlctErp] = useRecoilState(atomSlctErp);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [openIdx, setOpenIdx] = useState(-1);
 
@@ -83,7 +94,7 @@ const BrandListBox = ({ store, rent, bsDis }: Props) => {
             <TabPanel>
               <List display="flex" flexDirection="column">
                 {store.map((li: any, idx: number) => {
-                  const { storeName, addr, storePhone } = li;
+                  const { _id, storeName, addr, storePhone } = li;
 
                   return (
                     <ListItem
@@ -105,25 +116,24 @@ const BrandListBox = ({ store, rent, bsDis }: Props) => {
                         bg: "linear-gradient(90deg, rgba(255, 236, 61, 0) 0%, #FFEC3D 36.2%, rgba(255, 236, 61, 0) 92.66%)",
                       }}
                       onClick={() => {
-                        console.log("click");
-                        // setOpenIdx(0);
-                        // onOpen();
                         setSv({
                           viewId: "storeInfo",
                           props: {
-                            id: "test",
+                            id: _id,
+                            name: storeName,
                           },
                         });
                       }}
                       onMouseEnter={() => {
                         setSlctErp({
-                          ...slctErp,
+                          erpType: "store",
+                          cursorPo: null,
                           name: storeName,
                           hoverId: `markerStore-${idx}`,
                         });
                       }}
                       onMouseLeave={() => {
-                        setSlctErp({ ...slctErp, name: "", hoverId: "" });
+                        reset();
                       }}
                     >
                       <Flex justify="center" align="center" flex="none">
@@ -174,33 +184,53 @@ const BrandListBox = ({ store, rent, bsDis }: Props) => {
           )}
           {bsDis && bsDis.length > 0 && (
             <TabPanel>
-              <List display="flex" flexDirection="column" gap="1rem">
+              <List display="flex" flexDirection="column">
                 {bsDis.map((dis: any, idx: number) => {
-                  const { bisName, bsDisType } = dis;
+                  const { bisName, bsDisType, _id } = dis;
 
                   return (
                     <ListItem
                       key={`bsDisList=${idx}`}
-                      p="0rem 0.25rem 1rem"
+                      p="1rem 0rem 0.75rem"
                       display="flex"
                       alignItems="center"
                       gap="1rem"
                       borderBottom="1px solid"
                       borderColor="neutral.gray8"
-                      bgColor={
+                      bg={
                         `bsDisArea-${idx}` === slctErp?.hoverId
-                          ? "#EEEEEE"
+                          ? "linear-gradient(90deg, rgba(255, 236, 61, 0) 0%, #FFEC3D 36.2%, rgba(255, 236, 61, 0) 92.66%)"
                           : "transparent"
                       }
                       _hover={{
                         fontWeight: "strong",
                         cursor: "pointer",
-                        bgColor: "#EEEEEE",
                       }}
                       onClick={() => {
                         console.log("click");
-                        setOpenIdx(1);
-                        onOpen();
+                        setSv({
+                          viewId: "bsDisInfo",
+                          props: {
+                            id: _id,
+                            name: bisName,
+                          },
+                        });
+                      }}
+                      onMouseEnter={() => {
+                        slctErp.hoverId !== `bsDisArea-${idx}` &&
+                          setTimeout(() => {
+                            setSlctErp({
+                              erpType: "bsDis",
+                              cursorPo: null,
+                              name: bisName,
+                              hoverId: `bsDisArea-${idx}`,
+                            });
+                          }, 100);
+                      }}
+                      onMouseDown={() => {
+                        setTimeout(() => {
+                          reset();
+                        }, 0);
                       }}
                     >
                       <Flex
@@ -234,178 +264,6 @@ const BrandListBox = ({ store, rent, bsDis }: Props) => {
                     </ListItem>
                   );
                 })}
-                <ListItem
-                  p="0rem 0.25rem 1rem"
-                  display="flex"
-                  alignItems="center"
-                  gap="1rem"
-                  borderBottom="1px solid"
-                  borderColor="neutral.gray8"
-                  _hover={{
-                    fontWeight: "strong",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => {
-                    console.log("click");
-                  }}
-                >
-                  <Flex
-                    w="20px"
-                    h="20px"
-                    flex="none"
-                    justify="center"
-                    align="center"
-                    bgColor="#DE9F9F"
-                    borderRadius="50%"
-                  />
-                  <Flex direction="column">
-                    <Text
-                      textStyle="base"
-                      fontSize="md"
-                      fontWeight="strong"
-                      color="font.primary"
-                    >
-                      영역2
-                    </Text>
-                    <Text
-                      textStyle="base"
-                      fontSize="xs"
-                      fontWeight="regular"
-                      color="font.primary"
-                    >
-                      상권2
-                    </Text>
-                  </Flex>
-                </ListItem>
-                <ListItem
-                  p="0rem 0.25rem 1rem"
-                  display="flex"
-                  alignItems="center"
-                  gap="1rem"
-                  borderBottom="1px solid"
-                  borderColor="neutral.gray8"
-                  _hover={{
-                    fontWeight: "strong",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => {
-                    console.log("click");
-                  }}
-                >
-                  <Flex
-                    w="20px"
-                    h="20px"
-                    flex="none"
-                    justify="center"
-                    align="center"
-                    bgColor="#74D8D2"
-                    borderRadius="50%"
-                  />
-                  <Flex direction="column">
-                    <Text
-                      textStyle="base"
-                      fontSize="md"
-                      fontWeight="strong"
-                      color="font.primary"
-                    >
-                      영역3
-                    </Text>
-                    <Text
-                      textStyle="base"
-                      fontSize="xs"
-                      fontWeight="regular"
-                      color="font.primary"
-                    >
-                      상권3
-                    </Text>
-                  </Flex>
-                </ListItem>
-                <ListItem
-                  p="0rem 0.25rem 1rem"
-                  display="flex"
-                  alignItems="center"
-                  gap="1rem"
-                  borderBottom="1px solid"
-                  borderColor="neutral.gray8"
-                  _hover={{
-                    fontWeight: "strong",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => {
-                    console.log("click");
-                  }}
-                >
-                  <Flex
-                    w="20px"
-                    h="20px"
-                    flex="none"
-                    justify="center"
-                    align="center"
-                    bgColor="#B3FFB1"
-                    borderRadius="50%"
-                  />
-                  <Flex direction="column">
-                    <Text
-                      textStyle="base"
-                      fontSize="md"
-                      fontWeight="strong"
-                      color="font.primary"
-                    >
-                      영역4
-                    </Text>
-                    <Text
-                      textStyle="base"
-                      fontSize="xs"
-                      fontWeight="regular"
-                      color="font.primary"
-                    >
-                      상권4
-                    </Text>
-                  </Flex>
-                </ListItem>
-                <ListItem
-                  p="0rem 0.25rem 1rem"
-                  display="flex"
-                  alignItems="center"
-                  gap="1rem"
-                  borderBottom="1px solid"
-                  borderColor="neutral.gray8"
-                  _hover={{
-                    fontWeight: "strong",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => {
-                    console.log("click");
-                  }}
-                >
-                  <Flex
-                    w="20px"
-                    h="20px"
-                    flex="none"
-                    justify="center"
-                    align="center"
-                    bgColor="#EFAEE1"
-                    borderRadius="50%"
-                  />
-                  <Flex direction="column">
-                    <Text
-                      textStyle="base"
-                      fontSize="md"
-                      fontWeight="strong"
-                      color="font.primary"
-                    >
-                      영역5
-                    </Text>
-                    <Text
-                      textStyle="base"
-                      fontSize="xs"
-                      fontWeight="regular"
-                      color="font.primary"
-                    >
-                      상권5
-                    </Text>
-                  </Flex>
-                </ListItem>
               </List>
             </TabPanel>
           )}
@@ -413,7 +271,7 @@ const BrandListBox = ({ store, rent, bsDis }: Props) => {
             <TabPanel>
               <List display="flex" flexDirection="column">
                 {rent.map((li: any, idx: number) => {
-                  const { rentName, addr } = li;
+                  const { _id, rentName, addr } = li;
 
                   return (
                     <ListItem
@@ -435,19 +293,24 @@ const BrandListBox = ({ store, rent, bsDis }: Props) => {
                         bg: "linear-gradient(90deg, rgba(255, 236, 61, 0) 0%, #FFEC3D 36.2%, rgba(255, 236, 61, 0) 92.66%)",
                       }}
                       onClick={() => {
-                        console.log("click");
-                        setOpenIdx(2);
-                        onOpen();
+                        setSv({
+                          viewId: "rentInfo",
+                          props: {
+                            id: _id,
+                            name: rentName,
+                          },
+                        });
                       }}
                       onMouseEnter={() => {
                         setSlctErp({
-                          ...slctErp,
+                          erpType: "rent",
+                          cursorPo: null,
                           name: rentName,
                           hoverId: `markerRent-${idx}`,
                         });
                       }}
                       onMouseLeave={() => {
-                        setSlctErp({ ...slctErp, name: "", hoverId: "" });
+                        reset();
                       }}
                     >
                       <Flex justify="center" align="center" flex="none">
@@ -487,33 +350,6 @@ const BrandListBox = ({ store, rent, bsDis }: Props) => {
           )}
         </TabPanels>
       </Tabs>
-      {/* {openIdx === 0 && (
-        <ModalStoreDetail
-          isOpen={isOpen}
-          onClose={() => {
-            onClose();
-            setOpenIdx(-1);
-          }}
-        />
-      )} */}
-      {openIdx === 1 && (
-        <ModalBsDisDetail
-          isOpen={isOpen}
-          onClose={() => {
-            onClose();
-            setOpenIdx(-1);
-          }}
-        />
-      )}
-      {openIdx === 2 && (
-        <ModalBuilding
-          isOpen={isOpen}
-          onClose={() => {
-            onClose();
-            setOpenIdx(-1);
-          }}
-        />
-      )}
     </Flex>
   );
 };

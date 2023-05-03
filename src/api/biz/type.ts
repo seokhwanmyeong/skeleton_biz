@@ -49,14 +49,55 @@ type TypeMapStoreSearch = {
   };
 };
 
+type TypeMapStoreInfo = {
+  req: {
+    id: string;
+  };
+  res: {
+    _id: string;
+    storeName: string;
+    storeCode: string;
+    storeStatus: "open" | "ready" | "rest" | "close" | "etc";
+    storeType?: "A" | "B" | "C" | "D" | "E";
+    storePhone?: string;
+    bsNum?: string;
+    ownerName: string;
+    ownerPhone: string;
+    addr: string;
+    addrDetail?: string;
+    linkBsDis?: {
+      bsDisName: string;
+      bsDisCode: string;
+    }[];
+    lat: number;
+    lng: number;
+  };
+};
+
 type TypeMapBsDisSearch = {
   req: TypeFilterBsDis;
   res: {
     _id: string;
-    bisName: string;
+    bsDisName: string;
     polygon: [number[]];
     center: [number, number];
     polygonType: "single" | "multi";
+  };
+};
+
+type TypeMapBsDisInfo = {
+  req: {
+    id: string;
+  };
+  res: {
+    _id: string;
+    bsDisName: string;
+    bsDisCode: string;
+    bsDisType: "A" | "B" | "C" | "D" | "E";
+    linkStore?: {
+      storeCode: string;
+      storeName: number;
+    }[];
   };
 };
 
@@ -65,6 +106,39 @@ type TypeMapRentSearch = {
   res: {
     _id: string;
     rentName: string;
+    addr: string;
+    lat: number;
+    lng: number;
+  };
+};
+
+type TypeMapRentInfo = {
+  req: {
+    id: string;
+  };
+  res: {
+    _id: string;
+    rentName: string;
+    rentType?: "A" | "B" | "C" | "D" | "E";
+    availableDay: string;
+    curUpjong?: string;
+    realArea?: number;
+    floor?: number;
+    rentalFee?: number;
+    depositFee?: number;
+    premiumFee?: number;
+    manageFee?: number;
+    addr: string;
+    addrDetail?: string;
+    nearbyStore?: {
+      storeName: string;
+      distance: number;
+      addr: string;
+      addrDetail: string;
+      lat: number;
+      lng: number;
+    }[];
+    img?: string[];
     lat: number;
     lng: number;
   };
@@ -178,6 +252,9 @@ export type {
   TypeMapStoreSearch,
   TypeMapBsDisSearch,
   TypeMapRentSearch,
+  TypeMapStoreInfo,
+  TypeMapBsDisInfo,
+  TypeMapRentInfo,
   TypeMapSido,
   TypeMapSigungu,
   TypeMapDong,

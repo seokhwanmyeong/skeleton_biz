@@ -123,6 +123,30 @@ type TypeNiceStore = {
   }[];
 };
 
+type TypeNiceFlowPop = {
+  req: {
+    upjongCd: string;
+    ctyCd?: string;
+    admiCd?: string;
+    range?: number;
+    xAxis?: number;
+    yAxis?: number;
+    wkt?: Array<Array<Array<[number, number]>>>;
+  };
+  res: TypeNiceFlowData[][];
+};
+
+type TypeNiceFlowData = {
+  id: string;
+  xAxis: number;
+  yAxis: number;
+  flowPop: number;
+  blkCd: string;
+  label: string;
+  cumedist: number;
+  flowLv: number;
+};
+
 export type {
   BixApiInstance,
   TypeMapSido,
@@ -130,4 +154,6 @@ export type {
   TypeMapDong,
   TypeSigunguRank,
   TypeNiceStore,
+  TypeNiceFlowPop,
+  TypeNiceFlowData,
 };
