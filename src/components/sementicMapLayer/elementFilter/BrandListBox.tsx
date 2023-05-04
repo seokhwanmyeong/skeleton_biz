@@ -1,5 +1,5 @@
 //  Lib
-import { useState, memo, Fragment, useEffect, useContext } from "react";
+import { useState, memo, Fragment, useEffect, useContext, useRef } from "react";
 import { useSetRecoilState } from "recoil";
 import {
   Flex,
@@ -404,8 +404,9 @@ const ListItemBsDis = ({
   const { state, dispatch } = useContext(NaverMapContext);
   const setSv = useSetRecoilState(sementicViewState);
   const [isHover, onHover] = useState<boolean>(false);
-  const [cursorPo, setCursorPo] = useState<[number, number] | null>(null);
-  const [isIn, setIsIn] = useState<boolean>(false);
+  // const [cursorPo, setCursorPo] = useState<[number, number] | null>(null);
+  // const [isIn, setIsIn] = useState<boolean>(false);
+  const polygonRef = useRef<any>(null);
 
   const getCenter = (paths: [number, number][]): [number, number] => {
     const arr = paths;
@@ -427,113 +428,90 @@ const ListItemBsDis = ({
     return [xcos / area, ycos / area];
   };
 
-  useEffect(() => {
-    if (isHover && state?.objects && state.objects.size !== 0) {
-      let obj: any = state?.objects.get(`bsDisArea-${idx}`);
-
-      if (obj) {
-        const pos = getCenterPolygon(obj);
-
-        setCursorPo(pos);
-      }
-    } else {
-      setCursorPo(null);
-    }
-  }, [isHover]);
-
   // useEffect(() => {
-  //   if (maxMin && state?.map) {
-  //     const mapBounds = state.map.getBounds();
+  //   if (isHover && state?.objects && state.objects.size !== 0) {
+  //     let obj: any = state?.objects.get(`bsDisArea-${idx}`);
 
-  //     if (polygonType === "circle" && center) {
-  //       // @ts-ignore
-  //       setIsIn(mapBounds?.hasLatLng(center));
-  //     } else if (polygonType === "single" && polygon) {
-  //       const pos = getCenter(polygon[0]);
-  //       // @ts-ignore
-  //       setIsIn(mapBounds?.hasLatLng(pos));
+  //     if (obj) {
+  //       const pos = getCenterPolygon(obj);
+
+  //       setCursorPo(pos);
   //     }
+  //   } else {
+  //     setCursorPo(null);
   //   }
-  // }, [maxMin]);
+  // }, [isHover]);
 
   useEffect(() => {
     if (!state?.map) return;
-    const zoomEventHandelr = naver.maps.Event.addListener(
-      state.map,
-      "zoom_changed",
-      (e: number) => {
-        if (!state?.map) return;
-        if (e <= 13 && isIn) {
-          setIsIn(false);
-          return;
-        } else if (e >= 13 && !isIn) {
-          setIsIn(true);
-        }
-      }
-    );
+    if (polygonType !== "single") return;
+
     let timer: any;
     const panningEventHandelr = naver.maps.Event.addListener(
       state.map,
       "bounds_changed",
       (e) => {
-        if (!state?.map) return;
         if (timer) clearTimeout(timer);
-
         timer = setTimeout(function () {
-          // @ts-ignore
-          const mapBounds = state.map.getBounds();
-          const zoom = state.map?.getZoom();
+          if (!state?.map) return;
+          let zoom = state.map.getZoom();
 
-          if (polygonType === "circle" && center) {
-            // @ts-ignore
-            setIsIn(mapBounds?.hasLatLng(center) && zoom >= 13);
-          } else if (polygonType === "single" && polygon) {
+          if (zoom < 13 && polygonRef.current) {
+            if (polygonRef.current.getVisible()) {
+              polygonRef.current.setVisible(false);
+              // polygonRef.current.setMap(null);
+              polygonRef.current = null;
+            }
+            // else {
+            //   polygonRef.current.setMap(null);
+            //   polygonRef.current = null;
+            // }
+          } else if (zoom >= 13) {
+            const mapBounds: any = e;
+            const minLat = mapBounds._min._lat;
+            const minLng = mapBounds._min._lng;
+            const maxLat = mapBounds._max._lat;
+            const maxLng = mapBounds._max._lng;
             const pos = getCenter(polygon[0]);
-            // @ts-ignore
-            setIsIn(mapBounds?.hasLatLng(pos) && zoom >= 13);
+
+            if (!polygonRef.current) {
+              const poly = new naver.maps.Polygon({
+                map: state.map,
+                paths: polygon,
+              });
+              polygonRef.current = poly;
+              const isVisible = polygonRef.current.getVisible();
+
+              pos[1] >= minLat &&
+              pos[1] <= maxLat &&
+              pos[0] >= minLng &&
+              pos[0] <= maxLng
+                ? !isVisible && polygonRef.current.setVisible(true)
+                : isVisible && polygonRef.current.setVisible(false);
+            } else {
+              const isVisible = polygonRef.current.getVisible();
+
+              pos[1] >= minLat &&
+              pos[1] <= maxLat &&
+              pos[0] >= minLng &&
+              pos[0] <= maxLng
+                ? !isVisible && polygonRef.current.setVisible(true)
+                : isVisible && polygonRef.current.setVisible(false);
+            }
+          } else {
+            const isVisible = polygonRef.current.getVisible();
+            if (isVisible && polygonRef.current) {
+              polygonRef.current.setVisible(false);
+              // polygonRef.current = null;
+            }
           }
         }, 500);
       }
     );
 
-    const mapBounds = state.map.getBounds();
-    let zoom = 0;
-    let bool = false;
-
-    if (!zoom) {
-      zoom = state.map.getZoom();
-      if (zoom <= 13 && isIn) {
-        setIsIn(false);
-        return;
-      } else if (zoom >= 13 && !isIn) {
-        bool = true;
-      }
-    }
-
-    if (polygonType === "circle" && center) {
-      // @ts-ignore
-      if (!mapBounds?.hasLatLng(center) && isIn) {
-        setIsIn(false);
-        return;
-        // @ts-ignore
-      } else if (mapBounds?.hasLatLng(center) && !isIn) {
-        bool = true;
-      }
-    } else if (polygonType === "single" && polygon) {
-      const pos = getCenter(polygon[0]);
-      // @ts-ignore
-      if (!mapBounds?.hasLatLng(pos)) {
-        setIsIn(false);
-        return;
-        // @ts-ignore
-      } else if (mapBounds?.hasLatLng(pos) && !isIn) {
-        bool = true;
-      }
-    }
-    setIsIn(bool);
-
     return () => {
-      naver.maps.Event.removeListener(zoomEventHandelr);
+      polygonRef.current && polygonRef.current?.setMap(null);
+      polygonRef.current = null;
       naver.maps.Event.removeListener(panningEventHandelr);
     };
   }, [state]);
@@ -599,7 +577,7 @@ const ListItemBsDis = ({
           </Text>
         </Flex>
       </ListItem>
-      {isShow &&
+      {/* {isShow &&
         (polygonType === "circle" ? (
           <Circle
             id={`circle-${idx}`}
@@ -668,7 +646,7 @@ const ListItemBsDis = ({
             </Text>
           </Flex>
         </OverlayView>
-      )}
+      )} */}
     </Fragment>
   );
 };

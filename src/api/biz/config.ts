@@ -32,7 +32,6 @@ import {
   ERP_CLIENT_UPDATE,
   ERP_CLIENT_DELETE,
   ERP_CODE_CHECKER,
-  ERP_LINK_GET,
   MAP_SIDO_GET_LIST,
   MAP_SIGUNGU_GET_LIST,
   MAP_DONG_GET_LIST,
@@ -43,6 +42,8 @@ import {
   MAP_ERP_STORE_GET_INFO,
   MAP_ERP_RENT_GET_INFO,
   MAP_ERP_BSDIS_GET_INFO,
+  ERP_LINK_STORE_GET,
+  ERP_LINK_BSDIS_GET,
 } from "@api/biz/url";
 //  Type
 import type {
@@ -226,7 +227,8 @@ const apiUpjong = {
 
 const apiCommon = {
   checkCode: (req: any) => instance.post(ERP_CODE_CHECKER, req),
-  getAvailableErpLinkLi: (req: any) => instance.post(ERP_LINK_GET, req),
+  getAvailableStoreLink: (req: any) => instance.post(ERP_LINK_STORE_GET, req),
+  getAvailableBsDisLink: (req: any) => instance.post(ERP_LINK_BSDIS_GET, req),
 };
 
 export {

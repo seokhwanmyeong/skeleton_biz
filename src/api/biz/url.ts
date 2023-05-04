@@ -72,5 +72,6 @@ export const ERP_CLIENT_DELETE = "/v1/Franchise_Branch/delete";
 export const ERP_HISTORY_GET = "/v1/Franchise_Branch";
 
 //  COMMON
-export const ERP_CODE_CHECKER = "/v1/Franchise_Branch";
-export const ERP_LINK_GET = "/v1/Franchise_Branch";
+export const ERP_CODE_CHECKER = "/v1/franchise_common/duplicatecheck";
+export const ERP_LINK_STORE_GET = "/v1/franchise_common/connectedbusinessarea";
+export const ERP_LINK_BSDIS_GET = "/v1/franchise_common/connectedbranch";
