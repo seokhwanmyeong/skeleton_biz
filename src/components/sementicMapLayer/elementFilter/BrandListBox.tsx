@@ -1,6 +1,6 @@
 //  Lib
 import { useState, memo, Fragment, useEffect, useContext } from "react";
-import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import {
   Flex,
   Heading,
@@ -19,11 +19,10 @@ import OverlayView from "@src/lib/src/components/Overlay/OverlayView";
 import Circle from "@src/lib/src/components/Overlay/Circle";
 import { Marker, NaverMapContext, Polygon } from "@src/lib/src";
 //  State
-import { atomSlctErp } from "@states/sementicMap/stateMap";
 import { sementicViewState } from "@states/sementicMap/stateView";
 //  Util
 import { getCenterPolygon } from "@util/map/distance";
-import { bsDisColor } from "@util/define/bsDis";
+import { bsDisColor } from "@util/define/map";
 //  Icon
 import markerStore from "@assets/icons/marker_store.png";
 import markerRent from "@assets/icons/marker_rent.png";
@@ -38,7 +37,32 @@ type Props = {
   rentShow: boolean;
   store: any[];
   rent: any[];
-  bsDis: any[];
+  bsDis: TypeBsDis[];
+};
+
+type TypeBsDis = {
+  _id: string;
+  bisName: string;
+  bsDisType: string;
+  polygon_type: "circle" | "single" | "multi";
+  polygon: any[];
+  range: string;
+  center: [number, number];
+};
+
+type BsDisList = {
+  isShow: boolean;
+  // isIn: boolean;
+  // curZoom: number | null;
+  // maxMin: any;
+  idx: number;
+  _id: string;
+  bsDisName: string;
+  bsDisType: string;
+  polygonType: "circle" | "single" | "multi";
+  polygon: any[];
+  range: string;
+  center: [number, number];
 };
 
 const BrandListBox = memo(
@@ -87,35 +111,9 @@ const BrandListBox = memo(
               <ListStore storeShow={storeShow} storeList={store} />
             </TabPanel>
           )}
-          {bsDis && bsDis.length > 0 && (
+          {bsDisShow && bsDis && bsDis.length > 0 && (
             <TabPanel>
-              <List display="flex" flexDirection="column">
-                {bsDis.map((dis: any, idx: number) => {
-                  const {
-                    bisName,
-                    bsDisType,
-                    _id,
-                    polygon,
-                    polygon_type,
-                    range,
-                    center,
-                  } = dis;
-
-                  return (
-                    <ListBsDis
-                      isShow={bsDisShow}
-                      idx={idx}
-                      _id={_id}
-                      biDissName={bisName}
-                      bsDisType={bsDisType}
-                      polygon_type={polygon_type}
-                      polygon={polygon || null}
-                      range={range || null}
-                      center={center || null}
-                    />
-                  );
-                })}
-              </List>
+              <ListBsDis bsDisShow={bsDisShow} bsDisList={bsDis} />
             </TabPanel>
           )}
           {rent && rent.length > 0 && (
@@ -182,7 +180,7 @@ const ListItemStore = ({
   return (
     <Fragment>
       <ListItem
-        key={`storeList-${idx}`}
+        key={`storeListItem-${idx}`}
         p="1rem 0rem 0.75rem"
         display="flex"
         alignItems="center"
@@ -304,20 +302,130 @@ const ListItemStore = ({
 };
 
 const ListBsDis = ({
+  bsDisShow,
+  bsDisList,
+}: {
+  bsDisShow: boolean;
+  bsDisList: TypeBsDis[];
+}) => {
+  const { state } = useContext(NaverMapContext);
+  // const [curZoom, setCurZoom] = useState<number | null>(null);
+  // const [maxMin, setMaxMin] = useState<{
+  //   max: [number, number];
+  //   min: [number, number];
+  // } | null>(null);
+
+  // useEffect(() => {
+  //   if (!state?.map) return;
+  //   if (!curZoom) {
+  //     let zoom = state.map.getZoom();
+  //     setCurZoom(zoom);
+  //   }
+
+  //   const zoomEventHandelr = naver.maps.Event.addListener(
+  //     state.map,
+  //     "zoom_changed",
+  //     (e: number) => {
+  //       console.log("zoom", e);
+  //       setCurZoom(e);
+  //     }
+  //   );
+  //   let timer: any;
+  //   const panningEventHandelr = naver.maps.Event.addListener(
+  //     state.map,
+  //     "bounds_changed",
+  //     (e) => {
+  //       if (timer) clearTimeout(timer);
+
+  //       timer = setTimeout(function () {
+  //         setMaxMin({ max: [e._max.y, e._max.x], min: [e._min.y, e._min.x] });
+  //       }, 500);
+  //     }
+  //   );
+
+  //   return () => {
+  //     naver.maps.Event.removeListener(zoomEventHandelr);
+  //     naver.maps.Event.removeListener(panningEventHandelr);
+  //   };
+  // }, [state]);
+  console.log("render");
+  return bsDisList ? (
+    <List display="flex" flexDirection="column">
+      {bsDisList.map(
+        (
+          {
+            _id,
+            bisName,
+            bsDisType,
+            polygon,
+            polygon_type,
+            range,
+            center,
+          }: TypeBsDis,
+          idx: number
+        ) => {
+          return (
+            <ListItemBsDis
+              key={`storeList-${idx}`}
+              isShow={bsDisShow}
+              // curZoom={curZoom}
+              // maxMin={maxMin}
+              // isIn={isIn && curZoom && curZoom >= 13 ? true : false}
+              idx={idx}
+              _id={_id}
+              bsDisName={bisName}
+              bsDisType={bsDisType}
+              polygonType={polygon_type}
+              polygon={polygon}
+              range={range}
+              center={center}
+            />
+          );
+        }
+      )}
+    </List>
+  ) : null;
+};
+
+const ListItemBsDis = ({
   isShow,
+  // isIn,
+  // curZoom,
+  // maxMin,
   idx,
   _id,
-  biDissName,
+  bsDisName,
   bsDisType,
+  polygonType,
   polygon,
-  polygon_type,
   range,
   center,
-}: any) => {
-  const { state } = useContext(NaverMapContext);
+}: BsDisList) => {
+  const { state, dispatch } = useContext(NaverMapContext);
   const setSv = useSetRecoilState(sementicViewState);
   const [isHover, onHover] = useState<boolean>(false);
   const [cursorPo, setCursorPo] = useState<[number, number] | null>(null);
+  const [isIn, setIsIn] = useState<boolean>(false);
+
+  const getCenter = (paths: [number, number][]): [number, number] => {
+    const arr = paths;
+    const length = arr.length;
+    let xcos = 0;
+    let ycos = 0;
+    let area = 0;
+
+    for (let i = 0, len = length, j = length - 1; i < len; j = i++) {
+      let p1 = arr[i];
+      let p2 = arr[j];
+
+      let f = p1[1] * p2[0] - p2[1] * p1[0];
+      xcos += (p1[0] + p2[0]) * f;
+      ycos += (p1[1] + p2[1]) * f;
+      area += f * 3;
+    }
+
+    return [xcos / area, ycos / area];
+  };
 
   useEffect(() => {
     if (isHover && state?.objects && state.objects.size !== 0) {
@@ -333,10 +441,107 @@ const ListBsDis = ({
     }
   }, [isHover]);
 
+  // useEffect(() => {
+  //   if (maxMin && state?.map) {
+  //     const mapBounds = state.map.getBounds();
+
+  //     if (polygonType === "circle" && center) {
+  //       // @ts-ignore
+  //       setIsIn(mapBounds?.hasLatLng(center));
+  //     } else if (polygonType === "single" && polygon) {
+  //       const pos = getCenter(polygon[0]);
+  //       // @ts-ignore
+  //       setIsIn(mapBounds?.hasLatLng(pos));
+  //     }
+  //   }
+  // }, [maxMin]);
+
+  useEffect(() => {
+    if (!state?.map) return;
+    const zoomEventHandelr = naver.maps.Event.addListener(
+      state.map,
+      "zoom_changed",
+      (e: number) => {
+        if (!state?.map) return;
+        if (e <= 13 && isIn) {
+          setIsIn(false);
+          return;
+        } else if (e >= 13 && !isIn) {
+          setIsIn(true);
+        }
+      }
+    );
+    let timer: any;
+    const panningEventHandelr = naver.maps.Event.addListener(
+      state.map,
+      "bounds_changed",
+      (e) => {
+        if (!state?.map) return;
+        if (timer) clearTimeout(timer);
+
+        timer = setTimeout(function () {
+          // @ts-ignore
+          const mapBounds = state.map.getBounds();
+          const zoom = state.map?.getZoom();
+
+          if (polygonType === "circle" && center) {
+            // @ts-ignore
+            setIsIn(mapBounds?.hasLatLng(center) && zoom >= 13);
+          } else if (polygonType === "single" && polygon) {
+            const pos = getCenter(polygon[0]);
+            // @ts-ignore
+            setIsIn(mapBounds?.hasLatLng(pos) && zoom >= 13);
+          }
+        }, 500);
+      }
+    );
+
+    const mapBounds = state.map.getBounds();
+    let zoom = 0;
+    let bool = false;
+
+    if (!zoom) {
+      zoom = state.map.getZoom();
+      if (zoom <= 13 && isIn) {
+        setIsIn(false);
+        return;
+      } else if (zoom >= 13 && !isIn) {
+        bool = true;
+      }
+    }
+
+    if (polygonType === "circle" && center) {
+      // @ts-ignore
+      if (!mapBounds?.hasLatLng(center) && isIn) {
+        setIsIn(false);
+        return;
+        // @ts-ignore
+      } else if (mapBounds?.hasLatLng(center) && !isIn) {
+        bool = true;
+      }
+    } else if (polygonType === "single" && polygon) {
+      const pos = getCenter(polygon[0]);
+      // @ts-ignore
+      if (!mapBounds?.hasLatLng(pos)) {
+        setIsIn(false);
+        return;
+        // @ts-ignore
+      } else if (mapBounds?.hasLatLng(pos) && !isIn) {
+        bool = true;
+      }
+    }
+    setIsIn(bool);
+
+    return () => {
+      naver.maps.Event.removeListener(zoomEventHandelr);
+      naver.maps.Event.removeListener(panningEventHandelr);
+    };
+  }, [state]);
+
   return (
     <Fragment>
       <ListItem
-        key={`bsDisList=${idx}`}
+        key={`bsDisListItem-${idx}`}
         p="1rem 0rem 0.75rem"
         display="flex"
         alignItems="center"
@@ -358,7 +563,7 @@ const ListBsDis = ({
             viewId: "bsDisInfo",
             props: {
               id: _id,
-              name: biDissName,
+              name: bsDisName,
             },
           });
         }}
@@ -382,7 +587,7 @@ const ListBsDis = ({
             color="font.primary"
             noOfLines={1}
           >
-            {biDissName}
+            {bsDisName}
           </Text>
           <Text
             textStyle="base"
@@ -395,7 +600,7 @@ const ListBsDis = ({
         </Flex>
       </ListItem>
       {isShow &&
-        (polygon_type === "circle" ? (
+        (polygonType === "circle" ? (
           <Circle
             id={`circle-${idx}`}
             key={`circle-${idx}`}
@@ -410,7 +615,7 @@ const ListBsDis = ({
               strokeOpacity: 0.5,
             }}
           />
-        ) : polygon_type === "single" ? (
+        ) : polygonType === "single" ? (
           <Polygon
             key={`bsDisArea-${idx}`}
             id={`bsDisArea-${idx}`}
@@ -422,6 +627,7 @@ const ListBsDis = ({
               fillOpacity: 0.35,
               strokeWeight: 2,
               clickable: true,
+              visible: isIn ? true : false,
             }}
           />
         ) : null)}
@@ -458,7 +664,7 @@ const ListBsDis = ({
               color="font.primary"
               whiteSpace="nowrap"
             >
-              {biDissName || ""}
+              {bsDisName || ""}
             </Text>
           </Flex>
         </OverlayView>
@@ -472,7 +678,7 @@ const ListRent = memo(({ rentShow, rentList }: any) => {
     <List display="flex" flexDirection="column">
       {rentList.map(({ _id, rentName, addr, lat, lng }: any, idx: number) => (
         <ListItemRent
-          key={`storeList-${idx}`}
+          key={`rentList-${idx}`}
           isShow={rentShow}
           idx={idx}
           _id={_id}
@@ -511,7 +717,7 @@ const ListItemRent = ({ isShow, idx, _id, rentName, addr, lat, lng }: any) => {
   return (
     <Fragment>
       <ListItem
-        key={`rentList-${idx}`}
+        key={`rentListItem-${idx}`}
         p="1rem 0rem 0.75rem"
         display="flex"
         alignItems="center"

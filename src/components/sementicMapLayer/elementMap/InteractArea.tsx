@@ -33,6 +33,7 @@ const InteractArea = ({
 }: InteractAreaProps) => {
   const { state, dispatch } = useContext(NaverMapContext);
   const [areaId] = useState("area" + num);
+
   const onMouseOverArea = (e: PointerEvent) => {
     const poly = state.objects.get(areaId) as naver.maps.Polygon;
     poly.setOptions({
@@ -44,6 +45,7 @@ const InteractArea = ({
     });
     onMouse && onMouse(e);
   };
+
   const onMouseOutArea = (e: PointerEvent) => {
     // state.objects.get(areaId)?.set("fillColor", "#0305F2");
     const poly = state.objects.get(areaId) as naver.maps.Polygon;

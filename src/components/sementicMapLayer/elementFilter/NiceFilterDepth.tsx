@@ -59,7 +59,7 @@ const NiceFilterDepth = ({ path }: { path: any }) => {
       // ctyCd: sigungu.slctCode.slice(0, 4),
       // admiCd: slctCode,
       upjongCd: bot.code,
-      admiCd: "11110560",
+      admiCd: "11110710",
       ctyCd: "1111",
     }).then((res: any) => {
       console.log(res);
@@ -77,7 +77,7 @@ const NiceFilterDepth = ({ path }: { path: any }) => {
       // ctyCd: sigungu.slctCode.slice(0, 4),
       // admiCd: slctCode,
       upjongCd: bot.code,
-      admiCd: "11110560",
+      admiCd: "11110710",
       ctyCd: "1111",
       pageNo: 1,
     }).then((res: any) => {

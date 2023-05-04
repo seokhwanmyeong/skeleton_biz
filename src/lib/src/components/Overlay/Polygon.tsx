@@ -73,6 +73,7 @@ const Polygon = forwardRef<naver.maps.Polygon, PolygonProps>((props, ref) => {
     { name: "mouseup", handler: props.onMouseUp },
     { name: "rightclick", handler: props.onRightClick },
   ]);
+
   useEffect(() => {
     if (
       polygon === undefined ||

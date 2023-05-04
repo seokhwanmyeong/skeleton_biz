@@ -1,7 +1,7 @@
 //  Lib
-import { useContext } from "react";
-import { useRecoilState } from "recoil";
-import { NaverMapContext } from "@src/lib/src";
+import { useContext, useEffect, useState, memo, Fragment } from "react";
+import OverlayView from "@src/lib/src/components/Overlay/OverlayView";
+import { Marker, NaverMapContext } from "@src/lib/src";
 import {
   Flex,
   Heading,
@@ -17,14 +17,14 @@ import {
 } from "@chakra-ui/react";
 //  Component
 import ModalBuilding from "@components/modal/map/ModalBuilding";
-//  State
-import { atomSlctNice } from "@states/sementicMap/stateMap";
 //  Icon
-import { IcoBuildingList, IcoVillage } from "@src/assets/icons/icon";
+import { IcoBuildingList, IcoVillage } from "@assets/icons/icon";
+import makerBrandS from "@assets/icons/marker_brand_small.png";
 //  Deco
 import { Deco01 } from "@assets/deco/DecoSvg";
 
 type Props = {
+  brandShow: boolean;
   brandList: {
     newAddr: string;
     oldAddr: string;
@@ -35,9 +35,7 @@ type Props = {
   }[];
 };
 
-const DepthListBox = ({ brandList }: Props) => {
-  const { state } = useContext(NaverMapContext);
-  const [slctNice, setSlctNice] = useRecoilState(atomSlctNice);
+const DepthListBox = memo(({ brandShow, brandList }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -79,7 +77,7 @@ const DepthListBox = ({ brandList }: Props) => {
           <Tab>건물</Tab>
         </TabList>
         <TabPanels>
-          {brandList && brandList.length > 0 && (
+          {/* {brandList && brandList.length > 0 && (
             <TabPanel>
               <List display="flex" flexDirection="column">
                 {brandList.map(({ storeNm }, idx: number) => {
@@ -138,6 +136,11 @@ const DepthListBox = ({ brandList }: Props) => {
                 })}
               </List>
             </TabPanel>
+          )} */}
+          {brandList && brandList.length > 0 && (
+            <TabPanel>
+              <ListBrand brandShow={brandShow} brandList={brandList} />
+            </TabPanel>
           )}
           <TabPanel>
             <List display="flex" flexDirection="column" gap="1rem">
@@ -194,6 +197,181 @@ const DepthListBox = ({ brandList }: Props) => {
       </Tabs>
       <ModalBuilding onClose={onClose} isOpen={isOpen} />
     </Flex>
+  );
+});
+
+const ListBrand = memo(
+  ({
+    brandShow,
+    brandList,
+  }: {
+    brandShow: boolean;
+    brandList: {
+      storeNm: string;
+      xAxis: number;
+      yAxis: number;
+    }[];
+  }) => {
+    return brandList ? (
+      <List display="flex" flexDirection="column">
+        {brandList.map(
+          (
+            {
+              storeNm,
+              xAxis,
+              yAxis,
+            }: {
+              storeNm: string;
+              xAxis: number;
+              yAxis: number;
+            },
+            idx: number
+          ) => (
+            <ListItemBrand
+              key={`brandList-${idx}`}
+              isShow={brandShow}
+              idx={idx}
+              storeNm={storeNm}
+              lat={yAxis}
+              lng={xAxis}
+            />
+          )
+        )}
+      </List>
+    ) : null;
+  }
+);
+
+const ListItemBrand = ({
+  isShow,
+  idx,
+  storeNm,
+  lat,
+  lng,
+}: {
+  isShow: boolean;
+  idx: number;
+  storeNm: string;
+  lat: number;
+  lng: number;
+}) => {
+  const { state } = useContext(NaverMapContext);
+  const [isHover, onHover] = useState<boolean>(false);
+  const [cursorPo, setCursorPo] = useState<[number, number] | null>(null);
+
+  useEffect(() => {
+    if (isHover && state?.objects && state.objects.size !== 0) {
+      let obj: any = state?.objects.get(`markerBrand-${idx}`);
+
+      if (obj) {
+        const pos = obj.getPosition();
+        setCursorPo(pos);
+      }
+    } else {
+      setCursorPo(null);
+    }
+  }, [isHover]);
+
+  return (
+    <Fragment>
+      <ListItem
+        key={`brandList-${idx}`}
+        p="1rem 0rem 0.75rem"
+        display="flex"
+        alignItems="center"
+        gap="0.75rem"
+        borderBottom="1px solid"
+        borderColor="neutral.gray8"
+        transition="0.2s"
+        bg={
+          isHover
+            ? "linear-gradient(90deg, rgba(255, 236, 61, 0) 0%, #FFEC3D 36.2%, rgba(255, 236, 61, 0) 92.66%)"
+            : "transparent"
+        }
+        _hover={{
+          fontWeight: "strong",
+          cursor: "pointer",
+        }}
+        onClick={() => {}}
+        onMouseEnter={() => onHover(true)}
+        onMouseLeave={() => onHover(false)}
+      >
+        <Flex
+          justify="center"
+          align="center"
+          w="2.5rem"
+          h="2rem"
+          bgColor="secondary.third.type5"
+          border="1px solid"
+          borderColor="neutral.gray8"
+          borderRadius="2px"
+        >
+          <IcoBuildingList color="#FFFFFFD9" />
+        </Flex>
+        <Text
+          textStyle="base"
+          fontSize="md"
+          fontWeight="strong"
+          color="font.primary"
+        >
+          {storeNm}
+        </Text>
+      </ListItem>
+      {isShow && lat && lng && (
+        <Marker
+          key={`markerBrand-${idx}`}
+          id={`markerBrand-${idx}`}
+          opts={{
+            position: [lng, lat],
+            icon: {
+              url: makerBrandS,
+              size: new naver.maps.Size(50, 50),
+              anchor: new naver.maps.Point(24, 42),
+            },
+          }}
+          onClick={() => {}}
+          onMouseOver={() => onHover(true)}
+          onMouseOut={() => onHover(false)}
+        />
+      )}
+      {isShow && isHover && cursorPo && (
+        <OverlayView
+          id={`infoBox`}
+          position={new naver.maps.LatLng(cursorPo)}
+          pane="floatPane"
+          anchorPoint={{ x: 0, y: 10 }}
+        >
+          <Flex
+            pos="relative"
+            top="-5.25rem"
+            left="-50%"
+            p="0.25rem 0.75rem"
+            w="auto"
+            justify="center"
+            align="center"
+            bgColor="#FFFFFFD9"
+            gap="0.5rem"
+            border="1px solid"
+            borderColor="neutral.gray6"
+            borderRadius="base"
+            transition="0.3s"
+            whiteSpace="nowrap"
+          >
+            <Text
+              textStyle="base"
+              fontSize="sm"
+              fontWeight="strong"
+              lineHeight="normal"
+              transition="0.3s"
+              color="font.primary"
+              whiteSpace="nowrap"
+            >
+              {storeNm || ""}
+            </Text>
+          </Flex>
+        </OverlayView>
+      )}
+    </Fragment>
   );
 };
 

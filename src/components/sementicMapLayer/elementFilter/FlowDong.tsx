@@ -1,41 +1,26 @@
 //  Lib
-import { useContext, useState, useEffect, useCallback, useRef } from "react";
-import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
+import { useContext } from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { Box, Button, Flex, Text, useDisclosure } from "@chakra-ui/react";
 import { NaverMapContext } from "@src/lib/src";
 //  Component
 import UpjongListBox from "@components/sementicMapLayer/elementFilter/UpjongListBox";
 import NiceFilterDepth from "@components/sementicMapLayer/elementFilter/NiceFilterDepth";
-import ErpFilter from "@components/sementicMapLayer/elementFilter/ErpFilter";
 import BtnReset from "@components/sementicMapLayer/elementFilter/BtnReset";
 import BtnBack from "@components/sementicMapLayer/elementFilter/BtnBack";
-import DrawTools from "@components/sementicMapLayer/elementFilter/DrawTools";
-import FlowPopInfo from "@components/sementicMapLayer/elementFilter/FlowPopInfo";
-import { BoxRankingDong } from "@components/sementicMapLayer/elementFilter/BoxRanking";
-import DepthListBox from "@src/components/sementicMapLayer/elementFilter/DepthListBox";
 //  State
-import {
-  atomFilterFlow,
-  infoComBrand,
-  infoComFlowDepth,
-  infoComNiceRank,
-} from "@states/sementicMap/stateFilter";
+import { atomFilterFlow } from "@states/sementicMap/stateFilter";
 import { atomFlowEnterArea, atomSlctDong } from "@states/sementicMap/stateMap";
 import { sementicViewState } from "@states/sementicMap/stateView";
 //  Icon
-import { IcoBarChart, IcoErp, IcoFilter } from "@assets/icons/icon";
+import { IcoBarChart, IcoFilter } from "@assets/icons/icon";
 //  Deco
 import {
   DecoBotHightBox,
   DecoFilterDivider,
-  DecoFrameCenter,
-  DecoFrameL,
-  DecoFrameR,
   DecoTop,
 } from "@components/sementicMapLayer/elementDeco/Deco";
 import sample from "@src/util/data/sampleBuilding";
-//  Type
-import type { RankType } from "@states/sementicMap/stateFilter";
 
 type Props = {};
 
@@ -43,46 +28,9 @@ const FlowDong = (props: Props) => {
   const { state } = useContext(NaverMapContext);
   const setFlow = useSetRecoilState(atomFilterFlow);
   const setSv = useSetRecoilState(sementicViewState);
-  const resetSv = useResetRecoilState(sementicViewState);
   const { sigungu } = useRecoilValue(atomFlowEnterArea);
   const dong = useRecoilValue(atomSlctDong);
-  const rankList = useRecoilValue(infoComNiceRank);
-  const { active, show } = useRecoilValue(infoComFlowDepth);
-  const { data: brandList } = useRecoilValue(infoComBrand);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [centerView, setCenterView] = useState<boolean>(true);
-  const [dongRank, setDongRank] = useState<RankType | null>(null);
-
-  useEffect(() => {
-    const dongName = dong.slctName.replace(`${sigungu?.slctName} `, "");
-    let rank;
-
-    for (let i = 0; i < rankList.length; i++) {
-      if (rankList[i].dongName === dongName) {
-        rank = rankList[i];
-        break;
-      }
-    }
-    if (rank) setDongRank(rank);
-  }, [rankList]);
-
-  useEffect(() => {
-    const zoomHandler = naver.maps.Event.addListener(
-      state.map,
-      "zoom_changed",
-      (zoom) => {
-        const min = state.map?.getMinZoom() || 16;
-        zoom > min ? setCenterView(false) : setCenterView(true);
-      }
-    );
-
-    setCenterView(true);
-
-    return () => {
-      resetSv();
-      naver.maps.Event.removeListener(zoomHandler);
-    };
-  }, []);
 
   return (
     <>
@@ -127,17 +75,6 @@ const FlowDong = (props: Props) => {
           )}
         </Flex>
         <UpjongListBox />
-      </Flex>
-      {/* --------------------------- 중단 Frame ---------------------------*/}
-      <Flex w="100%" h="100%" zIndex={1} gap="0.625rem" pointerEvents="none">
-        <DecoFrameL pl="1rem" align="flex-end">
-          {dongRank && <BoxRankingDong rankData={dongRank} />}
-          {active && show && <FlowPopInfo />}
-        </DecoFrameL>
-        <DecoFrameCenter isOpen={centerView} activeAni={false} />
-        <DecoFrameR pr="0.25rem">
-          <DepthListBox brandList={brandList || []} />
-        </DecoFrameR>
       </Flex>
       {/* ------------------------------ 하단 ------------------------------*/}
       <DecoBotHightBox gap="3rem">

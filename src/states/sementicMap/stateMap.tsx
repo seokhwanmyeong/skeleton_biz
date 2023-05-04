@@ -106,35 +106,3 @@ export const atomCreateArea = atom({
     center: null,
   },
 });
-
-// ==================== 매장/마커/상권 클릭 이벤트 ====================
-export const atomSlctErp = atom<{
-  erpType?: "store" | "rent" | "bsDis";
-  name: string;
-  cursorPo: any;
-  hoverId?: string;
-}>({
-  key: "atomSlctErp",
-  default: {
-    erpType: undefined,
-    cursorPo: null,
-    name: "",
-    hoverId: "",
-  },
-});
-
-// ==================== 나이스 클릭 이벤트 ====================
-export const atomSlctNice = atom<{
-  niceType?: "pop" | "brand";
-  name: string;
-  id: string;
-  hoverId?: string;
-}>({
-  key: "atomSlctNice",
-  default: {
-    niceType: undefined,
-    name: "",
-    id: "",
-    hoverId: "",
-  },
-});
