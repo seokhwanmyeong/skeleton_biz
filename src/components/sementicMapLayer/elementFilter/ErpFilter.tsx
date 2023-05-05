@@ -31,6 +31,8 @@ import {
   infoComErpRent,
   resetErp,
 } from "@states/sementicMap/stateFilter";
+//  Util
+import { getCenter } from "@util/map/distance";
 //  Icon
 import {
   IcoDoubleSquere,
@@ -126,52 +128,6 @@ const ErpFilter = ({
     console.log("bsD search");
     console.log(filterBsD);
 
-    // const test = [
-    //   {
-    //     bisName: "상권01",
-    //     bsDisType: "A",
-    //     polygon: [
-    //       [126.9749089, 37.6164026],
-    //       [126.9719048, 37.6124932],
-    //       [126.9746514, 37.6102834],
-    //       [126.977398, 37.612731100000005],
-    //       [126.9767114, 37.6154847],
-    //       [126.9749089, 37.6164026],
-    //     ],
-    //     // center : [ Number, Number ]
-    //     polygonType: "single",
-    //   },
-    //   {
-    //     bisName: "상권02",
-    //     bsDisType: "B",
-    //     polygon: [
-    //       [126.9665286, 37.6142807],
-    //       [126.965284, 37.6136178],
-    //       [126.9638464, 37.6113231],
-    //       [126.9649407, 37.6112041],
-    //       [126.9667861, 37.611799000000005],
-    //       [126.9676229, 37.6134308],
-    //       [126.96766579999999, 37.6143317],
-    //       [126.9665286, 37.6142807],
-    //     ],
-    //     // center : [ Number, Number ]
-    //     polygonType: "single",
-    //   },
-    //   {
-    //     bisName: "상권03",
-    //     bsDisType: "C",
-    //     polygon: [
-    //       [126.96750109999999, 37.6128706],
-    //       [126.9677371, 37.6111878],
-    //       [126.9690353, 37.6110263],
-    //       [126.9699151, 37.6117827],
-    //       [126.97002239999999, 37.6128706],
-    //       [126.96750109999999, 37.6128706],
-    //     ],
-    //     // center : [ Number, Number ]
-    //     polygonType: "single",
-    //   },
-    // ];
     const tmp = { ...filterBsD };
     delete tmp.areaCode;
 
@@ -181,12 +137,26 @@ const ErpFilter = ({
       const { records } = res;
       console.log(res);
 
-      setErpBsD({
-        filter: filterBsD,
-        active: true,
-        show: true,
-        data: records || [],
-      });
+      if (records && records.length > 0) {
+        const checkList = records.filter((li: any) =>
+          li.polygon_type ? true : false
+        );
+        const makeCenter = checkList.map((li: any) => {
+          if (li.center) {
+            return li;
+          } else {
+            const center = getCenter(li.polygon[0]);
+            return { ...li, center: center };
+          }
+        });
+
+        setErpBsD({
+          filter: filterBsD,
+          active: true,
+          show: true,
+          data: makeCenter || [],
+        });
+      }
     });
   };
 

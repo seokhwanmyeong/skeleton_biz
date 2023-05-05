@@ -246,6 +246,36 @@ type TypeSigunguRank = {
   res: any;
 };
 
+type TypeHistoryStoreList = {
+  req: any;
+  res: any;
+};
+
+type TypeHistoryStoreDetail = {
+  req: any;
+  res: any;
+};
+
+type TypeHistoryStoreForm = {
+  req: any;
+  res: any;
+};
+
+type TypeHistoryRentList = {
+  req: any;
+  res: any;
+};
+
+type TypeHistoryRentDetail = {
+  req: any;
+  res: any;
+};
+
+type TypeHistoryRentForm = {
+  req: any;
+  res: any;
+};
+
 export type {
   BixApiInstance,
   TypeLogin,
@@ -261,4 +291,10 @@ export type {
   TypeUpjongGet,
   TypeUpjongPost,
   TypeSigunguRank,
+  TypeHistoryStoreList,
+  TypeHistoryStoreDetail,
+  TypeHistoryStoreForm,
+  TypeHistoryRentList,
+  TypeHistoryRentDetail,
+  TypeHistoryRentForm,
 };

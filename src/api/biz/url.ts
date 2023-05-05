@@ -69,7 +69,22 @@ export const ERP_CLIENT_UPDATE = "/v1/Franchise_Branch/update";
 export const ERP_CLIENT_DELETE = "/v1/Franchise_Branch/delete";
 
 //  HISTORY
-export const ERP_HISTORY_GET = "/v1/Franchise_Branch";
+export const ERP_HISTORY_STORE_GET =
+  "/v1/franchise_history/branchhistorysearch";
+export const ERP_HISTORY_STORE_DETAIL =
+  "/v1/franchise_history/branchhistorydetail";
+export const ERP_HISTORY_STORE_CREATE =
+  "/v1/franchise_history/branchHistoryCreate";
+export const ERP_HISTORY_STORE_UPDATE = "/v1/Franchise_Branch";
+export const ERP_HISTORY_STORE_DELETE = "/v1/Franchise_Branch";
+export const ERP_HISTORY_RENT_GET =
+  "/v1/franchise_history/unsoldshophistorysearch";
+export const ERP_HISTORY_RENT_DETAIL =
+  "/v1/franchise_history/unsoldshophistorydetail";
+export const ERP_HISTORY_RENT_CREATE =
+  "/v1/franchise_history/unsoldshopHistoryCreate";
+export const ERP_HISTORY_RENT_UPDATE = "/v1/Franchise_Branch";
+export const ERP_HISTORY_RENT_DELETE = "/v1/Franchise_Branch";
 
 //  COMMON
 export const ERP_CODE_CHECKER = "/v1/franchise_common/duplicatecheck";
