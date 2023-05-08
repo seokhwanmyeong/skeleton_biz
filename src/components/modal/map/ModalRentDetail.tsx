@@ -92,24 +92,59 @@ const ModalRentDetail = ({ id, name, isOpen, onClose }: Props) => {
               variant="detailPage"
               index={tabIdx}
               onChange={(index) => setTabIdx(index)}
+              h="100%"
             >
-              <TabList>
-                <Tab key="tab-info">
+              <TabList
+                mb="1.25rem"
+                w="100%"
+                justifyContent="center"
+                borderBottom="1px solid"
+                borderColor="neutral.gray6"
+              >
+                <Tab
+                  key="tab-info"
+                  p="0 1rem 0.5rem"
+                  _before={{
+                    content: '""',
+                    position: "absolute",
+                    bottom: "5px",
+                    display: "inline-block",
+                    w: "100%",
+                    h: "3px",
+                    opacity: 0,
+                    bgColor: "primary.type7",
+                    transition: "all linear 0.3s 0s",
+                  }}
+                >
                   <IcoBars />
                   <Text>기본 정보</Text>
                 </Tab>
-                <Tab key="tab-history" isDisabled={false}>
+                <Tab
+                  key="tab-history"
+                  p="0 1rem 0.5rem"
+                  _before={{
+                    content: '""',
+                    position: "absolute",
+                    bottom: "5px",
+                    display: "inline-block",
+                    w: "100%",
+                    h: "3px",
+                    opacity: 0,
+                    bgColor: "primary.type7",
+                    transition: "all linear 0.3s 0s",
+                  }}
+                >
                   <IcoHistory />
                   <Text>히스토리 데이터</Text>
                 </Tab>
               </TabList>
-              <TabPanels>
-                <TabPanel>
+              <TabPanels p="1rem">
+                <TabPanel w="324px">
                   {tabIdx === 0 && infoData !== null && (
                     <RentBasicInfo info={infoData} />
                   )}
                 </TabPanel>
-                <TabPanel>
+                <TabPanel w="738px">
                   {tabIdx === 1 && <ElementHistory id={id} title={name} />}
                 </TabPanel>
               </TabPanels>

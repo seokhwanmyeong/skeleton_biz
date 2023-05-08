@@ -21,10 +21,10 @@ const ChartStackBar = (props: any) => {
     Legend
   );
 
-  const { options, data } = props;
+  const { options, data, ...rest } = props;
 
   return (
-    <Flex flexDirection="column" gap="1rem">
+    <Flex flexDirection="column" {...rest}>
       <Bar options={options} data={data} />
     </Flex>
   );

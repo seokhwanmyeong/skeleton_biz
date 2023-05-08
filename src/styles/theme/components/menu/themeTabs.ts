@@ -51,6 +51,9 @@ const themeTabs = {
           svg: {
             color: "primary.type7",
           },
+          _before: {
+            opacity: 1,
+          },
           _after: {
             opacity: 1,
           },
@@ -63,6 +66,9 @@ const themeTabs = {
           svg: {
             color: "primary.type7",
             transition: "0.5s",
+          },
+          _before: {
+            opacity: 1,
           },
           _after: {
             opacity: 1,

@@ -1,5 +1,5 @@
 //  LIB
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import {
   Drawer,
   DrawerBody,
@@ -40,14 +40,20 @@ const ModalHistoryEditor = ({
   };
 
   return (
-    <>
-      <BtnEditor onClick={onOpen} text="히스토리 추가하기" />
+    <Fragment>
+      <BtnEditor
+        onClick={onOpen}
+        text="히스토리 추가하기"
+        variant="search"
+        lineHeight="-1px"
+      />
       {isOpen && (
         <Drawer isOpen={isOpen} onClose={onClose} placement="right">
           <DrawerOverlay
             top="auto"
             bottom="0"
             h="calc(100vh - 2.875rem - 1px)"
+            zIndex={999}
           />
           <DrawerContent
             maxW="fit-content"
@@ -91,7 +97,7 @@ const ModalHistoryEditor = ({
           </DrawerContent>
         </Drawer>
       )}
-    </>
+    </Fragment>
   );
 };
 

@@ -172,7 +172,7 @@ const BoxRanking = ({ rankData, direction = "left" }: Props) => {
               }
               fillColor="#FADB14"
               rank={categoryRanks?.inflowCustCnt?.rank}
-              amount={categoryRanks?.inflowCustCnt?.amount}
+              amount={categoryRanks?.inflowCustCnt?.amount || null}
               direction="right"
             />
             <ElementDivider />
@@ -187,7 +187,7 @@ const BoxRanking = ({ rankData, direction = "left" }: Props) => {
               }
               fillColor="#FF7A45"
               rank={categoryRanks?.housCnt?.rank}
-              amount={categoryRanks?.housCnt?.amount}
+              amount={categoryRanks?.housCnt?.amount || null}
               direction="right"
             />
           </Flex>
@@ -207,7 +207,7 @@ const BoxRanking = ({ rankData, direction = "left" }: Props) => {
               }
               fillColor="#FADB14"
               rank={categoryRanks?.housCustCnt?.rank}
-              amount={categoryRanks?.housCustCnt?.amount}
+              amount={categoryRanks?.housCustCnt?.amount || null}
               direction="right"
             />
             <ElementDivider />
@@ -222,7 +222,7 @@ const BoxRanking = ({ rankData, direction = "left" }: Props) => {
               }
               fillColor="#36CFC9"
               rank={categoryRanks?.storeCnt?.rank}
-              amount={categoryRanks?.storeCnt?.amount}
+              amount={categoryRanks?.storeCnt?.amount || null}
               direction="right"
             />
           </Flex>
@@ -238,7 +238,7 @@ const BoxRanking = ({ rankData, direction = "left" }: Props) => {
               }
               fillColor="#36CFC9"
               rank={categoryRanks?.jobCustCnt?.rank}
-              amount={categoryRanks?.jobCustCnt?.amount}
+              amount={categoryRanks?.jobCustCnt?.amount || null}
               direction="right"
             />
             <ElementDivider />
@@ -253,7 +253,7 @@ const BoxRanking = ({ rankData, direction = "left" }: Props) => {
               }
               fillColor="#D9D9D9"
               rank={categoryRanks?.admiSaleAmt?.rank}
-              amount={categoryRanks?.admiSaleAmt?.amount}
+              amount={categoryRanks?.admiSaleAmt?.amount || null}
               direction="right"
               isSale={true}
             />
@@ -291,7 +291,7 @@ const BoxRankingDong = ({ rankData }: { rankData: RankType }) => {
               />
             }
             fillColor="#FADB14"
-            amount={categoryRanks?.inflowCustCnt?.amount}
+            amount={categoryRanks?.inflowCustCnt?.amount || null}
             rank={categoryRanks?.inflowCustCnt?.rank}
           />
           <ElementListOne
@@ -304,7 +304,7 @@ const BoxRankingDong = ({ rankData }: { rankData: RankType }) => {
               />
             }
             fillColor="#FADB14"
-            amount={categoryRanks?.housCustCnt?.amount}
+            amount={categoryRanks?.housCustCnt?.amount || null}
             rank={categoryRanks?.housCustCnt?.rank}
           />
           <ElementListOne
@@ -317,7 +317,7 @@ const BoxRankingDong = ({ rankData }: { rankData: RankType }) => {
               />
             }
             fillColor="#36CFC9"
-            amount={categoryRanks?.jobCustCnt?.amount}
+            amount={categoryRanks?.jobCustCnt?.amount || null}
             rank={categoryRanks?.jobCustCnt?.rank}
           />
           <ElementListOne
@@ -330,7 +330,7 @@ const BoxRankingDong = ({ rankData }: { rankData: RankType }) => {
               />
             }
             fillColor="#FF7A45"
-            amount={categoryRanks?.housCnt?.amount}
+            amount={categoryRanks?.housCnt?.amount || null}
             rank={categoryRanks?.housCnt?.rank}
           />
           <ElementListOne
@@ -343,7 +343,7 @@ const BoxRankingDong = ({ rankData }: { rankData: RankType }) => {
               />
             }
             fillColor="#36CFC9"
-            amount={categoryRanks?.storeCnt?.amount}
+            amount={categoryRanks?.storeCnt?.amount || null}
             rank={categoryRanks?.storeCnt?.rank}
           />
           <ElementListOne
@@ -356,7 +356,7 @@ const BoxRankingDong = ({ rankData }: { rankData: RankType }) => {
               />
             }
             fillColor="#D9D9D9"
-            amount={categoryRanks?.admiSaleAmt?.amount}
+            amount={categoryRanks?.admiSaleAmt?.amount || null}
             rank={categoryRanks?.admiSaleAmt?.rank}
             isSale={true}
           />
@@ -483,7 +483,7 @@ const ElementList = ({
         whiteSpace="nowrap"
       >
         {isSale && amount
-          ? `${Math.round(amount / 10000)} `
+          ? `${Math.round(amount / 10000) || "s"}`
           : amount
           ? amount.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
           : "-"}

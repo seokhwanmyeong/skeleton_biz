@@ -9,7 +9,12 @@ import BtnReset from "@components/sementicMapLayer/elementFilter/BtnReset";
 import FlowPopInfo from "@components/sementicMapLayer/elementFilter/FlowPopInfo";
 import DepthList from "@src/components/sementicMapLayer/elementFilter/DepthListBox";
 //  State
-import { infoComBrand } from "@states/sementicMap/stateFilter";
+import {
+  atomUpjongState,
+  infoComBrand,
+  infoComFloatPop,
+  infoComFlowDepth,
+} from "@states/sementicMap/stateFilter";
 import { atomSlctCustom } from "@states/sementicMap/stateMap";
 import { sementicViewState } from "@states/sementicMap/stateView";
 //  Icon
@@ -27,7 +32,9 @@ import {
 type Props = {};
 
 const FlowCustom = (props: Props) => {
-  const { data: brandList } = useRecoilValue(infoComBrand);
+  const { show, data: brandList } = useRecoilValue(infoComBrand);
+  const { show: brandShow } = useRecoilValue(infoComFlowDepth);
+  const { top, mid, bot } = useRecoilValue(atomUpjongState);
   const cutomArea = useRecoilValue(atomSlctCustom);
   const setSv = useSetRecoilState(sementicViewState);
   const resetSv = useResetRecoilState(sementicViewState);
@@ -73,11 +80,11 @@ const FlowCustom = (props: Props) => {
       {/* --------------------------- 중단 Frame ---------------------------*/}
       <Flex w="100%" h="100%" zIndex={1} gap="0.625rem" pointerEvents="none">
         <DecoFrameL pl="1rem" align="flex-end">
-          <FlowPopInfo />
+          {brandShow && <FlowPopInfo />}
         </DecoFrameL>
         <DecoFrameCenter />
         <DecoFrameR pr="0.25rem">
-          <DepthList brandList={brandList || []} />
+          <DepthList brandShow={show} brandList={brandList || []} />
         </DecoFrameR>
       </Flex>
       {/* ------------------------------ 하단 ------------------------------*/}
@@ -95,8 +102,9 @@ const FlowCustom = (props: Props) => {
         <DecoFilterDivider />
         <Button
           variant="filterTop"
+          isDisabled={!(top.code && mid.code && bot.code)}
           onClick={() => {
-            setSv({ props: null, viewId: "eval" });
+            setSv({ props: cutomArea, viewId: "eval" });
           }}
         >
           <Box>
@@ -107,7 +115,7 @@ const FlowCustom = (props: Props) => {
         <DecoFilterDivider />
         <BtnReset />
       </DecoBotHightBox>
-      {isOpen && <NiceFilterDepth path={cutomArea.slctPath} />}
+      {isOpen && <NiceFilterDepth areaInfo={cutomArea} />}
     </Fragment>
   );
 };

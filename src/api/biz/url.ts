@@ -23,7 +23,8 @@ export const ERP_RENT_GET_POINT = "/v1/Franchise_unsoldshop/mapunsoldsearch";
 export const MAP_ERP_RENT_GET_INFO = "/v1/Franchise_unsoldshop/mapdetailsearch";
 
 //  MAP_ERP_BSDIS
-export const ERP_BSDIS_GET_AREA = "/v1/Franchise_businessarea/mapbusisearch";
+// export const ERP_BSDIS_GET_AREA = "/v1/Franchise_businessarea/mapbusisearch";
+export const ERP_BSDIS_GET_AREA = "/v1/franchise_businessarea/newsearch";
 export const MAP_ERP_BSDIS_GET_INFO =
   "/v1/Franchise_unsoldshop/mapdetailsearch";
 
@@ -88,5 +89,5 @@ export const ERP_HISTORY_RENT_DELETE = "/v1/Franchise_Branch";
 
 //  COMMON
 export const ERP_CODE_CHECKER = "/v1/franchise_common/duplicatecheck";
-export const ERP_LINK_STORE_GET = "/v1/franchise_common/connectedbusinessarea";
-export const ERP_LINK_BSDIS_GET = "/v1/franchise_common/connectedbranch";
+export const ERP_LINK_STORE_GET = "/v1/franchise_common/connectedbranch";
+export const ERP_LINK_BSDIS_GET = "/v1/franchise_common/connectedbusinessarea";

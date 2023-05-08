@@ -18,7 +18,7 @@ import ModalDaumAddr from "@components/modal/common/ModalDaumAddr";
 import { atomFilterFlow } from "@states/sementicMap/stateFilter";
 import { atomSlctCustom } from "@states/sementicMap/stateMap";
 //  Util
-import { calDist } from "@util/map/distance";
+import { calDist, calcPolyDistance } from "@util/map/distance";
 //  Icons
 import { IcoPolyline, IcoLineCurve, IcoDistance } from "@assets/icons/icon";
 import markerIcon from "@assets/icons/marker.png";
@@ -248,11 +248,10 @@ const DrawAddr = () => {
         if (!markerRef.current) markerRef.current = [];
         if (!eventRef.current) eventRef.current = [];
         if (e.latlng) setCursorPo(e.latlng);
-        if (polyRef?.current) {
-          let distance = polyRef?.current.getDistance();
-          setDistance(distance);
-        }
+
         const path: any = polyRef.current?.getPath();
+        let distance = calcPolyDistance(path._array);
+        setDistance(distance / 2);
 
         if (path.length === 1) {
           const marker = new naver.maps.Marker({
@@ -576,7 +575,7 @@ const DrawAddr = () => {
                   >
                     {activeIdx === 0 ? "그리기" : "반경"}
                   </Text>
-                  {distance <= 1000 ? (
+                  {distance <= 2000 ? (
                     <Text
                       textStyle="base"
                       fontSize="sm"
@@ -617,7 +616,7 @@ const DrawAddr = () => {
                 >
                   <Text>다시 그리기</Text>
                 </Button>
-                {distance <= 1000 && (
+                {distance <= 2000 && (
                   <Button
                     variant="infoBox"
                     aria-label="영역확정"
@@ -640,6 +639,7 @@ const DrawAddr = () => {
                           center?._lat,
                           (result: any) => {
                             setSlceCustom({
+                              areaType: "polygon",
                               slctName: result[0].address_name || "",
                               slctPath: path._array,
                               range: undefined,
@@ -667,6 +667,7 @@ const DrawAddr = () => {
                           center?._lat,
                           (result: any) => {
                             setSlceCustom({
+                              areaType: "circle",
                               slctName: result[0].address_name || "",
                               slctPath: bounds,
                               range: range,
@@ -688,6 +689,7 @@ const DrawAddr = () => {
                         const center: any = circleRef.current?.getCenter();
 
                         setSlceCustom({
+                          areaType: "circle",
                           slctName: addr.address,
                           slctPath: bounds,
                           range: range,
@@ -749,12 +751,12 @@ const DrawAddr = () => {
                   lineHeight="normal"
                   transition="0.3s"
                   color={
-                    distance > 1000 ? "system.default.red" : "font.primary"
+                    distance > 2000 ? "system.default.red" : "font.primary"
                   }
                 >
                   {activeIdx === 0
-                    ? `그리기 (반경: ${distance?.toFixed(2) * 2}m)`
-                    : `반경 ${distance * 2}m`}
+                    ? `그리기 (반경: ${distance?.toFixed(2)}m)`
+                    : `반경 ${distance}m`}
                 </Text>
                 {distance > 1000 && (
                   <Text
@@ -764,7 +766,7 @@ const DrawAddr = () => {
                     lineHeight="normal"
                     transition="0.3s"
                     color={
-                      distance > 1000 ? "system.default.red" : "font.primary"
+                      distance > 2000 ? "system.default.red" : "font.primary"
                     }
                   >
                     반경 2000m를 넘기실 수 없습니다.

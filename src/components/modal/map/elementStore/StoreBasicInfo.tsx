@@ -16,7 +16,7 @@ const StoreBasicInfo = ({ info }: { info: TypeMapStoreInfo["res"] | null }) => {
         justify="center"
         align="center"
         direction="column"
-        gap="1.875rem"
+        gap="1rem"
       >
         <ElementLine title="매장코드" content={info?.storeCode || "-"} />
         <ElementLine title="매장타입" content={info?.storeType || "-"} />
@@ -26,6 +26,7 @@ const StoreBasicInfo = ({ info }: { info: TypeMapStoreInfo["res"] | null }) => {
         <ElementLine title="대표자" content={info?.ownerName || "-"} />
         <ElementLine title="대표자 연락처" content={info?.ownerPhone || "-"} />
         <ElementLine
+          noborder={true}
           title="주소"
           content={(info?.addr || "") + (info?.addrDetail || "")}
         />
@@ -37,23 +38,30 @@ const StoreBasicInfo = ({ info }: { info: TypeMapStoreInfo["res"] | null }) => {
 };
 
 const ElementLine = ({
+  noborder = false,
   title,
   content,
 }: {
+  noborder?: boolean;
   title: string;
   content: string;
 }) => {
   return (
-    <Flex w="100%" align="center">
+    <Flex
+      pb={noborder ? "0" : "1rem"}
+      w="100%"
+      align="center"
+      borderBottom={noborder ? "none" : "1px solid"}
+    >
       <FormLabel
         display="flex"
         alignItems="flex-start"
         m="0"
         minW="4.4rem"
-        w="30%"
+        w="40%"
         flex="none"
         textStyle="base"
-        fontSize="xs"
+        fontSize="sm"
         fontWeight="strong"
       >
         {title}
@@ -90,21 +98,31 @@ const ElementLineList = ({
         w="30%"
         flex="none"
         textStyle="base"
-        fontSize="xs"
+        fontSize="sm"
         fontWeight="strong"
       >
         {title}
       </FormLabel>
-      {content?.map((li) => {
+      {content?.map((li, idx) => {
         return (
-          <Text
-            textStyle="base"
-            fontSize="sm"
-            fontWeight="medium"
-            color="font.primary"
+          <Flex
+            position="relative"
+            p="0 0.5rem 0"
+            h="1.375rem"
+            display="flex"
+            align="center"
+            gap="0.25rem"
+            bgColor={idx % 2 === 0 ? "#FFFBE6" : "#E6FFFB"}
+            border="1px solid"
+            borderRadius="2px"
+            borderColor={idx % 2 === 0 ? "#FFE58F" : "#87E8DE"}
+            fontFamily="main"
+            fontSize="xs"
+            lineHeight="1.5rem"
+            color={idx % 2 === 0 ? "#FAAD14" : "#13C2C2"}
           >
             {li.bsDisName}
-          </Text>
+          </Flex>
         );
       })}
     </Flex>

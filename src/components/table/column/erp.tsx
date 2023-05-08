@@ -26,6 +26,7 @@ import { csvStoreSale } from "@util/data/fileCSV";
 import { exportFormCsv } from "@util/file/manageFile";
 //  Icon
 import { IcoCheckCircle, IcoCloseCircle, IcoUpdate } from "@assets/icons/icon";
+import FormHistory from "@src/components/form/map/FormHistory";
 
 const columnHelper = createColumnHelper();
 
@@ -468,18 +469,136 @@ const columnHistory = [
                 top="auto"
                 bottom="0"
                 h="calc(100vh - 2.875rem - 1px)"
+                zIndex={999}
+                onClick={() => {
+                  onClose();
+                }}
               />
               <DrawerContent
                 maxW="fit-content"
+                w="10rem"
                 borderRadius="12px 0 0 12px"
                 sx={{
                   top: "auto!important",
                   bottom: "0!important",
                   h: "calc(100% - 2.875rem - 2px)",
                 }}
+                zIndex={9999}
+                pointerEvents={"all"}
               >
-                <DrawerBody pos="relative" p="0" width="18.5rem">
+                <DrawerBody pos="relative" p="0" width="24rem">
                   <FormHistoryEditor
+                    fixMode={fixmode}
+                    initVal={info.row.original}
+                    setValues={test}
+                  />
+                </DrawerBody>
+                <DrawerFooter
+                  justifyContent={fixmode ? "center" : "flex-end"}
+                  alignItems="center"
+                >
+                  {info?.row?.original.type !== "로그" && !fixmode && (
+                    <Button
+                      variant="editor"
+                      onClick={() => {
+                        setFixMode(true);
+                      }}
+                    >
+                      <IcoUpdate w="0.875rem" h="0.875rem" />
+                      수정
+                    </Button>
+                  )}
+                  {fixmode && (
+                    <Flex w="100%" justify="space-around">
+                      <Button
+                        variant="editor"
+                        onClick={() => {
+                          setFixMode(false);
+                        }}
+                      >
+                        <IcoCloseCircle w="0.875rem" h="0.875rem" />
+                        취소
+                      </Button>
+                      <Button
+                        variant="editor"
+                        onClick={() => {
+                          console.log("submit");
+                          setFixMode(false);
+                          onClose();
+                        }}
+                      >
+                        <IcoCheckCircle w="0.875rem" h="0.875rem" />
+                        완료
+                      </Button>
+                    </Flex>
+                  )}
+                </DrawerFooter>
+              </DrawerContent>
+            </Drawer>
+          )}
+        </>
+      );
+    },
+    enableResizing: false,
+    size: 100,
+  }),
+];
+
+const columnHistoryModal = [
+  columnHelper.accessor((row: any) => row["type"], {
+    id: "type",
+    header: "구분",
+    cell: (info) => <Text noOfLines={2}>{info.getValue()}</Text>,
+    size: 60,
+  }),
+  columnHelper.accessor((row: any) => row["title"], {
+    id: "title",
+    header: "제목",
+    cell: (info) => info.getValue(),
+    minSize: 120,
+  }),
+  columnHelper.accessor((row: any) => row["createdAt"], {
+    id: "createdAt",
+    header: "작성일",
+    cell: (info) => info.getValue(),
+    size: 100,
+  }),
+  columnHelper.display({
+    header: "상세보기",
+    cell: (info: any) => {
+      const { isOpen, onClose, onOpen } = useDisclosure();
+      const [fixmode, setFixMode] = useState(false);
+      const test = (val: any) => {
+        console.log(val);
+      };
+
+      return (
+        <>
+          <IcoBtnDetail data-text={"상세보기"} onClick={onOpen} />
+          {isOpen && (
+            <Drawer isOpen={isOpen} onClose={onClose} placement="right">
+              <DrawerOverlay
+                top="auto"
+                bottom="0"
+                h="calc(100vh - 2.875rem - 1px)"
+                zIndex={999}
+                onClick={() => {
+                  onClose();
+                }}
+              />
+              <DrawerContent
+                maxW="fit-content"
+                w="100%"
+                sx={{
+                  top: "auto!important",
+                  bottom: "0!important",
+                  h: "calc(100% - 2.875rem - 2px)",
+                }}
+                zIndex={9999}
+                pointerEvents={"all"}
+              >
+                <DrawerBody pos="relative" p="1rem 1.5rem" width="fit-content">
+                  <FormHistory
                     fixMode={fixmode}
                     initVal={info.row.original}
                     setValues={test}
@@ -796,6 +915,7 @@ export {
   columnRentInfo,
   columnClientInfo,
   columnHistory,
+  columnHistoryModal,
   columnDocs,
   columnNotice,
   columnRentNear,

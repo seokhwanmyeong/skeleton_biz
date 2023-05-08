@@ -1,5 +1,5 @@
 //  LIB
-import { useState, useRef } from "react";
+import { useState, useRef, Fragment } from "react";
 import {
   Input as ChakraInput,
   InputGroup,
@@ -767,12 +767,8 @@ const InputAddr = ({
   isReadOnly = false,
   isRequired = false,
 }: InpAddressProps) => {
-  const [address, setAddress] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const addressHandler = () => {
-    onChange();
-  };
   const handleComplete = (data: any) => {
     let fullAddress = data.address;
     let extraAddress = "";
@@ -796,22 +792,38 @@ const InputAddr = ({
   // };
 
   return (
-    <Flex minW={0} w="100%" h="100%" gap="0.25rem">
-      <ChakraInput
-        variant={variant}
-        isDisabled={true}
-        value={value}
-        onChange={() => {}}
-      />
-      <Button
-        isDisabled={isDisabled}
-        variant="search"
-        onClick={onOpen}
-        {...btnProps}
+    <Fragment>
+      <Flex
+        minW={0}
+        w="100%"
+        h="100%"
+        gap="0.25rem"
+        onClick={() => {
+          onOpen();
+        }}
       >
-        {hasIcon && <IcoSearch w="0.875rem" h="0.875rem" />}
-        검색
-      </Button>
+        <ChakraInput
+          variant={variant || "addr"}
+          value={value}
+          onClick={() => {
+            onOpen();
+          }}
+          placeholder="주소"
+          isDisabled={true}
+          _disabled={{
+            cursor: "pointer",
+          }}
+        />
+        <Button
+          isDisabled={isDisabled}
+          variant="search"
+          onClick={onOpen}
+          {...btnProps}
+        >
+          {hasIcon && <IcoSearch w="0.875rem" h="0.875rem" />}
+          검색
+        </Button>
+      </Flex>
       <ChakraModal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent w="auto" maxW="auto">
@@ -826,7 +838,7 @@ const InputAddr = ({
           </ModalBody>
         </ModalContent>
       </ChakraModal>
-    </Flex>
+    </Fragment>
   );
 };
 

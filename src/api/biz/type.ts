@@ -276,6 +276,36 @@ type TypeHistoryRentForm = {
   res: any;
 };
 
+type TypeChkCode = {
+  req: {
+    type: "store" | "bsDis";
+    code: string;
+  };
+  res: {
+    result: boolean;
+  };
+};
+
+type TypeSearchLinkStore = {
+  req: {
+    type: "store";
+    text: string;
+  };
+  res: {
+    result: boolean;
+  };
+};
+
+type TypeSearchLinkBsDis = {
+  req: {
+    type: "bsDis";
+    text: string;
+  };
+  res: {
+    result: boolean;
+  };
+};
+
 export type {
   BixApiInstance,
   TypeLogin,
@@ -297,4 +327,7 @@ export type {
   TypeHistoryRentList,
   TypeHistoryRentDetail,
   TypeHistoryRentForm,
+  TypeChkCode,
+  TypeSearchLinkStore,
+  TypeSearchLinkBsDis,
 };

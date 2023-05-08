@@ -40,7 +40,19 @@ import {
   atomSlctDong,
 } from "@src/states/sementicMap/stateMap";
 
-const NiceFilterDepth = ({ path }: { path: any }) => {
+const NiceFilterDepth = ({
+  areaInfo,
+}: {
+  areaInfo: {
+    areaType: "dong" | "polygon" | "circle" | null;
+    slctName: string;
+    slctCode?: string;
+    pathType?: string;
+    slctPath?: any[];
+    center?: any;
+    range?: any;
+  };
+}) => {
   const { getBrandList, getFlowPop } = apiMapNice;
   const divRef = useRef<HTMLDivElement | null>(null);
   const [openIdx, setOpenIdx] = useState(0);
@@ -55,37 +67,104 @@ const NiceFilterDepth = ({ path }: { path: any }) => {
 
   //  세부 유동인구 필터 변화 및 액티브
   const searchPopHandler = () => {
-    getFlowPop({
-      // ctyCd: sigungu.slctCode.slice(0, 4),
-      // admiCd: slctCode,
-      upjongCd: bot.code,
-      admiCd: "11110710",
-      ctyCd: "1111",
-    }).then((res: any) => {
-      console.log(res);
+    if (areaInfo.areaType === "dong" && areaInfo.slctCode) {
+      getFlowPop({
+        // ctyCd: sigungu.slctCode.slice(0, 4),
+        // admiCd: slctCode,
+        upjongCd: bot.code || "Q01005",
+        admiCd: "11110710",
+        ctyCd: "1111",
+      }).then((res: any) => {
+        console.log(res);
 
-      if (res.data && res.data.length > 0)
-        setFlowPop({ show: true, active: true, data: res.data || [] });
-    });
+        if (res.data && res.data.length > 0)
+          setFlowPop({ show: true, active: true, data: res.data || [] });
+      });
+    } else if (areaInfo.areaType === "polygon" && areaInfo.slctPath) {
+      console.log(areaInfo.slctPath);
+      if (areaInfo?.slctPath) {
+        const arr = areaInfo.slctPath.map((path: any) => {
+          return [path.x || path[0], path.y || path[1]];
+        });
+
+        getFlowPop({
+          upjongCd: bot.code || "Q01005",
+          wkt: [[[arr]]],
+        }).then((res: any) => {
+          console.log(res);
+
+          if (res.data && res.data.length > 0)
+            setFlowPop({ show: true, active: true, data: res.data || [] });
+        });
+      }
+    } else if (
+      areaInfo.areaType === "circle" &&
+      areaInfo.center &&
+      areaInfo.range
+    ) {
+      getFlowPop({
+        upjongCd: bot.code || "Q01005",
+        xAxis: areaInfo.center.x,
+        yAxis: areaInfo.center.y,
+        range: Number(areaInfo.range),
+      }).then((res: any) => {
+        console.log(res);
+
+        if (res.data && res.data.length > 0)
+          setFlowPop({ show: true, active: true, data: res.data || [] });
+      });
+    }
   };
 
   const searchBrandHandler = () => {
     // if (!bot.code || !bot.name || !sigungu?.slctCode || !slctCode) return;
     if (!bot.code || !bot.name) return;
+    console.log(areaInfo.areaType);
+    if (areaInfo.areaType === "dong" && areaInfo.slctCode) {
+      getBrandList({
+        // ctyCd: sigungu.slctCode.slice(0, 4),
+        // admiCd: slctCode,
+        upjongCd: bot.code,
+        admiCd: "11110710",
+        ctyCd: "1111",
+        pageNo: 1,
+      }).then((res: any) => {
+        console.log(res);
 
-    getBrandList({
-      // ctyCd: sigungu.slctCode.slice(0, 4),
-      // admiCd: slctCode,
-      upjongCd: bot.code,
-      admiCd: "11110710",
-      ctyCd: "1111",
-      pageNo: 1,
-    }).then((res: any) => {
-      console.log(res);
+        if (res.data && res.data.length > 0)
+          setBrandFilter({ show: true, active: true, data: res.data || [] });
+      });
+    } else if (areaInfo.areaType === "polygon" && areaInfo.slctPath) {
+      const arr = areaInfo.slctPath.map((path: any) => {
+        return [path.x || path[0], path.y || path[1]];
+      });
 
-      if (res.data && res.data.length > 0)
-        setBrandFilter({ show: true, active: true, data: res.data || [] });
-    });
+      getBrandList({
+        upjongCd: bot.code,
+        wkt: [[arr]],
+      }).then((res: any) => {
+        console.log(res);
+
+        if (res.data && res.data.length > 0)
+          setBrandFilter({ show: true, active: true, data: res.data || [] });
+      });
+    } else if (
+      areaInfo.areaType === "circle" &&
+      areaInfo.center &&
+      areaInfo.range
+    ) {
+      getBrandList({
+        upjongCd: bot.code,
+        xAxis: areaInfo.center.x,
+        yAxis: areaInfo.center.y,
+        range: Number(areaInfo.range),
+      }).then((res: any) => {
+        console.log(res);
+
+        if (res.data && res.data.length > 0)
+          setBrandFilter({ show: true, active: true, data: res.data || [] });
+      });
+    }
   };
 
   //  건물조회 필터 변화 및 액티브

@@ -21,7 +21,7 @@ import { SwitchFilter } from "@components/common/Switch";
 import ModalStoreEditor from "@components/modal/map/ModalStoreEditor";
 import ModalRentEditor from "@components/modal/map/ModalRentEditor";
 import ModalBsnsDEditor from "@components/modal/map/ModalBsnsDEditor";
-import DrawTools from "@components/sementicMapLayer/elementFilter/DrawTools";
+import DrawBox from "@components/sementicMapLayer/createDrawBox/DrawBox";
 //  Api
 import { apiErpMap } from "@api/biz/config";
 //  State
@@ -56,27 +56,23 @@ import type {
   TypeFilterRent,
 } from "@states/sementicMap/stateFilter";
 import type { TypeMapStoreInfo, TypeMapRentSearch } from "@api/biz/type";
+import { atomCreateArea } from "@src/states/sementicMap/stateMap";
 
 type ErpFilterProps = {
-  areaCode?: string;
-  path?: any;
-  isToolOpen: boolean;
-  toolOpen: (props?: any) => any;
+  editorOpen: boolean;
+  setEditorOpen: (props?: any) => any;
 };
 
-const ErpFilter = ({
-  isToolOpen,
-  toolOpen,
-  areaCode,
-  path,
-}: ErpFilterProps) => {
+const ErpFilter = ({ editorOpen, setEditorOpen }: ErpFilterProps) => {
   const { dispatch } = useContext(NaverMapContext);
   const divRef = useRef<HTMLDivElement | null>(null);
   const { getStoreList, getRentList, getBsDisList } = apiErpMap;
+  const resetCreateArea = useResetRecoilState(atomCreateArea);
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [openIdx, setOpenIdx] = useState(0);
   const [localModalIdx, setLocalModalIdx] = useState(0);
   const [modalIdx, setModalIdx] = useState(0);
+  const [isToolOpen, toolOpen] = useState<boolean>(false);
   const [erpStore, setErpStore] =
     useRecoilState<Infocome<TypeFilterStore>>(infoComErpStore);
   const [filterStore, setFilterStore] = useState<TypeFilterStore>(
@@ -89,26 +85,6 @@ const ErpFilter = ({
     useRecoilState<Infocome<TypeFilterRent>>(infoComErpRent);
   const [filterRent, setFilterRent] = useState<TypeFilterRent>(erpRent.filter);
   const reset = useResetRecoilState(resetErp);
-
-  const getCenter = (paths: [number, number][]): [number, number] => {
-    const arr = paths;
-    const length = arr.length;
-    let xcos = 0;
-    let ycos = 0;
-    let area = 0;
-
-    for (let i = 0, len = length, j = length - 1; i < len; j = i++) {
-      let p1 = arr[i];
-      let p2 = arr[j];
-
-      let f = p1[1] * p2[0] - p2[1] * p1[0];
-      xcos += (p1[0] + p2[0]) * f;
-      ycos += (p1[1] + p2[1]) * f;
-      area += f * 3;
-    }
-
-    return [xcos / area, ycos / area];
-  };
 
   //  매장 필터 검색
   const searchStoreHandler = () => {
@@ -155,12 +131,12 @@ const ErpFilter = ({
 
     getBsDisList(tmp).then((res) => {
       const { records } = res;
-      console.log(res);
 
       if (records && records.length > 0) {
         const checkList = records.filter((li: any) =>
           li.polygon_type ? true : false
         );
+
         const makeCenter = checkList.map((li: any) => {
           if (li.center) {
             return li;
@@ -175,6 +151,13 @@ const ErpFilter = ({
           active: true,
           show: true,
           data: makeCenter || [],
+        });
+      } else {
+        setErpBsD({
+          filter: filterBsD,
+          active: true,
+          show: true,
+          data: [],
         });
       }
     });
@@ -192,7 +175,6 @@ const ErpFilter = ({
 
     getRentList(tmp).then((res: { records: TypeMapRentSearch["res"][] }) => {
       const { records } = res;
-      console.log(res);
 
       records && records.length > 0
         ? setErpRent({
@@ -219,6 +201,7 @@ const ErpFilter = ({
     onClose();
     toolOpen(false);
     reset();
+    setEditorOpen(false);
     // setFilterStore()
     // setFilterBsD()
     // setFilterRent()
@@ -238,7 +221,6 @@ const ErpFilter = ({
       as={motion.div}
       ref={divRef}
       pos="absolute"
-      // bottom="6.15rem"
       left="50%"
       zIndex={999}
       transform="translateX(-50%)"
@@ -266,7 +248,14 @@ const ErpFilter = ({
     >
       {/* ============================== infoCom의 필터 버튼 ============================== */}
       {isToolOpen ? (
-        <DrawTools toolOpen={toolOpen} />
+        <Fragment>
+          <DrawBox
+            toolOpen={toolOpen}
+            setLocalModalIdx={setLocalModalIdx}
+            onOpen={onOpen}
+            onClose={onClose}
+          />
+        </Fragment>
       ) : (
         <Fragment>
           <Button
@@ -338,7 +327,7 @@ const ErpFilter = ({
         </Fragment>
       )}
       {/* ============================== infoCom의 필터 박스 ============================== */}
-      {openIdx === 1 ? (
+      {openIdx === 1 && !isToolOpen ? (
         <Flex
           pos="absolute"
           bottom={
@@ -524,7 +513,7 @@ const ErpFilter = ({
           </Flex>
           <DecoCardBg />
         </Flex>
-      ) : openIdx === 2 ? (
+      ) : openIdx === 2 && !isToolOpen ? (
         <Flex
           pos="absolute"
           bottom={
@@ -673,7 +662,7 @@ const ErpFilter = ({
           </Flex>
           <DecoCardBg />
         </Flex>
-      ) : openIdx === 3 ? (
+      ) : openIdx === 3 && !isToolOpen ? (
         <Flex
           pos="absolute"
           bottom={
@@ -822,7 +811,7 @@ const ErpFilter = ({
           </Flex>
           <DecoCardBg />
         </Flex>
-      ) : openIdx === 4 ? (
+      ) : openIdx === 4 && !isToolOpen ? (
         <Flex
           pos="absolute"
           bottom={
@@ -855,11 +844,14 @@ const ErpFilter = ({
                 variant="filterSearch"
                 aria-label="생성하기"
                 onClick={() => {
-                  setModalIdx(localModalIdx);
-                  onOpen();
-
+                  setEditorOpen(true);
                   if (localModalIdx === 2) {
+                    isOpen && onClose();
+                    setModalIdx(localModalIdx);
                     toolOpen(true);
+                  } else {
+                    setModalIdx(localModalIdx);
+                    onOpen();
                   }
                 }}
               >
@@ -892,7 +884,6 @@ const ErpFilter = ({
                   { text: "매장", value: 1 },
                   { text: "상권", value: 2 },
                   { text: "매물", value: 3 },
-                  // { text: "고객", value: 4 },
                 ]}
                 fieldKey="value"
                 value={localModalIdx}
@@ -912,21 +903,32 @@ const ErpFilter = ({
       {modalIdx === 1 && isOpen ? (
         <ModalStoreEditor
           onOpen={onOpen}
-          onClose={onClose}
+          onClose={() => {
+            onClose();
+            setEditorOpen(false);
+          }}
           isOpen={isOpen}
           setOpenIdx={setOpenIdx}
         />
       ) : modalIdx === 2 && isOpen ? (
         <ModalBsnsDEditor
           onOpen={onOpen}
-          onClose={onClose}
+          onClose={() => {
+            onClose();
+            setEditorOpen(false);
+            toolOpen(false);
+            resetCreateArea();
+          }}
           isOpen={isOpen}
           toolOpen={toolOpen}
         />
       ) : modalIdx === 3 && isOpen ? (
         <ModalRentEditor
           onOpen={onOpen}
-          onClose={onClose}
+          onClose={() => {
+            onClose();
+            setEditorOpen(false);
+          }}
           isOpen={isOpen}
           setOpenIdx={setOpenIdx}
         />

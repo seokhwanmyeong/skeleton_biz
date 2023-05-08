@@ -120,21 +120,31 @@ const NiceFilter = ({ areaCode }: Props) => {
         ...filter.options,
         ...transFilter({ type: "inflow", ...filterPop }),
       };
-
     if (resiPop.active)
       filter.options = {
         ...filter.options,
         ...transFilter({ type: "hous", ...filterResi }),
       };
-
     if (jobPop.active)
       filter.options = {
         ...filter.options,
         ...transFilter({ type: "job", ...filterJob }),
       };
-    if (sale.active) filter.options.admiSaleAmt = {};
-    if (upjongCnt.active) filter.options.storeCnt = {};
-    if (household.active) filter.options.housCnt = {};
+    if (sale.active)
+      filter.options = {
+        ...filter.options,
+        admiSaleAmt: {},
+      };
+    if (upjongCnt.active)
+      filter.options = {
+        ...filter.options,
+        storeCnt: {},
+      };
+    if (household.active)
+      filter.options = {
+        ...filter.options,
+        housCnt: {},
+      };
 
     switch (cate) {
       case "flow":
@@ -159,21 +169,30 @@ const NiceFilter = ({ areaCode }: Props) => {
         setJobPop({ filter: filterJob, show: true, active: true });
         break;
       case "house":
-        filter.options.housCnt = {};
+        filter.options = {
+          ...filter.options,
+          housCnt: {},
+        };
         setHouse({ show: true, active: true });
         break;
       case "upjong":
-        filter.options.storeCnt = {};
+        filter.options = {
+          ...filter.options,
+          storeCnt: {},
+        };
         setUpjong({ show: true, active: true });
         break;
       case "sale":
-        filter.options.admiSaleAmt = {};
+        filter.options = {
+          ...filter.options,
+          admiSaleAmt: {},
+        };
         setSale({ show: true, active: true });
         break;
       default:
         break;
     }
-
+    console.log("click");
     getSigunguRank(filter).then((res: any) => {
       if (res?.data?.rank && res?.data?.rank.length > 0) {
         setRank(res?.data?.rank);

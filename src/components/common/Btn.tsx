@@ -348,13 +348,13 @@ const IcoBtnDetail = ({ onClick, isDisabled, ...rest }: BtnProps) => {
   );
 };
 
-const IcoBtnPrev = ({ onClick, isDisabled, ...rest }: BtnProps) => {
+const IcoBtnPrev = ({ onClick, isDisabled, svgprop, ...rest }: BtnProps) => {
   return (
     <IconButton
       onClick={onClick}
       isDisabled={isDisabled}
       aria-label="이전 슬라이드"
-      icon={<IcoArrowBack />}
+      icon={<IcoArrowBack {...svgprop} />}
       w="1rem"
       h="1rem"
       bg="transparent"
@@ -367,13 +367,13 @@ const IcoBtnPrev = ({ onClick, isDisabled, ...rest }: BtnProps) => {
   );
 };
 
-const IcoBtnNext = ({ onClick, isDisabled, ...rest }: BtnProps) => {
+const IcoBtnNext = ({ onClick, isDisabled, svgprop, ...rest }: BtnProps) => {
   return (
     <IconButton
       onClick={onClick}
       isDisabled={isDisabled}
       aria-label="다음슬라이드"
-      icon={<IcoArrowBack />}
+      icon={<IcoArrowBack {...svgprop} />}
       w="1rem"
       h="1rem"
       bg="transparent"

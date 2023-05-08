@@ -8,13 +8,17 @@ import {
   DrawerContent,
   Button,
   Heading,
+  DrawerHeader,
+  IconButton,
+  DrawerFooter,
+  useDisclosure,
 } from "@chakra-ui/react";
 //  Components
 import FormBsnsD from "@components/form/map/FormBsnsD";
 //  State
 import { atomCreateArea } from "@states/sementicMap/stateMap";
 //  Icon
-import { IcoCheck, IcoCloseCircle, IcoPlusSquare } from "@assets/icons/icon";
+import { IcoLeft, IcoPlusCircle } from "@assets/icons/icon";
 import { Deco01 } from "@assets/deco/DecoSvg";
 //  Type
 import { FormikValues } from "formik";
@@ -40,11 +44,15 @@ type BsnsDisInfo = {
 const ModalBsnsDEditor = ({ isOpen, onOpen, onClose, toolOpen }: Props) => {
   const createdArea = useRecoilValue(atomCreateArea);
   const submitRef = useRef<FormikValues>(null);
-
+  const {
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
+  } = useDisclosure();
   const [initData, setInitData] = useState<BsnsDisInfo>({
     bsDisName: "",
     bsDisCode: "",
-    bsDisType: undefined,
+    bsDisType: "A",
     polygon: "",
     lat: 0,
     lng: 0,
@@ -52,15 +60,24 @@ const ModalBsnsDEditor = ({ isOpen, onOpen, onClose, toolOpen }: Props) => {
     linkStore: [],
   });
 
-  const submitHandler = () => {
+  const submitHandler = useCallback(() => {
     console.log("submit start");
-    submitRef?.current && submitRef.current.handleSubmit();
-  };
+    console.log(submitRef.current);
+    if (submitRef?.current) {
+      const { errors, touched } = submitRef.current;
+      if (Object.keys(touched).length > 0 || !errors) {
+        submitRef?.current && submitRef.current.handleSubmit();
+      } else {
+        submitRef?.current && submitRef.current.handleSubmit();
+        !isAlertOpen && onAlertOpen();
+      }
+    }
+  }, [submitRef.current]);
 
   const createBsnsDis = (val: BsnsDisInfo) => {
     console.log("create start");
     const { bsDisName, bsDisCode, bsDisType } = val;
-    const { path, center } = createdArea;
+    const { pathType, path, center, range } = createdArea;
     console.log(val);
     console.log(createdArea);
 
@@ -73,8 +90,7 @@ const ModalBsnsDEditor = ({ isOpen, onOpen, onClose, toolOpen }: Props) => {
       return;
     }
 
-    toolOpen(false);
-    onClose();
+    closeHandler();
   };
 
   const closeHandler = () => {
@@ -83,55 +99,42 @@ const ModalBsnsDEditor = ({ isOpen, onOpen, onClose, toolOpen }: Props) => {
   };
 
   return (
-    <Drawer isOpen={isOpen} onClose={onClose} placement="right">
-      <DrawerContent maxW="fit-content">
-        <DrawerBody pos="relative" p="0" width="18.5rem">
-          <Flex justify="space-between">
-            <Flex p="0 0.5rem" align="center" gap="1rem">
-              <IcoPlusSquare
-                width="0.875rem"
-                height="0.875rem"
-                color="primary.type7"
-              />
-              <Heading
-                as={"h5"}
-                fontSize="sm"
-                lineHeight="normal"
-                color="font.title"
-                bg="none"
-              >
-                상권 등록
-              </Heading>
-            </Flex>
-            <Flex gap="0.5rem">
-              <Button variant="filterSearch" zIndex={1} onClick={submitHandler}>
-                <IcoCheck />
-                상권생성
-              </Button>
-              <Button
-                variant="filterSearch"
-                bgColor="#FFFFFF"
-                border="1px solid"
-                borderColor="primary.type7"
-                color="primary.type7"
-                _hover={{
-                  bgColor: "primary.type7",
-                  color: "#FFFFFF",
-                }}
-                zIndex={1}
-                onClick={closeHandler}
-              >
-                <IcoCloseCircle />
-                취소
-              </Button>
-            </Flex>
+    <Drawer isOpen={isOpen} onClose={closeHandler} placement="right">
+      <DrawerContent p="1rem 1.5625rem" maxW="25.3125rem" w="25.3125rem">
+        <DrawerHeader pos="relative" p="0">
+          <Flex direction="column" justify="center" align="center" gap="1rem">
+            <IconButton
+              aria-label="생성 취소"
+              onClick={onClose}
+              icon={
+                <IcoLeft
+                  width="1.25rem"
+                  height="1.25rem"
+                  color="font.primary"
+                />
+              }
+              position="absolute"
+              top="0.125rem"
+              left="0rem"
+              bg="transparent"
+              color="font.primary"
+              _hover={{
+                bg: "transparent",
+              }}
+            />
+            <Heading
+              as={"h5"}
+              fontSize="md"
+              lineHeight="normal"
+              color="font.primary"
+              bg="none"
+            >
+              상권 등록
+            </Heading>
           </Flex>
-          <Deco01
-            margin="0.25rem 0 1.3125rem"
-            p="0"
-            width="100%"
-            height="auto"
-          />
+          <Deco01 margin="0.5rem 0 1.3125rem" width="100%" height="auto" />
+        </DrawerHeader>
+        <DrawerBody pos="relative" p="0" width="100%">
           <FormBsnsD
             fixMode={true}
             initVal={initData}
@@ -139,6 +142,17 @@ const ModalBsnsDEditor = ({ isOpen, onOpen, onClose, toolOpen }: Props) => {
             ref={submitRef}
           />
         </DrawerBody>
+        <DrawerFooter justifyContent="center">
+          <Button
+            variant="modalSubmit"
+            w="80%"
+            zIndex={1}
+            onClick={submitHandler}
+          >
+            <IcoPlusCircle />
+            상권생성
+          </Button>
+        </DrawerFooter>
       </DrawerContent>
     </Drawer>
   );

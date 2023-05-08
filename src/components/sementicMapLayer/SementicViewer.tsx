@@ -53,7 +53,16 @@ const SementicViewer = () => {
       />
     );
   } else if (viewId === "eval") {
-    return <Report />;
+    return (
+      <Report
+        props={props}
+        isOpen={isOpen}
+        onClose={() => {
+          onClose();
+          reset();
+        }}
+      />
+    );
   } else {
     return null;
   }

@@ -213,7 +213,7 @@ const DrawPolygon = (props: Props) => {
         if (e.latlng) setCursorPo(e.latlng);
         const path: any = polyRef.current?.getPath();
         let distance = calcPolyDistance(path._array);
-        setDistance(distance);
+        setDistance(distance / 2);
 
         if (path.length === 1) {
           const marker = new naver.maps.Marker({
@@ -360,7 +360,7 @@ const DrawPolygon = (props: Props) => {
                 >
                   그리기
                 </Text>
-                {distance <= 1000 ? (
+                {distance?.toFixed(2) <= 2000 ? (
                   <Text
                     textStyle="base"
                     fontSize="sm"
@@ -395,7 +395,7 @@ const DrawPolygon = (props: Props) => {
               >
                 <Text>다시 그리기</Text>
               </Button>
-              {distance <= 1000 && (
+              {distance <= 2000 && (
                 <Button
                   variant="infoBox"
                   aria-label="영역확정"
@@ -419,6 +419,7 @@ const DrawPolygon = (props: Props) => {
                       center?._lat,
                       (result: any) => {
                         setSlceCustom({
+                          areaType: "polygon",
                           slctName: result[0].address_name || "",
                           slctPath: path._array,
                           range: undefined,
@@ -448,7 +449,7 @@ const DrawPolygon = (props: Props) => {
             icon: {
               url: markerWithPoint,
               size: new naver.maps.Size(50, 50),
-              anchor: new naver.maps.Point(17, 47),
+              anchor: new naver.maps.Point(17, 50),
             },
             clickable: false,
           }}
@@ -491,11 +492,11 @@ const DrawPolygon = (props: Props) => {
                 fontWeight="strong"
                 lineHeight="normal"
                 transition="0.3s"
-                color={distance > 1000 ? "system.default.red" : "font.primary"}
+                color={distance > 2000 ? "system.default.red" : "font.primary"}
               >
-                그리기 (반경: {distance?.toFixed(2) * 2}m)
+                그리기 (반경: {distance?.toFixed(2)}m)
               </Text>
-              {distance > 1000 && (
+              {distance?.toFixed(2) > 2000 && (
                 <Text
                   textStyle="base"
                   fontSize="sm"
@@ -503,7 +504,9 @@ const DrawPolygon = (props: Props) => {
                   lineHeight="normal"
                   transition="0.3s"
                   color={
-                    distance > 1000 ? "system.default.red" : "font.primary"
+                    distance?.toFixed(2) > 2000
+                      ? "system.default.red"
+                      : "font.primary"
                   }
                 >
                   반경 2000m를 넘기실 수 없습니다.

@@ -78,6 +78,75 @@ const themeInput = {
         },
       },
     },
+    modalEditor: {
+      field: {
+        zIndex: "1",
+        w: "100%",
+        h: "1.5rem",
+        bgColor: "neutral.gray1",
+        border: "1px solid",
+        borderColor: "neutral.gray5",
+        textStyle: "base",
+        fontSize: "sm",
+        fontWeight: "regular",
+        _hover: { borderColor: "primary.type6" },
+        _focus: {
+          borderColor: "primary.type6",
+          boxShadow: "none",
+        },
+        _focusVisible: {
+          borderColor: "primary.type6",
+          boxShadow: "none",
+        },
+        _invalid: {
+          boxShadow: "none",
+          borderColor: "system.default.red",
+        },
+        _autofill: {
+          boxShadow: "0 0 0px 1000px #FFFFFF inset",
+        },
+        _placeholder: {
+          fontSize: "sm",
+          color: "font.placeholder",
+        },
+      },
+    },
+    addr: {
+      field: {
+        zIndex: "1",
+        w: "100%",
+        h: "1.5rem",
+        bgColor: "neutral.gray3",
+        border: "1px solid",
+        borderColor: "neutral.gray5",
+        textStyle: "base",
+        fontSize: "sm",
+        fontWeight: "regular",
+        _hover: { borderColor: "primary.type6" },
+        _focus: {
+          borderColor: "primary.type6",
+          boxShadow: "none",
+        },
+        _focusVisible: {
+          borderColor: "primary.type6",
+          boxShadow: "none",
+        },
+        _invalid: {
+          boxShadow: "none",
+          borderColor: "system.default.red",
+        },
+        _autofill: {
+          boxShadow: "0 0 0px 1000px #FFFFFF inset",
+        },
+        _placeholder: {
+          fontSize: "sm",
+          color: "font.placeholder",
+        },
+        _disabled: {
+          cursor: "pointer",
+        },
+      },
+    },
     form: {},
     pwd: {
       field: {},

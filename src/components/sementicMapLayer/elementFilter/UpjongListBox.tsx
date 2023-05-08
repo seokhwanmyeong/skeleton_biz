@@ -1,6 +1,6 @@
 //  Lib
 import { useState, useEffect, Fragment } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
   Accordion,
   AccordionButton,
@@ -16,10 +16,12 @@ import {
 } from "@chakra-ui/react";
 //  State
 import {
+  atomFilterFlow,
   atomUpjongBotList,
   atomUpjongMidList,
   atomUpjongState,
   atomUpjongTopList,
+  refUpjongActiveGetter,
 } from "@states/sementicMap/stateFilter";
 //  Api
 import { apiUpjong } from "@api/biz/config";
@@ -40,6 +42,7 @@ import {
   DecoBoxR,
   DecoTopFilterModal,
 } from "@components/sementicMapLayer/elementDeco/Deco";
+import { DialogAlertUpjong } from "@src/components/dialog/DialogAlertModal";
 
 type Props = {
   isOpen?: boolean;
@@ -56,9 +59,16 @@ const UpjongListBox = ({
 }: Props) => {
   const { getTopList, getMidList, getBotList } = apiUpjong;
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
+  } = useDisclosure();
   const [tabIdx, setTabIdx] = useState(0);
   const [{ top, mid, bot }, setUpjong] = useRecoilState(atomUpjongState);
   const [topList, setTopList] = useRecoilState(atomUpjongTopList);
+  const flow = useRecoilValue(atomFilterFlow);
+  const { brand, upjongCnt, sale } = useRecoilValue(refUpjongActiveGetter);
   const [midList, setMidList] = useRecoilState(atomUpjongMidList);
   const [botList, setBotList] = useRecoilState(atomUpjongBotList);
   const [localUpjong, setLocal] = useState({
@@ -76,7 +86,7 @@ const UpjongListBox = ({
     },
   });
 
-  const upjongIcon = {
+  const upjongIcon: any = {
     D: <IcoUpjongTop1 />,
     F: <IcoUpjongTop2 />,
     Q: <IcoUpjongTop3 />,
@@ -190,9 +200,14 @@ const UpjongListBox = ({
               >
                 {localUpjong.top.name ? localUpjong.top.name : "대분류"}
               </AccordionButton>
-              <Divider m="0.25rem 0rem 1rem" borderColor="neutral.gray6" />
-              <AccordionPanel>
-                <Flex justify="space-between" align="center" w="100%">
+              <Divider m="0.25rem 0rem 0.75rem" borderColor="neutral.gray6" />
+              <AccordionPanel overflow="visible">
+                <Flex
+                  pt="0.375rem"
+                  justify="space-between"
+                  align="center"
+                  w="100%"
+                >
                   {topList?.map(
                     ({
                       name,
@@ -305,23 +320,32 @@ const UpjongListBox = ({
                             isActive={localUpjong.bot.code === code}
                             key={`key-${code}`}
                             onClick={() => {
-                              setLocal({
-                                top: localUpjong.top,
-                                mid: localUpjong.mid,
-                                bot: {
-                                  name: name,
-                                  code: code,
-                                },
-                              });
-                              setUpjong({
-                                top: localUpjong.top,
-                                mid: localUpjong.mid,
-                                bot: {
-                                  name: name,
-                                  code: code,
-                                },
-                              });
-                              onClose();
+                              if (
+                                (flow === "dong" ||
+                                  flow === "custom" ||
+                                  flow === "sigungu") &&
+                                (brand || upjongCnt || sale)
+                              ) {
+                                setLocal({
+                                  top: localUpjong.top,
+                                  mid: localUpjong.mid,
+                                  bot: {
+                                    name: name,
+                                    code: code,
+                                  },
+                                });
+                                onAlertOpen();
+                              } else {
+                                setUpjong({
+                                  top: localUpjong.top,
+                                  mid: localUpjong.mid,
+                                  bot: {
+                                    name: name,
+                                    code: code,
+                                  },
+                                });
+                                onClose();
+                              }
                             }}
                           >
                             {name}
@@ -330,28 +354,6 @@ const UpjongListBox = ({
                       }
                     )}
                 </Grid>
-                {/* {tabIdx === 2 && (
-                  <Button
-                    variant="slctUpjong"
-                    isDisabled={
-                      !(localUpjong.top && localUpjong.mid && localUpjong.bot)
-                    }
-                    onClick={() => {
-                      if (
-                        localUpjong.top &&
-                        localUpjong.mid &&
-                        localUpjong.bot
-                      ) {
-                        setUpjong(localUpjong);
-                        onClose();
-                      } else {
-                        alert("업종을 선택해주세요");
-                      }
-                    }}
-                  >
-                    설정완료
-                  </Button>
-                )} */}
               </AccordionPanel>
             </AccordionItem>
           </Accordion>
@@ -375,6 +377,17 @@ const UpjongListBox = ({
           />
         </DecoTopFilterModal>
       )}
+      <DialogAlertUpjong
+        icon={upjongIcon[localUpjong.top.code]}
+        name={localUpjong.bot.name}
+        isOpen={isAlertOpen}
+        onClose={onAlertClose}
+        onClick={() => {
+          onAlertClose();
+          setUpjong(localUpjong);
+          onClose();
+        }}
+      />
     </Fragment>
   );
 };

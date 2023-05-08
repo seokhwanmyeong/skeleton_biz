@@ -22,13 +22,16 @@ import FormRentEditore from "@src/components/form/erp/FormRentEditore";
 export type RentInfo = {
   rentName: string;
   rentType?: "A" | "B" | "C" | "D" | "E";
+  availableDay?: string;
   curUpjong: string;
-  size: number;
+  realArea: number;
   floor: number;
   rentalFee: number;
   depositFee: number;
   premiumFee: number;
   manageFee: number;
+  addr: string;
+  addrDetail?: string;
   img?: [];
   lat: number;
   lng: number;
@@ -42,13 +45,16 @@ const ErpRentCreate = () => {
   const [rentData, setRentData] = useState<RentInfo>({
     rentName: "",
     rentType: undefined,
+    availableDay: "",
     curUpjong: "",
-    size: 0,
+    realArea: 0,
     floor: 0,
     rentalFee: 0,
     depositFee: 0,
     premiumFee: 0,
     manageFee: 0,
+    addr: "",
+    addrDetail: "",
     img: [],
     lat: 0,
     lng: 0,

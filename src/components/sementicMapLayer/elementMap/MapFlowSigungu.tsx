@@ -124,14 +124,14 @@ const MapFlowSigungu = (props: Props) => {
             );
           }
         )}
-      {sigungu && dongli.length !== 0 ? (
+      {/* {sigungu && dongli.length !== 0 ? (
         <GuPanel
           range={range}
           dongList={dongli}
           onClickArea={onClickArea}
           selectDong={slctDong}
         />
-      ) : null}
+      ) : null} */}
     </>
   );
 };

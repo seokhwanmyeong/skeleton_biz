@@ -23,7 +23,7 @@ const SementicMap = (props: Props) => {
 
   return (
     <Box position="relative" w="100vw" h="100%">
-      {flow !== "init" && flow !== "find" && (
+      {flow !== "init" && flow !== "find" && flow !== "erp" && (
         <DecoFilterBg top="4px" left="50%" transform="translateX(-50%)" />
       )}
       <Map

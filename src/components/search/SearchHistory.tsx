@@ -8,11 +8,15 @@ import { Select } from "@components/common/Select";
 import { IcoSearch } from "@assets/icons/icon";
 
 const SearchHistory = ({
+  width,
   initVal,
   setValues,
+  onClick,
 }: {
+  width?: string;
   initVal: any;
   setValues: any;
+  onClick?: any;
 }) => {
   return (
     <Formik
@@ -20,16 +24,17 @@ const SearchHistory = ({
       onSubmit={(values) => {
         if (values && setValues !== undefined) {
           setValues(values);
+          onClick(values);
         }
       }}
     >
       {({ handleSubmit, errors, touched, getFieldProps, setFieldValue }) => {
         return (
-          <Form onSubmit={handleSubmit} style={{ width: "100%" }}>
+          <Form onSubmit={handleSubmit} style={{ width: width || "100%" }}>
             <Flex w="100%" direction="row" gap="1rem">
               <FormControl variant="search">
                 <Flex align="center" w="100%" gap="0.5rem">
-                  <FormLabel w="3rem">검색어</FormLabel>
+                  <FormLabel w="3rem">검색</FormLabel>
                   <Select
                     variant="search"
                     data={[
@@ -41,7 +46,7 @@ const SearchHistory = ({
                     opBaseTxt="text"
                     opBaseId="value"
                     opBaseKey="value"
-                    onChange={(val: any) => setFieldValue("dataType", val)}
+                    onChange={(val: any) => setFieldValue("historyType", val)}
                     selectProps={{ w: "5rem", flex: "none" }}
                   />
                   <Select
@@ -72,6 +77,7 @@ const SearchHistory = ({
                   <Button
                     type="submit"
                     variant="search"
+                    lineHeight="2px"
                     onClick={() => {
                       handleSubmit();
                     }}

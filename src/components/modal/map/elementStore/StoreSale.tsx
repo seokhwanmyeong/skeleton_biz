@@ -167,7 +167,7 @@ const StoreSale = (props: Props) => {
 
   return (
     <Flex w="100%" h="100%" direction="column">
-      <Flex
+      {/* <Flex
         position="relative"
         mb="1.5rem"
         w="100%"
@@ -203,7 +203,7 @@ const StoreSale = (props: Props) => {
             }}
           />
         </Flex>
-      </Flex>
+      </Flex> */}
       <Flex
         mb="1.875rem"
         flex="none"
@@ -381,7 +381,7 @@ const StoreSale = (props: Props) => {
                 borderColor="primary.type4"
                 fontFamily="main"
                 fontSize="xs"
-                lineHeight="1px"
+                lineHeight="2px"
                 color="primary.type7"
               >
                 매장
@@ -494,18 +494,18 @@ const StoreSale = (props: Props) => {
             <Flex w="5rem" justify="center">
               <Flex
                 position="relative"
-                p="3 0.5rem"
+                p="0.5rem"
                 display="flex"
                 w="fit-content"
                 h="1.375rem"
                 align="center"
-                bgColor="secondary.second1.type1"
+                bgColor="secondary.second.type1"
                 border="1px solid"
-                borderColor="secondary.second1.type3"
+                borderColor="secondary.second.type3"
                 fontFamily="main"
                 fontSize="xs"
-                lineHeight="1px"
-                color="secondary.second1.type6"
+                lineHeight="2px"
+                color="secondary.second.type6"
               >
                 브랜드
               </Flex>
@@ -549,8 +549,9 @@ const StoreSale = (props: Props) => {
                 actviePage={false}
                 activeCheck={false}
                 divide={3}
+                registersPerPage={3}
                 columns={columnMenu}
-                tdH="2rem"
+                tdH="1.5rem"
               />
               {brand && (
                 <Table
@@ -558,8 +559,9 @@ const StoreSale = (props: Props) => {
                   actviePage={false}
                   activeCheck={false}
                   divide={3}
+                  registersPerPage={3}
                   columns={columnMenu}
-                  tdH="2rem"
+                  tdH="1.5rem"
                 />
               )}
             </Flex>
@@ -571,8 +573,9 @@ const StoreSale = (props: Props) => {
                 actviePage={false}
                 activeCheck={false}
                 divide={3}
+                registersPerPage={3}
                 columns={columnTime}
-                tdH="2rem"
+                tdH="1.5rem"
               />
               {brand && (
                 <Table
@@ -580,8 +583,9 @@ const StoreSale = (props: Props) => {
                   actviePage={false}
                   activeCheck={false}
                   divide={3}
+                  registersPerPage={3}
                   columns={columnTime}
-                  tdH="2rem"
+                  tdH="1.5rem"
                 />
               )}
             </Flex>
@@ -593,8 +597,9 @@ const StoreSale = (props: Props) => {
                 actviePage={false}
                 activeCheck={false}
                 divide={3}
+                registersPerPage={3}
                 columns={columnDay}
-                tdH="2rem"
+                tdH="1.5rem"
               />
               {brand && (
                 <Table
@@ -602,8 +607,9 @@ const StoreSale = (props: Props) => {
                   actviePage={false}
                   activeCheck={false}
                   divide={3}
+                  registersPerPage={3}
                   columns={columnDay}
-                  tdH="2rem"
+                  tdH="1.5rem"
                 />
               )}
             </Flex>
@@ -615,8 +621,9 @@ const StoreSale = (props: Props) => {
                 actviePage={false}
                 activeCheck={false}
                 divide={3}
+                registersPerPage={3}
                 columns={columnType}
-                tdH="2rem"
+                tdH="1.5rem"
               />
               {brand && (
                 <Table
@@ -624,8 +631,9 @@ const StoreSale = (props: Props) => {
                   actviePage={false}
                   activeCheck={false}
                   divide={3}
+                  registersPerPage={3}
                   columns={columnType}
-                  tdH="2rem"
+                  tdH="1.5rem"
                 />
               )}
             </Flex>
@@ -715,9 +723,9 @@ const LineChart = ({ store, brand }: { store: any[]; brand: any[] }) => {
         },
         pointStyle: "circle",
         pointBorderWidth: 1,
-        pointRadius: 3,
+        pointRadius: 2,
         pointhoverRadius: 6,
-        pointBackgroundColor: "#e4ff0080",
+        pointBackgroundColor: "#e4ff00",
         pointBorderColor: "#00000080",
       },
       {
@@ -731,7 +739,7 @@ const LineChart = ({ store, brand }: { store: any[]; brand: any[] }) => {
         },
         pointStyle: "circle",
         pointBorderWidth: 1,
-        pointRadius: 3,
+        pointRadius: 2,
         pointhoverRadius: 6,
         pointBackgroundColor: "#ffffff",
         pointBorderColor: "#00000080",
@@ -740,13 +748,13 @@ const LineChart = ({ store, brand }: { store: any[]; brand: any[] }) => {
   };
 
   return (
-    <Flex w="100%" h="10vh" justify="center" flex={1}>
+    <Flex w="100%" justify="center" flex={1}>
       <Line
         id="saleChart"
         options={options}
         // @ts-ignore
         data={data}
-        style={{ width: "100%", height: "500px" }}
+        style={{ width: "100%", height: "30vh" }}
       />
     </Flex>
   );

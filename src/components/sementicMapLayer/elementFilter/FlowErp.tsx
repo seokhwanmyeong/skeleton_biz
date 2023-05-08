@@ -1,7 +1,7 @@
 //  Lib
-import { Fragment, useContext, useState } from "react";
+import { Fragment, useContext, useState, useEffect } from "react";
 import { Box, Button, Flex, useDisclosure } from "@chakra-ui/react";
-import { NaverMapContext } from "@src/lib/src";
+import { Marker, NaverMapContext } from "@src/lib/src";
 //  Component
 import ErpFilter from "@components/sementicMapLayer/elementFilter/ErpFilter";
 import BtnReset from "@components/sementicMapLayer/elementFilter/BtnReset";
@@ -9,9 +9,11 @@ import ModalDaumAddr from "@components/modal/common/ModalDaumAddr";
 import ToolBox from "@components/sementicMapLayer/toolBox/ToolBox";
 //  Icon
 import { IcoDoubleSquere } from "@assets/icons/icon";
+import marker from "@assets/icons/marker.png";
 //  Deco
 import {
   DecoBotHightBox,
+  DecoFilterBg,
   DecoFilterDivider,
   DecoTop,
 } from "@components/sementicMapLayer/elementDeco/Deco";
@@ -26,9 +28,16 @@ const FlowErp = () => {
     getHistoryRentDetail,
     createHistoryRent,
   } = erpHistoryApi;
-  const { state, dispatch } = useContext(NaverMapContext);
+  const { state } = useContext(NaverMapContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [isToolOpen, toolOpen] = useState(false);
+  const [editorOpen, setEditorOpen] = useState<boolean>(false);
+  const [addr, setAddr] = useState<{
+    name: string;
+    point: [number, number] | null;
+  }>({
+    name: "",
+    point: null,
+  });
 
   const setAddrCenter = (val: any) => {
     // @ts-ignore
@@ -37,8 +46,8 @@ const FlowErp = () => {
 
     geocoder.addressSearch(address, (result: any, status: any) => {
       if (status === "OK") {
-        const { x, y } = result[0];
-
+        const { x, y, address_name } = result[0];
+        console.log(result[0]);
         state.map?.setOptions({
           zoom: 15,
           center: {
@@ -46,6 +55,9 @@ const FlowErp = () => {
             lng: x,
           },
         });
+
+        setAddr({ name: address_name, point: [y, x] });
+        onClose();
       }
     });
   };
@@ -53,7 +65,10 @@ const FlowErp = () => {
   return (
     <Fragment>
       {/* ------------------------------ 상단 ------------------------------*/}
-      {!isToolOpen && (
+      {!editorOpen && (
+        <DecoFilterBg top="4px" left="50%" transform="translateX(-50%)" />
+      )}
+      {!editorOpen && (
         <Flex
           pos="absolute"
           top="1%"
@@ -77,7 +92,7 @@ const FlowErp = () => {
                   isOpen ? onClose() : onOpen();
                 }}
               >
-                주소를 검색하세요
+                {addr?.name || "주소를 검색하세요"}
               </Button>
               <ModalDaumAddr
                 isOpen={isOpen}
@@ -105,7 +120,7 @@ const FlowErp = () => {
         </Button>
         <DecoFilterDivider />
         <BtnReset />
-        <Button
+        {/* <Button
           variant="filterTop"
           isActive={true}
           onClick={() => {
@@ -194,10 +209,24 @@ const FlowErp = () => {
           }}
         >
           매물 생성
-        </Button>
+        </Button> */}
       </DecoBotHightBox>
-      <ErpFilter isToolOpen={isToolOpen} toolOpen={toolOpen} />
+      <ErpFilter editorOpen={editorOpen} setEditorOpen={setEditorOpen} />
       <ToolBox />
+      {!editorOpen && addr?.point && (
+        <Marker
+          key={`markerAddr`}
+          id={`markerAddr`}
+          opts={{
+            position: new naver.maps.LatLng(addr.point[0], addr.point[1]),
+            icon: {
+              url: marker,
+              size: new naver.maps.Size(18, 26),
+              anchor: new naver.maps.Point(9, 26),
+            },
+          }}
+        />
+      )}
     </Fragment>
   );
 };

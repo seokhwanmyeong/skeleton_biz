@@ -298,7 +298,7 @@ const DrawRange = () => {
             top="0.5rem"
             left="0.5rem"
             p="1rem"
-            w={distance <= 1000 ? "13rem" : "20rem"}
+            w={distance <= 2000 ? "13rem" : "20rem"}
             direction="column"
             gap="0.5rem"
             bgColor="#FFFFFFD9"
@@ -329,7 +329,7 @@ const DrawRange = () => {
                 >
                   반경
                 </Text>
-                {distance <= 1000 ? (
+                {distance <= 2000 ? (
                   <Text
                     textStyle="base"
                     fontSize="sm"
@@ -364,7 +364,7 @@ const DrawRange = () => {
               >
                 <Text>다시 그리기</Text>
               </Button>
-              {distance <= 1000 && (
+              {distance <= 2000 && (
                 <Button
                   variant="infoBox"
                   aria-label="영역확정"
@@ -385,11 +385,12 @@ const DrawRange = () => {
                       center?._lat,
                       (result: any) => {
                         setSlceCustom({
+                          areaType: "circle",
                           slctName: result[0].address_name || "",
+                          pathType: "circle",
                           slctPath: bounds,
                           range: range,
                           center: center,
-                          pathType: "circle",
                         });
                         onConClose();
                         resetAllElement();
@@ -445,11 +446,11 @@ const DrawRange = () => {
                 fontWeight="strong"
                 lineHeight="normal"
                 transition="0.3s"
-                color={distance > 1000 ? "system.default.red" : "font.primary"}
+                color={distance > 2000 ? "system.default.red" : "font.primary"}
               >
-                반경 {distance * 2}m
+                반경 {distance}m
               </Text>
-              {distance > 1000 && (
+              {distance > 2000 && (
                 <Text
                   textStyle="base"
                   fontSize="sm"
@@ -457,7 +458,7 @@ const DrawRange = () => {
                   lineHeight="normal"
                   transition="0.3s"
                   color={
-                    distance > 1000 ? "system.default.red" : "font.primary"
+                    distance > 2000 ? "system.default.red" : "font.primary"
                   }
                 >
                   반경 2000m를 넘기실 수 없습니다.

@@ -18,8 +18,6 @@ import {
 import StoreBasicInfo from "@components/modal/map/elementStore/StoreBasicInfo";
 import StoreSale from "@components/modal/map/elementStore/StoreSale";
 import ElementHistory from "@components/modal/map/elementCommon/ElementHistory";
-import StoreDoc from "@components/modal/map/elementStore/StoreDoc";
-
 //  Api
 import { apiErpMap } from "@api/biz/config";
 //  Deco
@@ -98,40 +96,80 @@ const ModalStoreDetail = ({ id, name, isOpen, onClose }: Props) => {
               index={tabIdx}
               onChange={(index) => setTabIdx(index)}
             >
-              <TabList>
-                <Tab key="tab-info">
+              <TabList
+                mb="1.25rem"
+                w="100%"
+                justifyContent="center"
+                borderBottom="1px solid"
+                borderColor="neutral.gray6"
+              >
+                <Tab
+                  key="tab-info"
+                  p="0 1rem 0.5rem"
+                  _before={{
+                    content: '""',
+                    position: "absolute",
+                    bottom: "5px",
+                    display: "inline-block",
+                    w: "100%",
+                    h: "3px",
+                    opacity: 0,
+                    bgColor: "primary.type7",
+                    transition: "all linear 0.3s 0s",
+                  }}
+                >
                   <IcoBars />
                   <Text>기본 정보</Text>
                 </Tab>
-                <Tab key="tab-sale" isDisabled={false}>
+                <Tab
+                  key="tab-sale"
+                  isDisabled={false}
+                  p="0 1rem 0.5rem"
+                  _before={{
+                    content: '""',
+                    position: "absolute",
+                    bottom: "5px",
+                    display: "inline-block",
+                    w: "100%",
+                    h: "3px",
+                    opacity: 0,
+                    bgColor: "primary.type7",
+                    transition: "all linear 0.3s 0s",
+                  }}
+                >
                   <IcoLineChart />
                   <Text>매출</Text>
                 </Tab>
-                <Tab key="tab-history" isDisabled={false}>
+                <Tab
+                  key="tab-history"
+                  isDisabled={false}
+                  p="0 1rem 0.5rem"
+                  _before={{
+                    content: '""',
+                    position: "absolute",
+                    bottom: "5px",
+                    display: "inline-block",
+                    w: "100%",
+                    h: "3px",
+                    opacity: 0,
+                    bgColor: "primary.type7",
+                    transition: "all linear 0.3s 0s",
+                  }}
+                >
                   <IcoHistory />
                   <Text>히스토리 데이터</Text>
                 </Tab>
-                {/* <Tab key="tab-doc" isDisabled={false}>
-                  <IcoAudit />
-                  <Text>문서보관함</Text>
-                </Tab> */}
               </TabList>
               <TabPanels>
-                <TabPanel>
+                <TabPanel w="324px">
                   {tabIdx === 0 && infoData !== null && (
                     <StoreBasicInfo info={infoData} />
                   )}
                 </TabPanel>
-                <TabPanel w="800px">
-                  {tabIdx === 1 && <StoreSale />}
-                  <StoreSale />
-                </TabPanel>
-                <TabPanel>
+                <TabPanel w="738px">{tabIdx === 1 && <StoreSale />}</TabPanel>
+                <TabPanel w="738px">
                   {tabIdx === 2 && <ElementHistory id={id} title={name} />}
                 </TabPanel>
-                {/* <TabPanel>
-                  <StoreDoc />
-                </TabPanel> */}
               </TabPanels>
             </Tabs>
           </Flex>

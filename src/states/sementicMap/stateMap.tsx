@@ -88,21 +88,36 @@ export const resetHandler = selector({
 
 // ==================== 영역선택 Flow ====================
 
-export const atomSlctCustom = atom<{ [key: string]: any }>({
+export const atomSlctCustom = atom<{
+  areaType: "dong" | "polygon" | "circle" | null;
+  slctName: string;
+  pathType: string;
+  slctPath?: any[];
+  center?: any;
+  range?: any;
+}>({
   key: "flowCustomArea",
   default: {
+    areaType: null,
     slctName: "",
     slctPath: [],
     pathType: "",
     center: null,
+    range: null,
   },
 });
 
-export const atomCreateArea = atom({
+export const atomCreateArea = atom<{
+  pathType: "circle" | "polygon" | undefined;
+  path?: any[];
+  center?: any;
+  range?: number;
+}>({
   key: "createArea",
   default: {
-    pathType: "",
+    pathType: undefined,
     path: [],
+    range: 0,
     center: null,
   },
 });

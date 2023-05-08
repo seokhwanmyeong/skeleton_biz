@@ -22,6 +22,7 @@ import { TableCheckBox } from "@components/common/CheckBox";
 import Section from "@components/common/Section";
 //  Custom Hook
 import { usePagination } from "@hook/usePagination";
+import { forEach } from "lodash";
 
 type PropsTable = {
   caption?: string;
@@ -230,37 +231,57 @@ const Table = ({
                 </Td>
               </Tr>
             ) : (
-              getRowModel().rows.map((row, rowIdx) => (
-                <Tr key={row.id}>
-                  {activeCheck && (
-                    <Td
-                      key={`table-td-chk-${rowIdx + 1}`}
-                      onClick={(e: any) => e.stopPropagation()}
-                    >
-                      <TableCheckBox
-                        checked={row.getIsSelected()}
-                        indeterminate={row.getIsSomeSelected()}
-                        onChange={row.getToggleSelectedHandler()}
-                      />
-                    </Td>
-                  )}
-                  {row.getVisibleCells().map((cell) => (
-                    <Td key={cell.id}>
-                      <Flex
-                        h={tdH || "auto"}
-                        minH={tdH || "2.5rem"}
-                        justify="center"
-                        align="center"
+              getRowModel().rows.map((row, rowIdx, rows) => {
+                return (
+                  <Tr key={row.id}>
+                    {activeCheck && (
+                      <Td
+                        key={`table-td-chk-${rowIdx + 1}`}
+                        onClick={(e: any) => e.stopPropagation()}
                       >
-                        {flexRender(cell.column.columnDef.cell, {
-                          ...cell.getContext(),
-                        })}
-                      </Flex>
-                    </Td>
-                  ))}
-                </Tr>
-              ))
+                        <TableCheckBox
+                          checked={row.getIsSelected()}
+                          indeterminate={row.getIsSomeSelected()}
+                          onChange={row.getToggleSelectedHandler()}
+                        />
+                      </Td>
+                    )}
+                    {row.getVisibleCells().map((cell) => (
+                      <Td key={cell.id}>
+                        <Flex
+                          h={tdH || "auto"}
+                          minH={tdH || "2.5rem"}
+                          justify="center"
+                          align="center"
+                        >
+                          {flexRender(cell.column.columnDef.cell, {
+                            ...cell.getContext(),
+                          })}
+                        </Flex>
+                      </Td>
+                    ))}
+                  </Tr>
+                );
+              })
             )}
+            {getRowModel().rows.length !== 0 &&
+            getRowModel().rows.length < registersPerPage
+              ? Array.from(
+                  { length: registersPerPage - getRowModel().rows.length },
+                  (v, i) => i + 1
+                ).map((i) => {
+                  return (
+                    <Tr>
+                      {Array.from(
+                        { length: columns.length },
+                        (v, i) => i + 1
+                      ).map((j) => {
+                        return <Td></Td>;
+                      })}
+                    </Tr>
+                  );
+                })
+              : null}
           </Tbody>
         </ChakraTable>
       </Flex>

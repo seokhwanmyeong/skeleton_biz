@@ -26,7 +26,6 @@ import { motion } from "framer-motion";
 import OverlayView from "@src/lib/src/components/Overlay/OverlayView";
 import Circle from "@src/lib/src/components/Overlay/Circle";
 import { Marker, NaverMapContext, Polygon } from "@src/lib/src";
-import { MarkerClustering } from "@src/lib/src/components/Cluster/MarkerClustering";
 //  State
 import { sementicViewState } from "@states/sementicMap/stateView";
 //  Util
@@ -35,6 +34,7 @@ import { getCenter } from "@util/map/distance";
 //  Icon
 import markerStore from "@assets/icons/marker_store.png";
 import markerRent from "@assets/icons/marker_rent.png";
+import markerCluster from "@assets/icons/marker_cluster.png";
 //  Deco
 import { Deco01 } from "@assets/deco/DecoSvg";
 //  Ani
@@ -74,65 +74,61 @@ type BsDisList = {
 const BrandListBox = memo(
   ({ storeShow, bsDisShow, rentShow, store, rent, bsDis }: Props) => {
     const { state } = useContext(NaverMapContext);
+    const [bsList, setBsList] = useState<any[] | null>(null);
+    const [cursorPo, setCursorPo] = useState<any>(null);
+    const [name, setName] = useState<any>(null);
     const polygonRef = useRef<any[] | null>([]);
 
     useEffect(() => {
       if (!state?.map) return;
       let zoom = state.map.getZoom();
 
-      if (zoom < 13 && polygonRef.current && polygonRef.current.length > 0) {
-        polygonRef.current.map((poly) => poly.setMap(null));
+      if (zoom < 13) {
+        setBsList([]);
         return;
       } else if (zoom >= 13) {
-        if (polygonRef.current && polygonRef.current.length > 0) {
-          polygonRef.current.map((poly) => poly.setMap(null));
-        } else {
-          const list: any = [];
+        const list: any = [];
 
-          if (bsDis && bsDis.length > 0) {
-            bsDis.map(
-              (li: {
-                _id: string;
-                bisName: string;
-                bsDisType: string;
-                polygon_type: "circle" | "single" | "multi";
-                polygon: any[];
-                range: string;
-                center: [number, number];
-              }) => {
-                const mapBounds: any = state.map?.getBounds();
-                const minLat = mapBounds._min._lat;
-                const minLng = mapBounds._min._lng;
-                const maxLat = mapBounds._max._lat;
-                const maxLng = mapBounds._max._lng;
+        if (bsDis && bsDis.length > 0) {
+          bsDis.map(
+            (li: {
+              _id: string;
+              bisName: string;
+              bsDisType: string;
+              polygon_type: "circle" | "single" | "multi";
+              polygon: any[];
+              range: string;
+              center: [number, number];
+            }) => {
+              const mapBounds: any = state.map?.getBounds();
+              const minLat = mapBounds._min._lat;
+              const minLng = mapBounds._min._lng;
+              const maxLat = mapBounds._max._lat;
+              const maxLng = mapBounds._max._lng;
 
-                if (li.polygon_type === "single") {
-                  if (
-                    li.center[1] >= minLat &&
-                    li.center[1] <= maxLat &&
-                    li.center[0] >= minLng &&
-                    li.center[0] <= maxLng
-                  ) {
-                    const poly = new naver.maps.Polygon({
-                      map: state.map,
-                      paths: li.polygon,
-                      fillColor: bsDisColor[li.bsDisType] || "#FF7A45",
-                      fillOpacity: 0.5,
-                      strokeWeight: 1,
-                      strokeColor: "#FFFFFF",
-                      clickable: true,
-                    });
-
-                    list.push(poly);
-                  }
-                } else if (li.polygon_type === "circle") {
+              if (li.polygon_type === "single") {
+                if (
+                  li.center[1] >= minLat &&
+                  li.center[1] <= maxLat &&
+                  li.center[0] >= minLng &&
+                  li.center[0] <= maxLng
+                ) {
+                  list.push(li);
+                }
+              } else if (li.polygon_type === "circle") {
+                if (
+                  li.center[1] >= minLat &&
+                  li.center[1] <= maxLat &&
+                  li.center[0] >= minLng &&
+                  li.center[0] <= maxLng
+                ) {
+                  list.push(li);
                 }
               }
-            );
-          }
-
-          polygonRef.current = list;
+            }
+          );
         }
+        setBsList(list);
       }
 
       let timer: any;
@@ -145,13 +141,8 @@ const BrandListBox = memo(
             if (!state?.map) return;
             let zoom = state.map.getZoom();
 
-            if (
-              zoom < 13 &&
-              polygonRef.current &&
-              polygonRef.current.length > 0
-            ) {
-              polygonRef.current.map((poly) => poly.setMap(null));
-              polygonRef.current = [];
+            if (zoom < 13) {
+              setBsList([]);
             } else if (zoom >= 13) {
               const mapBounds: any = e;
               const minLat = mapBounds._min._lat;
@@ -180,19 +171,17 @@ const BrandListBox = memo(
                           li.center[0] >= minLng &&
                           li.center[0] <= maxLng
                         ) {
-                          const poly = new naver.maps.Polygon({
-                            map: state.map,
-                            paths: li.polygon,
-                            fillColor: bsDisColor[li.bsDisType] || "#FF7A45",
-                            fillOpacity: 0.5,
-                            strokeWeight: 1,
-                            strokeColor: "#FFFFFF",
-                            clickable: true,
-                          });
-
-                          list.push(poly);
+                          list.push(li);
                         }
                       } else if (li.polygon_type === "circle") {
+                        if (
+                          li.center[1] >= minLat &&
+                          li.center[1] <= maxLat &&
+                          li.center[0] >= minLng &&
+                          li.center[0] <= maxLng
+                        ) {
+                          list.push(li);
+                        }
                       }
                     }
                   );
@@ -200,11 +189,9 @@ const BrandListBox = memo(
                   return;
                 }
 
-                polygonRef.current = list;
+                setBsList(list);
               } else {
                 const list: any = [];
-                polygonRef.current.map((poly) => poly.setMap(null));
-                polygonRef.current = [];
 
                 if (bsDis && bsDis.length > 0) {
                   bsDis.map(
@@ -224,17 +211,7 @@ const BrandListBox = memo(
                           li.center[0] >= minLng &&
                           li.center[0] <= maxLng
                         ) {
-                          const poly = new naver.maps.Polygon({
-                            map: state.map,
-                            paths: li.polygon,
-                            fillColor: bsDisColor[li.bsDisType] || "#FF7A45",
-                            fillOpacity: 0.5,
-                            strokeWeight: 1,
-                            strokeColor: "#FFFFFF",
-                            clickable: true,
-                          });
-
-                          list.push(poly);
+                          list.push(li);
                         }
                       } else if (li.polygon_type === "circle") {
                       }
@@ -242,25 +219,206 @@ const BrandListBox = memo(
                   );
                 }
 
-                polygonRef.current = list;
+                setBsList(list);
               }
             } else {
-              if (polygonRef.current && polygonRef.current.length > 0) {
-                polygonRef.current.map((poly) => poly.setMap(null));
-                polygonRef.current = [];
-              }
+              setBsList([]);
             }
-          }, 500);
+          }, 300);
         }
       );
 
       return () => {
-        polygonRef.current &&
-          polygonRef.current.map((poly) => poly.setMap(null));
-        polygonRef.current = null;
+        setBsList(null);
         naver.maps.Event.removeListener(panningEventHandelr);
       };
     }, [state, bsDis]);
+
+    // useEffect(() => {
+    //   if (!state?.map) return;
+    //   let zoom = state.map.getZoom();
+
+    //   if (zoom < 13 && polygonRef.current && polygonRef.current.length > 0) {
+    //     polygonRef.current.map((poly) => poly.setMap(null));
+    //     return;
+    //   } else if (zoom >= 13) {
+    //     if (polygonRef.current && polygonRef.current.length > 0) {
+    //       polygonRef.current.map((poly) => poly.setMap(null));
+    //     } else {
+    //       const list: any = [];
+
+    //       if (bsDis && bsDis.length > 0) {
+    //         bsDis.map(
+    //           (li: {
+    //             _id: string;
+    //             bisName: string;
+    //             bsDisType: string;
+    //             polygon_type: "circle" | "single" | "multi";
+    //             polygon: any[];
+    //             range: string;
+    //             center: [number, number];
+    //           }) => {
+    //             const mapBounds: any = state.map?.getBounds();
+    //             const minLat = mapBounds._min._lat;
+    //             const minLng = mapBounds._min._lng;
+    //             const maxLat = mapBounds._max._lat;
+    //             const maxLng = mapBounds._max._lng;
+
+    //             if (li.polygon_type === "single") {
+    //               if (
+    //                 li.center[1] >= minLat &&
+    //                 li.center[1] <= maxLat &&
+    //                 li.center[0] >= minLng &&
+    //                 li.center[0] <= maxLng
+    //               ) {
+    //                 const poly = new naver.maps.Polygon({
+    //                   map: state.map,
+    //                   paths: li.polygon,
+    //                   fillColor: bsDisColor[li.bsDisType] || "#FF7A45",
+    //                   fillOpacity: 0.5,
+    //                   strokeWeight: 1,
+    //                   strokeColor: "#FFFFFF",
+    //                   clickable: true,
+    //                 });
+
+    //                 list.push(poly);
+    //               }
+    //             } else if (li.polygon_type === "circle") {
+    //             }
+    //           }
+    //         );
+    //       }
+
+    //       polygonRef.current = list;
+    //     }
+    //   }
+
+    //   let timer: any;
+    //   const panningEventHandelr = naver.maps.Event.addListener(
+    //     state.map,
+    //     "bounds_changed",
+    //     (e) => {
+    //       if (timer) clearTimeout(timer);
+    //       timer = setTimeout(function () {
+    //         if (!state?.map) return;
+    //         let zoom = state.map.getZoom();
+
+    //         if (
+    //           zoom < 13 &&
+    //           polygonRef.current &&
+    //           polygonRef.current.length > 0
+    //         ) {
+    //           polygonRef.current.map((poly) => poly.setMap(null));
+    //           polygonRef.current = [];
+    //         } else if (zoom >= 13) {
+    //           const mapBounds: any = e;
+    //           const minLat = mapBounds._min._lat;
+    //           const minLng = mapBounds._min._lng;
+    //           const maxLat = mapBounds._max._lat;
+    //           const maxLng = mapBounds._max._lng;
+
+    //           if (!polygonRef.current) {
+    //             const list: any = [];
+
+    //             if (bsDis && bsDis.length > 0) {
+    //               bsDis.map(
+    //                 (li: {
+    //                   _id: string;
+    //                   bisName: string;
+    //                   bsDisType: string;
+    //                   polygon_type: "circle" | "single" | "multi";
+    //                   polygon: any[];
+    //                   range: string;
+    //                   center: [number, number];
+    //                 }) => {
+    //                   if (li.polygon_type === "single") {
+    //                     if (
+    //                       li.center[1] >= minLat &&
+    //                       li.center[1] <= maxLat &&
+    //                       li.center[0] >= minLng &&
+    //                       li.center[0] <= maxLng
+    //                     ) {
+    //                       const poly = new naver.maps.Polygon({
+    //                         map: state.map,
+    //                         paths: li.polygon,
+    //                         fillColor: bsDisColor[li.bsDisType] || "#FF7A45",
+    //                         fillOpacity: 0.5,
+    //                         strokeWeight: 1,
+    //                         strokeColor: "#FFFFFF",
+    //                         clickable: true,
+    //                       });
+
+    //                       list.push(poly);
+    //                     }
+    //                   } else if (li.polygon_type === "circle") {
+    //                   }
+    //                 }
+    //               );
+    //             } else {
+    //               return;
+    //             }
+
+    //             polygonRef.current = list;
+    //           } else {
+    //             const list: any = [];
+    //             polygonRef.current.map((poly) => poly.setMap(null));
+    //             polygonRef.current = [];
+
+    //             if (bsDis && bsDis.length > 0) {
+    //               bsDis.map(
+    //                 (li: {
+    //                   _id: string;
+    //                   bisName: string;
+    //                   bsDisType: string;
+    //                   polygon_type: "circle" | "single" | "multi";
+    //                   polygon: any[];
+    //                   range: string;
+    //                   center: [number, number];
+    //                 }) => {
+    //                   if (li.polygon_type === "single") {
+    //                     if (
+    //                       li.center[1] >= minLat &&
+    //                       li.center[1] <= maxLat &&
+    //                       li.center[0] >= minLng &&
+    //                       li.center[0] <= maxLng
+    //                     ) {
+    //                       const poly = new naver.maps.Polygon({
+    //                         map: state.map,
+    //                         paths: li.polygon,
+    //                         fillColor: bsDisColor[li.bsDisType] || "#FF7A45",
+    //                         fillOpacity: 0.5,
+    //                         strokeWeight: 1,
+    //                         strokeColor: "#FFFFFF",
+    //                         clickable: true,
+    //                       });
+
+    //                       list.push(poly);
+    //                     }
+    //                   } else if (li.polygon_type === "circle") {
+    //                   }
+    //                 }
+    //               );
+    //             }
+
+    //             polygonRef.current = list;
+    //           }
+    //         } else {
+    //           if (polygonRef.current && polygonRef.current.length > 0) {
+    //             polygonRef.current.map((poly) => poly.setMap(null));
+    //             polygonRef.current = [];
+    //           }
+    //         }
+    //       }, 300);
+    //     }
+    //   );
+
+    //   return () => {
+    //     polygonRef.current &&
+    //       polygonRef.current.map((poly) => poly.setMap(null));
+    //     polygonRef.current = null;
+    //     naver.maps.Event.removeListener(panningEventHandelr);
+    //   };
+    // }, [state, bsDis]);
 
     return (
       <Flex
@@ -291,7 +449,7 @@ const BrandListBox = memo(
             color="font.title"
             textAlign="center"
           >
-            매장 조회
+            브랜드 조회
           </Heading>
         </Flex>
         <Deco01 margin="0.75rem 0 0.5rem" width="100%" height="auto" />
@@ -319,6 +477,100 @@ const BrandListBox = memo(
             )}
           </TabPanels>
         </Tabs>
+        {bsList &&
+          bsList.length > 0 &&
+          bsList.map(
+            (li: {
+              _id: string;
+              bisName: string;
+              bsDisType: string;
+              polygon_type: "circle" | "single" | "multi";
+              polygon: any[];
+              range: string;
+              center: [number, number];
+            }) => {
+              return li.polygon_type === "circle" ? (
+                <Circle
+                  id={`circle-${li._id}`}
+                  key={`circle-${li._id}`}
+                  onMouseOver={(e: any) => {
+                    setCursorPo(li.center);
+                    setName(li.bisName);
+                  }}
+                  onMouseOut={(e: any) => {
+                    setCursorPo(null);
+                    setName(null);
+                  }}
+                  opts={{
+                    center: li.center,
+                    radius: Number(li.range) || 0,
+                    fillColor: bsDisColor[li.bsDisType] || "#FF7A45",
+                    fillOpacity: 0.5,
+                    strokeWeight: 1,
+                    strokeColor: "#FFFFFF",
+                    clickable: true,
+                  }}
+                />
+              ) : li.polygon_type === "single" ? (
+                <Polygon
+                  key={`bsDisArea-${li._id}`}
+                  id={`bsDisArea-${li._id}`}
+                  onMouseOver={(e: any) => {
+                    setCursorPo(li.center);
+                    setName(li.bisName);
+                  }}
+                  onMouseOut={(e: any) => {
+                    setCursorPo(null);
+                    setName(null);
+                  }}
+                  opts={{
+                    paths: li.polygon,
+                    fillColor: bsDisColor[li.bsDisType] || "#FF7A45",
+                    fillOpacity: 0.5,
+                    strokeWeight: 1,
+                    strokeColor: "#FFFFFF",
+                    clickable: true,
+                  }}
+                />
+              ) : null;
+            }
+          )}
+        {bsDisShow && cursorPo && name && (
+          <OverlayView
+            id={`infoBox`}
+            position={new naver.maps.LatLng(cursorPo)}
+            pane="floatPane"
+            anchorPoint={{ x: 0, y: 10 }}
+          >
+            <Flex
+              pos="relative"
+              top="-4.5rem"
+              left="-50%"
+              p="0.25rem 0.75rem"
+              w="auto"
+              justify="flex-start"
+              align="flex-start"
+              bgColor="#FFFFFFD9"
+              gap="0.5rem"
+              border="1px solid"
+              borderColor="neutral.gray6"
+              borderRadius="base"
+              whiteSpace="nowrap"
+            >
+              <Text
+                textStyle="base"
+                fontSize="sm"
+                fontWeight="strong"
+                lineHeight="normal"
+                transition="0.3s"
+                color="font.primary"
+                whiteSpace="nowrap"
+              >
+                {name || ""}
+              </Text>
+            </Flex>
+          </OverlayView>
+        )}
       </Flex>
     );
   }
@@ -367,12 +619,15 @@ const ListStore = memo(({ storeShow, storeList }: any) => {
 
       Object.keys(area).map((key: string) => {
         const pos = area[key].length > 1 ? getCenter(area[key]) : area[key][0];
-
         const marker = new naver.maps.Marker({
           map: state.map,
           position: new naver.maps.LatLng(pos[0], pos[1]),
           icon: {
-            content: `<div style='background: #000000; color: #FFFFFF'>${key} ${area[key].length}</div>`,
+            content:
+              `<div style='display: flex; flex-direction: column; justify-content: center; align-items: center; width: 7rem; height: 7rem; background: url(${markerCluster})'>` +
+              `<p style='font-family: 'Roboto';font-weight: 500;'>${key}</p><p style='font-family: 'Roboto';` +
+              `font-weight: 700;` +
+              `font-size: 1.5rem;'>${area[key].length}</p></div>`,
           },
         });
 
@@ -413,7 +668,11 @@ const ListStore = memo(({ storeShow, storeList }: any) => {
           map: state.map,
           position: new naver.maps.LatLng(pos[0], pos[1]),
           icon: {
-            content: `<div style='background: #000000; color: #FFFFFF'>${key} ${area[key].length}</div>`,
+            content:
+              `<div style='display: flex; flex-direction: column; justify-content: center; align-items: center; width: 7rem; height: 7rem; background: url(${markerCluster})'>` +
+              `<p style='font-family: 'Roboto';font-weight: 500;'>${key}</p><p style='font-family: 'Roboto';` +
+              `font-weight: 700;` +
+              `font-size: 1.5rem;'>${area[key].length}</p></div>`,
           },
         });
 
@@ -464,7 +723,11 @@ const ListStore = memo(({ storeShow, storeList }: any) => {
               map: state.map,
               position: new naver.maps.LatLng(pos[0], pos[1]),
               icon: {
-                content: `<div style='background: #000000; color: #FFFFFF'>${key} ${area[key].length}</div>`,
+                content:
+                  `<div style='display: flex; flex-direction: column; justify-content: center; align-items: center; width: 7rem; height: 7rem; background: url(${markerCluster})'>` +
+                  `<p style='font-family: 'Roboto';font-weight: 500;'>${key}</p><p style='font-family: 'Roboto';` +
+                  `font-weight: 700;` +
+                  `font-size: 1.5rem;'>${area[key].length}</p></div>`,
               },
             });
 
@@ -506,7 +769,11 @@ const ListStore = memo(({ storeShow, storeList }: any) => {
               map: state.map,
               position: new naver.maps.LatLng(pos[0], pos[1]),
               icon: {
-                content: `<div style='background: #000000; color: #FFFFFF'>${key} ${area[key].length}</div>`,
+                content:
+                  `<div style='display: flex; flex-direction: column; justify-content: center; align-items: center; width: 7rem; height: 7rem; background: url(${markerCluster})'>` +
+                  `<p style='font-family: 'Roboto';font-weight: 500;'>${key}</p><p style='font-family: 'Roboto';` +
+                  `font-weight: 700;` +
+                  `font-size: 1.5rem;'>${area[key].length}</p></div>`,
               },
             });
 
@@ -591,7 +858,7 @@ const ListItemStore = ({
     return () => {
       naver.maps.Event.removeListener(zoomEvent);
     };
-  }, [state]);
+  }, [state.map, state?.objects]);
 
   useEffect(() => {
     if (isHover && state?.objects && state.objects.size !== 0) {
@@ -674,7 +941,7 @@ const ListItemStore = ({
           </Text>
         </Flex>
       </ListItem>
-      {isShow && lat && lng && (
+      {state?.map && state.map.getZoom() >= 13 && isShow && lat && lng && (
         <Marker
           key={`markerStore-${idx}`}
           id={`markerStore-${idx}`}
@@ -689,44 +956,48 @@ const ListItemStore = ({
           onMouseOut={() => onHover(false)}
         />
       )}
-      {isShow && isHover && cursorPo && (
-        <OverlayView
-          id={`infoBox`}
-          position={new naver.maps.LatLng(cursorPo)}
-          pane="floatPane"
-          anchorPoint={{ x: 0, y: 10 }}
-        >
-          <Flex
-            as={motion.div}
-            animation={infoAnimation}
-            pos="relative"
-            top="-4.5rem"
-            left="-50%"
-            p="0.25rem 0.75rem"
-            w="auto"
-            justify="flex-start"
-            align="flex-start"
-            bgColor="#FFFFFFD9"
-            gap="0.5rem"
-            border="1px solid"
-            borderColor="neutral.gray6"
-            borderRadius="base"
-            whiteSpace="nowrap"
+      {state?.map &&
+        state.map.getZoom() >= 13 &&
+        isShow &&
+        isHover &&
+        cursorPo && (
+          <OverlayView
+            id={`infoBox`}
+            position={new naver.maps.LatLng(cursorPo)}
+            pane="floatPane"
+            anchorPoint={{ x: 0, y: 10 }}
           >
-            <Text
-              textStyle="base"
-              fontSize="sm"
-              fontWeight="strong"
-              lineHeight="normal"
-              transition="0.3s"
-              color="font.primary"
+            <Flex
+              as={motion.div}
+              animation={infoAnimation}
+              pos="relative"
+              top="-4.5rem"
+              left="-50%"
+              p="0.25rem 0.75rem"
+              w="auto"
+              justify="flex-start"
+              align="flex-start"
+              bgColor="#FFFFFFD9"
+              gap="0.5rem"
+              border="1px solid"
+              borderColor="neutral.gray6"
+              borderRadius="base"
               whiteSpace="nowrap"
             >
-              {storeName || ""}
-            </Text>
-          </Flex>
-        </OverlayView>
-      )}
+              <Text
+                textStyle="base"
+                fontSize="sm"
+                fontWeight="strong"
+                lineHeight="normal"
+                transition="0.3s"
+                color="font.primary"
+                whiteSpace="nowrap"
+              >
+                {storeName || ""}
+              </Text>
+            </Flex>
+          </OverlayView>
+        )}
     </Fragment>
   );
 };
@@ -780,47 +1051,24 @@ const ListItemBsDis = ({
   _id,
   bsDisName,
   bsDisType,
+  center,
 }: BsDisList) => {
-  const { state, dispatch } = useContext(NaverMapContext);
+  const { state } = useContext(NaverMapContext);
   const setSv = useSetRecoilState(sementicViewState);
   const [isHover, onHover] = useState<boolean>(false);
-  // const [cursorPo, setCursorPo] = useState<[number, number] | null>(null);
-  // const [isIn, setIsIn] = useState<boolean>(false);
-  const polygonRef = useRef<any>(null);
+  const [cursorPo, setCursorPo] = useState<[number, number] | null>(null);
 
-  const getCenter = (paths: [number, number][]): [number, number] => {
-    const arr = paths;
-    const length = arr.length;
-    let xcos = 0;
-    let ycos = 0;
-    let area = 0;
+  useEffect(() => {
+    if (isHover && state?.objects && state.objects.size !== 0) {
+      let obj: any = state?.objects.get(`bsDisArea-${_id}`);
 
-    for (let i = 0, len = length, j = length - 1; i < len; j = i++) {
-      let p1 = arr[i];
-      let p2 = arr[j];
-
-      let f = p1[1] * p2[0] - p2[1] * p1[0];
-      xcos += (p1[0] + p2[0]) * f;
-      ycos += (p1[1] + p2[1]) * f;
-      area += f * 3;
+      if (obj) {
+        setCursorPo(center);
+      }
+    } else {
+      setCursorPo(null);
     }
-
-    return [xcos / area, ycos / area];
-  };
-
-  // useEffect(() => {
-  //   if (isHover && state?.objects && state.objects.size !== 0) {
-  //     let obj: any = state?.objects.get(`bsDisArea-${idx}`);
-
-  //     if (obj) {
-  //       const pos = getCenterPolygon(obj);
-
-  //       setCursorPo(pos);
-  //     }
-  //   } else {
-  //     setCursorPo(null);
-  //   }
-  // }, [isHover]);
+  }, [isHover]);
 
   return (
     <Fragment>
@@ -883,38 +1131,6 @@ const ListItemBsDis = ({
           </Text>
         </Flex>
       </ListItem>
-      {/* {isShow &&
-        (polygonType === "circle" ? (
-          <Circle
-            id={`circle-${idx}`}
-            key={`circle-${idx}`}
-            onMouseOver={(e: any) => onHover(true)}
-            onMouseOut={(e: any) => onHover(false)}
-            opts={{
-              fillColor: "#fadb14",
-              center: center,
-              radius: Number(range) || 0,
-              fillOpacity: 0.3,
-              strokeColor: "#FFFFFF",
-              strokeOpacity: 0.5,
-            }}
-          />
-        ) : polygonType === "single" ? (
-          <Polygon
-            key={`bsDisArea-${idx}`}
-            id={`bsDisArea-${idx}`}
-            onMouseOver={(e: any) => onHover(true)}
-            onMouseOut={(e: any) => onHover(false)}
-            opts={{
-              paths: polygon,
-              fillColor: bsDisColor[bsDisType] || "#FF7A45",
-              fillOpacity: 0.35,
-              strokeWeight: 2,
-              clickable: true,
-              visible: isIn ? true : false,
-            }}
-          />
-        ) : null)}
       {isShow && isHover && cursorPo && (
         <OverlayView
           id={`infoBox`}
@@ -952,7 +1168,7 @@ const ListItemBsDis = ({
             </Text>
           </Flex>
         </OverlayView>
-      )} */}
+      )}
     </Fragment>
   );
 };
@@ -981,6 +1197,37 @@ const ListItemRent = ({ isShow, idx, _id, rentName, addr, lat, lng }: any) => {
   const setSv = useSetRecoilState(sementicViewState);
   const [isHover, onHover] = useState<boolean>(false);
   const [cursorPo, setCursorPo] = useState<[number, number] | null>(null);
+
+  useEffect(() => {
+    if (!state.map && !state?.objects && state.objects.size === 0) return;
+    let zoom = state.map?.getZoom() || 0;
+    let obj: any = state?.objects.get(`markerRent-${idx}`);
+
+    if (zoom < 13 && obj && obj.getVisible()) {
+      obj.setVisible(false);
+    } else if (zoom >= 13 && obj && !obj.getVisible()) {
+      obj.setVisible(true);
+    }
+
+    const zoomEvent = naver.maps.Event.addListener(
+      state.map,
+      "zoom_changed",
+      (e) => {
+        if (!state?.objects && state.objects.size === 0) return;
+        let obj: any = state?.objects.get(`markerRent-${idx}`);
+
+        if (e < 13 && obj && obj.getVisible()) {
+          obj.setVisible(false);
+        } else if (e >= 13 && obj && !obj.getVisible()) {
+          obj.setVisible(true);
+        }
+      }
+    );
+
+    return () => {
+      naver.maps.Event.removeListener(zoomEvent);
+    };
+  }, [state]);
 
   useEffect(() => {
     if (isHover && state?.objects && state.objects.size !== 0) {
@@ -1051,7 +1298,7 @@ const ListItemRent = ({ isShow, idx, _id, rentName, addr, lat, lng }: any) => {
           </Text>
         </Flex>
       </ListItem>
-      {isShow && lat && lng && (
+      {state?.map && state.map.getZoom() >= 13 && isShow && lat && lng && (
         <Marker
           key={`markerRent-${idx}`}
           id={`markerRent-${idx}`}
@@ -1069,44 +1316,48 @@ const ListItemRent = ({ isShow, idx, _id, rentName, addr, lat, lng }: any) => {
           onMouseOut={() => onHover(false)}
         />
       )}
-      {isShow && isHover && cursorPo && (
-        <OverlayView
-          id={`infoBox`}
-          position={new naver.maps.LatLng(cursorPo)}
-          pane="floatPane"
-          anchorPoint={{ x: 0, y: 10 }}
-        >
-          <Flex
-            as={motion.div}
-            animation={infoAnimation}
-            pos="relative"
-            top="-4.5rem"
-            left="-50%"
-            p="0.25rem 0.75rem"
-            w="auto"
-            justify="flex-start"
-            align="flex-start"
-            bgColor="#FFFFFFD9"
-            gap="0.5rem"
-            border="1px solid"
-            borderColor="neutral.gray6"
-            borderRadius="base"
-            whiteSpace="nowrap"
+      {state?.map &&
+        state.map.getZoom() >= 13 &&
+        isShow &&
+        isHover &&
+        cursorPo && (
+          <OverlayView
+            id={`infoBox`}
+            position={new naver.maps.LatLng(cursorPo)}
+            pane="floatPane"
+            anchorPoint={{ x: 0, y: 10 }}
           >
-            <Text
-              textStyle="base"
-              fontSize="sm"
-              fontWeight="strong"
-              lineHeight="normal"
-              transition="0.3s"
-              color="font.primary"
+            <Flex
+              as={motion.div}
+              animation={infoAnimation}
+              pos="relative"
+              top="-4.5rem"
+              left="-50%"
+              p="0.25rem 0.75rem"
+              w="auto"
+              justify="flex-start"
+              align="flex-start"
+              bgColor="#FFFFFFD9"
+              gap="0.5rem"
+              border="1px solid"
+              borderColor="neutral.gray6"
+              borderRadius="base"
               whiteSpace="nowrap"
             >
-              {rentName || ""}
-            </Text>
-          </Flex>
-        </OverlayView>
-      )}
+              <Text
+                textStyle="base"
+                fontSize="sm"
+                fontWeight="strong"
+                lineHeight="normal"
+                transition="0.3s"
+                color="font.primary"
+                whiteSpace="nowrap"
+              >
+                {rentName || ""}
+              </Text>
+            </Flex>
+          </OverlayView>
+        )}
     </Fragment>
   );
 };

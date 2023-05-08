@@ -15,7 +15,7 @@ const DrawBox = () => {
     <Fragment>
       <Flex
         pos="absolute"
-        bottom="5.25rem"
+        bottom="6rem"
         left="50%"
         zIndex={999}
         transform="translateX(-50%)"

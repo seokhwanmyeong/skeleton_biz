@@ -18,13 +18,15 @@ const calDist = (point01: any, point02: any) => {
 
 const calcPolyDistance = (paths: naver.maps.LatLng[]) => {
   console.log(paths);
-  const origin = { _lat: paths[0]?.x, _lng: paths[0]?.y };
   let longDistance = 0;
+  paths.map((path, idx: number) => {
+    const origin = { _lat: path?.x, _lng: path?.y };
 
-  for (let i = 1; i < paths.length; i++) {
-    let distance = calDist(origin, { _lat: paths[i]?.x, _lng: paths[i]?.y });
-    longDistance = distance > longDistance ? distance : longDistance;
-  }
+    for (let i = idx + 1; i < paths.length; i++) {
+      let distance = calDist(origin, { _lat: paths[i]?.x, _lng: paths[i]?.y });
+      longDistance = distance > longDistance ? distance : longDistance;
+    }
+  });
 
   return longDistance;
 };

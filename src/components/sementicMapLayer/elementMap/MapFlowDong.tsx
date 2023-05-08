@@ -6,6 +6,7 @@ import {
   useMemo,
   Fragment,
   memo,
+  useRef,
 } from "react";
 import { useRecoilValue, useResetRecoilState } from "recoil";
 import { Marker, NaverMapContext } from "@src/lib/src";
@@ -55,33 +56,76 @@ const MapFlowDong = () => {
   const [flowData, setFlowData] = useState<TypePoint[] | null>([]);
   const [dongRank, setDongRank] = useState<RankType | null>(null);
   // const [sampleData, setSampleData] = useState<any>([]);
-
+  const markerFlow = useRef<any[] | null>(null);
   const dongTopData = useMemo(() => {
     return dong.slctData || [];
   }, [dong]);
 
   useEffect(() => {
-    if (flowList.length > 0) {
-      const point: TypePoint[] = [];
+    if (!state.map) return;
 
+    if (flowList.length > 0 && flowShow && flowActive) {
+      if (markerFlow.current && markerFlow.current.length > 0) {
+        markerFlow.current.map((marker: any) => marker.setMap(null));
+        markerFlow.current = [];
+      }
+      const markerLi: any[] = [];
+      console.log(flowList);
       flowList.map((list: any, idx: number) => {
-        list.map((li: TypeNiceFlowData, depthIdx: number) => {
+        list.map((li: TypeNiceFlowData) => {
           const { flowLv, xAxis, yAxis } = li;
-          point.push({
-            lv: flowLv,
-            point: [yAxis, xAxis],
+
+          const marker = new naver.maps.Marker({
+            map: state.map,
+            position: new naver.maps.LatLng(yAxis, xAxis),
+            icon: {
+              content: `<div style="width: 6px; height: 6px; border-radius: 50%; background-color: ${flowColor[flowLv]}"/>`,
+              size: new naver.maps.Size(6, 6),
+              anchor: new naver.maps.Point(3, 3),
+            },
           });
+          markerLi.push(marker);
         });
       });
-      setFlowData(point);
+
+      markerFlow.current = markerLi;
     } else {
-      setFlowData([]);
+      if (markerFlow.current && markerFlow.current.length > 0) {
+        markerFlow.current.map((marker: any) => marker.setMap(null));
+        markerFlow.current = [];
+      }
     }
 
     return () => {
-      setFlowData(null);
+      if (markerFlow.current && markerFlow.current.length > 0) {
+        markerFlow.current.map((marker: any) => marker.setMap(null));
+        markerFlow.current = [];
+      }
     };
-  }, [flowList]);
+  }, [flowList, flowShow, flowActive, state.map]);
+
+  // useEffect(() => {
+  //   if (flowList.length > 0) {
+  //     const point: TypePoint[] = [];
+
+  //     flowList.map((list: any, idx: number) => {
+  //       list.map((li: TypeNiceFlowData, depthIdx: number) => {
+  //         const { flowLv, xAxis, yAxis } = li;
+  //         point.push({
+  //           lv: flowLv,
+  //           point: [yAxis, xAxis],
+  //         });
+  //       });
+  //     });
+  //     setFlowData(point);
+  //   } else {
+  //     setFlowData([]);
+  //   }
+
+  //   return () => {
+  //     setFlowData(null);
+  //   };
+  // }, [flowList]);
 
   useEffect(() => {
     const dongName = dong.slctName.replace(`${sigungu?.slctName} `, "");
@@ -238,35 +282,35 @@ const MapFlowDong = () => {
           strokeOpacity: 0.5,
         }}
       />
-      {flowActive && flowShow && flowData && flowData?.length > 0 && (
+      {/* {flowActive && flowShow && flowData && flowData?.length > 0 && (
         <MarkerFlowPopList flowList={flowData} />
-      )}
+      )} */}
     </Fragment>
   );
 };
 
-const MarkerFlowPopList = memo(({ flowList }: { flowList: TypePoint[] }) => {
-  return (
-    <Fragment>
-      {flowList.map(({ lv, point }, idx: number) => {
-        return (
-          <Marker
-            key={`flow-${idx}`}
-            id={`flow-${idx}`}
-            opts={{
-              position: new naver.maps.LatLng(point[0], point[1]),
-              icon: {
-                content: `<div style="width: 6px; height: 6px; border-radius: 50%; background-color: ${flowColor[lv]}"/>`,
-                size: new naver.maps.Size(6, 6),
-                anchor: new naver.maps.Point(3, 3),
-              },
-            }}
-            onClick={() => {}}
-          />
-        );
-      })}
-    </Fragment>
-  );
-});
+// const MarkerFlowPopList = memo(({ flowList }: { flowList: TypePoint[] }) => {
+//   return (
+//     <Fragment>
+//       {flowList.map(({ lv, point }, idx: number) => {
+//         return (
+//           <Marker
+//             key={`flow-${idx}`}
+//             id={`flow-${idx}`}
+//             opts={{
+//               position: new naver.maps.LatLng(point[0], point[1]),
+//               icon: {
+//                 content: `<div style="width: 6px; height: 6px; border-radius: 50%; background-color: ${flowColor[lv]}"/>`,
+//                 size: new naver.maps.Size(6, 6),
+//                 anchor: new naver.maps.Point(3, 3),
+//               },
+//             }}
+//             onClick={() => {}}
+//           />
+//         );
+//       })}
+//     </Fragment>
+//   );
+// });
 
 export default MapFlowDong;

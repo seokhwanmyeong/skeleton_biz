@@ -92,7 +92,10 @@ const FlowDong = (props: Props) => {
         <Button
           variant="filterTop"
           onClick={() => {
-            setSv({ props: null, viewId: "eval" });
+            setSv({
+              props: { areaType: "dong", areaCode: dong.slctCode },
+              viewId: "eval",
+            });
           }}
         >
           <Box>
@@ -103,7 +106,16 @@ const FlowDong = (props: Props) => {
         <DecoFilterDivider />
         <BtnReset />
       </DecoBotHightBox>
-      {isOpen && <NiceFilterDepth path={dong.slctPath} />}
+      {isOpen && (
+        <NiceFilterDepth
+          areaInfo={{
+            areaType: "polygon",
+            slctName: dong.slctName,
+            slctCode: dong.slctCode,
+            slctPath: dong.slctPath[0],
+          }}
+        />
+      )}
     </>
   );
 };

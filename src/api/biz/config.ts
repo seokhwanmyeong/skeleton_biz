@@ -31,7 +31,6 @@ import {
   ERP_CLIENT_CREATE,
   ERP_CLIENT_UPDATE,
   ERP_CLIENT_DELETE,
-  ERP_CODE_CHECKER,
   MAP_SIDO_GET_LIST,
   MAP_SIGUNGU_GET_LIST,
   MAP_DONG_GET_LIST,
@@ -42,6 +41,7 @@ import {
   MAP_ERP_STORE_GET_INFO,
   MAP_ERP_RENT_GET_INFO,
   MAP_ERP_BSDIS_GET_INFO,
+  ERP_CODE_CHECKER,
   ERP_LINK_STORE_GET,
   ERP_LINK_BSDIS_GET,
   ERP_HISTORY_STORE_GET,
@@ -77,6 +77,9 @@ import type {
   TypeHistoryRentList,
   TypeHistoryRentDetail,
   TypeHistoryRentForm,
+  TypeChkCode,
+  TypeSearchLinkStore,
+  TypeSearchLinkBsDis,
 } from "@api/biz/type";
 
 let localStorage = window.localStorage;
@@ -275,9 +278,21 @@ const apiUpjong = {
 };
 
 const apiCommon = {
-  checkCode: (req: any) => instance.post(ERP_CODE_CHECKER, req),
-  getAvailableStoreLink: (req: any) => instance.post(ERP_LINK_STORE_GET, req),
-  getAvailableBsDisLink: (req: any) => instance.post(ERP_LINK_BSDIS_GET, req),
+  checkCode: (req: TypeChkCode["req"]) =>
+    instance.post<TypeChkCode["req"], TypeChkCode["res"]>(
+      ERP_CODE_CHECKER,
+      req
+    ),
+  getAvailableStoreLink: (req: TypeSearchLinkStore["req"]) =>
+    instance.post<TypeSearchLinkStore["req"], TypeSearchLinkStore["res"]>(
+      ERP_LINK_STORE_GET,
+      req
+    ),
+  getAvailableBsDisLink: (req: TypeSearchLinkBsDis["req"]) =>
+    instance.post<TypeSearchLinkBsDis["req"], TypeSearchLinkBsDis["res"]>(
+      ERP_LINK_BSDIS_GET,
+      req
+    ),
 };
 
 export {

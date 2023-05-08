@@ -37,23 +37,30 @@ const RentBasicInfo = ({ info }: { info: TypeMapRentInfo["res"] | null }) => {
 };
 
 const ElementLine = ({
+  noborder = false,
   title,
   content,
 }: {
+  noborder?: boolean;
   title: string;
   content: string | number;
 }) => {
   return (
-    <Flex w="100%" align="center">
+    <Flex
+      pb={noborder ? "0" : "1rem"}
+      w="100%"
+      align="center"
+      borderBottom={noborder ? "none" : "1px solid"}
+    >
       <FormLabel
         display="flex"
         alignItems="flex-start"
         m="0"
         minW="4.4rem"
-        w="30%"
+        w="40%"
         flex="none"
         textStyle="base"
-        fontSize="xs"
+        fontSize="sm"
         fontWeight="strong"
       >
         {title}
@@ -66,47 +73,6 @@ const ElementLine = ({
       >
         {content}
       </Text>
-    </Flex>
-  );
-};
-
-const ElementImgList = ({
-  title,
-  content,
-}: {
-  title: string;
-  content?: {
-    bsDisCode: string;
-    bsDisName: string;
-  }[];
-}) => {
-  return (
-    <Flex w="100%" align="center">
-      <FormLabel
-        display="flex"
-        alignItems="flex-start"
-        m="0"
-        minW="4.4rem"
-        w="30%"
-        flex="none"
-        textStyle="base"
-        fontSize="xs"
-        fontWeight="strong"
-      >
-        {title}
-      </FormLabel>
-      {content?.map((li) => {
-        return (
-          <Text
-            textStyle="base"
-            fontSize="sm"
-            fontWeight="medium"
-            color="font.primary"
-          >
-            {li.bsDisName}
-          </Text>
-        );
-      })}
     </Flex>
   );
 };

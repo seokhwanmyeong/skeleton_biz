@@ -8,6 +8,11 @@ import {
   MAP_NICE_RANKING,
   MAP_NICE_STORE,
   MAP_NICE_FLOWPOP,
+  MAP_REPORT_SUMMARY,
+  MAP_REPORT_POP,
+  MAP_REPORT_HOUSE,
+  MAP_REPORT_UPJONSALE,
+  MAP_REPORT_FACILITY,
 } from "@api/bizSub/url";
 //  Type
 import type {
@@ -28,7 +33,7 @@ const instance: BixApiInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BIZSUB_SERVER,
   responseType: "json",
   responseEncoding: "utf8",
-  timeout: 20000,
+  timeout: 10000,
   headers: {
     Accept: "*/*",
     "Content-Type": "application/json",
@@ -79,4 +84,12 @@ const apiMapNice = {
     ),
 };
 
-export { apiMapArea, apiMapNice };
+const apiReport = {
+  getSummary: (req: any) => instance.post(MAP_REPORT_SUMMARY, req),
+  getPop: (req: any) => instance.post(MAP_REPORT_POP, req),
+  getHouse: (req: any) => instance.post(MAP_REPORT_HOUSE, req),
+  getUpjongSale: (req: any) => instance.post(MAP_REPORT_UPJONSALE, req),
+  getFacility: (req: any) => instance.post(MAP_REPORT_FACILITY, req),
+};
+
+export { apiMapArea, apiMapNice, apiReport };

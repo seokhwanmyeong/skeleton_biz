@@ -411,3 +411,20 @@ export const dataErpCollector = selector({
   },
   set: ({ set, reset }) => {},
 });
+
+//  업종관련 연관필터
+export const refUpjongActiveGetter = selector({
+  key: "refUpjongActiveGetter",
+  get: ({ get }) => {
+    const { active: a } = get(infoComBrand);
+    const { active: b } = get(infoComUpjongCnt);
+    const { active: c } = get(infoComSale);
+
+    return {
+      brand: a,
+      upjongCnt: b,
+      sale: c,
+    };
+  },
+  set: ({ set, reset }) => {},
+});

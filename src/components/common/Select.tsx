@@ -8,6 +8,10 @@ import {
   MenuList,
   MenuItem,
   Button,
+  List,
+  ListItem,
+  Box,
+  Text,
 } from "@chakra-ui/react";
 //  Services
 import { addrApiHandler } from "@services/address/sgisDepthAddr";
@@ -256,8 +260,165 @@ const SelectAddr = ({
   );
 };
 
-const SelectBsDisLayer = () => {
-  return null;
+const SelectForm = ({
+  selectProps,
+  variant,
+  value,
+  defaultText = "선택",
+  defalutValue,
+  data,
+  opBaseTxt,
+  opBaseId,
+  opBaseKey,
+  onChange,
+  isDisabled = false,
+  isInvalid = false,
+  isReadOnly = false,
+  isRequired = false,
+}: PropsSlct) => {
+  const defaultId = defalutValue ? defalutValue : useId();
+
+  return (
+    <ChakraSelect
+      {...selectProps}
+      variant={variant}
+      isDisabled={isDisabled}
+      isInvalid={isInvalid}
+      isReadOnly={isReadOnly}
+      isRequired={isRequired}
+      onChange={onChange}
+      value={value}
+      iconSize="0.875rem"
+      iconColor="font.placeholder"
+      icon={<IcoDown />}
+    >
+      {!defalutValue && (
+        <option key={defaultId} value={defaultId} hidden>
+          {defaultText}
+        </option>
+      )}
+      {data?.length > 0 &&
+        data.map((option: any, idx: number) => {
+          const opKey = option[opBaseKey];
+          const opId = option[opBaseId];
+          const opTxt = option[opBaseTxt];
+
+          return (
+            <option key={`${idx}-${opId}`} value={opKey} id={opId}>
+              {opTxt}
+            </option>
+          );
+        })}
+    </ChakraSelect>
+  );
 };
 
-export { Select, SelectAddr, SelectBsDisLayer };
+const SelectBsDisLayer = ({
+  value,
+  onClick,
+}: {
+  value: string;
+  onClick: any;
+}) => {
+  return (
+    <List display="flex" w="100%" flexDirection="column" gap="0.5rem">
+      <SlctList
+        text="상권1"
+        color="#FADB14"
+        isActive={value === "A"}
+        onClick={() => {
+          value !== "A" && onClick("A");
+        }}
+      />
+      <SlctList
+        text="상권2"
+        color="#DE9F9F"
+        isActive={value === "B"}
+        onClick={() => {
+          value !== "B" && onClick("B");
+        }}
+      />
+      <SlctList
+        text="상권3"
+        color="#74D8D2"
+        isActive={value === "C"}
+        onClick={() => {
+          value !== "C" && onClick("C");
+        }}
+      />
+      <SlctList
+        text="상권4"
+        color="#B3FFB1"
+        isActive={value === "D"}
+        onClick={() => {
+          value !== "D" && onClick("D");
+        }}
+      />
+      <SlctList
+        text="상권5"
+        color="#EFAEE1"
+        isActive={value === "E"}
+        onClick={() => {
+          value !== "E" && onClick("E");
+        }}
+      />
+    </List>
+  );
+};
+
+const SlctList = ({
+  text,
+  isActive = false,
+  color,
+  onClick,
+}: {
+  text: string;
+  isActive: boolean;
+  color: string;
+  onClick: any;
+}) => {
+  return (
+    <ListItem
+      display="flex"
+      w="100%"
+      h="2.625rem"
+      justifyContent="center"
+      alignItems="center"
+      gap="2rem"
+      border="1px solid"
+      bgColor={isActive ? "primary.type7" : "transparent"}
+      borderColor={isActive ? "primary.type7" : "system.accessible.gray.type5"}
+      borderRadius="12px"
+      transition="0.3s"
+      cursor="pointer"
+      p={{
+        fontWeight: isActive ? "strong" : "regular",
+        color: isActive ? "font.inverse" : "font.title",
+        transition: "0.3s",
+      }}
+      _hover={{
+        bgColor: "primary.type7",
+        borderColor: "primary.type7",
+        p: {
+          fontWeight: "strong",
+          color: "font.inverse",
+          transition: "0.3s",
+        },
+      }}
+      onClick={onClick}
+    >
+      <Box w="1.5rem" h="1.5rem" borderRadius="50%" bgColor={color} />
+      <Text
+        textStyle="base"
+        fontSize="xs"
+        fontWeight="regular"
+        color="font.title"
+        transition="0.3s"
+      >
+        {text}
+      </Text>
+    </ListItem>
+  );
+};
+
+export { Select, SelectAddr, SelectBsDisLayer, SelectForm };
