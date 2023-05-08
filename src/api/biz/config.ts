@@ -44,6 +44,16 @@ import {
   MAP_ERP_BSDIS_GET_INFO,
   ERP_LINK_STORE_GET,
   ERP_LINK_BSDIS_GET,
+  ERP_HISTORY_STORE_GET,
+  ERP_HISTORY_STORE_DETAIL,
+  ERP_HISTORY_STORE_CREATE,
+  ERP_HISTORY_STORE_UPDATE,
+  ERP_HISTORY_STORE_DELETE,
+  ERP_HISTORY_RENT_GET,
+  ERP_HISTORY_RENT_DETAIL,
+  ERP_HISTORY_RENT_CREATE,
+  ERP_HISTORY_RENT_UPDATE,
+  ERP_HISTORY_RENT_DELETE,
 } from "@api/biz/url";
 //  Type
 import type {
@@ -61,6 +71,12 @@ import type {
   TypeUpjongPost,
   TypeSigunguRank,
   TypeMapBsDisInfo,
+  TypeHistoryStoreList,
+  TypeHistoryStoreDetail,
+  TypeHistoryStoreForm,
+  TypeHistoryRentList,
+  TypeHistoryRentDetail,
+  TypeHistoryRentForm,
 } from "@api/biz/type";
 
 let localStorage = window.localStorage;
@@ -165,6 +181,39 @@ const erpClientApi = {
   delete: (req: any) => instance.post(ERP_CLIENT_DELETE, req),
 };
 
+const erpHistoryApi = {
+  getHistoryStoreLi: (req: TypeHistoryStoreList["res"]) =>
+    instance.post<TypeHistoryStoreList["req"], TypeHistoryStoreList["res"]>(
+      ERP_HISTORY_STORE_GET,
+      req
+    ),
+  getHistoryStoreDetail: (req: TypeHistoryStoreDetail["res"]) =>
+    instance.post<TypeHistoryStoreDetail["req"], TypeHistoryStoreDetail["res"]>(
+      ERP_HISTORY_STORE_DETAIL,
+      req
+    ),
+  createHistoryStore: (req: TypeHistoryStoreForm["res"]) =>
+    instance.post<TypeHistoryStoreForm["req"], TypeHistoryStoreForm["res"]>(
+      ERP_HISTORY_STORE_CREATE,
+      req
+    ),
+  getHistoryRentLi: (req: TypeHistoryRentList["res"]) =>
+    instance.post<TypeHistoryRentList["req"], TypeHistoryRentList["res"]>(
+      ERP_HISTORY_RENT_GET,
+      req
+    ),
+  getHistoryRentDetail: (req: TypeHistoryRentDetail["res"]) =>
+    instance.post<TypeHistoryRentDetail["req"], TypeHistoryRentDetail["res"]>(
+      ERP_HISTORY_RENT_DETAIL,
+      req
+    ),
+  createHistoryRent: (req: TypeHistoryRentForm["res"]) =>
+    instance.post<TypeHistoryRentForm["req"], TypeHistoryRentForm["res"]>(
+      ERP_HISTORY_RENT_CREATE,
+      req
+    ),
+};
+
 const apiErpMap = {
   getStoreList: (req: TypeMapStoreSearch["req"]) =>
     instance.post<TypeMapStoreSearch["req"], any>(ERP_STORE_GET_POINT, req),
@@ -238,6 +287,7 @@ export {
   erpBsdisApi,
   erpRentApi,
   erpClientApi,
+  erpHistoryApi,
   apiErpMap,
   apiCommon,
   apiMapArea,

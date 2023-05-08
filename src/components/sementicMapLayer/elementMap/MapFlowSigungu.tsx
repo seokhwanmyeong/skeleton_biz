@@ -30,26 +30,6 @@ const MapFlowSigungu = (props: Props) => {
     lngMin: 0,
   });
 
-  const getCenterPath = (path: any) => {
-    const length = path.length;
-    let xcos = 0;
-    let ycos = 0;
-    let area = 0;
-
-    for (let i = 0, len = length, j = length - 1; i < len; j = i++) {
-      let p1 = path[i];
-      let p2 = path[j];
-
-      let f = p1.y * p2.x - p2.y * p1.x;
-      xcos += (p1.x + p2.x) * f;
-      ycos += (p1.y + p2.y) * f;
-      area += f * 3;
-    }
-    return {
-      center: [xcos / area, ycos / area],
-    };
-  };
-
   useEffect(() => {
     if (sigungu?.slctCode && sigungu?.slctName && sigungu?.slctPath) {
       state.map?.fitBounds(sigungu.slctPath[0]);

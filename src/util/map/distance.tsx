@@ -50,4 +50,23 @@ const getCenterPolygon = (polygon: any): [number, number] => {
   return [xcos / area, ycos / area];
 };
 
-export { calDist, calcPolyDistance, getCenterPolygon };
+const getCenter = (paths: [number, number][]): [number, number] => {
+  const length = paths.length;
+  let xcos = 0;
+  let ycos = 0;
+  let area = 0;
+
+  for (let i = 0, len = length, j = length - 1; i < len; j = i++) {
+    let p1 = paths[i];
+    let p2 = paths[j];
+
+    let f = p1[1] * p2[0] - p2[1] * p1[0];
+    xcos += (p1[0] + p2[0]) * f;
+    ycos += (p1[1] + p2[1]) * f;
+    area += f * 3;
+  }
+
+  return [xcos / area, ycos / area];
+};
+
+export { calDist, calcPolyDistance, getCenterPolygon, getCenter };

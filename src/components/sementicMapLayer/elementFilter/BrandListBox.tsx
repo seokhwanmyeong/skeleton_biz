@@ -1,5 +1,13 @@
 //  Lib
-import { useState, memo, Fragment, useEffect, useContext, useRef } from "react";
+import {
+  useState,
+  memo,
+  Fragment,
+  useEffect,
+  useContext,
+  useRef,
+  useCallback,
+} from "react";
 import { useSetRecoilState } from "recoil";
 import {
   Flex,
@@ -18,11 +26,12 @@ import { motion } from "framer-motion";
 import OverlayView from "@src/lib/src/components/Overlay/OverlayView";
 import Circle from "@src/lib/src/components/Overlay/Circle";
 import { Marker, NaverMapContext, Polygon } from "@src/lib/src";
+import { MarkerClustering } from "@src/lib/src/components/Cluster/MarkerClustering";
 //  State
 import { sementicViewState } from "@states/sementicMap/stateView";
 //  Util
-import { getCenterPolygon } from "@util/map/distance";
 import { bsDisColor } from "@util/define/map";
+import { getCenter } from "@util/map/distance";
 //  Icon
 import markerStore from "@assets/icons/marker_store.png";
 import markerRent from "@assets/icons/marker_rent.png";
@@ -52,9 +61,6 @@ type TypeBsDis = {
 
 type BsDisList = {
   isShow: boolean;
-  // isIn: boolean;
-  // curZoom: number | null;
-  // maxMin: any;
   idx: number;
   _id: string;
   bsDisName: string;
@@ -68,59 +74,64 @@ type BsDisList = {
 const BrandListBox = memo(
   ({ storeShow, bsDisShow, rentShow, store, rent, bsDis }: Props) => {
     const { state } = useContext(NaverMapContext);
-    const [polyList, setPolyList] = useState<any[]>([]);
-    const polyListRef = useRef<any[]>([]);
+    const polygonRef = useRef<any[] | null>([]);
 
     useEffect(() => {
-      // @ts-ignore
-      if (!state.map || !bsDis || bsDis.length === 0) {
-        return;
-      }
       if (!state?.map) return;
       let zoom = state.map.getZoom();
 
-      if (zoom < 13 && polyListRef.current.length > 0) {
-        // setPolyList([]);
-        polyListRef.current.map((poly: any) => poly.setMap(null));
-        polyListRef.current = [];
+      if (zoom < 13 && polygonRef.current && polygonRef.current.length > 0) {
+        polygonRef.current.map((poly) => poly.setMap(null));
+        return;
       } else if (zoom >= 13) {
-        const mapBounds: any = state.map.getBounds();
-        const minLat = mapBounds._min._lat;
-        const minLng = mapBounds._min._lng;
-        const maxLat = mapBounds._max._lat;
-        const maxLng = mapBounds._max._lng;
+        if (polygonRef.current && polygonRef.current.length > 0) {
+          polygonRef.current.map((poly) => poly.setMap(null));
+        } else {
+          const list: any = [];
 
-        const list: any = [];
-        bsDis.map((li) => {
-          if (li.polygon_type === "single") {
-            const pos = li.center;
+          if (bsDis && bsDis.length > 0) {
+            bsDis.map(
+              (li: {
+                _id: string;
+                bisName: string;
+                bsDisType: string;
+                polygon_type: "circle" | "single" | "multi";
+                polygon: any[];
+                range: string;
+                center: [number, number];
+              }) => {
+                const mapBounds: any = state.map?.getBounds();
+                const minLat = mapBounds._min._lat;
+                const minLng = mapBounds._min._lng;
+                const maxLat = mapBounds._max._lat;
+                const maxLng = mapBounds._max._lng;
 
-            if (
-              pos[1] >= minLat &&
-              pos[1] <= maxLat &&
-              pos[0] >= minLng &&
-              pos[0] <= maxLng
-            ) {
-              const poly = new naver.maps.Polygon({
-                map: state.map,
-                paths: li.polygon,
-                fillColor: bsDisColor[li.bsDisType] || "#FF7A45",
-                fillOpacity: 0.35,
-                strokeWeight: 2,
-                clickable: true,
-              });
+                if (li.polygon_type === "single") {
+                  if (
+                    li.center[1] >= minLat &&
+                    li.center[1] <= maxLat &&
+                    li.center[0] >= minLng &&
+                    li.center[0] <= maxLng
+                  ) {
+                    const poly = new naver.maps.Polygon({
+                      map: state.map,
+                      paths: li.polygon,
+                      fillColor: bsDisColor[li.bsDisType] || "#FF7A45",
+                      fillOpacity: 0.5,
+                      strokeWeight: 1,
+                      strokeColor: "#FFFFFF",
+                      clickable: true,
+                    });
 
-              list.push(poly);
-            }
+                    list.push(poly);
+                  }
+                } else if (li.polygon_type === "circle") {
+                }
+              }
+            );
           }
-        });
 
-        polyListRef.current = list;
-      } else {
-        if (polyListRef.current.length > 0) {
-          // setPolyList([]);
-          polyListRef.current.map((poly: any) => poly.setMap(null));
-          polyListRef.current = [];
+          polygonRef.current = list;
         }
       }
 
@@ -134,10 +145,13 @@ const BrandListBox = memo(
             if (!state?.map) return;
             let zoom = state.map.getZoom();
 
-            if (zoom < 13 && polyListRef.current.length > 0) {
-              // setPolyList([]);
-              polyListRef.current.map((poly: any) => poly.setMap(null));
-              polyListRef.current = [];
+            if (
+              zoom < 13 &&
+              polygonRef.current &&
+              polygonRef.current.length > 0
+            ) {
+              polygonRef.current.map((poly) => poly.setMap(null));
+              polygonRef.current = [];
             } else if (zoom >= 13) {
               const mapBounds: any = e;
               const minLat = mapBounds._min._lat;
@@ -145,54 +159,95 @@ const BrandListBox = memo(
               const maxLat = mapBounds._max._lat;
               const maxLng = mapBounds._max._lng;
 
-              polyListRef.current.map((poly: any) => poly.setMap(null));
-              polyListRef.current = [];
+              if (!polygonRef.current) {
+                const list: any = [];
 
-              const list: any = [];
-              bsDis.map((li) => {
-                if (li.polygon_type === "single") {
-                  const pos = li.center;
+                if (bsDis && bsDis.length > 0) {
+                  bsDis.map(
+                    (li: {
+                      _id: string;
+                      bisName: string;
+                      bsDisType: string;
+                      polygon_type: "circle" | "single" | "multi";
+                      polygon: any[];
+                      range: string;
+                      center: [number, number];
+                    }) => {
+                      if (li.polygon_type === "single") {
+                        if (
+                          li.center[1] >= minLat &&
+                          li.center[1] <= maxLat &&
+                          li.center[0] >= minLng &&
+                          li.center[0] <= maxLng
+                        ) {
+                          const poly = new naver.maps.Polygon({
+                            map: state.map,
+                            paths: li.polygon,
+                            fillColor: bsDisColor[li.bsDisType] || "#FF7A45",
+                            fillOpacity: 0.5,
+                            strokeWeight: 1,
+                            strokeColor: "#FFFFFF",
+                            clickable: true,
+                          });
 
-                  if (
-                    pos[1] >= minLat &&
-                    pos[1] <= maxLat &&
-                    pos[0] >= minLng &&
-                    pos[0] <= maxLng
-                  ) {
-                    const poly = new naver.maps.Polygon({
-                      map: state.map,
-                      paths: li.polygon,
-                      fillColor: bsDisColor[li.bsDisType] || "#FF7A45",
-                      fillOpacity: 0.35,
-                      strokeWeight: 2,
-                      clickable: true,
-                    });
-
-                    list.push(poly);
-                  }
+                          list.push(poly);
+                        }
+                      } else if (li.polygon_type === "circle") {
+                      }
+                    }
+                  );
+                } else {
+                  return;
                 }
-              });
 
-              polyListRef.current = list;
+                polygonRef.current = list;
+              } else {
+                const list: any = [];
+                polygonRef.current.map((poly) => poly.setMap(null));
+                polygonRef.current = [];
 
-              // @ts-ignore
-              // const list = bsDis.filter((li) => {
-              //   if (li.polygon_type === "single") {
-              //     const pos = li.center;
-              //     return (
-              //       pos[1] >= minLat &&
-              //       pos[1] <= maxLat &&
-              //       pos[0] >= minLng &&
-              //       pos[0] <= maxLng
-              //     );
-              //   } else return false;
-              // });
-              // setPolyList(list);
+                if (bsDis && bsDis.length > 0) {
+                  bsDis.map(
+                    (li: {
+                      _id: string;
+                      bisName: string;
+                      bsDisType: string;
+                      polygon_type: "circle" | "single" | "multi";
+                      polygon: any[];
+                      range: string;
+                      center: [number, number];
+                    }) => {
+                      if (li.polygon_type === "single") {
+                        if (
+                          li.center[1] >= minLat &&
+                          li.center[1] <= maxLat &&
+                          li.center[0] >= minLng &&
+                          li.center[0] <= maxLng
+                        ) {
+                          const poly = new naver.maps.Polygon({
+                            map: state.map,
+                            paths: li.polygon,
+                            fillColor: bsDisColor[li.bsDisType] || "#FF7A45",
+                            fillOpacity: 0.5,
+                            strokeWeight: 1,
+                            strokeColor: "#FFFFFF",
+                            clickable: true,
+                          });
+
+                          list.push(poly);
+                        }
+                      } else if (li.polygon_type === "circle") {
+                      }
+                    }
+                  );
+                }
+
+                polygonRef.current = list;
+              }
             } else {
-              if (polyListRef.current.length > 0) {
-                // setPolyList([]);
-                polyListRef.current.map((poly: any) => poly.setMap(null));
-                polyListRef.current = [];
+              if (polygonRef.current && polygonRef.current.length > 0) {
+                polygonRef.current.map((poly) => poly.setMap(null));
+                polygonRef.current = [];
               }
             }
           }, 500);
@@ -200,8 +255,9 @@ const BrandListBox = memo(
       );
 
       return () => {
-        polyListRef.current.map((poly: any) => poly.setMap(null));
-        polyListRef.current = [];
+        polygonRef.current &&
+          polygonRef.current.map((poly) => poly.setMap(null));
+        polygonRef.current = null;
         naver.maps.Event.removeListener(panningEventHandelr);
       };
     }, [state, bsDis]);
@@ -263,47 +319,213 @@ const BrandListBox = memo(
             )}
           </TabPanels>
         </Tabs>
-        {/* {polyList &&
-          polyList.length > 0 &&
-          polyList.map((poly, idx) => {
-            const { polygon_type, center, range, polygon, bsDisType } = poly;
-            return polygon_type === "circle" ? (
-              <Circle
-                id={`circle-${idx}`}
-                key={`circle-${idx}`}
-                // onMouseOver={(e: any) => onHover(true)}
-                // onMouseOut={(e: any) => onHover(false)}
-                opts={{
-                  fillColor: "#fadb14",
-                  center: center,
-                  radius: Number(range) || 0,
-                  fillOpacity: 0.3,
-                  strokeColor: "#FFFFFF",
-                  strokeOpacity: 0.5,
-                }}
-              />
-            ) : polygon_type === "single" ? (
-              <Polygon
-                key={`bsDisArea-${idx}`}
-                id={`bsDisArea-${idx}`}
-                // onMouseOver={(e: any) => onHover(true)}
-                // onMouseOut={(e: any) => onHover(false)}
-                opts={{
-                  paths: polygon,
-                  fillColor: bsDisColor[bsDisType] || "#FF7A45",
-                  fillOpacity: 0.35,
-                  strokeWeight: 2,
-                  clickable: true,
-                }}
-              />
-            ) : null;
-          })} */}
       </Flex>
     );
   }
 );
 
 const ListStore = memo(({ storeShow, storeList }: any) => {
+  const { state } = useContext(NaverMapContext);
+  const markerRef = useRef<any[] | null>([]);
+
+  const reset = useCallback(() => {
+    if (markerRef.current && markerRef.current.length > 0) {
+      markerRef.current.map((marker: any) => marker.setMap(null));
+      markerRef.current = null;
+    }
+  }, [markerRef.current]);
+
+  useEffect(() => {
+    if (!state.map) return;
+    let zoom = state.map.getZoom();
+
+    if (10 < zoom && zoom < 13) {
+      reset();
+
+      const markerLi: any[] = [];
+      const area: { [x: string]: any } = {};
+
+      storeList.map(
+        (store: {
+          addr: string;
+          lat: string;
+          lng: string;
+          storeName: string;
+          storePhone: string;
+          _id: string;
+        }) => {
+          const addr = store.addr.split(" ")[1];
+
+          if (area[addr]) {
+            area[addr].push([Number(store.lat), Number(store.lng)]);
+          } else {
+            area[addr] = [];
+            area[addr].push([Number(store.lat), Number(store.lng)]);
+          }
+        }
+      );
+
+      Object.keys(area).map((key: string) => {
+        const pos = area[key].length > 1 ? getCenter(area[key]) : area[key][0];
+
+        const marker = new naver.maps.Marker({
+          map: state.map,
+          position: new naver.maps.LatLng(pos[0], pos[1]),
+          icon: {
+            content: `<div style='background: #000000; color: #FFFFFF'>${key} ${area[key].length}</div>`,
+          },
+        });
+
+        markerLi.push(marker);
+      });
+
+      markerRef.current = markerLi;
+    } else if (zoom <= 10) {
+      reset();
+
+      const markerLi: any[] = [];
+      const area: { [x: string]: any } = {};
+
+      storeList.map(
+        (store: {
+          addr: string;
+          lat: string;
+          lng: string;
+          storeName: string;
+          storePhone: string;
+          _id: string;
+        }) => {
+          const addr = store.addr.split(" ")[0];
+
+          if (area[addr]) {
+            area[addr].push([Number(store.lat), Number(store.lng)]);
+          } else {
+            area[addr] = [];
+            area[addr].push([Number(store.lat), Number(store.lng)]);
+          }
+        }
+      );
+
+      Object.keys(area).map((key: string) => {
+        const pos = area[key].length > 1 ? getCenter(area[key]) : area[key][0];
+
+        const marker = new naver.maps.Marker({
+          map: state.map,
+          position: new naver.maps.LatLng(pos[0], pos[1]),
+          icon: {
+            content: `<div style='background: #000000; color: #FFFFFF'>${key} ${area[key].length}</div>`,
+          },
+        });
+
+        markerLi.push(marker);
+      });
+
+      markerRef.current = markerLi;
+    } else {
+      reset();
+    }
+
+    const zoomEvent = naver.maps.Event.addListener(
+      state.map,
+      "zoom_changed",
+      (e) => {
+        console.log(e);
+        if (10 < e && e < 13) {
+          reset();
+
+          const markerLi: any[] = [];
+          const area: { [x: string]: any } = {};
+
+          storeList.map(
+            (store: {
+              addr: string;
+              lat: string;
+              lng: string;
+              storeName: string;
+              storePhone: string;
+              _id: string;
+            }) => {
+              const addr = store.addr.split(" ")[1];
+
+              if (area[addr]) {
+                area[addr].push([Number(store.lat), Number(store.lng)]);
+              } else {
+                area[addr] = [];
+                area[addr].push([Number(store.lat), Number(store.lng)]);
+              }
+            }
+          );
+
+          Object.keys(area).map((key: string) => {
+            const pos =
+              area[key].length > 1 ? getCenter(area[key]) : area[key][0];
+
+            const marker = new naver.maps.Marker({
+              map: state.map,
+              position: new naver.maps.LatLng(pos[0], pos[1]),
+              icon: {
+                content: `<div style='background: #000000; color: #FFFFFF'>${key} ${area[key].length}</div>`,
+              },
+            });
+
+            markerLi.push(marker);
+          });
+
+          markerRef.current = markerLi;
+        } else if (e <= 10) {
+          reset();
+
+          const markerLi: any[] = [];
+          const area: { [x: string]: any } = {};
+
+          storeList.map(
+            (store: {
+              addr: string;
+              lat: string;
+              lng: string;
+              storeName: string;
+              storePhone: string;
+              _id: string;
+            }) => {
+              const addr = store.addr.split(" ")[0];
+
+              if (area[addr]) {
+                area[addr].push([Number(store.lat), Number(store.lng)]);
+              } else {
+                area[addr] = [];
+                area[addr].push([Number(store.lat), Number(store.lng)]);
+              }
+            }
+          );
+
+          Object.keys(area).map((key: string) => {
+            const pos =
+              area[key].length > 1 ? getCenter(area[key]) : area[key][0];
+
+            const marker = new naver.maps.Marker({
+              map: state.map,
+              position: new naver.maps.LatLng(pos[0], pos[1]),
+              icon: {
+                content: `<div style='background: #000000; color: #FFFFFF'>${key} ${area[key].length}</div>`,
+              },
+            });
+
+            markerLi.push(marker);
+          });
+
+          markerRef.current = markerLi;
+        } else {
+          reset();
+        }
+      }
+    );
+
+    return () => {
+      reset();
+      naver.maps.Event.removeListener(zoomEvent);
+    };
+  }, [state, storeList]);
+
   return storeList ? (
     <List display="flex" flexDirection="column">
       {storeList.map(
@@ -341,17 +563,49 @@ const ListItemStore = ({
   const [cursorPo, setCursorPo] = useState<[number, number] | null>(null);
 
   useEffect(() => {
+    if (!state.map && !state?.objects && state.objects.size === 0) return;
+    let zoom = state.map?.getZoom() || 0;
+    let obj: any = state?.objects.get(`markerStore-${idx}`);
+
+    if (zoom < 13 && obj && obj.getVisible()) {
+      obj.setVisible(false);
+    } else if (zoom >= 13 && obj && !obj.getVisible()) {
+      obj.setVisible(true);
+    }
+
+    const zoomEvent = naver.maps.Event.addListener(
+      state.map,
+      "zoom_changed",
+      (e) => {
+        if (!state?.objects && state.objects.size === 0) return;
+        let obj: any = state?.objects.get(`markerStore-${idx}`);
+
+        if (e < 13 && obj && obj.getVisible()) {
+          obj.setVisible(false);
+        } else if (e >= 13 && obj && !obj.getVisible()) {
+          obj.setVisible(true);
+        }
+      }
+    );
+
+    return () => {
+      naver.maps.Event.removeListener(zoomEvent);
+    };
+  }, [state]);
+
+  useEffect(() => {
     if (isHover && state?.objects && state.objects.size !== 0) {
       let obj: any = state?.objects.get(`markerStore-${idx}`);
 
       if (obj) {
         const pos = obj.getPosition();
+
         setCursorPo(pos);
       }
     } else {
       setCursorPo(null);
     }
-  }, [isHover]);
+  }, [isHover, state]);
 
   return (
     <Fragment>
@@ -484,46 +738,6 @@ const ListBsDis = ({
   bsDisShow: boolean;
   bsDisList: TypeBsDis[];
 }) => {
-  const { state } = useContext(NaverMapContext);
-  // const [curZoom, setCurZoom] = useState<number | null>(null);
-  // const [maxMin, setMaxMin] = useState<{
-  //   max: [number, number];
-  //   min: [number, number];
-  // } | null>(null);
-
-  // useEffect(() => {
-  //   if (!state?.map) return;
-  //   if (!curZoom) {
-  //     let zoom = state.map.getZoom();
-  //     setCurZoom(zoom);
-  //   }
-
-  //   const zoomEventHandelr = naver.maps.Event.addListener(
-  //     state.map,
-  //     "zoom_changed",
-  //     (e: number) => {
-  //       console.log("zoom", e);
-  //       setCurZoom(e);
-  //     }
-  //   );
-  //   let timer: any;
-  //   const panningEventHandelr = naver.maps.Event.addListener(
-  //     state.map,
-  //     "bounds_changed",
-  //     (e) => {
-  //       if (timer) clearTimeout(timer);
-
-  //       timer = setTimeout(function () {
-  //         setMaxMin({ max: [e._max.y, e._max.x], min: [e._min.y, e._min.x] });
-  //       }, 500);
-  //     }
-  //   );
-
-  //   return () => {
-  //     naver.maps.Event.removeListener(zoomEventHandelr);
-  //     naver.maps.Event.removeListener(panningEventHandelr);
-  //   };
-  // }, [state]);
   console.log("render");
   return bsDisList ? (
     <List display="flex" flexDirection="column">
@@ -544,9 +758,6 @@ const ListBsDis = ({
             <ListItemBsDis
               key={`bsDisList-${idx}`}
               isShow={bsDisShow}
-              // curZoom={curZoom}
-              // maxMin={maxMin}
-              // isIn={isIn && curZoom && curZoom >= 13 ? true : false}
               idx={idx}
               _id={_id}
               bsDisName={bisName}
@@ -565,17 +776,10 @@ const ListBsDis = ({
 
 const ListItemBsDis = ({
   isShow,
-  // isIn,
-  // curZoom,
-  // maxMin,
   idx,
   _id,
   bsDisName,
   bsDisType,
-  polygonType,
-  polygon,
-  range,
-  center,
 }: BsDisList) => {
   const { state, dispatch } = useContext(NaverMapContext);
   const setSv = useSetRecoilState(sementicViewState);
@@ -617,79 +821,6 @@ const ListItemBsDis = ({
   //     setCursorPo(null);
   //   }
   // }, [isHover]);
-
-  // useEffect(() => {
-  //   if (!state?.map) return;
-  //   if (polygonType !== "single") return;
-
-  //   let timer: any;
-  //   const panningEventHandelr = naver.maps.Event.addListener(
-  //     state.map,
-  //     "bounds_changed",
-  //     (e) => {
-  //       if (timer) clearTimeout(timer);
-  //       timer = setTimeout(function () {
-  //         if (!state?.map) return;
-  //         let zoom = state.map.getZoom();
-
-  //         if (zoom < 13 && polygonRef.current) {
-  //           if (polygonRef.current.getVisible()) {
-  //             polygonRef.current.setVisible(false);
-  //             // polygonRef.current.setMap(null);
-  //             polygonRef.current = null;
-  //           }
-  //           // else {
-  //           //   polygonRef.current.setMap(null);
-  //           //   polygonRef.current = null;
-  //           // }
-  //         } else if (zoom >= 13) {
-  //           const mapBounds: any = e;
-  //           const minLat = mapBounds._min._lat;
-  //           const minLng = mapBounds._min._lng;
-  //           const maxLat = mapBounds._max._lat;
-  //           const maxLng = mapBounds._max._lng;
-  //           const pos = center;
-
-  //           if (!polygonRef.current) {
-  //             const poly = new naver.maps.Polygon({
-  //               map: state.map,
-  //               paths: polygon,
-  //             });
-  //             polygonRef.current = poly;
-  //             const isVisible = polygonRef.current.getVisible();
-
-  //             pos[1] >= minLat &&
-  //             pos[1] <= maxLat &&
-  //             pos[0] >= minLng &&
-  //             pos[0] <= maxLng
-  //               ? !isVisible && polygonRef.current.setVisible(true)
-  //               : isVisible && polygonRef.current.setVisible(false);
-  //           } else {
-  //             const isVisible = polygonRef.current.getVisible();
-
-  //             pos[1] >= minLat &&
-  //             pos[1] <= maxLat &&
-  //             pos[0] >= minLng &&
-  //             pos[0] <= maxLng
-  //               ? !isVisible && polygonRef.current.setVisible(true)
-  //               : isVisible && polygonRef.current.setVisible(false);
-  //           }
-  //         } else {
-  //           if (polygonRef.current && polygonRef.current.getVisible()) {
-  //             polygonRef.current.setVisible(false);
-  //             // polygonRef.current = null;
-  //           }
-  //         }
-  //       }, 500);
-  //     }
-  //   );
-
-  //   return () => {
-  //     polygonRef.current && polygonRef.current?.setMap(null);
-  //     polygonRef.current = null;
-  //     naver.maps.Event.removeListener(panningEventHandelr);
-  //   };
-  // }, [state]);
 
   return (
     <Fragment>
@@ -863,9 +994,6 @@ const ListItemRent = ({ isShow, idx, _id, rentName, addr, lat, lng }: any) => {
       setCursorPo(null);
     }
   }, [isHover]);
-
-  console.log(isShow && lat && lng);
-  console.log(lat, lng);
 
   return (
     <Fragment>

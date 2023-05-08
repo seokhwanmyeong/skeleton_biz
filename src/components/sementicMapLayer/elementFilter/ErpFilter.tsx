@@ -31,6 +31,8 @@ import {
   infoComErpRent,
   resetErp,
 } from "@states/sementicMap/stateFilter";
+//  Util
+import { getCenter } from "@util/map/distance";
 //  Icon
 import {
   IcoDoubleSquere,
@@ -155,34 +157,26 @@ const ErpFilter = ({
       const { records } = res;
       console.log(res);
 
-      const tmp = records.map(
-        (li: {
-          _id: string;
-          bisName: string;
-          bsDisType: string;
-          polygon_type: "circle" | "single" | "multi";
-          polygon: any[];
-          range: string;
-          center: [number, number];
-        }) => {
-          if (!li?.center && li.polygon_type === "single") {
-            const center = getCenter(li.polygon[0]);
-            return {
-              ...li,
-              center: center,
-            };
-          } else {
+      if (records && records.length > 0) {
+        const checkList = records.filter((li: any) =>
+          li.polygon_type ? true : false
+        );
+        const makeCenter = checkList.map((li: any) => {
+          if (li.center) {
             return li;
+          } else {
+            const center = getCenter(li.polygon[0]);
+            return { ...li, center: center };
           }
-        }
-      );
+        });
 
-      setErpBsD({
-        filter: filterBsD,
-        active: true,
-        show: true,
-        data: tmp || [],
-      });
+        setErpBsD({
+          filter: filterBsD,
+          active: true,
+          show: true,
+          data: makeCenter || [],
+        });
+      }
     });
   };
 
