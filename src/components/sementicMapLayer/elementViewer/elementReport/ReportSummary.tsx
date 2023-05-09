@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { Box, Divider, Flex, Text } from "@chakra-ui/react";
 //  Component
 import ChartDo from "@components/charts/ChartDo";
-import { lib } from "crypto-js";
 
 type Props = {};
 
@@ -13,6 +12,8 @@ const ReportSummary = ({ data }: any) => {
   const [chartData, setChartData] = useState<any[]>([]);
 
   const rankColor = ["#FADB14", "#FF7A45", "#36CFC9", "#595959", "#BFBFBF"];
+
+  const width = ["54%", "46%"];
 
   useEffect(() => {
     if (data.blockType && data.blockRto) {
@@ -43,15 +44,9 @@ const ReportSummary = ({ data }: any) => {
   }, [data]);
 
   return (
-    <Flex
-      p="0rem 0.5rem"
-      h="100%"
-      w="100%"
-      direction="column"
-      justify="space-between"
-    >
+    <Flex h="100%" w="100%" direction="column" justify="space-between">
       <Flex w="100%" gap="0.5rem">
-        <ElementCardBox width="50%">
+        <ElementCardBox width={width[0]}>
           <Flex direction="column">
             <ElementCardTitle title="상권유형" subTitle="상업지역" />
             <Flex
@@ -119,8 +114,8 @@ const ReportSummary = ({ data }: any) => {
             }}
           />
         </ElementCardBox>
-        <Flex direction="column" width="50%" gap="0.5rem">
-          <ElementCardBox>
+        <Flex direction="column" width={width[1]} gap="0.5rem">
+          <ElementCardBox height="50%">
             <ElementCardTitle title="상권 점수" subTitle="1000점 기준" />
             <Flex align="flex-end">
               <Text
@@ -143,7 +138,7 @@ const ReportSummary = ({ data }: any) => {
               </Text>
             </Flex>
           </ElementCardBox>
-          <ElementCardBox>
+          <ElementCardBox height="50%">
             <ElementCardTitle title="상권 등급" subTitle="5등급 기준" />
             <Flex align="flex-end">
               <Text
@@ -170,7 +165,7 @@ const ReportSummary = ({ data }: any) => {
       </Flex>
       <Flex w="100%" direction="column" gap="0.5rem">
         <Flex w="100%" gap="0.5rem">
-          <ElementCardBox>
+          <ElementCardBox width={width[0]}>
             <ElementCardTitle title="월 평균 매출" subTitle="매출 규모" />
             <Flex align="flex-end">
               <Text
@@ -193,7 +188,7 @@ const ReportSummary = ({ data }: any) => {
               </Text>
             </Flex>
           </ElementCardBox>
-          <ElementCardBox>
+          <ElementCardBox width={width[1]}>
             <ElementCardTitle title="유동 인구수" subTitle="40대 여성 1위" />
             <Flex align="flex-end">
               <Text
@@ -218,7 +213,7 @@ const ReportSummary = ({ data }: any) => {
           </ElementCardBox>
         </Flex>
         <Flex w="100%" gap="0.5rem">
-          <ElementCardBox>
+          <ElementCardBox width={width[0]}>
             <ElementCardTitle title="동종 업종수" subTitle="사무가구 점포수" />
             <Flex align="flex-end">
               <Text
@@ -241,7 +236,7 @@ const ReportSummary = ({ data }: any) => {
               </Text>
             </Flex>
           </ElementCardBox>
-          <ElementCardBox>
+          <ElementCardBox width={width[1]}>
             <ElementCardTitle title="주거 인구수" subTitle="50대 여성 1위" />
             <Flex align="flex-end">
               <Text
@@ -266,7 +261,7 @@ const ReportSummary = ({ data }: any) => {
           </ElementCardBox>
         </Flex>
         <Flex w="100%" gap="0.5rem">
-          <ElementCardBox>
+          <ElementCardBox width={width[0]}>
             <ElementCardTitle title="세대수" subTitle="아파트 1위" />
             <Flex align="flex-end">
               <Text
@@ -289,7 +284,7 @@ const ReportSummary = ({ data }: any) => {
               </Text>
             </Flex>
           </ElementCardBox>
-          <ElementCardBox>
+          <ElementCardBox width={width[1]}>
             <ElementCardTitle title="직장 인구수" subTitle="20대 남성 1위" />
             <Flex align="flex-end">
               <Text
@@ -315,8 +310,8 @@ const ReportSummary = ({ data }: any) => {
         </Flex>
       </Flex>
       <Flex w="100%" gap="0.5rem">
-        <ElementCardBox>
-          <ElementCardTitle title="지역정보" />
+        <ElementCardBox width={width[0]}>
+          <ElementCardTitle title="지역정보" width="min-content" />
           <Flex direction="column">
             <Flex gap="0.5rem">
               <Flex>
@@ -404,7 +399,7 @@ const ReportSummary = ({ data }: any) => {
             </Flex>
           </Flex>
         </ElementCardBox>
-        <ElementCardBox>
+        <ElementCardBox width={width[1]}>
           <ElementCardTitle title="평균 결제금액" subTitle="일평균" />
           <Flex align="flex-end">
             <Text
@@ -435,12 +430,14 @@ const ReportSummary = ({ data }: any) => {
 const ElementCardTitle = ({
   title,
   subTitle,
+  width = "auto",
 }: {
   title: string;
   subTitle?: string;
+  width?: string;
 }) => {
   return (
-    <Flex direction="column">
+    <Flex direction="column" w={width}>
       <Flex
         w="5.625rem"
         h="1.125rem"
@@ -453,7 +450,7 @@ const ElementCardTitle = ({
           textStyle="base"
           fontSize="xs"
           fontWeight="strong"
-          lineHeight="1px"
+          lineHeight="2px"
           color="font.inverse"
         >
           {title}
@@ -479,16 +476,23 @@ const ElementCardTitle = ({
 
 const ElementCardBox = ({
   children,
-  width,
+  width = "100%",
+  height = "auto",
+  direction = "row",
 }: {
   children: any;
   width?: string;
+  height?: string;
+  direction?: string;
 }) => {
   return (
     <Flex
       p="0.75rem 0.75rem 0.25rem"
-      w={width || "100%"}
+      w={width}
+      height={height}
       justify="space-between"
+      // @ts-ignore
+      flexDirection={direction}
       border="1px solid"
       borderColor="neutral.gray6"
       borderRadius="base"

@@ -957,48 +957,44 @@ const ListItemStore = ({
           onMouseOut={() => onHover(false)}
         />
       )}
-      {state?.map &&
-        state.map.getZoom() >= 13 &&
-        isShow &&
-        isHover &&
-        cursorPo && (
-          <OverlayView
-            id={`infoBox`}
-            position={new naver.maps.LatLng(cursorPo)}
-            pane="floatPane"
-            anchorPoint={{ x: 0, y: 10 }}
+      {state?.map && isShow && isHover && cursorPo && (
+        <OverlayView
+          id={`infoBox`}
+          position={new naver.maps.LatLng(cursorPo)}
+          pane="floatPane"
+          anchorPoint={{ x: 0, y: 10 }}
+        >
+          <Flex
+            as={motion.div}
+            animation={infoAnimation}
+            pos="relative"
+            top="-4.5rem"
+            left="-50%"
+            p="0.25rem 0.75rem"
+            w="auto"
+            justify="flex-start"
+            align="flex-start"
+            bgColor="#FFFFFFD9"
+            gap="0.5rem"
+            border="1px solid"
+            borderColor="neutral.gray6"
+            borderRadius="base"
+            whiteSpace="nowrap"
           >
-            <Flex
-              as={motion.div}
-              animation={infoAnimation}
-              pos="relative"
-              top="-4.5rem"
-              left="-50%"
-              p="0.25rem 0.75rem"
-              w="auto"
-              justify="flex-start"
-              align="flex-start"
-              bgColor="#FFFFFFD9"
-              gap="0.5rem"
-              border="1px solid"
-              borderColor="neutral.gray6"
-              borderRadius="base"
+            <Text
+              textStyle="base"
+              fontSize="sm"
+              fontWeight="strong"
+              lineHeight="normal"
+              transition="0.3s"
+              color="font.primary"
               whiteSpace="nowrap"
             >
-              <Text
-                textStyle="base"
-                fontSize="sm"
-                fontWeight="strong"
-                lineHeight="normal"
-                transition="0.3s"
-                color="font.primary"
-                whiteSpace="nowrap"
-              >
-                {storeName || ""}
-              </Text>
-            </Flex>
-          </OverlayView>
-        )}
+              {storeName || ""}
+            </Text>
+          </Flex>
+        </OverlayView>
+      )}
     </Fragment>
   );
 };
@@ -1299,7 +1295,7 @@ const ListItemRent = ({ isShow, idx, _id, rentName, addr, lat, lng }: any) => {
           </Text>
         </Flex>
       </ListItem>
-      {state?.map && state.map.getZoom() >= 13 && isShow && lat && lng && (
+      {state?.map && isShow && lat && lng && (
         <Marker
           key={`markerRent-${idx}`}
           id={`markerRent-${idx}`}

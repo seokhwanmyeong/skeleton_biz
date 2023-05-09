@@ -838,7 +838,7 @@ const Report = ({ props, isOpen, onClose }: any) => {
                 />
               </Flex>
               <TabPanels position="relative" h="100%">
-                <TabPanel p="1rem 0.5rem" w="100%" h="100%">
+                <TabPanel p="1.75rem 0.5rem" w="100%" h="100%">
                   {tabIdx === 0 && summary && !loading && (
                     <ReportSummary data={summary} />
                   )}
