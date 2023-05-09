@@ -1,5 +1,6 @@
+//  Lib
+import { useState, useEffect } from "react";
 import {
-  Box,
   Divider,
   Flex,
   Heading,
@@ -8,13 +9,47 @@ import {
   ListItem,
   Text,
 } from "@chakra-ui/react";
+//  Component
 import ChartLine from "@components/charts/ChartLine";
 
 type Props = {};
 
-const ReportUpjong = (props: Props) => {
+const ReportUpjong = ({ data }: any) => {
+  const [label, setLabel] = useState<any[]>([]);
+  const [chartData, setChartData] = useState<any[]>([]);
+  const [textArr, setTextArr] = useState({
+    storeCnt: null,
+    avgStoreOprYear: null,
+    growthSalesUpjong: null,
+  });
+
+  useEffect(() => {
+    for (let i = 0; i < data.length; i++) {
+      const list = data[i];
+      if (list.storeCnt && list.avgStoreOprYear && list.growthSalesUpjong) {
+        setTextArr({
+          storeCnt: list.storeCnt,
+          avgStoreOprYear: list.avgStoreOprYear,
+          growthSalesUpjong: list.growthSalesUpjong.split(",")[0],
+        });
+        break;
+      }
+    }
+    const chartLabel: string[] = [];
+    const chartData: string[] = [];
+
+    data.map((yearData: any) => {
+      const key = yearData.yyyymm.slice(2, 6).replace(/(.{2})/, "$1.");
+      chartLabel.push(key);
+      chartData.push(yearData.storeCnt);
+    });
+
+    setLabel(chartLabel);
+    setChartData(chartData);
+  }, [data]);
+
   return (
-    <Flex p="0" w="34.25rem" h="100%" direction="column" gap="1rem">
+    <Flex p="0" w="100%" h="100%" direction="column" gap="1rem">
       <Flex
         padding="1rem"
         w="100%"
@@ -24,6 +59,7 @@ const ReportUpjong = (props: Props) => {
         bgColor="rgba(255, 255, 255, 0.69)"
         boxShadow="0px 0px 4px rgba(0, 0, 0, 0.1)"
         border="1px solid"
+        borderColor="neutral.gray6"
         borderRadius="base"
       >
         <Heading
@@ -42,78 +78,86 @@ const ReportUpjong = (props: Props) => {
           borderColor="neutral.gray6"
         />
         <List p="0 0.75rem" w="100%">
-          <ListItem w="100%" display="flex" gap="4rem">
-            <Text
-              w="100%"
-              textStyle="base"
-              fontSize="sm"
-              fontWeight="regular"
-              lineHeight="1.75rem"
-            >
-              <Highlight
-                query={["남성", "32개"]}
-                styles={{
-                  w: "100%",
-                  textStyle: "base",
-                  fontSize: "sm",
-                  fontWeight: "strong",
-                  lineHeight: "1.75rem",
-                  color: "primary.type10",
-                  textDecoration: "underline",
-                }}
+          {textArr?.storeCnt && (
+            <ListItem w="100%" display="flex" gap="4rem">
+              <Text
+                w="100%"
+                textStyle="base"
+                fontSize="sm"
+                fontWeight="regular"
+                lineHeight="1.75rem"
               >
-                선택 영역의 업종수는 32개 입니다.
-              </Highlight>
-            </Text>
-          </ListItem>
-          <ListItem w="100%" display="flex" gap="4rem">
-            <Text
-              w="100%"
-              textStyle="base"
-              fontSize="sm"
-              fontWeight="regular"
-              lineHeight="1.75rem"
-            >
-              <Highlight
-                query={["3.5년"]}
-                styles={{
-                  w: "100%",
-                  textStyle: "base",
-                  fontSize: "sm",
-                  fontWeight: "strong",
-                  lineHeight: "1.75rem",
-                  color: "primary.type10",
-                  textDecoration: "underline",
-                }}
+                <Highlight
+                  query={[`${textArr?.storeCnt || 0}개`]}
+                  styles={{
+                    w: "100%",
+                    textStyle: "base",
+                    fontSize: "sm",
+                    fontWeight: "strong",
+                    lineHeight: "1.75rem",
+                    color: "primary.type10",
+                    textDecoration: "underline",
+                  }}
+                >
+                  {`선택 영역의 업종수는 ${textArr?.storeCnt || 0}개 입니다.`}
+                </Highlight>
+              </Text>
+            </ListItem>
+          )}
+          {textArr?.avgStoreOprYear && textArr?.avgStoreOprYear > 0 && (
+            <ListItem w="100%" display="flex" gap="4rem">
+              <Text
+                w="100%"
+                textStyle="base"
+                fontSize="sm"
+                fontWeight="regular"
+                lineHeight="1.75rem"
               >
-                평균 운영 연수는 3.5년 입니다.
-              </Highlight>
-            </Text>
-          </ListItem>
-          <ListItem w="100%" display="flex" gap="4rem">
-            <Text
-              w="100%"
-              textStyle="base"
-              fontSize="sm"
-              fontWeight="regular"
-              lineHeight="1.75rem"
-            >
-              <Highlight
-                query={["분식 / 떡볶이"]}
-                styles={{
-                  w: "100%",
-                  textStyle: "base",
-                  fontSize: "sm",
-                  fontWeight: "strong",
-                  lineHeight: "1.75rem",
-                  color: "primary.type10",
-                  textDecoration: "underline",
-                }}
+                <Highlight
+                  query={[`${textArr?.avgStoreOprYear || 0}년`]}
+                  styles={{
+                    w: "100%",
+                    textStyle: "base",
+                    fontSize: "sm",
+                    fontWeight: "strong",
+                    lineHeight: "1.75rem",
+                    color: "primary.type10",
+                    textDecoration: "underline",
+                  }}
+                >
+                  {`평균 운영 연수는 ${
+                    textArr?.avgStoreOprYear || 0
+                  }년 입니다.`}
+                </Highlight>
+              </Text>
+            </ListItem>
+          )}
+          {textArr?.growthSalesUpjong && (
+            <ListItem w="100%" display="flex" gap="4rem">
+              <Text
+                w="100%"
+                textStyle="base"
+                fontSize="sm"
+                fontWeight="regular"
+                lineHeight="1.75rem"
               >
-                매출 성장 업종은 분식 / 떡볶이 입니다.
-              </Highlight>
-            </Text>
-          </ListItem>
+                <Highlight
+                  query={[`${textArr?.growthSalesUpjong}`]}
+                  styles={{
+                    w: "100%",
+                    textStyle: "base",
+                    fontSize: "sm",
+                    fontWeight: "strong",
+                    lineHeight: "1.75rem",
+                    color: "primary.type10",
+                    textDecoration: "underline",
+                  }}
+                >
+                  {`매출 성장 업종은 ${textArr?.growthSalesUpjong} 입니다.`}
+                </Highlight>
+              </Text>
+            </ListItem>
+          )}
         </List>
       </Flex>
       <Flex
@@ -125,6 +169,7 @@ const ReportUpjong = (props: Props) => {
         bgColor="rgba(255, 255, 255, 0.69)"
         boxShadow="0px 0px 4px rgba(0, 0, 0, 0.1)"
         border="1px solid"
+        borderColor="neutral.gray6"
         borderRadius="base"
       >
         <Flex justify="space-between" align="center">
@@ -191,27 +236,11 @@ const ReportUpjong = (props: Props) => {
             },
           }}
           data={{
-            labels: [
-              "22.02",
-              "22.03",
-              "22.04",
-              "22.05",
-              "22.06",
-              "22.07",
-              "22.08",
-              "22.09",
-              "22.10",
-              "22.11",
-              "22.12",
-              "23.01",
-            ],
+            labels: label,
             datasets: [
               {
                 label: "업종 수",
-                data: [
-                  500, 1000, 3000, 200, 500, 300, 500, 1000, 3000, 200, 500,
-                  300,
-                ],
+                data: chartData,
                 borderColor: "#AD8B00",
                 backgroundColor: "rgba(255, 99, 132, 0.5)",
                 segment: {

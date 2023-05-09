@@ -46,7 +46,7 @@ const ReportSummary = ({ data }: any) => {
     <Flex
       p="0rem 0.5rem"
       h="100%"
-      w="34.25rem"
+      w="100%"
       direction="column"
       justify="space-between"
     >

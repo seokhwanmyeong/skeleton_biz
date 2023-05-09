@@ -71,7 +71,7 @@ const ReportResi = ({ data }: Props) => {
   }, [data]);
 
   return (
-    <Flex p="0" w="34.25rem" h="100%" direction="column" gap="1rem">
+    <Flex p="0" w="100%" h="100%" direction="column" gap="1rem">
       <Flex
         padding="1rem"
         w="100%"
@@ -81,6 +81,7 @@ const ReportResi = ({ data }: Props) => {
         bgColor="rgba(255, 255, 255, 0.69)"
         boxShadow="0px 0px 4px rgba(0, 0, 0, 0.1)"
         border="1px solid"
+        borderColor="neutral.gray6"
         borderRadius="base"
       >
         <Heading
@@ -162,6 +163,7 @@ const ReportResi = ({ data }: Props) => {
         bgColor="rgba(255, 255, 255, 0.69)"
         boxShadow="0px 0px 4px rgba(0, 0, 0, 0.1)"
         border="1px solid"
+        borderColor="neutral.gray6"
         borderRadius="base"
       >
         <Flex justify="space-between" align="center">

@@ -17,6 +17,7 @@ import {
   ModalContent,
   ModalBody,
   IconButton,
+  Spinner,
 } from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -60,8 +61,14 @@ import ReportCost from "./elementReport/ReportCost";
 const Report = ({ props, isOpen, onClose }: any) => {
   const { areaType, slctName, slctCode, pathType, slctPath, center, range } =
     props;
-  const { getSummary, getPop, getHouse, getUpjongSale, getFacility } =
-    apiReport;
+  const {
+    getSummary,
+    getPop,
+    getHouse,
+    getUpjongSale,
+    getFacility,
+    getFacilityList,
+  } = apiReport;
   const { top, mid, bot } = useRecoilValue(atomUpjongState);
   const [double, setDouble] = useState<boolean>(false);
   const [tabIdx, setTabIdx] = useState<number>(0);
@@ -71,34 +78,13 @@ const Report = ({ props, isOpen, onClose }: any) => {
   const [jobPop, setJobPop] = useState<any>(null);
   const [resiPop, setResiPop] = useState<any>(null);
   const [house, setHouse] = useState<any>(null);
-  const [ubjongCnt, setUpjongCnt] = useState<any>(null);
-  const [sale, setSale] = useState<any>(null);
+  const [ubjongSale, setUpjongSale] = useState<any>(null);
   const [facility, setFacility] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const summaryHandler = () => {
-    const sample = {
-      upjongCd: "Q13007",
-      batchYyyymm: "202303",
-      blockType: "상업지역, 주거지역, 특수지역, 오피스지역, 기타지역",
-      blockRto: "46, 45, 5, 3, 1",
-      avgScore: 152,
-      avgLv: 2,
-      avgMScore: 152,
-      inflowCustCnt: 296200,
-      housCustCnt: 26025,
-      jobCustCnt: 50296,
-      storeCnt: 67,
-      cost: 8661,
-      hous: 10191,
-      avgSalesAmt: 2646.3187865671644,
-      schoolCnt: 6,
-      companyCnt: 1994,
-      subwayCnt: 2,
-      busstopCnt: 21,
-    };
+    setLoading(true);
 
-    setSummary(sample);
-    return;
     if (areaType === "dong") {
       getSummary({
         upjongCd: bot.code,
@@ -106,14 +92,13 @@ const Report = ({ props, isOpen, onClose }: any) => {
         admiCd: slctCode,
       })
         .then((res: any) => {
-          console.log(res);
-
           if (res?.data) {
             setSummary(res.data);
+            setLoading(false);
           }
         })
         .catch(() => {
-          setSummary(sample);
+          setLoading(false);
         });
     } else if (areaType === "circle" && pathType === "circle") {
       getSummary({
@@ -123,14 +108,13 @@ const Report = ({ props, isOpen, onClose }: any) => {
         range: range,
       })
         .then((res: any) => {
-          console.log(res);
-
           if (res?.data) {
             setSummary(res.data);
           }
+          setLoading(false);
         })
         .catch(() => {
-          setSummary(sample);
+          setLoading(false);
         });
     } else if (areaType === "polygon" && pathType === "bounds") {
       if (slctPath) {
@@ -143,34 +127,39 @@ const Report = ({ props, isOpen, onClose }: any) => {
           wkt: [[arr]],
         })
           .then((res: any) => {
-            console.log(res);
-
             if (res?.data) {
               setSummary(res.data);
             }
+            setLoading(false);
           })
           .catch(() => {
-            setSummary(sample);
+            setLoading(false);
           });
+      } else {
+        setLoading(false);
       }
     }
   };
 
   const popHandler = (index: number) => {
-    setPop(FlowSample.data);
-    return;
+    setLoading(true);
+
     if (areaType === "dong") {
       getPop({
         upjongCd: bot.code,
         ctyCd: slctCode.slice(0, 4),
         admiCd: slctCode,
       })
-        .then((res) => {
-          console.log(res);
+        .then((res: any) => {
+          if (res.data) {
+            setPop(res.data);
+          }
+          setLoading(false);
           setTabIdx(index);
         })
         .catch(() => {
-          setPop(FlowSample);
+          setPop(null);
+          setLoading(false);
         });
     } else if (areaType === "circle" && pathType === "circle") {
       getPop({
@@ -179,12 +168,16 @@ const Report = ({ props, isOpen, onClose }: any) => {
         yAxis: center.y,
         range: range,
       })
-        .then((res) => {
-          console.log(res);
+        .then((res: any) => {
+          if (res.data) {
+            setPop(res.data);
+          }
+          setLoading(false);
           setTabIdx(index);
         })
         .catch(() => {
-          setPop(FlowSample);
+          setPop(null);
+          setLoading(false);
         });
     } else if (areaType === "polygon" && pathType === "bounds") {
       if (slctPath) {
@@ -196,45 +189,57 @@ const Report = ({ props, isOpen, onClose }: any) => {
           upjongCd: bot.code,
           wkt: [[arr]],
         })
-          .then((res) => {
-            console.log(res);
+          .then((res: any) => {
+            if (res.data) {
+              setPop(res.data);
+            }
+            setLoading(false);
             setTabIdx(index);
           })
           .catch(() => {
-            setPop(FlowSample);
+            setPop(null);
+            setLoading(false);
           });
       }
     }
   };
 
   const houseHandler = (index: number) => {
+    setLoading(true);
+
     if (areaType === "dong") {
       getHouse({
         upjongCd: bot.code,
         ctyCd: slctCode.slice(0, 4),
         admiCd: slctCode,
-      }).then((res: any) => {
-        console.log(res);
-
-        if (res?.data) {
-          setHouse(res.data);
-          setTabIdx(index);
-        }
-      });
+      })
+        .then((res: any) => {
+          if (res?.data) {
+            setHouse(res.data);
+            setLoading(false);
+            setTabIdx(index);
+          }
+        })
+        .catch(() => {
+          setLoading(false);
+        });
     } else if (areaType === "circle" && pathType === "circle") {
       getHouse({
         upjongCd: bot.code,
         xAxis: center.x,
         yAxis: center.y,
         range: range,
-      }).then((res: any) => {
-        console.log(res);
-
-        if (res?.data) {
-          setHouse(res.data);
-          setTabIdx(index);
-        }
-      });
+      })
+        .then((res: any) => {
+          if (res?.data) {
+            setHouse(res.data);
+            setLoading(false);
+            setTabIdx(index);
+          }
+        })
+        .catch(() => {
+          setLoading(false);
+        });
     } else if (areaType === "polygon" && pathType === "bounds") {
       if (slctPath) {
         const arr = slctPath.map((path: any) => {
@@ -244,38 +249,59 @@ const Report = ({ props, isOpen, onClose }: any) => {
         getHouse({
           upjongCd: bot.code,
           wkt: [[arr]],
-        }).then((res: any) => {
-          console.log(res);
+        })
+          .then((res: any) => {
+            console.log(res);
 
-          if (res?.data) {
-            setHouse(res.data);
-            setTabIdx(index);
-          }
-        });
+            if (res?.data) {
+              setHouse(res.data);
+              setLoading(false);
+              setTabIdx(index);
+            }
+          })
+          .catch(() => {
+            setLoading(false);
+          });
       }
     }
   };
 
   const upjongSaleHandler = (index: number) => {
+    setLoading(true);
+
     if (areaType === "dong") {
       getUpjongSale({
         upjongCd: bot.code,
         ctyCd: slctCode.slice(0, 4),
         admiCd: slctCode,
-      }).then((res) => {
-        console.log(res);
-        setTabIdx(index);
-      });
+      })
+        .then((res: any) => {
+          if (res.data && res.data.length > 0) {
+            setUpjongSale(res.data);
+            setTabIdx(index);
+          }
+          setLoading(false);
+        })
+        .catch(() => {
+          setLoading(false);
+        });
     } else if (areaType === "circle" && pathType === "circle") {
       getUpjongSale({
         upjongCd: bot.code,
         xAxis: center.x,
         yAxis: center.y,
         range: range,
-      }).then((res) => {
-        console.log(res);
-        setTabIdx(index);
-      });
+      })
+        .then((res: any) => {
+          if (res.data && res.data.length > 0) {
+            setUpjongSale(res.data);
+            setTabIdx(index);
+          }
+          setLoading(false);
+        })
+        .catch(() => {
+          setLoading(false);
+        });
     } else if (areaType === "polygon" && pathType === "bounds") {
       if (slctPath) {
         const arr = slctPath.map((path: any) => {
@@ -285,23 +311,50 @@ const Report = ({ props, isOpen, onClose }: any) => {
         getUpjongSale({
           upjongCd: bot.code,
           wkt: [[arr]],
-        }).then((res) => {
-          console.log(res);
-          setTabIdx(index);
-        });
+        })
+          .then((res: any) => {
+            if (res.data && res.data.length > 0) {
+              setUpjongSale(res.data);
+              setTabIdx(index);
+            }
+            setLoading(false);
+          })
+          .catch(() => {
+            setLoading(false);
+          });
       }
+    } else {
+      setLoading(false);
     }
   };
 
   const facilityHandler = (index: number) => {
+    setLoading(true);
+
     if (areaType === "dong") {
       getFacility({
         upjongCd: bot.code,
         ctyCd: slctCode.slice(0, 4),
         admiCd: slctCode,
-      }).then((res) => {
-        console.log(res);
-        setTabIdx(index);
+      }).then((res: any) => {
+        getFacilityList({
+          upjongCd: bot.code,
+          ctyCd: slctCode.slice(0, 4),
+          admiCd: slctCode,
+        })
+          .then((depthRes: any) => {
+            if (res?.data && depthRes.data) {
+              setFacility({
+                ...res.data[0],
+                ...depthRes.data,
+              });
+              setLoading(false);
+              setTabIdx(index);
+            }
+          })
+          .catch(() => {
+            setLoading(false);
+          });
       });
     } else if (areaType === "circle" && pathType === "circle") {
       getFacility({
@@ -309,9 +362,26 @@ const Report = ({ props, isOpen, onClose }: any) => {
         xAxis: center.x,
         yAxis: center.y,
         range: range,
-      }).then((res) => {
-        console.log(res);
-        setTabIdx(index);
+      }).then((res: any) => {
+        getFacilityList({
+          upjongCd: bot.code,
+          xAxis: center.x,
+          yAxis: center.y,
+          range: range,
+        })
+          .then((depthRes: any) => {
+            if (res?.data && depthRes.data) {
+              setFacility({
+                ...res.data[0],
+                ...depthRes.data,
+              });
+              setLoading(false);
+              setTabIdx(index);
+            }
+          })
+          .catch(() => {
+            setLoading(false);
+          });
       });
     } else if (areaType === "polygon" && pathType === "bounds") {
       if (slctPath) {
@@ -322,9 +392,24 @@ const Report = ({ props, isOpen, onClose }: any) => {
         getFacility({
           upjongCd: bot.code,
           wkt: [[arr]],
-        }).then((res) => {
-          console.log(res);
-          setTabIdx(index);
+        }).then((res: any) => {
+          getFacilityList({
+            upjongCd: bot.code,
+            wkt: [[arr]],
+          })
+            .then((depthRes: any) => {
+              if (res?.data && depthRes.data) {
+                setFacility({
+                  ...res.data[0],
+                  ...depthRes.data,
+                });
+                setLoading(false);
+                setTabIdx(index);
+              }
+            })
+            .catch(() => {
+              setLoading(false);
+            });
         });
       }
     }
@@ -400,6 +485,7 @@ const Report = ({ props, isOpen, onClose }: any) => {
       <ModalOverlay />
       <ModalContent w="auto" h="34.25rem" maxW="auto" bgColor="transparent">
         <ModalBody p="0" h="100%">
+          {loading && <ReportSpinner />}
           <Tabs
             variant="unstyled"
             display="flex"
@@ -412,14 +498,15 @@ const Report = ({ props, isOpen, onClose }: any) => {
                 popHandler(index);
               } else if (!house && index === 4) {
                 houseHandler(index);
-              } else if (!ubjongCnt && !sale && (index === 5 || index === 6)) {
-                setTabIdx(index);
-                return;
+              } else if (
+                !ubjongSale &&
+                (index === 5 || index === 6 || index === 7)
+              ) {
                 upjongSaleHandler(index);
-              } else if (!facility && index === 7) {
-                setTabIdx(index);
                 return;
+              } else if (!facility && index === 8) {
                 facilityHandler(index);
+                return;
               } else {
                 setTabIdx(index);
               }
@@ -557,40 +644,11 @@ const Report = ({ props, isOpen, onClose }: any) => {
                 display="grid"
                 gridTemplateColumns="1fr 1fr"
                 gridTemplateRows="1fr 1fr 1fr 1fr 1fr"
+                gap="0.25rem"
               >
-                <Tab
-                  w="auto"
-                  h="2.875rem"
-                  gridRow="1 / 2"
-                  gridColumn="1 / 3"
-                  borderRadius="23px"
-                  textStyle="base"
-                  _selected={{
-                    bg: "#262626",
-                    fontWeight: "strong",
-                    color: "font.inverse",
-                    svg: {
-                      color: "primary.type7",
-                    },
-                    div: {
-                      borderBottom: "3px solid",
-                      borderColor: "primary.type7",
-                    },
-                  }}
-                  _hover={{
-                    bg: "#262626",
-                    fontWeight: "strong",
-                    color: "font.inverse",
-                    svg: {
-                      color: "primary.type7",
-                    },
-                    div: {
-                      borderBottom: "3px solid",
-                      borderColor: "primary.type7",
-                    },
-                  }}
-                >
-                  <Flex p="0 0.5rem" align="center" gap="0.75rem">
+                <ReportTap
+                  text="전체요약"
+                  icon={
                     <IcoBars
                       pos="relative"
                       top="1px"
@@ -598,9 +656,10 @@ const Report = ({ props, isOpen, onClose }: any) => {
                       height="1rem"
                       color="font.secondary"
                     />
-                    전체요약
-                  </Flex>
-                </Tab>
+                  }
+                  gridRow="1 / 2"
+                  gridColumn="1 / 3"
+                />
                 <ReportTap
                   text="유동인구"
                   icon={
@@ -701,6 +760,7 @@ const Report = ({ props, isOpen, onClose }: any) => {
             </Flex>
             {/* -------------------- 우측 --------------- */}
             <Flex
+              w="31.25rem"
               direction="column"
               bgColor="rgba(255, 255, 255, 0.75)"
               borderRadius="base"
@@ -777,33 +837,51 @@ const Report = ({ props, isOpen, onClose }: any) => {
                   }}
                 />
               </Flex>
-              <TabPanels h="100%">
-                <TabPanel h="100%">
-                  {tabIdx === 0 && summary && <ReportSummary data={summary} />}
+              <TabPanels position="relative" h="100%">
+                <TabPanel p="1rem 0.5rem" w="100%" h="100%">
+                  {tabIdx === 0 && summary && !loading && (
+                    <ReportSummary data={summary} />
+                  )}
                 </TabPanel>
-                <TabPanel width="100%">
-                  {tabIdx === 1 && flowPop && <ReportPop data={flowPop} />}
+                <TabPanel p="1rem 0.5rem" w="100%" width="100%">
+                  {tabIdx === 1 && flowPop && !loading && (
+                    <ReportPop data={flowPop} />
+                  )}
                 </TabPanel>
-                <TabPanel>
-                  {tabIdx === 2 && resiPop && <ReportResi data={resiPop} />}
+                <TabPanel p="1rem 0.5rem" w="100%">
+                  {tabIdx === 2 && resiPop && !loading && (
+                    <ReportResi data={resiPop} />
+                  )}
                 </TabPanel>
-                <TabPanel>
-                  {tabIdx === 3 && jobPop && <ReportJob data={jobPop} />}
+                <TabPanel p="1rem 0.5rem" w="100%">
+                  {tabIdx === 3 && jobPop && !loading && (
+                    <ReportJob data={jobPop} />
+                  )}
                 </TabPanel>
-                <TabPanel>
-                  {tabIdx === 4 && house && <ReportHouse data={house} />}
+                <TabPanel p="1rem 0.5rem" w="100%">
+                  {tabIdx === 4 && house && !loading && (
+                    <ReportHouse data={house} />
+                  )}
                 </TabPanel>
-                <TabPanel>
-                  <ReportUpjong />
+                <TabPanel p="1rem 0.5rem" w="100%">
+                  {tabIdx === 5 && ubjongSale && !loading && (
+                    <ReportUpjong data={ubjongSale} />
+                  )}
                 </TabPanel>
-                <TabPanel>
-                  <ReportSale />
+                <TabPanel p="1rem 0.5rem" w="100%">
+                  {tabIdx === 6 && ubjongSale && !loading && (
+                    <ReportSale data={ubjongSale} />
+                  )}
                 </TabPanel>
-                <TabPanel>
-                  <ReportCost />
+                <TabPanel p="1rem 0.5rem" w="100%">
+                  {tabIdx === 7 && ubjongSale && !loading && (
+                    <ReportCost data={ubjongSale} />
+                  )}
                 </TabPanel>
-                <TabPanel>
-                  <ReportFacility />
+                <TabPanel p="1rem 0.5rem" w="100%">
+                  {tabIdx === 8 && facility && !loading && (
+                    <ReportFacility data={facility} />
+                  )}
                 </TabPanel>
               </TabPanels>
             </Flex>
@@ -814,7 +892,17 @@ const Report = ({ props, isOpen, onClose }: any) => {
   );
 };
 
-const ReportTap = ({ text, icon }: { text: string; icon: any }) => {
+const ReportTap = ({
+  text,
+  icon,
+  gridRow,
+  gridColumn,
+}: {
+  text: string;
+  icon: any;
+  gridRow?: string;
+  gridColumn?: string;
+}) => {
   return (
     <Tab
       p="0"
@@ -839,6 +927,8 @@ const ReportTap = ({ text, icon }: { text: string; icon: any }) => {
           color: "primary.type7",
         },
       }}
+      gridRow={gridRow || "auto"}
+      gridColumn={gridColumn || "auto"}
     >
       {icon}
       <Text>{text}</Text>
@@ -846,78 +936,39 @@ const ReportTap = ({ text, icon }: { text: string; icon: any }) => {
   );
 };
 
-export default Report;
-
-const FlowSample = {
-  data: {
-    inflowCustCnt: 91603,
-    inflowCustM20: 14602,
-    inflowCustM30: 8294,
-    inflowCustM40: 7448,
-    inflowCustM50: 7700,
-    inflowCustM60: 7877,
-    inflowCustW20: 18686,
-    inflowCustW30: 7163,
-    inflowCustW40: 7200,
-    inflowCustW50: 6444,
-    inflowCustW60: 6195,
-    inflowMon: 89801,
-    inflowTue: 92382,
-    inflowWed: 91430,
-    inflowThu: 91684,
-    inflowFri: 95294,
-    inflowSat: 93832,
-    inflowSun: 86803,
-    inflow0710: 12705,
-    inflow1012: 9651,
-    inflow1214: 25783,
-    inflow1418: 24700,
-    inflow1821: 18776,
-    housCustCnt: 9759,
-    housCustM10: 299,
-    housCustM20: 917,
-    housCustM30: 847,
-    housCustM40: 622,
-    housCustM50over: 0,
-    housCustW10: 274,
-    housCustW20: 1406,
-    housCustW30: 803,
-    housCustW40: 530,
-    housCustW50over: 0,
-    jobCustCnt: 12283,
-    jobCustM10: 11,
-    jobCustM20: 364,
-    jobCustM30: 1014,
-    jobCustM40: 1371,
-    jobCustM50over: 0,
-    jobCustW10: 14,
-    jobCustW20: 538,
-    jobCustW30: 1345,
-    jobCustW40: 1980,
-    jobCustW50over: 0,
-    economyPop: 6729,
-    nonEconomyPop: 3031,
-    popM09under: 0,
-    popM1019: 0,
-    popM2024: 0,
-    popM2529: 0,
-    popM3034: 0,
-    popM3539: 0,
-    popM4044: 0,
-    popM4549: 0,
-    popM5054: 0,
-    popM5559: 0,
-    popM60over: 0,
-    popW09under: 0,
-    popW1019: 0,
-    popW2024: 0,
-    popW2529: 0,
-    popW3034: 0,
-    popW3539: 0,
-    popW4044: 0,
-    popW4549: 0,
-    popW5054: 0,
-    popW5559: 0,
-    popW60over: 0,
-  },
+const ReportSpinner = () => {
+  return (
+    <Flex
+      position="absolute"
+      top={0}
+      left={0}
+      zIndex={100}
+      w="100%"
+      h="100%"
+      justify="center"
+      align="center"
+      _after={{
+        content: '""',
+        position: "absolute",
+        top: 0,
+        left: 0,
+        display: "block",
+        w: "100%",
+        h: "100%",
+        bgColor: "#00000090",
+      }}
+    >
+      <Spinner
+        zIndex={101}
+        w="3rem"
+        h="3rem"
+        speed="2s"
+        color="primary.type7"
+        emptyColor="#eeeeee"
+        thickness="7px"
+      />
+    </Flex>
+  );
 };
+
+export default Report;

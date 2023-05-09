@@ -13,6 +13,7 @@ import {
   MAP_REPORT_HOUSE,
   MAP_REPORT_UPJONSALE,
   MAP_REPORT_FACILITY,
+  MAP_REPORT_FACILITYLIST,
 } from "@api/bizSub/url";
 //  Type
 import type {
@@ -90,6 +91,7 @@ const apiReport = {
   getHouse: (req: any) => instance.post(MAP_REPORT_HOUSE, req),
   getUpjongSale: (req: any) => instance.post(MAP_REPORT_UPJONSALE, req),
   getFacility: (req: any) => instance.post(MAP_REPORT_FACILITY, req),
+  getFacilityList: (req: any) => instance.post(MAP_REPORT_FACILITYLIST, req),
 };
 
 export { apiMapArea, apiMapNice, apiReport };

@@ -894,6 +894,7 @@ const ListItemStore = ({
           cursor: "pointer",
         }}
         onClick={() => {
+          console.log(storeName);
           setSv({
             viewId: "storeInfo",
             props: {

@@ -78,11 +78,18 @@ const FlowCustom = (props: Props) => {
         </Flex>
       </Flex>
       {/* --------------------------- 중단 Frame ---------------------------*/}
-      <Flex w="100%" h="100%" zIndex={1} gap="0.625rem" pointerEvents="none">
+      <Flex
+        w="100%"
+        h="100%"
+        zIndex={1}
+        gap="0.625rem"
+        pointerEvents="none"
+        justify="space-between"
+      >
         <DecoFrameL pl="1rem" align="flex-end">
           {brandShow && <FlowPopInfo />}
         </DecoFrameL>
-        <DecoFrameCenter />
+        {/* <DecoFrameCenter /> */}
         <DecoFrameR pr="0.25rem">
           <DepthList brandShow={show} brandList={brandList || []} />
         </DecoFrameR>

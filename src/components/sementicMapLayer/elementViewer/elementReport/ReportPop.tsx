@@ -116,7 +116,7 @@ const ReportPop = ({ data }: Props) => {
   }, []);
   console.log(max);
   return (
-    <Flex p="0" w="34.25rem" h="100%" direction="column" gap="1rem">
+    <Flex p="0" w="100%" h="100%" direction="column" gap="1rem">
       <Flex
         padding="1rem"
         w="100%"
@@ -126,6 +126,7 @@ const ReportPop = ({ data }: Props) => {
         bgColor="rgba(255, 255, 255, 0.69)"
         boxShadow="0px 0px 4px rgba(0, 0, 0, 0.1)"
         border="1px solid"
+        borderColor="neutral.gray6"
         borderRadius="base"
       >
         <Heading
@@ -227,51 +228,51 @@ const ReportPop = ({ data }: Props) => {
           )}
         </List>
       </Flex>
-      <Swiper
-        loop={true}
-        ref={sliderRef}
-        spaceBetween={50}
-        slidesPerView={1}
-        onSlideChange={() => console.log("slide change")}
-        onSwiper={(swiper) => console.log(swiper)}
-        style={{ width: "100%" }}
+      <Flex
+        pos="relative"
+        padding="1rem"
+        w="100%"
+        direction="column"
+        justifyContent="center"
+        bgColor="rgba(255, 255, 255, 0.69)"
+        boxShadow="0px 0px 4px rgba(0, 0, 0, 0.1)"
+        border="1px solid"
+        borderColor="neutral.gray6"
+        borderRadius="base"
       >
-        <Flex
-          pos="absolute"
-          top="40%"
-          left="0"
-          right="0"
-          p="0.5rem"
-          w="100%"
-          justify="space-between"
-          zIndex={2}
+        <Swiper
+          loop={true}
+          ref={sliderRef}
+          spaceBetween={50}
+          slidesPerView={1}
+          onSlideChange={() => console.log("slide change")}
+          onSwiper={(swiper) => console.log(swiper)}
+          style={{ width: "100%" }}
         >
-          <IcoBtnPrev
-            width="2rem"
-            height="2rem"
-            svgprop={{ width: "2rem", height: "2rem" }}
-            onClick={() => handlePrev(0)}
-          />
-          <IcoBtnNext
-            width="2rem"
-            height="2rem"
-            svgprop={{ width: "2rem", height: "2rem" }}
-            onClick={() => handleNext(0)}
-            style={{ top: "1px", transform: "rotate(180deg)" }}
-          />
-        </Flex>
-        <SwiperSlide style={{ width: "100%", height: "100%" }}>
           <Flex
-            pos="relative"
-            padding="1rem"
-            w="100%"
-            direction="column"
-            justifyContent="center"
-            bgColor="rgba(255, 255, 255, 0.69)"
-            boxShadow="0px 0px 4px rgba(0, 0, 0, 0.1)"
-            border="1px solid"
-            borderRadius="base"
+            pos="absolute"
+            top="50%"
+            left="-1%"
+            right="0"
+            w="102%"
+            justify="space-between"
+            zIndex={2}
           >
+            <IcoBtnPrev
+              width="2rem"
+              height="2rem"
+              svgprop={{ width: "2rem", height: "2rem" }}
+              onClick={() => handlePrev(0)}
+            />
+            <IcoBtnNext
+              width="2rem"
+              height="2rem"
+              svgprop={{ width: "2rem", height: "2rem" }}
+              onClick={() => handleNext(0)}
+              style={{ top: "1px", transform: "rotate(180deg)" }}
+            />
+          </Flex>
+          <SwiperSlide style={{ width: "100%", height: "100%" }}>
             <Flex justify="space-between" align="center">
               <Heading
                 w="100%"
@@ -375,31 +376,20 @@ const ReportPop = ({ data }: Props) => {
                       label: "남자",
                       data: [...Object.values(ageMan)],
                       backgroundColor: "#36CFC9",
-                      barThickness: 40,
+                      barThickness: 36,
                     },
                     {
                       label: "여자",
                       data: [...Object.values(ageWoman)],
                       backgroundColor: "#FF7A45",
-                      barThickness: 40,
+                      barThickness: 36,
                     },
                   ],
                 }}
               />
             )}
-          </Flex>
-        </SwiperSlide>
-        <SwiperSlide>
-          <Flex
-            padding="1rem"
-            w="100%"
-            direction="column"
-            justifyContent="center"
-            bgColor="rgba(255, 255, 255, 0.69)"
-            boxShadow="0px 0px 4px rgba(0, 0, 0, 0.1)"
-            border="1px solid"
-            borderRadius="base"
-          >
+          </SwiperSlide>
+          <SwiperSlide>
             <Flex>
               <Heading
                 w="100%"
@@ -411,108 +401,6 @@ const ReportPop = ({ data }: Props) => {
               >
                 요일대별 추이
               </Heading>
-              {/* <Flex align="center" gap="0.25rem">
-                <Flex align="center" gap="0.25rem">
-                  <Box
-                    w="0.5rem"
-                    h="0.5rem"
-                    background="#FF8E61"
-                    borderRadius="2px"
-                  />
-                  <Text
-                    textStyle="base"
-                    fontSize="0.625rem"
-                    fontWeight="regular"
-                    color="font.secondary"
-                    whiteSpace="nowrap"
-                    lineHeight="1px"
-                  >
-                    07~10시
-                  </Text>
-                </Flex>
-                <Flex align="center" gap="0.25rem">
-                  <Box
-                    w="0.5rem"
-                    h="0.5rem"
-                    background="#474747"
-                    borderRadius="2px"
-                  />
-                  <Text
-                    textStyle="base"
-                    fontSize="0.625rem"
-                    fontWeight="regular"
-                    color="font.secondary"
-                    whiteSpace="nowrap"
-                    lineHeight="1px"
-                  >
-                    10~12시
-                  </Text>
-                </Flex>
-                <Flex align="center" gap="0.25rem">
-                  <Box
-                    w="0.5rem"
-                    h="0.5rem"
-                    background="#54D7D2"
-                    borderRadius="2px"
-                  />
-                  <Text
-                    textStyle="base"
-                    fontSize="0.625rem"
-                    fontWeight="regular"
-                    color="font.secondary"
-                    whiteSpace="nowrap"
-                    lineHeight="1px"
-                  >
-                    12~14시
-                  </Text>
-                </Flex>
-                <Flex align="center" gap="0.25rem">
-                  <Box
-                    w="0.5rem"
-                    h="0.5rem"
-                    background="#595959"
-                    borderRadius="2px"
-                  />
-                  <Text
-                    textStyle="base"
-                    fontSize="0.625rem"
-                    fontWeight="regular"
-                    color="font.secondary"
-                    whiteSpace="nowrap"
-                    lineHeight="1px"
-                  >
-                    14~18시
-                  </Text>
-                </Flex>
-                <Flex align="center" gap="0.25rem">
-                  <Box
-                    w="0.5rem"
-                    h="0.5rem"
-                    background="#FADB14"
-                    borderRadius="2px"
-                  />
-                  <Text
-                    textStyle="base"
-                    fontSize="0.625rem"
-                    fontWeight="regular"
-                    color="font.secondary"
-                    whiteSpace="nowrap"
-                    lineHeight="1px"
-                  >
-                    18~21시
-                  </Text>
-                </Flex>
-                <Text
-                  textStyle="base"
-                  fontSize="0.625rem"
-                  fontWeight="regular"
-                  color="font.secondary"
-                  whiteSpace="nowrap"
-                  lineHeight="1px"
-                >
-                  단위 : 명
-                </Text>
-              </Flex> */}
             </Flex>
             <Divider
               m="0.5rem 0"
@@ -564,45 +452,15 @@ const ReportPop = ({ data }: Props) => {
                     {
                       label: "07~10시",
                       data: [...Object.values(day)],
-                      backgroundColor: "#FF8E61",
+                      backgroundColor: "#FADB14",
+                      barThickness: 28,
                     },
-                    // {
-                    //   label: "10~12시",
-                    //   data: [1000, 500, 1200, 100, 100, 300, 300],
-                    //   backgroundColor: "#474747",
-                    // },
-                    // {
-                    //   label: "12~14시",
-                    //   data: [1000, 500, 1200, 100, 100, 300, 300],
-                    //   backgroundColor: "#54D7D2",
-                    // },
-                    // {
-                    //   label: "14~18시",
-                    //   data: [1000, 500, 1200, 100, 100, 300, 300],
-                    //   backgroundColor: "#595959",
-                    // },
-                    // {
-                    //   label: "18~21시",
-                    //   data: [1000, 500, 1200, 100, 100, 300, 300],
-                    //   backgroundColor: "#FADB14",
-                    // },
                   ],
                 }}
               />
             )}
-          </Flex>
-        </SwiperSlide>
-        <SwiperSlide>
-          <Flex
-            padding="1rem"
-            w="100%"
-            direction="column"
-            justifyContent="center"
-            bgColor="rgba(255, 255, 255, 0.69)"
-            boxShadow="0px 0px 4px rgba(0, 0, 0, 0.1)"
-            border="1px solid"
-            borderRadius="base"
-          >
+          </SwiperSlide>
+          <SwiperSlide>
             <Flex>
               <Heading
                 w="100%"
@@ -759,35 +617,16 @@ const ReportPop = ({ data }: Props) => {
                     {
                       label: "시간대",
                       data: [...Object.values(time)],
-                      backgroundColor: "#54D7D2",
+                      backgroundColor: "#262626",
+                      barThickness: 36,
                     },
-                    // {
-                    //   label: "10~12시",
-                    //   data: [1000, 500, 1200, 100, 100, 300, 300],
-                    //   backgroundColor: "#474747",
-                    // },
-                    // {
-                    //   label: "12~14시",
-                    //   data: [1000, 500, 1200, 100, 100, 300, 300],
-                    //   backgroundColor: "#54D7D2",
-                    // },
-                    // {
-                    //   label: "14~18시",
-                    //   data: [1000, 500, 1200, 100, 100, 300, 300],
-                    //   backgroundColor: "#595959",
-                    // },
-                    // {
-                    //   label: "18~21시",
-                    //   data: [1000, 500, 1200, 100, 100, 300, 300],
-                    //   backgroundColor: "#FADB14",
-                    // },
                   ],
                 }}
               />
             )}
-          </Flex>
-        </SwiperSlide>
-      </Swiper>
+          </SwiperSlide>
+        </Swiper>
+      </Flex>
     </Flex>
   );
 };

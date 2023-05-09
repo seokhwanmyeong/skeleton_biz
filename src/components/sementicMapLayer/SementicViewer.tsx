@@ -29,10 +29,11 @@ const SementicViewer = () => {
   }, [viewId]);
 
   if (viewId === "storeInfo" && props?.id) {
+    console.log(props);
     return (
       <ModalStoreDetail
         id={props?.id}
-        name={props.name}
+        name={props.name || ""}
         isOpen={isOpen}
         onClose={() => {
           onClose();

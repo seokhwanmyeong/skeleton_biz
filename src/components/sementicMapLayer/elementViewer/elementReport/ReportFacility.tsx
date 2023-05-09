@@ -1,5 +1,6 @@
+//  Lib
+import { useEffect, useState } from "react";
 import {
-  Box,
   Divider,
   Flex,
   Heading,
@@ -8,13 +9,46 @@ import {
   ListItem,
   Text,
 } from "@chakra-ui/react";
-import ChartStackBar from "@src/components/charts/ChartStackBar";
+//  Component
+import ChartStackBar from "@components/charts/ChartStackBar";
 
-type Props = {};
+type Props = any;
 
-const ReportFacility = (props: Props) => {
+const ReportFacility = ({ data }: Props) => {
+  const [label, setLabel] = useState<any[]>([]);
+  const [chartData, setChartData] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (data) {
+      const filter = {
+        companyCnt: data.companyCnt,
+        schoolCnt: data.schoolCnt,
+        subwayCnt: data.subwayList.length,
+        busstopCnt: data.busstopCnt,
+      };
+
+      const label: any[] = [];
+      const chartData = Object.values(filter);
+
+      Object.keys(filter).map((key: string) => {
+        if (key === "companyCnt") {
+          label.push("직장");
+        } else if (key === "schoolCnt") {
+          label.push("학교");
+        } else if (key === "busstopCnt") {
+          label.push("버스");
+        } else if (key === "subwayCnt") {
+          label.push("지하철");
+        }
+      });
+
+      setLabel(label);
+      setChartData(chartData);
+    }
+  }, [data]);
+
   return (
-    <Flex p="0" w="34.25rem" h="100%" direction="column" gap="1rem">
+    <Flex p="0" w="100%" h="100%" direction="column" gap="1rem">
       <Flex
         padding="1rem"
         w="100%"
@@ -24,6 +58,7 @@ const ReportFacility = (props: Props) => {
         bgColor="rgba(255, 255, 255, 0.69)"
         boxShadow="0px 0px 4px rgba(0, 0, 0, 0.1)"
         border="1px solid"
+        borderColor="neutral.gray6"
         borderRadius="base"
       >
         <Heading
@@ -42,78 +77,91 @@ const ReportFacility = (props: Props) => {
           borderColor="neutral.gray6"
         />
         <List p="0 0.75rem" w="100%">
-          <ListItem w="100%" display="flex" gap="4rem">
-            <Text
-              w="100%"
-              textStyle="base"
-              fontSize="sm"
-              fontWeight="regular"
-              lineHeight="1.75rem"
-            >
-              <Highlight
-                query={["2개"]}
-                styles={{
-                  w: "100%",
-                  textStyle: "base",
-                  fontSize: "sm",
-                  fontWeight: "strong",
-                  lineHeight: "1.75rem",
-                  color: "primary.type10",
-                  textDecoration: "underline",
-                }}
+          {data?.schoolCnt && (
+            <ListItem w="100%" display="flex" gap="4rem">
+              <Text
+                w="100%"
+                textStyle="base"
+                fontSize="sm"
+                fontWeight="regular"
+                lineHeight="1.75rem"
               >
-                선택 영역내 학교는 2개 입니다.
-              </Highlight>
-            </Text>
-          </ListItem>
-          <ListItem w="100%" display="flex" gap="4rem">
-            <Text
-              w="100%"
-              textStyle="base"
-              fontSize="sm"
-              fontWeight="regular"
-              lineHeight="1.75rem"
-            >
-              <Highlight
-                query={["23개"]}
-                styles={{
-                  w: "100%",
-                  textStyle: "base",
-                  fontSize: "sm",
-                  fontWeight: "strong",
-                  lineHeight: "1.75rem",
-                  color: "primary.type10",
-                  textDecoration: "underline",
-                }}
+                <Highlight
+                  query={[`${data?.schoolCnt}개`]}
+                  styles={{
+                    w: "100%",
+                    textStyle: "base",
+                    fontSize: "sm",
+                    fontWeight: "strong",
+                    lineHeight: "1.75rem",
+                    color: "primary.type10",
+                    textDecoration: "underline",
+                  }}
+                >
+                  {`선택 영역내 학교는 ${data?.schoolCnt}개 입니다.`}
+                </Highlight>
+              </Text>
+            </ListItem>
+          )}
+          {data?.companyCnt && (
+            <ListItem w="100%" display="flex" gap="4rem">
+              <Text
+                w="100%"
+                textStyle="base"
+                fontSize="sm"
+                fontWeight="regular"
+                lineHeight="1.75rem"
               >
-                선택 영역내 직장수는 23개 입니다.
-              </Highlight>
-            </Text>
-          </ListItem>
-          <ListItem w="100%" display="flex" gap="4rem">
-            <Text
-              w="100%"
-              textStyle="base"
-              fontSize="sm"
-              fontWeight="regular"
-              lineHeight="1.75rem"
-            >
-              <Highlight
-                query={["1개", "12개"]}
-                styles={{
-                  w: "100%",
-                  textStyle: "base",
-                  fontSize: "sm",
-                  fontWeight: "strong",
-                  lineHeight: "1.75rem",
-                  color: "primary.type10",
-                  textDecoration: "underline",
-                }}
+                <Highlight
+                  query={[`${data?.companyCnt}개`]}
+                  styles={{
+                    w: "100%",
+                    textStyle: "base",
+                    fontSize: "sm",
+                    fontWeight: "strong",
+                    lineHeight: "1.75rem",
+                    color: "primary.type10",
+                    textDecoration: "underline",
+                  }}
+                >
+                  {`선택 영역내 직장수는 ${data?.companyCnt}개 입니다.`}
+                </Highlight>
+              </Text>
+            </ListItem>
+          )}
+          {(data?.subwayList.length > 0 || data?.busstopCnt > 0) && (
+            <ListItem w="100%" display="flex" gap="4rem">
+              <Text
+                w="100%"
+                textStyle="base"
+                fontSize="sm"
+                fontWeight="regular"
+                lineHeight="1.75rem"
               >
-                선택 영역내 지하철은 1개 , 버스정류장은 12개 입니다.
-              </Highlight>
-            </Text>
-          </ListItem>
+                <Highlight
+                  query={[
+                    `${data?.subwayList.length}개`,
+                    `${data?.busstopCnt}개`,
+                  ]}
+                  styles={{
+                    w: "100%",
+                    textStyle: "base",
+                    fontSize: "sm",
+                    fontWeight: "strong",
+                    lineHeight: "1.75rem",
+                    color: "primary.type10",
+                    textDecoration: "underline",
+                  }}
+                >
+                  {data?.subwayList.length > 0 && data?.busstopCnt > 0
+                    ? `선택 영역내 지하철은 ${data?.subwayList.length}개, 버스정류장은 ${data?.busstopCnt}개 입니다.`
+                    : data?.subwayList.length > 0
+                    ? `선택 영역내 지하철은 ${data?.subwayList.length}개 입니다.`
+                    : `선택 영역내 버스정류장은 ${data?.busstopCnt}개 입니다.`}
+                </Highlight>
+              </Text>
+            </ListItem>
+          )}
         </List>
       </Flex>
       <Flex
@@ -125,6 +173,7 @@ const ReportFacility = (props: Props) => {
         bgColor="rgba(255, 255, 255, 0.69)"
         boxShadow="0px 0px 4px rgba(0, 0, 0, 0.1)"
         border="1px solid"
+        borderColor="neutral.gray6"
         borderRadius="base"
       >
         <Flex justify="space-between" align="center">
@@ -163,7 +212,6 @@ const ReportFacility = (props: Props) => {
             plugins: {
               title: {
                 display: false,
-                text: "성별 연령대별 추이",
               },
               legend: {
                 display: false,
@@ -187,10 +235,10 @@ const ReportFacility = (props: Props) => {
             },
           }}
           data={{
-            labels: ["아파트", "단독주택", "복합주택", "오피스텔"],
+            labels: label,
             datasets: [
               {
-                data: [300, 500, 1000, 500],
+                data: chartData,
                 backgroundColor: "#36CFC9",
                 barThickness: 40,
               },

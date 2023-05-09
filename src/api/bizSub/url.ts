@@ -18,3 +18,4 @@ export const MAP_REPORT_POP = "/v1/niceapi/getPopByClss";
 export const MAP_REPORT_HOUSE = "/v1/niceapi/getHousCntByClss";
 export const MAP_REPORT_UPJONSALE = "/v1/niceapi/getUpjongSalesStore";
 export const MAP_REPORT_FACILITY = "/v1/niceapi/getFacilityCnt";
+export const MAP_REPORT_FACILITYLIST = "/v1/niceapi/getFacilityList";

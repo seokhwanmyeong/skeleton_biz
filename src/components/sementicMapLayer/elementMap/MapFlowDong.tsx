@@ -252,12 +252,19 @@ const MapFlowDong = () => {
   return (
     <Fragment>
       {/* --------------------------- 중단 Frame ---------------------------*/}
-      <Flex w="100%" h="100%" zIndex={1} gap="0.625rem" pointerEvents="none">
+      <Flex
+        w="100%"
+        h="100%"
+        zIndex={1}
+        gap="0.625rem"
+        pointerEvents="none"
+        justify="space-between"
+      >
         <DecoFrameL pl="1rem" align="flex-end">
           {dongRank && <BoxRankingDong rankData={dongRank} />}
           {flowActive && flowShow && <FlowPopInfo />}
         </DecoFrameL>
-        <DecoFrameCenter isOpen={centerView} activeAni={false} />
+        {/* <DecoFrameCenter isOpen={centerView} activeAni={false} /> */}
         <DecoFrameR pr="0.25rem">
           <DepthListBox brandShow={brandShow} brandList={brandList || []} />
         </DecoFrameR>

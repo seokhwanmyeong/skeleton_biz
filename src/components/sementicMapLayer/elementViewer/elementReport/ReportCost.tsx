@@ -1,6 +1,5 @@
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useState, useEffect } from "react";
 import {
-  Box,
   Divider,
   Flex,
   Heading,
@@ -10,15 +9,23 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import ChartStackBar from "@src/components/charts/ChartStackBar";
 import { IcoBtnNext, IcoBtnPrev } from "@src/components/common/Btn";
 import ChartLine from "@src/components/charts/ChartLine";
 
 type Props = {};
 
-const ReportCost = (props: Props) => {
+const ReportCost = ({ data }: any) => {
   const sliderRef = useRef(null);
+  const [labelCnt, setLabelCnt] = useState<any[]>([]);
+  const [chartCntData, setChartCntData] = useState<any[]>([]);
+  const [labelAmt, setLabelAmt] = useState<any[]>([]);
+  const [chartAmtData, setChartAmtData] = useState<any[]>([]);
+  const [textArr, setTextArr] = useState({
+    useCnt: null,
+    cost: null,
+  });
 
+  console.log("test");
   const handlePrev = useCallback((num: number) => {
     if (!sliderRef.current) return;
     // @ts-ignore
@@ -31,8 +38,40 @@ const ReportCost = (props: Props) => {
     sliderRef.current.swiper.slideNext();
   }, []);
 
+  useEffect(() => {
+    console.log(data);
+    for (let i = 0; i < data.length; i++) {
+      const list = data[data.length - 1 - i];
+      if (list.useCnt && list.cost) {
+        setTextArr({
+          useCnt: list.useCnt,
+          cost: list.cost,
+        });
+        break;
+      }
+    }
+    const chartCntLabel: string[] = [];
+    const chartCntData: string[] = [];
+    const chartAmtLabel: string[] = [];
+    const chartAmtData: string[] = [];
+
+    data.map((yearData: any) => {
+      const key = yearData.yyyymm.slice(2, 6).replace(/(.{2})/, "$1.");
+
+      chartCntLabel.push(key);
+      chartCntData.push(yearData.useCnt);
+      chartAmtLabel.push(key);
+      chartAmtData.push(yearData.cost);
+    });
+
+    setLabelCnt(chartCntLabel);
+    setChartCntData(chartCntData);
+    setLabelAmt(chartAmtLabel);
+    setChartAmtData(chartAmtData);
+  }, [data]);
+
   return (
-    <Flex p="0" w="34.25rem" h="100%" direction="column" gap="1rem">
+    <Flex p="0" w="100%" h="100%" direction="column" gap="1rem">
       <Flex
         padding="1rem"
         w="100%"
@@ -42,6 +81,7 @@ const ReportCost = (props: Props) => {
         bgColor="rgba(255, 255, 255, 0.69)"
         boxShadow="0px 0px 4px rgba(0, 0, 0, 0.1)"
         border="1px solid"
+        borderColor="neutral.gray6"
         borderRadius="base"
       >
         <Heading
@@ -60,125 +100,104 @@ const ReportCost = (props: Props) => {
           borderColor="neutral.gray6"
         />
         <List p="0 0.75rem" w="100%">
-          <ListItem w="100%" display="flex" gap="4rem">
-            <Text
-              w="100%"
-              textStyle="base"
-              fontSize="sm"
-              fontWeight="regular"
-              lineHeight="1.75rem"
-            >
-              <Highlight
-                query={["3,032만원", "4,736만원"]}
-                styles={{
-                  w: "100%",
-                  textStyle: "base",
-                  fontSize: "sm",
-                  fontWeight: "strong",
-                  lineHeight: "1.75rem",
-                  color: "primary.type10",
-                  textDecoration: "underline",
-                }}
+          {textArr?.cost && (
+            <ListItem w="100%" display="flex" gap="4rem">
+              <Text
+                w="100%"
+                textStyle="base"
+                fontSize="sm"
+                fontWeight="regular"
+                lineHeight="1.75rem"
               >
-                선택 영역의 평균 매출은 3,032만원 입니다. 상위 20% 매출 -
-                4,736만원 ,
-              </Highlight>
-            </Text>
-          </ListItem>
-          <ListItem w="100%" display="flex" gap="4rem">
-            <Text
-              w="100%"
-              textStyle="base"
-              fontSize="sm"
-              fontWeight="regular"
-              lineHeight="1.75rem"
-            >
-              <Highlight
-                query={["1,736만원", "2,736만원"]}
-                styles={{
-                  w: "100%",
-                  textStyle: "base",
-                  fontSize: "sm",
-                  fontWeight: "strong",
-                  lineHeight: "1.75rem",
-                  color: "primary.type10",
-                  textDecoration: "underline",
-                }}
+                <Highlight
+                  query={[`${textArr?.cost || 0}원`]}
+                  styles={{
+                    w: "100%",
+                    textStyle: "base",
+                    fontSize: "sm",
+                    fontWeight: "strong",
+                    lineHeight: "1.75rem",
+                    color: "primary.type10",
+                    textDecoration: "underline",
+                  }}
+                >
+                  {`선택 영역의 결제 금액은 ${textArr?.cost || 0}원 입니다.`}
+                </Highlight>
+              </Text>
+            </ListItem>
+          )}
+          {textArr?.useCnt && (
+            <ListItem w="100%" display="flex" gap="4rem">
+              <Text
+                w="100%"
+                textStyle="base"
+                fontSize="sm"
+                fontWeight="regular"
+                lineHeight="1.75rem"
               >
-                하위 20% 매출 - 1,736만원 , 중간값 - 2,736만원 입니다.
-              </Highlight>
-            </Text>
-          </ListItem>
-          <ListItem w="100%" display="flex" gap="4rem">
-            <Text
-              w="100%"
-              textStyle="base"
-              fontSize="sm"
-              fontWeight="regular"
-              lineHeight="1.75rem"
-            >
-              <Highlight
-                query={["남성", "화요일", "14~18시"]}
-                styles={{
-                  w: "100%",
-                  textStyle: "base",
-                  fontSize: "sm",
-                  fontWeight: "strong",
-                  lineHeight: "1.75rem",
-                  color: "primary.type10",
-                  textDecoration: "underline",
-                }}
-              >
-                주요 매출 구성은 남성, 40대, 화요일, 14~18시 입니다.
-              </Highlight>
-            </Text>
-          </ListItem>
+                <Highlight
+                  query={[`${textArr?.useCnt || 0}건`]}
+                  styles={{
+                    w: "100%",
+                    textStyle: "base",
+                    fontSize: "sm",
+                    fontWeight: "strong",
+                    lineHeight: "1.75rem",
+                    color: "primary.type10",
+                    textDecoration: "underline",
+                  }}
+                >
+                  {`결제 건수는 ${textArr?.useCnt || 0}건 입니다.`}
+                </Highlight>
+              </Text>
+            </ListItem>
+          )}
         </List>
       </Flex>
-      <Swiper
-        loop={true}
-        ref={sliderRef}
-        spaceBetween={50}
-        slidesPerView={1}
-        onSlideChange={() => console.log("slide change")}
-        onSwiper={(swiper) => console.log(swiper)}
-        style={{ width: "100%" }}
+      <Flex
+        padding="1rem"
+        w="100%"
+        direction="column"
+        justifyContent="center"
+        bgColor="rgba(255, 255, 255, 0.69)"
+        boxShadow="0px 0px 4px rgba(0, 0, 0, 0.1)"
+        border="1px solid"
+        borderColor="neutral.gray6"
+        borderRadius="base"
       >
-        <Flex
-          pos="absolute"
-          top="40%"
-          left="0"
-          right="0"
-          p="0.5rem"
-          w="100%"
-          justify="space-between"
-          zIndex={2}
+        <Swiper
+          loop={true}
+          ref={sliderRef}
+          spaceBetween={50}
+          slidesPerView={1}
+          onSlideChange={() => console.log("slide change")}
+          onSwiper={(swiper) => console.log(swiper)}
+          style={{ width: "100%" }}
         >
-          <IcoBtnPrev
-            width="2rem"
-            height="2rem"
-            svgprop={{ width: "2rem", height: "2rem" }}
-            onClick={() => handlePrev(0)}
-          />
-          <IcoBtnNext
-            width="2rem"
-            height="2rem"
-            svgprop={{ width: "2rem", height: "2rem" }}
-            onClick={() => handleNext(0)}
-            style={{ top: "1px", transform: "rotate(180deg)" }}
-          />
-        </Flex>
-        <SwiperSlide>
           <Flex
-            padding="1rem"
-            w="100%"
-            direction="column"
-            justifyContent="center"
-            bgColor="rgba(255, 255, 255, 0.69)"
-            boxShadow="0px 0px 4px rgba(0, 0, 0, 0.1)"
-            border="1px solid"
-            borderRadius="base"
+            pos="absolute"
+            top="50%"
+            left="-1%"
+            right="0"
+            w="102%"
+            justify="space-between"
+            zIndex={2}
           >
+            <IcoBtnPrev
+              width="2rem"
+              height="2rem"
+              svgprop={{ width: "2rem", height: "2rem" }}
+              onClick={() => handlePrev(0)}
+            />
+            <IcoBtnNext
+              width="2rem"
+              height="2rem"
+              svgprop={{ width: "2rem", height: "2rem" }}
+              onClick={() => handleNext(0)}
+              style={{ top: "1px", transform: "rotate(180deg)" }}
+            />
+          </Flex>
+          <SwiperSlide>
             <Flex>
               <Heading
                 w="100%"
@@ -243,27 +262,11 @@ const ReportCost = (props: Props) => {
                 },
               }}
               data={{
-                labels: [
-                  "22.02",
-                  "22.03",
-                  "22.04",
-                  "22.05",
-                  "22.06",
-                  "22.07",
-                  "22.08",
-                  "22.09",
-                  "22.10",
-                  "22.11",
-                  "22.12",
-                  "23.01",
-                ],
+                labels: labelAmt,
                 datasets: [
                   {
                     label: "월별",
-                    data: [
-                      500, 1000, 3000, 200, 500, 300, 500, 1000, 3000, 200, 500,
-                      300,
-                    ],
+                    data: chartAmtData,
                     borderColor: "#08979C",
                     backgroundColor: "rgba(255, 99, 132, 0.5)",
                     segment: {
@@ -280,20 +283,8 @@ const ReportCost = (props: Props) => {
                 ],
               }}
             />
-          </Flex>
-        </SwiperSlide>
-        <SwiperSlide style={{ width: "100%", height: "100%" }}>
-          <Flex
-            pos="relative"
-            padding="1rem"
-            w="100%"
-            direction="column"
-            justifyContent="center"
-            bgColor="rgba(255, 255, 255, 0.69)"
-            boxShadow="0px 0px 4px rgba(0, 0, 0, 0.1)"
-            border="1px solid"
-            borderRadius="base"
-          >
+          </SwiperSlide>
+          <SwiperSlide style={{ width: "100%", height: "100%" }}>
             <Flex justify="space-between" align="center">
               <Heading
                 w="100%"
@@ -358,27 +349,11 @@ const ReportCost = (props: Props) => {
                 },
               }}
               data={{
-                labels: [
-                  "22.02",
-                  "22.03",
-                  "22.04",
-                  "22.05",
-                  "22.06",
-                  "22.07",
-                  "22.08",
-                  "22.09",
-                  "22.10",
-                  "22.11",
-                  "22.12",
-                  "23.01",
-                ],
+                labels: labelCnt,
                 datasets: [
                   {
                     label: "월별",
-                    data: [
-                      500, 1000, 3000, 200, 500, 300, 500, 1000, 3000, 200, 500,
-                      300,
-                    ],
+                    data: chartCntData,
                     borderColor: "#D4380D",
                     backgroundColor: "rgba(255, 99, 132, 0.5)",
                     segment: {
@@ -395,9 +370,9 @@ const ReportCost = (props: Props) => {
                 ],
               }}
             />
-          </Flex>
-        </SwiperSlide>
-      </Swiper>
+          </SwiperSlide>
+        </Swiper>
+      </Flex>
     </Flex>
   );
 };
