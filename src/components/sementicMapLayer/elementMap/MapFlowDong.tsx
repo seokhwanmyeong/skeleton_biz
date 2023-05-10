@@ -26,13 +26,12 @@ import { sementicViewState } from "@states/sementicMap/stateView";
 //  Util
 import { flowColor } from "@util/define/map";
 //  Icon
-import { Flex, useDisclosure } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 //  Deco
 import {
-  DecoFrameCenter,
   DecoFrameL,
   DecoFrameR,
-} from "@components/sementicMapLayer/elementDeco/Deco";
+} from "@components/sementicMapLayer/elementDeco/DecoCenter";
 //  Type
 import type { TypeNiceFlowData } from "@api/bizSub/type";
 import type { RankType } from "@states/sementicMap/stateFilter";

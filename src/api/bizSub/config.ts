@@ -14,6 +14,9 @@ import {
   MAP_REPORT_UPJONSALE,
   MAP_REPORT_FACILITY,
   MAP_REPORT_FACILITYLIST,
+  MAP_NICE_SIDO,
+  MAP_NICE_SIGUNGU,
+  MAP_NICE_DONG,
 } from "@api/bizSub/url";
 //  Type
 import type {
@@ -24,6 +27,9 @@ import type {
   TypeSigunguRank,
   TypeNiceStore,
   TypeNiceFlowPop,
+  TypeNiceSido,
+  TypeNiceSigungu,
+  TypeNiceDong,
 } from "@api/bizSub/type";
 
 let localStorage = window.localStorage;
@@ -54,7 +60,11 @@ instance.interceptors.response.use((res: any) => {
 });
 
 const apiMapArea = {
-  getSidoList: () => instance.get<TypeMapSido["res"]>(MAP_SIDO_GET_LIST),
+  getSidoList: (req: TypeMapSido["req"]) =>
+    instance.post<TypeMapSido["req"], TypeMapSido["res"]>(
+      MAP_SIDO_GET_LIST,
+      req
+    ),
   getSigunguList: (req: TypeMapSigungu["req"]) =>
     instance.post<TypeMapSigungu["req"], TypeMapSigungu["res"]>(
       MAP_SIGUNGU_GET_LIST,
@@ -85,6 +95,18 @@ const apiMapNice = {
     ),
 };
 
+const apiNiceAddr = {
+  getSidoAddr: (req: TypeNiceSido["req"]) =>
+    instance.post<TypeNiceSido["req"], TypeNiceSido["res"]>(MAP_NICE_SIDO, req),
+  getSigunguAddr: (req: TypeNiceSigungu["req"]) =>
+    instance.post<TypeNiceSigungu["req"], TypeNiceSigungu["res"]>(
+      MAP_NICE_SIGUNGU,
+      req
+    ),
+  getDongAddr: (req: TypeNiceDong["req"]) =>
+    instance.post<TypeNiceDong["req"], TypeNiceDong["res"]>(MAP_NICE_DONG, req),
+};
+
 const apiReport = {
   getSummary: (req: any) => instance.post(MAP_REPORT_SUMMARY, req),
   getPop: (req: any) => instance.post(MAP_REPORT_POP, req),
@@ -94,4 +116,4 @@ const apiReport = {
   getFacilityList: (req: any) => instance.post(MAP_REPORT_FACILITYLIST, req),
 };
 
-export { apiMapArea, apiMapNice, apiReport };
+export { apiMapArea, apiMapNice, apiReport, apiNiceAddr };

@@ -1,12 +1,32 @@
 import { atom, selector } from "recoil";
+import type { TypeMapGeo } from "@src/api/bizSub/type";
+
+// export type AreaProps = {
+//   name: string;
+//   code: string;
+//   path: never[] | any[];
+//   lat?: number;
+//   lng?: number;
+//   zoomLev?: string;
+// };
 
 export type AreaProps = {
-  name: string;
+  _id: string;
+  megaNm: string;
+  megaCd: string;
+  center: string;
+  bounds: string;
+  ctyCd: string;
+  ctyNm: string;
+  admiCd: string;
+  admiNm: string;
+  zoomLevel: string;
   code: string;
-  path: never[] | any[];
-  lat?: number;
-  lng?: number;
-  zoomLev?: string;
+  name: string;
+  feature: {
+    type: string;
+    geometry: TypeMapGeo;
+  };
 };
 
 export type SlctProps = {

@@ -14,6 +14,8 @@ import {
   Heading,
   useDisclosure,
 } from "@chakra-ui/react";
+//  Component
+import { DialogAlertUpjong } from "@components/dialog/DialogAlertModal";
 //  State
 import {
   atomFilterFlow,
@@ -42,7 +44,6 @@ import {
   DecoBoxR,
   DecoTopFilterModal,
 } from "@components/sementicMapLayer/elementDeco/Deco";
-import { DialogAlertUpjong } from "@src/components/dialog/DialogAlertModal";
 
 type Props = {
   isOpen?: boolean;

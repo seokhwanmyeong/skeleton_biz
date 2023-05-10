@@ -1,5 +1,5 @@
 //  Lib
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { NaverMapContext } from "@src/lib/src";
 //  Components
@@ -12,17 +12,22 @@ import {
   atomFlowEnterArea,
   atomSlctDong,
 } from "@states/sementicMap/stateMap";
+import { Flex, useDisclosure } from "@chakra-ui/react";
 
 type Props = {};
 
 const MapFlowSigungu = (props: Props) => {
-  const { state, dispatch } = useContext(NaverMapContext);
-  const setFlow = useSetRecoilState(atomFilterFlow);
+  const { state } = useContext(NaverMapContext);
   const { sigungu } = useRecoilValue(atomFlowEnterArea);
-  const dongli = useRecoilValue(atomDongLi);
-  const setDong = useSetRecoilState(atomSlctDong);
-  const [slctDong, setSlctDong] = useState(-1);
   const filterData = useRecoilValue(dataCollector);
+  const dongLi = useRecoilValue(atomDongLi);
+  const setFlow = useSetRecoilState(atomFilterFlow);
+  const setDong = useSetRecoilState(atomSlctDong);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [slctDong, setSlctDong] = useState(-1);
+  const [cursorPo, setCursorPo] = useState<any>(null);
+  const [infoArea, setInfoArea] = useState<string>("");
+  const geoRef = useRef<any>(null);
   const [range, setRange] = useState({
     latMax: 0,
     latMin: 0,
@@ -31,8 +36,15 @@ const MapFlowSigungu = (props: Props) => {
   });
 
   useEffect(() => {
-    if (sigungu?.slctCode && sigungu?.slctName && sigungu?.slctPath) {
-      state.map?.fitBounds(sigungu.slctPath[0]);
+    if (
+      sigungu?.slctCode &&
+      sigungu?.slctName &&
+      sigungu?.slctPath &&
+      state.map
+    ) {
+      if (sigungu.slctZoom) {
+        state.map?.setZoom(Number(sigungu.slctZoom));
+      }
 
       let latLngRange = {
         latMax: 0,
@@ -55,25 +67,109 @@ const MapFlowSigungu = (props: Props) => {
         }
       });
 
+      if (geoRef.current && geoRef.current.length > 0) {
+        geoRef.current.map((geo: any) => state.map?.data.removeGeoJson(geo));
+      }
+
+      const geo = dongLi.map((dong: any) => {
+        // @ts-ignore
+        state.map.data.addGeoJson(dong.feature);
+
+        return dong.feature;
+      });
+
+      state.map.data.setStyle({
+        fillColor: "#78d6b0",
+        fillOpacity: 0.4,
+        strokeWeight: 1,
+        strokeColor: "#41be72",
+      });
+
+      // @ts-ignore
+      state.map.data.addListener("mouseover", (e) => {
+        if (!state.map) return;
+
+        state.map.data.overrideStyle(e.feature, {
+          fillColor: "#78d6b0",
+          fillOpacity: 0.65,
+          strokeWeight: 1,
+          strokeColor: "#41be72",
+        });
+
+        window.addEventListener("mousemove", cursorHandler);
+        setSlctDong(e.feature.getProperty("idx"));
+        setInfoArea(e.feature.getProperty("name"));
+        onOpen();
+      });
+
+      // @ts-ignore
+      state.map.data.addListener("mouseout", (e) => {
+        if (!state.map) return;
+
+        state.map.data.revertStyle(e.feature);
+        window.removeEventListener("mousemove", cursorHandler);
+        setSlctDong(-1);
+        setInfoArea("");
+        onClose();
+      });
+
+      // @ts-ignore
+      state.map.data.addListener("click", (e) => {
+        if (!state.map) return;
+        state.map.data.revertStyle(e.feature);
+
+        setDong({
+          slctName: e.feature.getProperty("name"),
+          slctCode: e.feature.getProperty("code"),
+          slctIdx: e.feature.getProperty("idx"),
+          slctPath: e.feature.getProperty("feature"),
+          slctLat: e.feature.getProperty("lat"),
+          slctLng: e.feature.getProperty("lng"),
+          slctZoom: e.feature.getProperty("zoomLevel"),
+          slctData: filterData || [],
+          slctRank: e.feature.getProperty("idx"),
+        });
+        setFlow("dong");
+      });
+
+      geoRef.current = geo;
+
       setRange(latLngRange);
     }
-  }, [state.map]);
+  }, [state.map, dongLi]);
 
   const onClickArea = (areaIdx: number) => {
     setDong({
-      slctName: dongli[areaIdx].name,
-      slctCode: dongli[areaIdx].code,
-      slctIdx: `area${dongli[areaIdx].code}`,
-      slctPath: dongli[areaIdx].path,
+      slctName: dongLi[areaIdx].name,
+      slctCode: dongLi[areaIdx].code,
+      slctIdx: `area${dongLi[areaIdx].code}`,
+      slctPath: dongLi[areaIdx].path,
       slctData: filterData || [],
       slctRank: areaIdx,
     });
     setFlow("dong");
   };
 
+  const cursorHandler = useCallback(
+    (e: any) => {
+      setCursorPo({ x: e?.clientX, y: e?.clientY });
+
+      return () => {
+        setCursorPo(null);
+      };
+    },
+    [state.map]
+  );
+
+  useEffect(() => {
+    return () => {
+      window.removeEventListener("mousemove", cursorHandler);
+    };
+  }, []);
+
   return (
     <>
-      {dongli.length !== 0 &&
+      {/* {dongli.length !== 0 &&
         dongli.map(
           (
             dong: {
@@ -123,7 +219,7 @@ const MapFlowSigungu = (props: Props) => {
               />
             );
           }
-        )}
+        )} */}
       {/* {sigungu && dongli.length !== 0 ? (
         <GuPanel
           range={range}
@@ -132,6 +228,30 @@ const MapFlowSigungu = (props: Props) => {
           selectDong={slctDong}
         />
       ) : null} */}
+      {isOpen && cursorPo && (
+        <Flex
+          pos="relative"
+          top={cursorPo.y - 10}
+          left={cursorPo.x + 10}
+          p="0 0.75rem"
+          w="-webkit-fit-content"
+          h="1.875rem"
+          boxSizing="border-box"
+          justify="center"
+          align="center"
+          bgColor="neutral.gray1"
+          border="1px solid"
+          borderRadius="base"
+          borderColor="neutral.gray6"
+          pointerEvents="none"
+          textStyle="base"
+          fontSize="xs"
+          fontWeight="strong"
+          lineHeight="1.875rem"
+        >
+          {infoArea}
+        </Flex>
+      )}
     </>
   );
 };

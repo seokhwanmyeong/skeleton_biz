@@ -11,11 +11,11 @@ import { NaverMapContext } from "@src/lib/src";
 //  Component
 import UpjongListBox from "@components/sementicMapLayer/elementFilter/UpjongListBox";
 import NiceFilter from "@components/sementicMapLayer/elementFilter/NiceFilter";
-import BtnReset from "@components/sementicMapLayer/elementFilter/BtnReset";
-import BtnBack from "@components/sementicMapLayer/elementFilter/BtnBack";
+import BtnReset from "@components/sementicMapLayer/common/BtnReset";
+import BtnBack from "@components/sementicMapLayer/common/BtnBack";
 import { BoxRanking } from "@components/sementicMapLayer/elementFilter/BoxRanking";
 //  Api
-import { apiMapArea } from "@api/biz/config";
+import { apiMapArea } from "@api/bizSub/config";
 //  State
 import {
   atomFilterFlow,
@@ -28,12 +28,14 @@ import { IcoFilter } from "@assets/icons/icon";
 //  Deco
 import {
   DecoTop,
-  DecoFrameL,
-  DecoFrameCenter,
-  DecoFrameR,
   DecoBotHightBox,
   DecoFilterDivider,
 } from "@components/sementicMapLayer/elementDeco/Deco";
+import {
+  DecoFrameCenter,
+  DecoFrameL,
+  DecoFrameR,
+} from "@components/sementicMapLayer/elementDeco/DecoCenter";
 //  Type
 import type { AreaProps } from "@states/sementicMap/stateMap";
 
@@ -74,12 +76,46 @@ const FlowSigungu = () => {
 
   const getDongHandler = () => {
     if (sigungu?.slctCode) {
-      getDongList({ code: sigungu.slctCode }).then((res: any) => {
+      getDongList({ ctyCd: sigungu.slctCode }).then((res: any) => {
         console.log(res);
 
-        if (res.dong && res.dong.length > 0) {
-          const transData = pathTransHandler(res.dong);
-          setDongLi(transData);
+        if (res.data && res.data.length > 0) {
+          const addFeature = res.data.map((li) => {
+            const lat = li.center.split(" ")[2].slice(0, -2);
+            const lng = li.center.split(" ")[1].slice(1, -1);
+
+            return {
+              ...li,
+              code: li.megaCd,
+              name: li.megaNm,
+              lat: lat,
+              lng: lng,
+              feature: {
+                type: "Feature",
+                properties: {
+                  ...li,
+                  code: li.megaCd,
+                  name: li.megaNm,
+                  lat: lat,
+                  lng: lng,
+                  feature: {
+                    type: "Feature",
+                    properties: {
+                      ...li,
+                      ode: li.megaCd,
+                      name: li.megaNm,
+                      lat: lat,
+                      lng: lng,
+                    },
+                    geometry: li.geometry,
+                  },
+                },
+                geometry: li.geometry,
+              },
+            };
+          });
+
+          setDongLi(addFeature);
           return;
         } else {
           alert(`동 리스트를 불러올 수 없습니다. \n다시 시도해주세요`);

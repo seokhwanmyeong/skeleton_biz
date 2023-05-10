@@ -2,9 +2,9 @@
 import { useState, Fragment } from "react";
 import { Box, Button, Flex, Image } from "@chakra-ui/react";
 //  Component
-import ToolRound from "@components/sementicMapLayer/toolBox/ToolRound";
-import ToolDistance from "@components/sementicMapLayer/toolBox/ToolDistance";
-import ToolRoadView from "@components/sementicMapLayer/toolBox/ToolRoadView";
+import ToolRound from "@components/sementicMapLayer/boxTool/ToolRound";
+import ToolDistance from "@components/sementicMapLayer/boxTool/ToolDistance";
+import ToolRoadView from "@components/sementicMapLayer/boxTool/ToolRoadView";
 //  Icon
 import icoDistance from "@assets/icons/ico_Distance.png";
 import icoRoadview from "@assets/icons/ico_Roadview.png";

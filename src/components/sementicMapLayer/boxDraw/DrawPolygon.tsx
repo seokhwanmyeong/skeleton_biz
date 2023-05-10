@@ -424,7 +424,7 @@ const DrawPolygon = (props: Props) => {
                           slctPath: path._array,
                           range: undefined,
                           center: center,
-                          pathType: "bounds",
+                          pathType: "polygon",
                         });
                         onConClose();
                         resetAllElement();

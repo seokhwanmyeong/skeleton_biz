@@ -116,7 +116,7 @@ const Report = ({ props, isOpen, onClose }: any) => {
         .catch(() => {
           setLoading(false);
         });
-    } else if (areaType === "polygon" && pathType === "bounds") {
+    } else if (areaType === "polygon" && pathType === "polygon") {
       if (slctPath) {
         const arr = slctPath.map((path: any) => {
           return [path.x, path.y];
@@ -179,7 +179,7 @@ const Report = ({ props, isOpen, onClose }: any) => {
           setPop(null);
           setLoading(false);
         });
-    } else if (areaType === "polygon" && pathType === "bounds") {
+    } else if (areaType === "polygon" && pathType === "polygon") {
       if (slctPath) {
         const arr = slctPath.map((path: any) => {
           return [path.x, path.y];
@@ -240,7 +240,7 @@ const Report = ({ props, isOpen, onClose }: any) => {
         .catch(() => {
           setLoading(false);
         });
-    } else if (areaType === "polygon" && pathType === "bounds") {
+    } else if (areaType === "polygon" && pathType === "polygon") {
       if (slctPath) {
         const arr = slctPath.map((path: any) => {
           return [path.x, path.y];
@@ -302,7 +302,7 @@ const Report = ({ props, isOpen, onClose }: any) => {
         .catch(() => {
           setLoading(false);
         });
-    } else if (areaType === "polygon" && pathType === "bounds") {
+    } else if (areaType === "polygon" && pathType === "polygon") {
       if (slctPath) {
         const arr = slctPath.map((path: any) => {
           return [path.x, path.y];
@@ -383,7 +383,7 @@ const Report = ({ props, isOpen, onClose }: any) => {
             setLoading(false);
           });
       });
-    } else if (areaType === "polygon" && pathType === "bounds") {
+    } else if (areaType === "polygon" && pathType === "polygon") {
       if (slctPath) {
         const arr = slctPath.map((path: any) => {
           return [path.x, path.y];

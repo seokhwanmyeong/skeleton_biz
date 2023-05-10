@@ -2,9 +2,9 @@
 import { Fragment, useState } from "react";
 import { Box, Button, Flex } from "@chakra-ui/react";
 //  Component
-import DrawPolygon from "@components/sementicMapLayer/drawBox/DrawPolygon";
-import DrawRange from "@components/sementicMapLayer/drawBox/DrawRange";
-import DrawAddr from "@components/sementicMapLayer/drawBox/DrawAddr";
+import DrawPolygon from "@components/sementicMapLayer/boxDraw/DrawPolygon";
+import DrawRange from "@components/sementicMapLayer/boxDraw/DrawRange";
+import DrawAddr from "@components/sementicMapLayer/boxDraw/DrawAddr";
 //  Icon
 import { IcoAppStore } from "@assets/icons/icon";
 

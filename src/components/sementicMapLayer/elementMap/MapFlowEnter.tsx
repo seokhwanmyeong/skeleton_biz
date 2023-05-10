@@ -26,20 +26,90 @@ const MapFlowEnter = (props: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [cursorPo, setCursorPo] = useState<any>(null);
   const [infoArea, setInfoArea] = useState<string>("");
+  const geoRef = useRef<any>(null);
 
   useEffect(() => {
     if (!state.map) return;
 
     if (sido?.slctCode && sido?.slctName && sido?.slctPath) {
       console.log("시 진입");
-      state.map?.fitBounds(sido.slctPath[0]);
+      if (geoRef.current && geoRef.current.length > 0) {
+        geoRef.current.map((geo: any) => state.map?.data.removeGeoJson(geo));
+      }
+
+      const geo = sigunguLi.map((sigungu) => {
+        // @ts-ignore
+        state.map.data.addGeoJson(sigungu.feature);
+
+        return sigungu.feature;
+      });
+
+      state.map.data.setStyle({
+        fillColor: "#78d6b0",
+        fillOpacity: 0.4,
+        strokeWeight: 1,
+        strokeColor: "#41be72",
+      });
+
+      // @ts-ignore
+      state.map.data.addListener("mouseover", (e) => {
+        if (!state.map) return;
+
+        state.map.data.overrideStyle(e.feature, {
+          fillColor: "#78d6b0",
+          fillOpacity: 0.65,
+          strokeWeight: 1,
+          strokeColor: "#41be72",
+        });
+
+        window.addEventListener("mousemove", cursorHandler);
+        setInfoArea(e.feature.getProperty("name"));
+        onOpen();
+      });
+
+      // @ts-ignore
+      state.map.data.addListener("mouseout", (e) => {
+        if (!state.map) return;
+
+        state.map.data.revertStyle(e.feature);
+        window.removeEventListener("mousemove", cursorHandler);
+        setInfoArea("");
+        onClose();
+      });
+
+      // @ts-ignore
+      state.map.data.addListener("click", (e) => {
+        if (!state.map) return;
+        state.map.data.revertStyle(e.feature);
+        setSlctArea({
+          sido: sido,
+          sigungu: {
+            slctName: e.feature.getProperty("name"),
+            slctCode: e.feature.getProperty("code"),
+            slctIdx: e.feature.getProperty("idx"),
+            slctPath: e.feature.getProperty("feature"),
+            slctLat: e.feature.getProperty("lat"),
+            slctLng: e.feature.getProperty("lng"),
+            slctZoom: e.feature.getProperty("zoomLevel"),
+          },
+        });
+        setFlow("sigungu");
+      });
+
+      geoRef.current = geo;
+
       sido.slctLat &&
         sido.slctLng &&
         state.map?.setCenter(new naver.maps.LatLng(sido.slctLat, sido.slctLng));
+      sido.slctZoom && state.map?.setZoom(Number(sido.slctZoom));
       state.map?.setOptions({
         draggable: false,
       });
     } else {
+      if (geoRef.current && geoRef.current.length > 0) {
+        geoRef.current.map((geo: any) => state.map?.data.removeGeoJson(geo));
+      }
+
       state.map?.setOptions({
         center: {
           lat: 35.9223291,
@@ -54,16 +124,78 @@ const MapFlowEnter = (props: Props) => {
         disableDoubleTapZoom: true,
         disableTwoFingerTapZoom: true,
       });
-    }
-  }, [state.map, sido, sigungu]);
 
-  const cursorHandler = useCallback((e: any) => {
-    setCursorPo({ x: e?.clientX, y: e?.clientY });
+      const geo = sidoLi.map((sido) => {
+        // @ts-ignore
+        state.map.data.addGeoJson(sido.feature);
+
+        return sido.feature;
+      });
+
+      state.map.data.setStyle({
+        fillColor: "#78d6b0",
+        fillOpacity: 0.4,
+        strokeWeight: 1,
+        strokeColor: "#41be72",
+      });
+
+      // @ts-ignore
+      state.map.data.addListener("mouseover", (e) => {
+        if (!state.map) return;
+
+        state.map.data.overrideStyle(e.feature, {
+          fillColor: "#78d6b0",
+          fillOpacity: 0.65,
+          strokeWeight: 1,
+          strokeColor: "#41be72",
+        });
+      });
+
+      // @ts-ignore
+      state.map.data.addListener("mouseout", (e) => {
+        if (!state.map) return;
+
+        state.map.data.revertStyle(e.feature);
+      });
+
+      // @ts-ignore
+      state.map.data.addListener("click", (e) => {
+        if (!state.map) return;
+        state.map.data.revertStyle(e.feature);
+        setSlctArea({
+          sido: {
+            slctName: e.feature.getProperty("name"),
+            slctCode: e.feature.getProperty("code"),
+            slctIdx: e.feature.getProperty("idx"),
+            slctPath: e.feature.getProperty("feature"),
+            slctLat: e.feature.getProperty("lat"),
+            slctLng: e.feature.getProperty("lng"),
+            slctZoom: e.feature.getProperty("zoomLevel"),
+          },
+          sigungu,
+        });
+      });
+
+      geoRef.current = geo;
+    }
 
     return () => {
-      setCursorPo(null);
+      if (state.map && geoRef.current && geoRef.current.length > 0) {
+        geoRef.current.map((geo: any) => state.map?.data.removeGeoJson(geo));
+      }
     };
-  }, []);
+  }, [state.map, sido, sigungu, sidoLi, sigunguLi]);
+
+  const cursorHandler = useCallback(
+    (e: any) => {
+      setCursorPo({ x: e?.clientX, y: e?.clientY });
+
+      return () => {
+        setCursorPo(null);
+      };
+    },
+    [state.map]
+  );
 
   useEffect(() => {
     return () => {
@@ -73,7 +205,7 @@ const MapFlowEnter = (props: Props) => {
 
   return (
     <>
-      {!sido?.slctCode
+      {/* {!sido?.slctCode
         ? sidoLi.map((sido: AreaProps) => {
             return (
               <InteractArea
@@ -100,6 +232,7 @@ const MapFlowEnter = (props: Props) => {
                   fillOpacity: 0.4,
                   strokeWeight: 1,
                   strokeColor: "#41be72",
+                  zIndex: sido.code === "24" ? 1 : 0,
                 }}
                 hoverStyle={{
                   fillColor: "#78d6b0",
@@ -169,7 +302,7 @@ const MapFlowEnter = (props: Props) => {
               />
             );
           })
-        : null}
+        : null} */}
       {isOpen && cursorPo && (
         <Flex
           pos="relative"

@@ -5,14 +5,13 @@ import { Box, Button, Flex, useDisclosure } from "@chakra-ui/react";
 //  Component
 import UpjongListBox from "@components/sementicMapLayer/elementFilter/UpjongListBox";
 import NiceFilterDepth from "@components/sementicMapLayer/elementFilter/NiceFilterDepth";
-import BtnReset from "@components/sementicMapLayer/elementFilter/BtnReset";
+import BtnReset from "@components/sementicMapLayer/common/BtnReset";
 import FlowPopInfo from "@components/sementicMapLayer/elementFilter/FlowPopInfo";
 import DepthList from "@src/components/sementicMapLayer/elementFilter/DepthListBox";
 //  State
 import {
   atomUpjongState,
   infoComBrand,
-  infoComFloatPop,
   infoComFlowDepth,
 } from "@states/sementicMap/stateFilter";
 import { atomSlctCustom } from "@states/sementicMap/stateMap";
@@ -22,12 +21,13 @@ import { IcoBarChart, IcoFilter } from "@assets/icons/icon";
 //  Deco
 import {
   DecoTop,
-  DecoFrameCenter,
-  DecoFrameL,
-  DecoFrameR,
   DecoBotHightBox,
   DecoFilterDivider,
 } from "@components/sementicMapLayer/elementDeco/Deco";
+import {
+  DecoFrameL,
+  DecoFrameR,
+} from "@components/sementicMapLayer/elementDeco/DecoCenter";
 
 type Props = {};
 
@@ -89,7 +89,6 @@ const FlowCustom = (props: Props) => {
         <DecoFrameL pl="1rem" align="flex-end">
           {brandShow && <FlowPopInfo />}
         </DecoFrameL>
-        {/* <DecoFrameCenter /> */}
         <DecoFrameR pr="0.25rem">
           <DepthList brandShow={show} brandList={brandList || []} />
         </DecoFrameR>

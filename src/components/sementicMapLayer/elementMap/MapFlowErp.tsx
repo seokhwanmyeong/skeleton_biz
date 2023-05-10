@@ -10,7 +10,7 @@ import {
   infoComErpStore,
 } from "@states/sementicMap/stateFilter";
 //  Deco
-import { DecoFrameR } from "@components/sementicMapLayer/elementDeco/Deco";
+import { DecoFrameR } from "@components/sementicMapLayer/elementDeco/DecoCenter";
 import ModalRentDetail from "@src/components/modal/map/ModalRentDetail";
 
 const MapFlowErp = () => {

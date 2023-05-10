@@ -36,30 +36,30 @@ const AreaListBox = ({ title, isOpen, list, setSlctArea, onClick }: Props) => {
         templateColumns="repeat(5, calc(20% - 0.2rem))"
         gap="0.75rem 0.25rem"
       >
-        {list.map(({ name, code, path, lat, lng, zoomLev }: AreaProps) => {
-          const nameSplit = name.split(" ");
-
-          return (
-            <Button
-              variant="slctArea"
-              key={`key-${code}`}
-              onClick={() => {
-                setSlctArea({
-                  slctName: name,
-                  slctCode: code,
-                  slctIdx: `area${code}`,
-                  slctPath: path,
-                  slctLat: lat,
-                  slctLng: lng,
-                  slctZoom: zoomLev,
-                });
-                onClick && onClick();
-              }}
-            >
-              {nameSplit.length > 1 ? nameSplit[1] : name}
-            </Button>
-          );
-        })}
+        {list.map(
+          ({ _id, lat, lng, zoomLevel, code, name, idx, feature }: any) => {
+            return (
+              <Button
+                variant="slctArea"
+                key={`key-${_id}`}
+                onClick={() => {
+                  setSlctArea({
+                    slctName: name,
+                    slctCode: code,
+                    slctIdx: idx,
+                    slctPath: feature,
+                    slctLat: lat,
+                    slctLng: lng,
+                    slctZoom: zoomLevel,
+                  });
+                  onClick && onClick();
+                }}
+              >
+                {name}
+              </Button>
+            );
+          }
+        )}
       </Grid>
       <DecoBoxL
         position="absolute"

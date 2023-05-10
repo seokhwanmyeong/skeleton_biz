@@ -1,13 +1,13 @@
 //  Lib
 import { Fragment, useState, useContext } from "react";
 import { useRecoilValue, useResetRecoilState } from "recoil";
-import { Box, Button, Flex } from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
 import { NaverMapContext, Polygon } from "@src/lib/src";
 import Circle from "@src/lib/src/components/Overlay/Circle";
 //  Component
-import DrawPolygon from "@components/sementicMapLayer/createDrawBox/DrawPolygon";
-import DrawRange from "@components/sementicMapLayer/createDrawBox/DrawRange";
-import DrawAddr from "@components/sementicMapLayer/createDrawBox/DrawAddr";
+import DrawPolygon from "@components/sementicMapLayer/boxCreateDraw/DrawPolygon";
+import DrawRange from "@components/sementicMapLayer/boxCreateDraw/DrawRange";
+import DrawAddr from "@components/sementicMapLayer/boxCreateDraw/DrawAddr";
 //  State
 import { atomCreateArea } from "@states/sementicMap/stateMap";
 //  Icon

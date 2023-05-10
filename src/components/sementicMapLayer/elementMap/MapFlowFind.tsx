@@ -1,8 +1,8 @@
 //  Lib
-import { useContext, useEffect, Fragment } from "react";
+import { useContext, useEffect } from "react";
 import { NaverMapContext } from "@src/lib/src";
 //  Components
-import DrawBox from "@components/sementicMapLayer/drawBox/DrawBox";
+import DrawBox from "@components/sementicMapLayer/boxDraw/DrawBox";
 
 const MapFlowFind = () => {
   const { state } = useContext(NaverMapContext);
@@ -14,11 +14,7 @@ const MapFlowFind = () => {
     });
   }, []);
 
-  return (
-    <Fragment>
-      <DrawBox />
-    </Fragment>
-  );
+  return <DrawBox />;
 };
 
 export default MapFlowFind;

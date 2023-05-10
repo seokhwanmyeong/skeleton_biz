@@ -6,8 +6,8 @@ import { NaverMapContext } from "@src/lib/src";
 //  Component
 import UpjongListBox from "@components/sementicMapLayer/elementFilter/UpjongListBox";
 import NiceFilterDepth from "@components/sementicMapLayer/elementFilter/NiceFilterDepth";
-import BtnReset from "@components/sementicMapLayer/elementFilter/BtnReset";
-import BtnBack from "@components/sementicMapLayer/elementFilter/BtnBack";
+import BtnReset from "@components/sementicMapLayer/common/BtnReset";
+import BtnBack from "@components/sementicMapLayer/common/BtnBack";
 //  State
 import { atomFilterFlow } from "@states/sementicMap/stateFilter";
 import { atomFlowEnterArea, atomSlctDong } from "@states/sementicMap/stateMap";

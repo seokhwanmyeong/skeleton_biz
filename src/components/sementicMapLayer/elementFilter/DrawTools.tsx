@@ -551,7 +551,7 @@ const ToggleButtonGroup = ({ toolOpen }: any) => {
                   setCreateArea({
                     path: path._array,
                     center: center,
-                    pathType: "bounds",
+                    pathType: "polygon",
                   });
 
                   onConClose();

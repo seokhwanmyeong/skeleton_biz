@@ -2,7 +2,7 @@
 import { Fragment } from "react";
 import { Box, Button } from "@chakra-ui/react";
 //  Component
-import BtnReset from "@components/sementicMapLayer/elementFilter/BtnReset";
+import BtnReset from "@components/sementicMapLayer/common/BtnReset";
 //  Icon
 import { IcoBorderOuter } from "@assets/icons/icon";
 //  Deco

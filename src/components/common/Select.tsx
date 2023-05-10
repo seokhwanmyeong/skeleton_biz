@@ -13,11 +13,13 @@ import {
   Box,
   Text,
 } from "@chakra-ui/react";
-//  Services
+//  API && Services
+import { apiNiceAddr } from "@api/bizSub/config";
 import { addrApiHandler } from "@services/address/sgisDepthAddr";
-//  Util: Data
+//  Util
 import { addrHCode } from "@util/data/address";
-import { IcoDown } from "@src/assets/icons/icon";
+//  Icon
+import { IcoDown } from "@assets/icons/icon";
 
 type PropsSlct = {
   selectProps?: {};
@@ -115,150 +117,150 @@ const SelectMenu = () => {
   );
 };
 
-const SelectAddr = ({
-  selectProps,
-  selectGroupProps,
-  variant,
-  value,
-  onChange,
-  isDisabled = false,
-  isInvalid = false,
-  isReadOnly = false,
-  isRequired = false,
-}: PropSlctAddr) => {
-  const [addr, setAddr] = useState({
-    top: value?.slice(0, 2) || "total",
-    mid: value?.slice(2, 5) || "",
-    bot: value?.slice(5, 8) || "",
-  });
-  const [addrTxt, setAddrTxt] = useState({
-    top: value || "",
-    mid: value || "",
-    bot: value || "",
-  });
-  const [addrList, setAddrList] = useState<any>({
-    top: [{ code: "", address: "전체" }, ...addrHCode],
-    mid: [],
-    bot: [],
-  });
+// const SelectAddr = ({
+//   selectProps,
+//   selectGroupProps,
+//   variant,
+//   value,
+//   onChange,
+//   isDisabled = false,
+//   isInvalid = false,
+//   isReadOnly = false,
+//   isRequired = false,
+// }: PropSlctAddr) => {
+//   const [addr, setAddr] = useState({
+//     top: value?.slice(0, 2) || "total",
+//     mid: value?.slice(2, 5) || "",
+//     bot: value?.slice(5, 8) || "",
+//   });
+//   const [addrTxt, setAddrTxt] = useState({
+//     top: value || "",
+//     mid: value || "",
+//     bot: value || "",
+//   });
+//   const [addrList, setAddrList] = useState<any>({
+//     top: [{ code: "", address: "전체" }, ...addrHCode],
+//     mid: [],
+//     bot: [],
+//   });
 
-  const selectAddrHandler = (val: any, step: "top" | "mid" | "bot") => {
-    let result: string = "total";
-    console.log("click");
-    switch (step) {
-      case "top":
-        if (val) {
-          addrApiHandler(val).then((res) => {
-            setAddr({ top: val, mid: "", bot: "" });
-            setAddrList({
-              ...addrList,
-              mid: res ? [{ code: "", address: "전체" }, ...res] : [],
-              bot: [],
-            });
-          });
-        } else {
-          setAddr({ top: val, mid: "", bot: "" });
-          setAddrList({
-            ...addrList,
-            mid: [],
-            bot: [],
-          });
-        }
-        addrList.top?.map((li: any) => {
-          if (li.code === val) {
-            setAddrTxt({ ...addrTxt, top: li.address });
-            onChange(li.address, val);
-          }
-        });
-        result = val ? val : "total";
-        break;
-      case "mid":
-        if (val) {
-          addrApiHandler(val).then((res) => {
-            setAddr({ ...addr, mid: val.slice(2, 5), bot: "" });
-            setAddrList({
-              ...addrList,
-              bot: res ? [{ code: "", address: "전체" }, ...res] : [],
-            });
-          });
-        } else {
-          setAddr({ ...addr, mid: val, bot: "" });
-          setAddrList({
-            ...addrList,
-            bot: [],
-          });
-        }
+//   const selectAddrHandler = (val: any, step: "top" | "mid" | "bot") => {
+//     let result: string = "total";
+//     console.log("click");
+//     switch (step) {
+//       case "top":
+//         if (val) {
+//           addrApiHandler(val).then((res) => {
+//             setAddr({ top: val, mid: "", bot: "" });
+//             setAddrList({
+//               ...addrList,
+//               mid: res ? [{ code: "", address: "전체" }, ...res] : [],
+//               bot: [],
+//             });
+//           });
+//         } else {
+//           setAddr({ top: val, mid: "", bot: "" });
+//           setAddrList({
+//             ...addrList,
+//             mid: [],
+//             bot: [],
+//           });
+//         }
+//         addrList.top?.map((li: any) => {
+//           if (li.code === val) {
+//             setAddrTxt({ ...addrTxt, top: li.address });
+//             onChange(li.address, val);
+//           }
+//         });
+//         result = val ? val : "total";
+//         break;
+//       case "mid":
+//         if (val) {
+//           addrApiHandler(val).then((res) => {
+//             setAddr({ ...addr, mid: val.slice(2, 5), bot: "" });
+//             setAddrList({
+//               ...addrList,
+//               bot: res ? [{ code: "", address: "전체" }, ...res] : [],
+//             });
+//           });
+//         } else {
+//           setAddr({ ...addr, mid: val, bot: "" });
+//           setAddrList({
+//             ...addrList,
+//             bot: [],
+//           });
+//         }
 
-        addrList.mid?.map((li: any) => {
-          if (li.code === val) {
-            setAddrTxt({ ...addrTxt, mid: li.address });
-            onChange(addrTxt.top + " " + li.address.val);
-          }
-        });
-        result = val ? val : addr.top;
-        break;
-      case "bot":
-        setAddr({ ...addr, bot: val.slice(5, 8) });
+//         addrList.mid?.map((li: any) => {
+//           if (li.code === val) {
+//             setAddrTxt({ ...addrTxt, mid: li.address });
+//             onChange(addrTxt.top + " " + li.address.val);
+//           }
+//         });
+//         result = val ? val : addr.top;
+//         break;
+//       case "bot":
+//         setAddr({ ...addr, bot: val.slice(5, 8) });
 
-        addrList.bot?.map((li: any) => {
-          if (li.code === val) {
-            setAddrTxt({ ...addrTxt, bot: li.address });
-            onChange(addrTxt.top + " " + addrTxt.mid + " " + li.address, val);
-          }
-        });
-        result = val ? val : addr.top + addr.mid;
-        break;
-      default:
-        result = val;
-        break;
-    }
+//         addrList.bot?.map((li: any) => {
+//           if (li.code === val) {
+//             setAddrTxt({ ...addrTxt, bot: li.address });
+//             onChange(addrTxt.top + " " + addrTxt.mid + " " + li.address, val);
+//           }
+//         });
+//         result = val ? val : addr.top + addr.mid;
+//         break;
+//       default:
+//         result = val;
+//         break;
+//     }
 
-    // onChange(result);
-  };
+//     // onChange(result);
+//   };
 
-  return (
-    <Flex gap={"0.5rem"} w="100%" {...selectGroupProps}>
-      <Select
-        selectProps={selectProps}
-        variant={variant}
-        value={addr.top || "total"}
-        data={addrList.top}
-        opBaseTxt="address"
-        opBaseId="code"
-        opBaseKey="code"
-        onChange={(val: any) => selectAddrHandler(val, "top")}
-        defaultText="전체"
-        defalutValue="total"
-      />
-      <Select
-        selectProps={selectProps}
-        variant={variant}
-        value={addr.mid ? addr.top + addr.mid : ""}
-        data={addrList.mid}
-        opBaseTxt="address"
-        opBaseId="code"
-        opBaseKey="code"
-        onChange={(val: any) => selectAddrHandler(val, "mid")}
-        isDisabled={addrList.mid.length > 0 ? false : true}
-        defaultText={addrList.mid.length > 0 ? "전체" : "시/군/구"}
-        defalutValue=""
-      />
-      <Select
-        selectProps={selectProps}
-        variant={variant}
-        value={addr.bot ? addr.top + addr.mid + addr.bot : ""}
-        data={addrList.bot}
-        opBaseTxt="address"
-        opBaseId="code"
-        opBaseKey="code"
-        onChange={(val: any) => selectAddrHandler(val, "bot")}
-        isDisabled={addrList.bot.length > 0 ? false : true}
-        defaultText={addrList.bot.length > 0 ? "전체" : "읍/면/동"}
-        defalutValue=""
-      />
-    </Flex>
-  );
-};
+//   return (
+//     <Flex gap={"0.5rem"} w="100%" {...selectGroupProps}>
+//       <Select
+//         selectProps={selectProps}
+//         variant={variant}
+//         value={addr.top || "total"}
+//         data={addrList.top}
+//         opBaseTxt="address"
+//         opBaseId="code"
+//         opBaseKey="code"
+//         onChange={(val: any) => selectAddrHandler(val, "top")}
+//         defaultText="전체"
+//         defalutValue="total"
+//       />
+//       <Select
+//         selectProps={selectProps}
+//         variant={variant}
+//         value={addr.mid ? addr.top + addr.mid : ""}
+//         data={addrList.mid}
+//         opBaseTxt="address"
+//         opBaseId="code"
+//         opBaseKey="code"
+//         onChange={(val: any) => selectAddrHandler(val, "mid")}
+//         isDisabled={addrList.mid.length > 0 ? false : true}
+//         defaultText={addrList.mid.length > 0 ? "전체" : "시/군/구"}
+//         defalutValue=""
+//       />
+//       <Select
+//         selectProps={selectProps}
+//         variant={variant}
+//         value={addr.bot ? addr.top + addr.mid + addr.bot : ""}
+//         data={addrList.bot}
+//         opBaseTxt="address"
+//         opBaseId="code"
+//         opBaseKey="code"
+//         onChange={(val: any) => selectAddrHandler(val, "bot")}
+//         isDisabled={addrList.bot.length > 0 ? false : true}
+//         defaultText={addrList.bot.length > 0 ? "전체" : "읍/면/동"}
+//         defalutValue=""
+//       />
+//     </Flex>
+//   );
+// };
 
 const SelectForm = ({
   selectProps,
@@ -418,6 +420,253 @@ const SlctList = ({
         {text}
       </Text>
     </ListItem>
+  );
+};
+
+const SelectAddr = ({
+  selectProps,
+  selectGroupProps,
+  variant,
+  value,
+  onChange,
+  isDisabled = false,
+  isInvalid = false,
+  isReadOnly = false,
+  isRequired = false,
+}: PropSlctAddr) => {
+  const { getSidoAddr, getSigunguAddr, getDongAddr } = apiNiceAddr;
+  const [addr, setAddr] = useState({
+    top: value.length > 0 ? value.slice(0, 2) : value,
+    mid: value.length > 2 ? value.slice(0, 4) : "",
+    bot: value.length > 4 ? value : "",
+  });
+  const [addrList, setAddrList] = useState<any>({
+    top: [{ code: "", address: "전체" }],
+    mid: [],
+    bot: [],
+  });
+
+  const selectAddrHandler = (val: any, step: "top" | "mid" | "bot") => {
+    let result: string = "";
+
+    switch (step) {
+      case "top":
+        if (val) {
+          getSigunguAddr({ megaCd: val })
+            .then((res) => {
+              if (res.data && res.data.length > 0) {
+                const tmp = res.data.map((li) => ({
+                  code: li.ctyCd,
+                  address: li.ctyNm,
+                }));
+
+                setAddr({ top: val, mid: "", bot: "" });
+                setAddrList({
+                  ...addrList,
+                  mid: [{ code: "", address: "전체" }, ...tmp],
+                  bot: [],
+                });
+              }
+            })
+            .catch(() => {
+              setAddr({ top: val, mid: "", bot: "" });
+              setAddrList({
+                ...addrList,
+                mid: [],
+                bot: [],
+              });
+            });
+        } else {
+          setAddr({ top: "", mid: "", bot: "" });
+          setAddrList({
+            ...addrList,
+            mid: [],
+            bot: [],
+          });
+        }
+
+        result = val ? val : "";
+        break;
+      case "mid":
+        if (val) {
+          getDongAddr({ ctyCd: val })
+            .then((res) => {
+              if (res.data && res.data.length > 0) {
+                const tmp = res.data.map((li) => ({
+                  code: li.admiCd,
+                  address: li.admiNm,
+                }));
+
+                setAddr({ ...addr, mid: val, bot: "" });
+                setAddrList({
+                  ...addrList,
+                  bot: [{ code: "", address: "전체" }, ...tmp],
+                });
+              }
+            })
+            .catch(() => {
+              setAddr({ ...addr, mid: val, bot: "" });
+              setAddrList({
+                ...addrList,
+                bot: [],
+              });
+            });
+        } else {
+          setAddr({ ...addr, mid: "", bot: "" });
+          setAddrList({
+            ...addrList,
+            bot: [],
+          });
+        }
+        result = val ? val : "";
+        break;
+      case "bot":
+        setAddr({ ...addr, bot: val });
+
+        result = val ? val : "";
+        break;
+      default:
+        result = val;
+        break;
+    }
+
+    onChange(result);
+  };
+
+  useEffect(() => {
+    if (addrList.top.length < 2 && value === "") {
+      getSidoAddr({}).then((res) => {
+        if (res.data && res.data.length > 0) {
+          const tmp = res.data.map((li) => ({
+            code: li.megaCd,
+            address: li.megaNm,
+          }));
+
+          setAddrList({
+            top: [{ code: "", address: "전체" }, ...tmp],
+            mid: [],
+            bot: [],
+          });
+        }
+      });
+    } else if (value.length <= 2) {
+      if (addrList.top.length < 2) {
+        getSidoAddr({}).then((res) => {
+          if (res.data && res.data.length > 0) {
+            const tmpSido = res.data.map((li) => ({
+              code: li.megaCd,
+              address: li.megaNm,
+            }));
+
+            getSigunguAddr({ megaCd: value }).then((res) => {
+              if (res.data && res.data.length > 0) {
+                const tmpSigungu = res.data.map((li) => ({
+                  code: li.ctyCd,
+                  address: li.ctyNm,
+                }));
+
+                setAddrList({
+                  top: [{ code: "", address: "전체" }, ...tmpSido],
+                  mid: [{ code: "", address: "전체" }, ...tmpSigungu],
+                  bot: [],
+                });
+              }
+            });
+          }
+        });
+      } else {
+        getSigunguAddr({ megaCd: value }).then((res) => {
+          if (res.data && res.data.length > 0) {
+            const tmp = res.data.map((li) => ({
+              code: li.ctyCd,
+              address: li.ctyNm,
+            }));
+
+            setAddrList({
+              ...addrList,
+              mid: [{ code: "", address: "전체" }, ...tmp],
+              bot: [],
+            });
+          }
+        });
+      }
+    } else if (value.length > 2) {
+      getSidoAddr({}).then((res) => {
+        if (res.data && res.data.length > 0) {
+          const tmpSido = res.data.map((li) => ({
+            code: li.megaCd,
+            address: li.megaNm,
+          }));
+
+          getSigunguAddr({ megaCd: addr.top }).then((res) => {
+            if (res.data && res.data.length > 0) {
+              const tmpSigungu = res.data.map((li) => ({
+                code: li.ctyCd,
+                address: li.ctyNm,
+              }));
+
+              getDongAddr({ ctyCd: addr.mid }).then((res) => {
+                if (res.data && res.data.length > 0) {
+                  const tmp = res.data.map((li) => ({
+                    code: li.admiCd,
+                    address: li.admiNm,
+                  }));
+
+                  setAddrList({
+                    top: [{ code: "", address: "전체" }, ...tmpSido],
+                    mid: [{ code: "", address: "전체" }, ...tmpSigungu],
+                    bot: [{ code: "", address: "전체" }, ...tmp],
+                  });
+                }
+              });
+            }
+          });
+        }
+      });
+    }
+  }, []);
+
+  return (
+    <Flex gap={"0.5rem"} w="100%" {...selectGroupProps}>
+      <Select
+        selectProps={selectProps}
+        variant={variant}
+        value={addr.top || ""}
+        data={addrList.top}
+        opBaseTxt="address"
+        opBaseId="code"
+        opBaseKey="code"
+        onChange={(val: any) => selectAddrHandler(val, "top")}
+        defaultText="전체"
+        defalutValue=""
+      />
+      <Select
+        selectProps={selectProps}
+        variant={variant}
+        value={addr.mid || ""}
+        data={addrList.mid}
+        opBaseTxt="address"
+        opBaseId="code"
+        opBaseKey="code"
+        onChange={(val: any) => selectAddrHandler(val, "mid")}
+        isDisabled={addrList.mid.length > 0 ? false : true}
+        defaultText={addrList.mid.length > 0 ? "전체" : "시/군/구"}
+        defalutValue=""
+      />
+      <Select
+        selectProps={selectProps}
+        variant={variant}
+        value={addr.bot || ""}
+        data={addrList.bot}
+        opBaseTxt="address"
+        opBaseId="code"
+        opBaseKey="code"
+        onChange={(val: any) => selectAddrHandler(val, "bot")}
+        isDisabled={addrList.bot.length > 0 ? false : true}
+        defaultText={addrList.bot.length > 0 ? "전체" : "읍/면/동"}
+        defalutValue=""
+      />
+    </Flex>
   );
 };
 

@@ -10,12 +10,12 @@ import {
 } from "@chakra-ui/react";
 import { NaverMapContext } from "@src/lib/src";
 //  Component
-import BtnReset from "@components/sementicMapLayer/elementFilter/BtnReset";
-import BtnBack from "@components/sementicMapLayer/elementFilter/BtnBack";
+import BtnReset from "@components/sementicMapLayer/common/BtnReset";
+import BtnBack from "@components/sementicMapLayer/common/BtnBack";
 import AreaListBox from "@components/sementicMapLayer/elementFilter/AreaListBox";
 import UpjongListBox from "@components/sementicMapLayer/elementFilter/UpjongListBox";
 //  Api
-import { apiMapArea } from "@api/biz/config";
+import { apiMapArea } from "@api/bizSub/config";
 //  State
 import { atomFilterFlow } from "@states/sementicMap/stateFilter";
 import {
@@ -33,6 +33,7 @@ import {
 } from "@components/sementicMapLayer/elementDeco/Deco";
 //  Type
 import type { SlctProps, AreaProps } from "@states/sementicMap/stateMap";
+import { TypeMapSido } from "@src/api/bizSub/type";
 
 const FlowEnter = () => {
   const { getSidoList, getSigunguList } = apiMapArea;
@@ -45,57 +46,95 @@ const FlowEnter = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [filterType, setType] = useState("");
 
-  const pathTransHandler = (areaList: AreaProps[]) => {
-    return areaList.map((area) => {
-      let paths;
+  // const pathTransHandler = (areaList: TypeMapSido["res"][]) => {
+  //   return areaList.map(
+  //     ({
+  //       _id,
+  //       megaNm,
+  //       megaCd,
+  //       center,
+  //       bounds,
+  //       ctyCd,
+  //       ctyNm,
+  //       admiCd,
+  //       admiNm,
+  //       zoomLevel,
+  //       geometry,
+  //     }) => {
+  //       const lat = Number(center.split(" ")[2].slice(0, -2));
+  //       const lng = Number(center.split(" ")[1].slice(1, -1));
+  //       // let paths = area.path.map((latLng: [number, number][]) => {
+  //       //   // if (area.code === "28" || area.code === "46") {
+  //       //   //   return latLng.map(
+  //       //   //     (depth: any) => new naver.maps.LatLng(depth[1], depth[0])
+  //       //   //   );
+  //       //   // } else {
+  //       //   //   return new naver.maps.LatLng(latLng[1], latLng[0]);
+  //       //   // }
+  //       //   return latLng.map((depth: any) => {
+  //       //     const trans = naver.maps.TransCoord.fromUTMKToLatLng(
+  //       //       new naver.maps.Point(depth[0], depth[1])
+  //       //     );
+  //       //     return [trans.x, trans.y];
+  //       //   });
+  //       // });
 
-      if (
-        area.code === "11" ||
-        area.code === "22" ||
-        area.code === "24" ||
-        area.code === "25" ||
-        area.code === "26" ||
-        area.code === "29" ||
-        area.code.length > 2
-      ) {
-        paths = area.path.map((latLng: [number, number][]) => {
-          // if (area.code === "28" || area.code === "46") {
-          //   return latLng.map(
-          //     (depth: any) => new naver.maps.LatLng(depth[1], depth[0])
-          //   );
-          // } else {
-          //   return new naver.maps.LatLng(latLng[1], latLng[0]);
-          // }
-          return latLng.map((depth: any) => {
-            const trans = naver.maps.TransCoord.fromUTMKToLatLng(
-              new naver.maps.Point(depth[0], depth[1])
-            );
-            return [trans.x, trans.y];
-          });
-        });
-      } else {
-        paths = area.path;
-      }
-
-      return {
-        code: area.code,
-        name: area.name,
-        path: paths,
-        lat: area.lat,
-        lng: area.lng,
-        zoomLev: area.zoomLev,
-      };
-    });
-  };
+  //       return {
+  //         code: megaCd && ctyCd ? ctyCd : megaCd,
+  //         name: megaNm && ctyNm ? ctyNm : megaNm,
+  //         path: geometry?.coordinates || [],
+  //         lat: lat,
+  //         lng: lng,
+  //         zoomLevel: zoomLevel,
+  //       };
+  //     }
+  //   );
+  // };
 
   const getSidoHandler = () => {
-    getSidoList().then((res: any) => {
+    getSidoList({}).then((res) => {
       console.log(res);
 
-      if (res.sido && res.sido.length > 0) {
-        const transData = pathTransHandler(res.sido);
-        console.log("transData", transData);
-        setSidoLi(transData);
+      if (res.data && res.data.length > 0) {
+        const addFeature = res.data.map((li, idx: number) => {
+          const lat = li.center.split(" ")[2].slice(0, -2);
+          const lng = li.center.split(" ")[1].slice(1, -1);
+
+          return {
+            ...li,
+            code: li.megaCd,
+            name: li.megaNm,
+            lat: lat,
+            lng: lng,
+            idx: idx,
+            feature: {
+              type: "Feature",
+              properties: {
+                ...li,
+                code: li.megaCd,
+                name: li.megaNm,
+                lat: lat,
+                lng: lng,
+                idx: idx,
+                feature: {
+                  type: "Feature",
+                  properties: {
+                    ...li,
+                    code: li.megaCd,
+                    name: li.megaNm,
+                    idx: idx,
+                    lat: lat,
+                    lng: lng,
+                  },
+                  geometry: li.geometry,
+                },
+              },
+              geometry: li.geometry,
+            },
+          };
+        });
+
+        setSidoLi(addFeature);
         return;
       } else {
         alert(`시/도 리스트를 불러올 수 없습니다. \n다시 시도해주세요`);
@@ -105,13 +144,49 @@ const FlowEnter = () => {
   };
 
   const getSigunguHandler = (slctCode: string) => {
-    getSigunguList({ code: slctCode }).then((res: any) => {
+    getSigunguList({ megaCd: slctCode }).then((res) => {
       console.log(res);
 
-      if (res.sigungu && res.sigungu.length > 0) {
-        const transData = pathTransHandler(res.sigungu);
-        console.log("transData", transData);
-        setSigunguLi(transData);
+      if (res.data && res.data.length > 0) {
+        const addFeature = res.data.map((li, idx: number) => {
+          const lat = li.center.split(" ")[2].slice(0, -2);
+          const lng = li.center.split(" ")[1].slice(1, -1);
+
+          return {
+            ...li,
+            code: li.ctyCd,
+            name: li.ctyNm,
+            lat: lat,
+            lng: lng,
+            idx: idx,
+            feature: {
+              type: "Feature",
+              properties: {
+                ...li,
+                code: li.ctyCd,
+                name: li.ctyNm,
+                lat: lat,
+                lng: lng,
+                idx: idx,
+                feature: {
+                  type: "Feature",
+                  properties: {
+                    ...li,
+                    code: li.ctyCd,
+                    name: li.ctyNm,
+                    idx: idx,
+                    lat: lat,
+                    lng: lng,
+                  },
+                  geometry: li.geometry,
+                },
+              },
+              geometry: li.geometry,
+            },
+          };
+        });
+
+        setSigunguLi(addFeature);
         return;
       } else {
         alert(`시/군/구 리스트를 불러올 수 없습니다. \n다시 시도해주세요`);

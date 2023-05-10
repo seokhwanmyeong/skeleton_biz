@@ -23,50 +23,46 @@ interface BixApiInstance extends AxiosInstance {
   patch<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T>;
 }
 
+type TypeMapArea = {
+  _id: string;
+  megaNm: string;
+  megaCd: string;
+  center: string;
+  bounds: string;
+  ctyCd: string;
+  ctyNm: string;
+  admiCd: string;
+  admiNm: string;
+  zoomLevel: string;
+  geometry: TypeMapGeo;
+};
+
+type TypeMapGeo = {
+  coordinates?: [number, number][][] | [];
+};
+
 type TypeMapSido = {
+  req: {};
   res: {
-    data: {
-      sido: {
-        name: string;
-        code: string;
-        lat: number;
-        lng: number;
-        zoomLev: string;
-        path: any[];
-      }[];
-    };
+    data: TypeMapArea[];
   };
 };
 
 type TypeMapSigungu = {
-  req: { code: string };
+  req: {
+    megaCd: string;
+  };
   res: {
-    data: {
-      sigungu: {
-        name: string;
-        code: string;
-        lat: number;
-        lng: number;
-        zoomLev: string;
-        path: any[];
-      }[];
-    };
+    data: TypeMapArea[];
   };
 };
 
 type TypeMapDong = {
-  req: { code: string };
+  req: {
+    ctyCd: string;
+  };
   res: {
-    data: {
-      dong: {
-        name: string;
-        code: string;
-        lat: number;
-        lng: number;
-        zoomLev: string;
-        path: any[];
-      }[];
-    };
+    data: TypeMapArea[];
   };
 };
 
@@ -147,6 +143,40 @@ type TypeNiceFlowData = {
   flowLv: number;
 };
 
+type TypeNiceSido = {
+  req: {};
+  res: {
+    data: {
+      megaNm: string;
+      megaCd: string;
+    }[];
+  };
+};
+
+type TypeNiceSigungu = {
+  req: {
+    megaCd: string;
+  };
+  res: {
+    data: {
+      ctyCd: string;
+      ctyNm: string;
+    }[];
+  };
+};
+
+type TypeNiceDong = {
+  req: {
+    ctyCd: string;
+  };
+  res: {
+    data: {
+      admiCd: string;
+      admiNm: string;
+    }[];
+  };
+};
+
 export type {
   BixApiInstance,
   TypeMapSido,
@@ -156,4 +186,9 @@ export type {
   TypeNiceStore,
   TypeNiceFlowPop,
   TypeNiceFlowData,
+  TypeMapArea,
+  TypeMapGeo,
+  TypeNiceSido,
+  TypeNiceSigungu,
+  TypeNiceDong,
 };

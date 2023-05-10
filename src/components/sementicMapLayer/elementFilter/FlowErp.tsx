@@ -4,9 +4,9 @@ import { Box, Button, Flex, useDisclosure } from "@chakra-ui/react";
 import { Marker, NaverMapContext } from "@src/lib/src";
 //  Component
 import ErpFilter from "@components/sementicMapLayer/elementFilter/ErpFilter";
-import BtnReset from "@components/sementicMapLayer/elementFilter/BtnReset";
+import ToolBox from "@components/sementicMapLayer/boxTool/ToolBox";
+import BtnReset from "@components/sementicMapLayer/common/BtnReset";
 import ModalDaumAddr from "@components/modal/common/ModalDaumAddr";
-import ToolBox from "@components/sementicMapLayer/toolBox/ToolBox";
 //  Icon
 import { IcoDoubleSquere } from "@assets/icons/icon";
 import marker from "@assets/icons/marker.png";
@@ -17,7 +17,7 @@ import {
   DecoFilterDivider,
   DecoTop,
 } from "@components/sementicMapLayer/elementDeco/Deco";
-import { erpHistoryApi } from "@src/api/biz/config";
+import { erpHistoryApi } from "@api/biz/config";
 
 const FlowErp = () => {
   const {

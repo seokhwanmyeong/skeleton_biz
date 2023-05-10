@@ -1,9 +1,7 @@
 //  Lib
 import { Fragment } from "react";
-import { Box, Flex, Grid, Heading, Text } from "@chakra-ui/react";
-//  Deco
-import { Deco01 } from "@assets/deco/DecoSvg";
-import { DecoRankTag } from "@components/sementicMapLayer/elementDeco/Deco";
+import { Box, Flex, Heading, Text } from "@chakra-ui/react";
+//  Icon
 import {
   IcoGroup,
   IcoMonitoring,
@@ -11,7 +9,10 @@ import {
   IcoNice3,
   IcoResident,
   IcoWorkspace,
-} from "@src/assets/icons/icon";
+} from "@assets/icons/icon";
+//  Deco
+import { Deco01 } from "@assets/deco/DecoSvg";
+import { DecoRankTag } from "@components/sementicMapLayer/elementDeco/DecoCenter";
 //  Type
 import type { RankType } from "@states/sementicMap/stateFilter";
 
