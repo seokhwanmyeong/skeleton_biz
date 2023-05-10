@@ -12,11 +12,10 @@ import { infoComFlowDepth } from "@src/states/sementicMap/stateFilter";
 import type { TypeNiceFlowData } from "@api/bizSub/type";
 import { flowColor } from "@src/util/define/map";
 
-type Props = {};
 type TypePoint = { lv: number; point: [number, number] };
 
-const MapFlowCustom = (props: Props) => {
-  const { state, dispatch } = useContext(NaverMapContext);
+const MapFlowCustom = () => {
+  const { state } = useContext(NaverMapContext);
   const cutomArea = useRecoilValue(atomSlctCustom);
   const {
     show: flowShow,
@@ -27,7 +26,7 @@ const MapFlowCustom = (props: Props) => {
   const [circleOP, setCircleOP] = useState({});
   const [curZoom, setCurZoom] = useState(16);
   const markerFlow = useRef<any[] | null>(null);
-  console.log("render");
+
   useEffect(() => {
     if (!state.map) return;
 
@@ -38,7 +37,7 @@ const MapFlowCustom = (props: Props) => {
       }
       const markerLi: any[] = [];
 
-      flowList.map((list: any, idx: number) => {
+      flowList.map((list: any) => {
         list.map((li: TypeNiceFlowData) => {
           const { flowLv, xAxis, yAxis } = li;
 

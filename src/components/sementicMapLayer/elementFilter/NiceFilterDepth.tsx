@@ -1,5 +1,5 @@
 //  Lib
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
 import {
   Box,
@@ -10,7 +10,6 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 //  Component
-import { CheckboxGroup } from "@components/common/CheckBox";
 import { SwitchFilter } from "@components/common/Switch";
 import { BtnFilterSearch } from "@components/common/Btn";
 import { Select } from "@components/common/Select";
@@ -23,8 +22,11 @@ import {
   resetNiceDepth,
   atomUpjongState,
 } from "@states/sementicMap/stateFilter";
+import { atomFlowEnterArea } from "@states/sementicMap/stateMap";
 //  Api
-import { apiMapNice } from "@api/bizSub/config";
+import { apiMapBuilding, apiMapNice } from "@api/bizSub/config";
+//  Util
+import { regstrGbCd, roofCd, mainPurpsCd, strctCd } from "@util/define/map";
 //  Icon
 import {
   IcoFileSearch,
@@ -35,10 +37,7 @@ import {
 //  Deco
 import { Deco01 } from "@assets/deco/DecoSvg";
 import { DecoCardBg } from "@components/sementicMapLayer/elementDeco/Deco";
-import {
-  atomFlowEnterArea,
-  atomSlctDong,
-} from "@src/states/sementicMap/stateMap";
+import { DatePicker } from "chakra-ui-date-input";
 
 const NiceFilterDepth = ({
   areaInfo,
@@ -54,14 +53,15 @@ const NiceFilterDepth = ({
   };
 }) => {
   const { getBrandList, getFlowPop } = apiMapNice;
+  const { getBuildingList, getBuildingDetail } = apiMapBuilding;
   const divRef = useRef<HTMLDivElement | null>(null);
   const [openIdx, setOpenIdx] = useState(0);
   const { bot } = useRecoilValue(atomUpjongState);
   const { sigungu } = useRecoilValue(atomFlowEnterArea);
   const [flowPop, setFlowPop] = useRecoilState(infoComFlowDepth);
-  const [brandFilter, setBrandFilter] = useRecoilState(infoComBrand);
-  const [buildingFilter, setBuildingFilter] = useRecoilState(infoComBuilding);
-  const [filterBuilding, setFilterBuilding] = useState(buildingFilter.filter);
+  const [brand, setBrand] = useRecoilState(infoComBrand);
+  const [building, setBuilding] = useRecoilState(infoComBuilding);
+  const [filterBuilding, setFilterBuilding] = useState(building.filter);
   const reset = useResetRecoilState(resetNiceDepth);
 
   //  세부 유동인구 필터 변화 및 액티브
@@ -127,7 +127,7 @@ const NiceFilterDepth = ({
         console.log(res);
 
         if (res.data && res.data.length > 0)
-          setBrandFilter({ show: true, active: true, data: res.data || [] });
+          setBrand({ show: true, active: true, data: res.data || [] });
       });
     } else if (areaInfo.areaType === "polygon" && areaInfo.slctPath) {
       const arr = areaInfo.slctPath.map((path: any): [number, number] => {
@@ -142,7 +142,7 @@ const NiceFilterDepth = ({
         console.log(res);
 
         if (res.data && res.data.length > 0)
-          setBrandFilter({ show: true, active: true, data: res.data || [] });
+          setBrand({ show: true, active: true, data: res.data || [] });
       });
     } else if (
       areaInfo.areaType === "circle" &&
@@ -159,14 +159,63 @@ const NiceFilterDepth = ({
         console.log(res);
 
         if (res.data && res.data.length > 0)
-          setBrandFilter({ show: true, active: true, data: res.data || [] });
+          setBrand({ show: true, active: true, data: res.data || [] });
       });
     }
   };
 
-  //  건물조회 필터 변화 및 액티브
   const searchBuildingHandler = () => {
-    setBrandFilter(filterBuilding);
+    if (areaInfo.areaType === "dong" && areaInfo.slctCode) {
+      getBuildingList({
+        admiCd: areaInfo.slctCode,
+        ...filterBuilding,
+      }).then((res: any) => {
+        console.log(res);
+
+        setBuilding({
+          filter: filterBuilding,
+          data: res.data,
+          show: true,
+          active: true,
+        });
+      });
+    } else if (areaInfo.areaType === "polygon" && areaInfo.slctPath) {
+      const arr = areaInfo.slctPath.map((path: any): [number, number] => {
+        return [path.x || path[0], path.y || path[1]];
+      });
+
+      getBuildingList({
+        wkt: [[arr]],
+      }).then((res: any) => {
+        console.log(res);
+
+        setBuilding({
+          filter: filterBuilding,
+          data: res.data,
+          show: true,
+          active: true,
+        });
+      });
+    } else if (
+      areaInfo.areaType === "circle" &&
+      areaInfo.center &&
+      areaInfo.range
+    ) {
+      getBuildingList({
+        xAxis: areaInfo.center.x,
+        yAxis: areaInfo.center.y,
+        range: Number(areaInfo.range),
+      }).then((res: any) => {
+        console.log(res);
+
+        setBuilding({
+          filter: filterBuilding,
+          data: res.data,
+          show: true,
+          active: true,
+        });
+      });
+    }
   };
 
   return (
@@ -214,7 +263,7 @@ const NiceFilterDepth = ({
         <Button
           variant="filterTop02"
           isDisabled={bot ? false : true}
-          isActive={brandFilter?.active || openIdx === 2}
+          isActive={brand?.active || openIdx === 2}
           onClick={() => {
             if (openIdx === 2) {
               setOpenIdx(0);
@@ -231,7 +280,7 @@ const NiceFilterDepth = ({
       </Tooltip>
       <Button
         variant="filterTop02"
-        isActive={buildingFilter?.active || openIdx === 3}
+        isActive={building?.active || openIdx === 3}
         onClick={() => {
           if (openIdx === 3) {
             setOpenIdx(0);
@@ -338,12 +387,12 @@ const NiceFilterDepth = ({
             >
               <Flex align="center" gap="0.5rem">
                 <SwitchFilter
-                  isDisabled={!brandFilter.active || (bot.code ? false : true)}
-                  isChecked={brandFilter.active}
+                  isDisabled={!brand.active || (bot.code ? false : true)}
+                  isChecked={brand.active}
                   onChange={() => {
-                    setBrandFilter({
-                      ...brandFilter,
-                      active: !brandFilter.active,
+                    setBrand({
+                      ...brand,
+                      active: !brand.active,
                     });
                   }}
                   variant="filterControl"
@@ -419,11 +468,11 @@ const NiceFilterDepth = ({
             </Flex>
             <Flex align="center" gap="0.5rem">
               <SwitchFilter
-                isChecked={buildingFilter.active}
+                isChecked={building.active}
                 onChange={() => {
-                  setBuildingFilter({
-                    ...buildingFilter,
-                    active: !buildingFilter.active,
+                  setBuilding({
+                    ...building,
+                    active: !building.active,
                   });
                 }}
                 variant="filterControl"
@@ -441,23 +490,103 @@ const NiceFilterDepth = ({
                 flex="none"
                 m="0"
                 w="4rem"
+                textStyle="base"
                 fontSize="xs"
                 fontWeight="strong"
+                lineHeight={1}
               >
-                대장종류
+                준공기간
               </FormLabel>
-              <Select
-                data={[
-                  { text: "-", value: "-" },
-                  { text: "-", value: "-" },
-                ]}
-                // value={filterBuilding.searchType}
-                opBaseTxt="text"
-                opBaseId="value"
-                opBaseKey="value"
-                onChange={(val: any) => {}}
-                selectProps={{ w: "100%" }}
-              />
+              <Flex w="100%" gap="0.5rem">
+                <DatePicker
+                  placeholder="날짜를 입력하세요."
+                  name="date"
+                  dateFormat="YYYY/MM/DD"
+                  value={filterBuilding.useStartDay}
+                  onChange={(date: string) => {
+                    setFilterBuilding({
+                      ...filterBuilding,
+                      useStartDay: date,
+                    });
+                  }}
+                  bgColor="#FFFFFF"
+                  borderColor="neutral.gray5"
+                />
+                <DatePicker
+                  placeholder="날짜를 입력하세요."
+                  name="date"
+                  dateFormat="YYYY/MM/DD"
+                  value={filterBuilding.useEndDay}
+                  onChange={(date: string) => {
+                    setFilterBuilding({
+                      ...filterBuilding,
+                      useEndDay: date,
+                    });
+                  }}
+                  bgColor="#FFFFFF"
+                  borderColor="neutral.gray5"
+                />
+              </Flex>
+            </Flex>
+            <Flex gap="1rem">
+              <Flex w="100%" align="center">
+                <FormLabel
+                  display="flex"
+                  alignItems="center"
+                  flex="none"
+                  m="0"
+                  w="4rem"
+                  textStyle="base"
+                  fontSize="xs"
+                  fontWeight="strong"
+                  lineHeight={1}
+                >
+                  대장종류
+                </FormLabel>
+                <Select
+                  data={regstrGbCd}
+                  value={filterBuilding.regstrGbCd}
+                  opBaseTxt="text"
+                  opBaseId="value"
+                  opBaseKey="value"
+                  onChange={(val: string) => {
+                    setFilterBuilding({
+                      ...filterBuilding,
+                      regstrGbCd: val,
+                    });
+                  }}
+                  selectProps={{ w: "100%" }}
+                />
+              </Flex>
+              <Flex w="100%" align="center">
+                <FormLabel
+                  display="flex"
+                  alignItems="center"
+                  flex="none"
+                  m="0"
+                  w="4rem"
+                  textStyle="base"
+                  fontSize="xs"
+                  fontWeight="strong"
+                  lineHeight={1}
+                >
+                  지붕구조
+                </FormLabel>
+                <Select
+                  data={roofCd}
+                  value={filterBuilding.roofCd}
+                  opBaseTxt="text"
+                  opBaseId="value"
+                  opBaseKey="value"
+                  onChange={(val: string) => {
+                    setFilterBuilding({
+                      ...filterBuilding,
+                      roofCd: val,
+                    });
+                  }}
+                  selectProps={{ w: "100%" }}
+                />
+              </Flex>
             </Flex>
             <Flex align="center">
               <FormLabel
@@ -466,46 +595,25 @@ const NiceFilterDepth = ({
                 flex="none"
                 m="0"
                 w="4rem"
+                textStyle="base"
                 fontSize="xs"
                 fontWeight="strong"
-              >
-                지붕구조
-              </FormLabel>
-              <Select
-                data={[
-                  { text: "-", value: "-" },
-                  { text: "-", value: "-" },
-                ]}
-                // value={filterBuilding.searchType}
-                opBaseTxt="text"
-                opBaseId="value"
-                opBaseKey="value"
-                onChange={(val: any) => {}}
-                selectProps={{ w: "100%" }}
-              />
-            </Flex>
-            <Flex align="center">
-              <FormLabel
-                display="flex"
-                alignItems="center"
-                flex="none"
-                m="0"
-                w="4rem"
-                fontSize="xs"
-                fontWeight="strong"
+                lineHeight={1}
               >
                 용도
               </FormLabel>
               <Select
-                data={[
-                  { text: "-", value: "-" },
-                  { text: "-", value: "-" },
-                ]}
-                // value={filterBuilding.searchType}
+                data={mainPurpsCd}
+                value={filterBuilding.mainPurpsCd}
                 opBaseTxt="text"
                 opBaseId="value"
                 opBaseKey="value"
-                onChange={(val: any) => {}}
+                onChange={(val: string) => {
+                  setFilterBuilding({
+                    ...filterBuilding,
+                    mainPurpsCd: val,
+                  });
+                }}
                 selectProps={{ w: "100%" }}
               />
             </Flex>
@@ -516,21 +624,25 @@ const NiceFilterDepth = ({
                 flex="none"
                 m="0"
                 w="4rem"
+                textStyle="base"
                 fontSize="xs"
                 fontWeight="strong"
+                lineHeight={1}
               >
                 구조
               </FormLabel>
               <Select
-                data={[
-                  { text: "-", value: "-" },
-                  { text: "-", value: "-" },
-                ]}
-                // value={filterBuilding.searchType}
+                data={strctCd}
+                value={filterBuilding.strctCd}
                 opBaseTxt="text"
                 opBaseId="value"
                 opBaseKey="value"
-                onChange={(val: any) => {}}
+                onChange={(val: string) => {
+                  setFilterBuilding({
+                    ...filterBuilding,
+                    strctCd: val,
+                  });
+                }}
                 selectProps={{ w: "100%" }}
               />
             </Flex>
@@ -541,16 +653,37 @@ const NiceFilterDepth = ({
                 flex="none"
                 m="0"
                 w="4rem"
+                textStyle="base"
                 fontSize="xs"
                 fontWeight="strong"
+                lineHeight={1}
               >
                 연면적
               </FormLabel>
-              <Input
-                inputProps={{ w: "100%" }}
-                placeholder={"연면적을 입력하세요"}
-                onChange={(val: any) => {}}
-              />
+              <Flex w="100%" gap="0.5rem">
+                <Input
+                  inputProps={{ w: "100%" }}
+                  placeholder={"연면적을 입력하세요"}
+                  value={filterBuilding.startTotArea || ""}
+                  onChange={(val: any) => {
+                    setFilterBuilding({
+                      ...filterBuilding,
+                      startTotArea: val || "",
+                    });
+                  }}
+                />
+                <Input
+                  inputProps={{ w: "100%" }}
+                  placeholder={"연면적을 입력하세요"}
+                  value={filterBuilding.endTotArea || ""}
+                  onChange={(val: any) => {
+                    setFilterBuilding({
+                      ...filterBuilding,
+                      endTotArea: val || "",
+                    });
+                  }}
+                />
+              </Flex>
             </Flex>
           </Flex>
           <DecoCardBg />

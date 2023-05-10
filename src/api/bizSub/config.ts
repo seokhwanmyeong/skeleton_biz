@@ -17,6 +17,8 @@ import {
   MAP_NICE_SIDO,
   MAP_NICE_SIGUNGU,
   MAP_NICE_DONG,
+  MAP_BUILDING_LIST,
+  MAP_BUILDING_DETAIL,
 } from "@api/bizSub/url";
 //  Type
 import type {
@@ -107,6 +109,11 @@ const apiNiceAddr = {
     instance.post<TypeNiceDong["req"], TypeNiceDong["res"]>(MAP_NICE_DONG, req),
 };
 
+const apiMapBuilding = {
+  getBuildingList: (req: any) => instance.post(MAP_BUILDING_LIST, req),
+  getBuildingDetail: (req: any) => instance.post(MAP_BUILDING_DETAIL, req),
+};
+
 const apiReport = {
   getSummary: (req: any) => instance.post(MAP_REPORT_SUMMARY, req),
   getPop: (req: any) => instance.post(MAP_REPORT_POP, req),
@@ -116,4 +123,4 @@ const apiReport = {
   getFacilityList: (req: any) => instance.post(MAP_REPORT_FACILITYLIST, req),
 };
 
-export { apiMapArea, apiMapNice, apiReport, apiNiceAddr };
+export { apiMapArea, apiMapNice, apiReport, apiNiceAddr, apiMapBuilding };

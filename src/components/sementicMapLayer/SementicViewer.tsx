@@ -10,6 +10,7 @@ import ModalRentDetail from "@components/modal/map/ModalRentDetail";
 import Report from "@src/components/sementicMapLayer/elementViewer/Report";
 //  States
 import { sementicViewState } from "@states/sementicMap/stateView";
+import ModalBuilding from "../modal/map/ModalBuilding";
 
 const SementicViewer = () => {
   const { viewId, props } = useRecoilValue(sementicViewState);
@@ -44,6 +45,18 @@ const SementicViewer = () => {
   } else if (viewId === "rentInfo") {
     return (
       <ModalRentDetail
+        id={props?.id}
+        name={props.name}
+        isOpen={isOpen}
+        onClose={() => {
+          onClose();
+          reset();
+        }}
+      />
+    );
+  } else if (viewId === "buildingInfo") {
+    return (
+      <ModalBuilding
         id={props?.id}
         name={props.name}
         isOpen={isOpen}

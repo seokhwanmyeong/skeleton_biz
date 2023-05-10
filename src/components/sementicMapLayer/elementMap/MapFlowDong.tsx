@@ -64,8 +64,8 @@ const MapFlowDong = () => {
         markerFlow.current = [];
       }
       const markerLi: any[] = [];
-      console.log(flowList);
-      flowList.map((list: any, idx: number) => {
+
+      flowList.map((list: any) => {
         list.map((li: TypeNiceFlowData) => {
           const { flowLv, xAxis, yAxis } = li;
 
@@ -148,23 +148,19 @@ const MapFlowDong = () => {
         disableDoubleTapZoom: true,
         disableTwoFingerTapZoom: true,
       });
-      // state.map?.fitBounds(dong.slctPath[0]);
-
-      // let curZoom = state.map?.getZoom();
-
-      // if (curZoom) {
-      //   state.map?.setZoom(curZoom);
-      //   state.map?.setOptions({
-      //     minZoom: curZoom,
-      //     maxZoom: 22,
-      //   });
-      // }
 
       if (geoRef.current) {
         state.map?.data.removeGeoJson(geoRef.current);
       }
       // @ts-ignore
       state.map.data.addGeoJson(dong.slctPath);
+
+      state.map.data.setStyle({
+        fillColor: "#36CFC9",
+        fillOpacity: 0.2,
+        strokeColor: "#FFFFFF",
+        strokeOpacity: 0.5,
+      });
 
       geoRef.current = dong.slctPath;
 

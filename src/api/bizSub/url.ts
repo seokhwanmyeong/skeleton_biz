@@ -12,6 +12,10 @@ export const MAP_NICE_STORE = "/v1/niceapi/getStoreList";
 //  MAP_NICE_FLOWPOP
 export const MAP_NICE_FLOWPOP = "/v1/niceapi/getFlowPopPoint";
 
+//  MAP_BUILDING
+export const MAP_BUILDING_LIST = "/v1/building/getBuildings";
+export const MAP_BUILDING_DETAIL = "/v1/building/getBuilding";
+
 //  MAP_NICE_ADDR
 export const MAP_NICE_SIDO = "/v1/niceapi/getMegaCode";
 export const MAP_NICE_SIGUNGU = "/v1/niceapi/getCtyCode";

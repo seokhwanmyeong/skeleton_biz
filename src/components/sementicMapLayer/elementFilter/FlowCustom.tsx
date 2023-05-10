@@ -13,6 +13,7 @@ import {
   atomUpjongState,
   infoComBrand,
   infoComFlowDepth,
+  infoComBuilding,
 } from "@states/sementicMap/stateFilter";
 import { atomSlctCustom } from "@states/sementicMap/stateMap";
 import { sementicViewState } from "@states/sementicMap/stateView";
@@ -29,12 +30,23 @@ import {
   DecoFrameR,
 } from "@components/sementicMapLayer/elementDeco/DecoCenter";
 
-type Props = {};
-
-const FlowCustom = (props: Props) => {
-  const { show, data: brandList } = useRecoilValue(infoComBrand);
-  const { show: brandShow } = useRecoilValue(infoComFlowDepth);
+const FlowCustom = () => {
   const { top, mid, bot } = useRecoilValue(atomUpjongState);
+  const {
+    show: flowShow,
+    active: flowActive,
+    data: flowList,
+  } = useRecoilValue(infoComFlowDepth);
+  const {
+    show: brandShow,
+    active: brandActive,
+    data: brandList,
+  } = useRecoilValue(infoComBrand);
+  const {
+    show: buildShow,
+    active: buildActive,
+    data: buildList,
+  } = useRecoilValue(infoComBuilding);
   const cutomArea = useRecoilValue(atomSlctCustom);
   const setSv = useSetRecoilState(sementicViewState);
   const resetSv = useResetRecoilState(sementicViewState);
@@ -86,11 +98,18 @@ const FlowCustom = (props: Props) => {
         pointerEvents="none"
         justify="space-between"
       >
-        <DecoFrameL pl="1rem" align="flex-end">
-          {brandShow && <FlowPopInfo />}
+        <DecoFrameL pl="0.25rem" align="flex-end">
+          {flowActive && flowShow && <FlowPopInfo />}
         </DecoFrameL>
         <DecoFrameR pr="0.25rem">
-          <DepthList brandShow={show} brandList={brandList || []} />
+          {((brandShow && brandActive) || (buildShow && buildActive)) && (
+            <DepthList
+              brandShow={brandShow}
+              brandList={brandList || []}
+              buildShow={buildShow}
+              buildList={buildList || []}
+            />
+          )}
         </DecoFrameR>
       </Flex>
       {/* ------------------------------ 하단 ------------------------------*/}

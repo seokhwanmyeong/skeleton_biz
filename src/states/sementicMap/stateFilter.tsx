@@ -265,7 +265,14 @@ export const infoComBuilding = atom<any>({
   key: "infoComBuilding",
   default: {
     filter: {
-      brand: [],
+      useStartDay: null,
+      useEndDay: null,
+      regstrGbCd: "",
+      roofCd: "",
+      mainPurpsCd: "",
+      strctCd: "",
+      startTotArea: "",
+      endTotArea: "",
     },
     data: [],
     show: false,
