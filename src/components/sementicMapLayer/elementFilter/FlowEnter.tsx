@@ -33,15 +33,14 @@ import {
 } from "@components/sementicMapLayer/elementDeco/Deco";
 //  Type
 import type { SlctProps, AreaProps } from "@states/sementicMap/stateMap";
-import { TypeMapSido } from "@src/api/bizSub/type";
 
 const FlowEnter = () => {
   const { getSidoList, getSigunguList } = apiMapArea;
   const { state } = useContext(NaverMapContext);
-  const setFlow = useSetRecoilState(atomFilterFlow);
-  const resetSlct = useResetRecoilState(atomFlowEnterArea);
   const [{ sido, sigungu }, setSlctArea] = useRecoilState(atomFlowEnterArea);
   const [sidoLi, setSidoLi] = useRecoilState(atomSidoLi);
+  const setFlow = useSetRecoilState(atomFilterFlow);
+  const resetSlctSigungu = useResetRecoilState(atomSigunguLi);
   const [sigunguLi, setSigunguLi] = useRecoilState(atomSigunguLi);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [filterType, setType] = useState("");
@@ -93,20 +92,27 @@ const FlowEnter = () => {
 
   const getSidoHandler = () => {
     getSidoList({}).then((res) => {
-      console.log(res);
-
       if (res.data && res.data.length > 0) {
         const addFeature = res.data.map((li, idx: number) => {
           const lat = li.center.split(" ")[2].slice(0, -2);
           const lng = li.center.split(" ")[1].slice(1, -1);
+          const bounds = li?.bounds
+            ?.split("((")[1]
+            ?.split("))")[0]
+            ?.split(", ")
+            ?.map((li: string) => {
+              const t = li.split(" ");
+              return [Number(t[1]), Number(t[0])];
+            });
 
           return {
             ...li,
             code: li.megaCd,
             name: li.megaNm,
-            lat: lat,
-            lng: lng,
-            idx: idx,
+            lat: Number(lat),
+            lng: Number(lng),
+            idx: String(idx),
+            bounds: bounds || null,
             feature: {
               type: "Feature",
               properties: {
@@ -115,16 +121,18 @@ const FlowEnter = () => {
                 name: li.megaNm,
                 lat: lat,
                 lng: lng,
-                idx: idx,
+                idx: String(idx),
+                bounds: bounds || null,
                 feature: {
                   type: "Feature",
                   properties: {
                     ...li,
                     code: li.megaCd,
                     name: li.megaNm,
-                    idx: idx,
+                    idx: String(idx),
                     lat: lat,
                     lng: lng,
+                    bounds: bounds || null,
                   },
                   geometry: li.geometry,
                 },
@@ -145,20 +153,27 @@ const FlowEnter = () => {
 
   const getSigunguHandler = (slctCode: string) => {
     getSigunguList({ megaCd: slctCode }).then((res) => {
-      console.log(res);
-
       if (res.data && res.data.length > 0) {
         const addFeature = res.data.map((li, idx: number) => {
           const lat = li.center.split(" ")[2].slice(0, -2);
           const lng = li.center.split(" ")[1].slice(1, -1);
+          const bounds = li?.bounds
+            ?.split("((")[1]
+            ?.split("))")[0]
+            ?.split(", ")
+            ?.map((li: string) => {
+              const t = li.split(" ");
+              return [Number(t[1]), Number(t[0])];
+            });
 
           return {
             ...li,
             code: li.ctyCd,
             name: li.ctyNm,
-            lat: lat,
-            lng: lng,
-            idx: idx,
+            lat: Number(lat),
+            lng: Number(lng),
+            idx: String(idx),
+            bounds: bounds || null,
             feature: {
               type: "Feature",
               properties: {
@@ -167,16 +182,18 @@ const FlowEnter = () => {
                 name: li.ctyNm,
                 lat: lat,
                 lng: lng,
-                idx: idx,
+                idx: String(idx),
+                bounds: bounds || null,
                 feature: {
                   type: "Feature",
                   properties: {
                     ...li,
                     code: li.ctyCd,
                     name: li.ctyNm,
-                    idx: idx,
+                    idx: String(idx),
                     lat: lat,
                     lng: lng,
+                    bounds: bounds || null,
                   },
                   geometry: li.geometry,
                 },
@@ -202,17 +219,17 @@ const FlowEnter = () => {
   }, []);
 
   useEffect(() => {
-    if (sido?.slctCode && sido?.slctName && sido?.slctIdx) {
+    if (sido?.slctCode && sido?.slctName && sido?.slctIdx !== null) {
       getSigunguHandler(sido.slctCode);
     }
   }, [sido]);
 
   // useEffect(() => {
   //   if (
+  //     sido?.slctCode &&
   //     sigungu?.slctCode &&
   //     sigungu?.slctName &&
-  //     sigungu?.slctIdx &&
-  //     sido?.slctCode
+  //     sigungu?.slctIdx
   //   ) {
   //     getSigunguHandler(sido.slctCode);
   //   }
@@ -236,7 +253,20 @@ const FlowEnter = () => {
               maxZoom: 22,
               scrollWheel: false,
             });
-            resetSlct();
+            resetSlctSigungu();
+            setSlctArea({
+              sido: sido,
+              sigungu: {
+                slctName: "",
+                slctCode: "",
+                slctIdx: "",
+                slctPath: undefined,
+                slctLat: undefined,
+                slctLng: undefined,
+                slctZoom: undefined,
+                slctBounds: null,
+              },
+            });
           }}
           disabled={!sido?.slctName}
         />
@@ -271,7 +301,7 @@ const FlowEnter = () => {
               setSlctArea={(val: SlctProps) => {
                 if (sido?.slctCode && sigunguLi.length !== 0) {
                   setSlctArea({
-                    sido,
+                    sido: sido,
                     sigungu: val,
                   });
 
@@ -279,7 +309,16 @@ const FlowEnter = () => {
                 } else {
                   setSlctArea({
                     sido: val,
-                    sigungu,
+                    sigungu: {
+                      slctName: "",
+                      slctCode: "",
+                      slctIdx: "",
+                      slctPath: undefined,
+                      slctLat: undefined,
+                      slctLng: undefined,
+                      slctZoom: undefined,
+                      slctBounds: null,
+                    },
                   });
                 }
               }}

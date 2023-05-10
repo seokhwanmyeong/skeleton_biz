@@ -36,8 +36,6 @@ import {
   DecoFrameL,
   DecoFrameR,
 } from "@components/sementicMapLayer/elementDeco/DecoCenter";
-//  Type
-import type { AreaProps } from "@states/sementicMap/stateMap";
 
 const FlowSigungu = () => {
   const { getDongList } = apiMapArea;
@@ -46,66 +44,54 @@ const FlowSigungu = () => {
   const rankList = useRecoilValue(infoComNiceRank);
   const setFlow = useSetRecoilState(atomFilterFlow);
   const setDongLi = useSetRecoilState(atomDongLi);
+  const resetDongLi = useResetRecoilState(atomDongLi);
   const reset = useResetRecoilState(resetNice);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [left, setLeft] = useState([]);
   const [right, setRight] = useState([]);
 
-  const pathTransHandler = (areaList: AreaProps[]) => {
-    return areaList.map((area, idx: number) => {
-      const paths = area.path.map((latLng: [number, number][]) => {
-        return latLng.map((depth: any) => {
-          const trans = naver.maps.TransCoord.fromUTMKToLatLng(
-            new naver.maps.Point(depth[0], depth[1])
-          );
-          return [trans.x, trans.y];
-        });
-      });
-
-      return {
-        code: area.code,
-        name: area.name,
-        num: area.code,
-        path: paths,
-        lat: area.lat,
-        lng: area.lng,
-        zoomLev: area.zoomLev,
-      };
-    });
-  };
-
   const getDongHandler = () => {
     if (sigungu?.slctCode) {
-      getDongList({ ctyCd: sigungu.slctCode }).then((res: any) => {
-        console.log(res);
-
+      getDongList({ ctyCd: sigungu.slctCode }).then((res) => {
         if (res.data && res.data.length > 0) {
-          const addFeature = res.data.map((li) => {
+          const addFeature = res.data.map((li, idx: number) => {
             const lat = li.center.split(" ")[2].slice(0, -2);
             const lng = li.center.split(" ")[1].slice(1, -1);
+            const bounds = li?.bounds
+              ?.split("((")[1]
+              ?.split("))")[0]
+              ?.split(", ")
+              ?.map((li: string) => {
+                const t = li.split(" ");
+                return [Number(t[1]), Number(t[0])];
+              });
 
             return {
               ...li,
-              code: li.megaCd,
-              name: li.megaNm,
-              lat: lat,
-              lng: lng,
+              code: li.admiCd,
+              name: li.admiNm,
+              lat: Number(lat),
+              lng: Number(lng),
+              idx: idx,
+              bounds: bounds || null,
               feature: {
                 type: "Feature",
                 properties: {
                   ...li,
-                  code: li.megaCd,
-                  name: li.megaNm,
-                  lat: lat,
-                  lng: lng,
+                  code: li.admiCd,
+                  name: li.admiNm,
+                  lat: Number(lat),
+                  lng: Number(lng),
+                  bounds: bounds || null,
                   feature: {
                     type: "Feature",
                     properties: {
                       ...li,
-                      ode: li.megaCd,
-                      name: li.megaNm,
-                      lat: lat,
-                      lng: lng,
+                      ode: li.admiCd,
+                      name: li.admiNm,
+                      lat: Number(lat),
+                      lng: Number(lng),
+                      bounds: bounds || null,
                     },
                     geometry: li.geometry,
                   },
@@ -175,15 +161,20 @@ const FlowSigungu = () => {
               disableTwoFingerTapZoom: false,
             });
             setSlctArea({
-              sido,
+              sido: sido,
               sigungu: {
                 slctName: "",
                 slctCode: "",
                 slctIdx: "",
-                slctPath: [],
+                slctPath: undefined,
+                slctLat: undefined,
+                slctLng: undefined,
+                slctZoom: undefined,
+                slctBounds: null,
               },
             });
             reset();
+            resetDongLi();
             setFlow("enter");
           }}
         />

@@ -8,10 +8,7 @@ import {
   Tab,
   TabPanels,
   TabPanel,
-  List,
-  ListItem,
   Text,
-  Highlight,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -20,14 +17,8 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
 //  Component
 import { Select } from "@components/common/Select";
-import ChartStackBar from "@components/charts/ChartStackBar";
-import ViewList from "@components/sementicMapLayer/elementViewer/ViewList";
-import ChartLine from "@components/sementicMapLayer/elementViewer/ChartLine";
-import ChartLineGroup from "@components/sementicMapLayer/elementViewer/ChartLineGroup";
 //  Api
 import { apiReport } from "@api/bizSub/config";
 //  State
@@ -46,7 +37,6 @@ import {
   IcoPayment,
   IcoResident,
   IcoWorkspace,
-  IconFileAdd,
 } from "@assets/icons/icon";
 import ReportSummary from "./elementReport/ReportSummary";
 import ReportPop from "./elementReport/ReportPop";
@@ -88,7 +78,7 @@ const Report = ({ props, isOpen, onClose }: any) => {
     if (areaType === "dong") {
       getSummary({
         upjongCd: bot.code,
-        ctyCd: slctCode.slice(0, 4),
+        // ctyCd: slctCode.slice(0, 4),
         admiCd: slctCode,
       })
         .then((res: any) => {
@@ -147,7 +137,7 @@ const Report = ({ props, isOpen, onClose }: any) => {
     if (areaType === "dong") {
       getPop({
         upjongCd: bot.code,
-        ctyCd: slctCode.slice(0, 4),
+        // ctyCd: slctCode.slice(0, 4),
         admiCd: slctCode,
       })
         .then((res: any) => {
@@ -210,7 +200,7 @@ const Report = ({ props, isOpen, onClose }: any) => {
     if (areaType === "dong") {
       getHouse({
         upjongCd: bot.code,
-        ctyCd: slctCode.slice(0, 4),
+        // ctyCd: slctCode.slice(0, 4),
         admiCd: slctCode,
       })
         .then((res: any) => {
@@ -272,7 +262,7 @@ const Report = ({ props, isOpen, onClose }: any) => {
     if (areaType === "dong") {
       getUpjongSale({
         upjongCd: bot.code,
-        ctyCd: slctCode.slice(0, 4),
+        // ctyCd: slctCode.slice(0, 4),
         admiCd: slctCode,
       })
         .then((res: any) => {
@@ -334,12 +324,12 @@ const Report = ({ props, isOpen, onClose }: any) => {
     if (areaType === "dong") {
       getFacility({
         upjongCd: bot.code,
-        ctyCd: slctCode.slice(0, 4),
+        // ctyCd: slctCode.slice(0, 4),
         admiCd: slctCode,
       }).then((res: any) => {
         getFacilityList({
           upjongCd: bot.code,
-          ctyCd: slctCode.slice(0, 4),
+          // ctyCd: slctCode.slice(0, 4),
           admiCd: slctCode,
         })
           .then((depthRes: any) => {
@@ -791,7 +781,7 @@ const Report = ({ props, isOpen, onClose }: any) => {
                   >
                     선택 영역 (
                     {areaType === "dong"
-                      ? "지역"
+                      ? slctName || "지역"
                       : areaType === "circle"
                       ? "반경"
                       : areaType === "polygon"

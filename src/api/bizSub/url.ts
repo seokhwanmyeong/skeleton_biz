@@ -1,7 +1,7 @@
 //  MAP_AREA_POLYGON
 export const MAP_SIDO_GET_LIST = "/v1/area/getMegaCdArea";
 export const MAP_SIGUNGU_GET_LIST = "/v1/area/getCtyCdArea";
-export const MAP_DONG_GET_LIST = "/v1/area/getAdmiCode";
+export const MAP_DONG_GET_LIST = "/v1/area/getAdmiCdArea";
 
 //  MAP_NICE_RANKING
 export const MAP_NICE_RANKING = "/v1/niceapi/getGuCustDataList";

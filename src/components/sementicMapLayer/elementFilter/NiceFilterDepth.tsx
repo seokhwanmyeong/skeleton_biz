@@ -58,7 +58,6 @@ const NiceFilterDepth = ({
   const [openIdx, setOpenIdx] = useState(0);
   const { bot } = useRecoilValue(atomUpjongState);
   const { sigungu } = useRecoilValue(atomFlowEnterArea);
-  const { slctCode } = useRecoilValue(atomSlctDong);
   const [flowPop, setFlowPop] = useRecoilState(infoComFlowDepth);
   const [brandFilter, setBrandFilter] = useRecoilState(infoComBrand);
   const [buildingFilter, setBuildingFilter] = useRecoilState(infoComBuilding);
@@ -70,10 +69,8 @@ const NiceFilterDepth = ({
     if (areaInfo.areaType === "dong" && areaInfo.slctCode) {
       getFlowPop({
         // ctyCd: sigungu.slctCode.slice(0, 4),
-        // admiCd: slctCode,
+        admiCd: areaInfo.slctCode,
         upjongCd: bot.code || "Q01005",
-        admiCd: "11110710",
-        ctyCd: "1111",
       }).then((res: any) => {
         console.log(res);
 
@@ -83,13 +80,13 @@ const NiceFilterDepth = ({
     } else if (areaInfo.areaType === "polygon" && areaInfo.slctPath) {
       console.log(areaInfo.slctPath);
       if (areaInfo?.slctPath) {
-        const arr = areaInfo.slctPath.map((path: any) => {
+        const arr = areaInfo.slctPath.map((path: any): [number, number] => {
           return [path.x || path[0], path.y || path[1]];
         });
 
         getFlowPop({
           upjongCd: bot.code || "Q01005",
-          wkt: [[[arr]]],
+          wkt: [[arr]],
         }).then((res: any) => {
           console.log(res);
 
@@ -123,10 +120,8 @@ const NiceFilterDepth = ({
     if (areaInfo.areaType === "dong" && areaInfo.slctCode) {
       getBrandList({
         // ctyCd: sigungu.slctCode.slice(0, 4),
-        // admiCd: slctCode,
+        admiCd: areaInfo.slctCode,
         upjongCd: bot.code,
-        admiCd: "11110710",
-        ctyCd: "1111",
         pageNo: 1,
       }).then((res: any) => {
         console.log(res);
@@ -135,13 +130,14 @@ const NiceFilterDepth = ({
           setBrandFilter({ show: true, active: true, data: res.data || [] });
       });
     } else if (areaInfo.areaType === "polygon" && areaInfo.slctPath) {
-      const arr = areaInfo.slctPath.map((path: any) => {
+      const arr = areaInfo.slctPath.map((path: any): [number, number] => {
         return [path.x || path[0], path.y || path[1]];
       });
 
       getBrandList({
         upjongCd: bot.code,
         wkt: [[arr]],
+        pageNo: 1,
       }).then((res: any) => {
         console.log(res);
 
@@ -158,6 +154,7 @@ const NiceFilterDepth = ({
         xAxis: areaInfo.center.x,
         yAxis: areaInfo.center.y,
         range: Number(areaInfo.range),
+        pageNo: 1,
       }).then((res: any) => {
         console.log(res);
 

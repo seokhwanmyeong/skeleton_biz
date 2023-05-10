@@ -35,14 +35,12 @@ import {
 //  Type
 import type { TypeNiceFlowData } from "@api/bizSub/type";
 import type { RankType } from "@states/sementicMap/stateFilter";
-import sample from "@src/util/data/sampleBuilding";
 
 type TypePoint = { lv: number; point: [number, number] };
 
 const MapFlowDong = () => {
   const { state } = useContext(NaverMapContext);
   const dong = useRecoilValue(atomSlctDong);
-  const { sigungu } = useRecoilValue(atomFlowEnterArea);
   const { show: brandShow, data: brandList } = useRecoilValue(infoComBrand);
   const {
     show: flowShow,
@@ -54,11 +52,8 @@ const MapFlowDong = () => {
   const [centerView, setCenterView] = useState<boolean>(true);
   const [flowData, setFlowData] = useState<TypePoint[] | null>([]);
   const [dongRank, setDongRank] = useState<RankType | null>(null);
-  // const [sampleData, setSampleData] = useState<any>([]);
   const markerFlow = useRef<any[] | null>(null);
-  const dongTopData = useMemo(() => {
-    return dong.slctData || [];
-  }, [dong]);
+  const geoRef = useRef<any | null>(null);
 
   useEffect(() => {
     if (!state.map) return;
@@ -127,11 +122,10 @@ const MapFlowDong = () => {
   // }, [flowList]);
 
   useEffect(() => {
-    const dongName = dong.slctName.replace(`${sigungu?.slctName} `, "");
     let rank;
 
     for (let i = 0; i < rankList.length; i++) {
-      if (rankList[i].dongName === dongName) {
+      if (rankList[i].dongName === dong.slctName) {
         rank = rankList[i];
         break;
       }
@@ -144,7 +138,7 @@ const MapFlowDong = () => {
   }, [rankList]);
 
   useEffect(() => {
-    if (dong.slctPath) {
+    if (dong.slctPath && state.map) {
       state.map?.setOptions({
         minZoom: 0,
         maxZoom: 22,
@@ -154,16 +148,46 @@ const MapFlowDong = () => {
         disableDoubleTapZoom: true,
         disableTwoFingerTapZoom: true,
       });
-      state.map?.fitBounds(dong.slctPath[0]);
+      // state.map?.fitBounds(dong.slctPath[0]);
 
-      let curZoom = state.map?.getZoom();
+      // let curZoom = state.map?.getZoom();
 
-      if (curZoom) {
-        state.map?.setZoom(curZoom);
-        state.map?.setOptions({
-          minZoom: curZoom,
-          maxZoom: 22,
-        });
+      // if (curZoom) {
+      //   state.map?.setZoom(curZoom);
+      //   state.map?.setOptions({
+      //     minZoom: curZoom,
+      //     maxZoom: 22,
+      //   });
+      // }
+
+      if (geoRef.current) {
+        state.map?.data.removeGeoJson(geoRef.current);
+      }
+      // @ts-ignore
+      state.map.data.addGeoJson(dong.slctPath);
+
+      geoRef.current = dong.slctPath;
+
+      const bounds = dong.slctBounds;
+      console.log(bounds);
+      if (bounds && bounds.length > 0) {
+        const transLatLng = bounds.map(
+          (li) => new naver.maps.LatLng(li[0], li[1])
+        );
+        // @ts-ignore
+        const latLngB = new naver.maps.LatLngBounds(...transLatLng);
+        state.map.fitBounds(latLngB);
+        if (dong.slctLat && dong.slctLng)
+          state.map?.setCenter(
+            new naver.maps.LatLng(dong.slctLat, dong.slctLng)
+          );
+      } else {
+        dong.slctLat &&
+          dong.slctLng &&
+          state.map?.setCenter(
+            new naver.maps.LatLng(dong.slctLat, dong.slctLng)
+          );
+        dong.slctZoom && state.map?.setZoom(Number(dong.slctZoom));
       }
     }
 
@@ -172,17 +196,20 @@ const MapFlowDong = () => {
       "zoom_changed",
       (zoom) => {
         const min = state.map?.getMinZoom() || 16;
-        zoom > min ? setCenterView(false) : setCenterView(true);
+        // zoom > min ? setCenterView(false) : setCenterView(true);
       }
     );
 
-    setCenterView(true);
+    // setCenterView(true);
 
     return () => {
       resetSv();
       naver.maps.Event.removeListener(zoomHandler);
+      if (state.map && geoRef.current) {
+        state.map?.data.removeGeoJson(geoRef.current);
+      }
     };
-  }, [state.map]);
+  }, [state.map, dong]);
 
   // const createPolyHandler = (coordinates: any) => {
   //   return coordinates[0].map((coordinate: any) => {
@@ -269,7 +296,7 @@ const MapFlowDong = () => {
         </DecoFrameR>
       </Flex>
       {/* --------------------------- 맵 Object ---------------------------*/}
-      <InteractArea
+      {/* <InteractArea
         key={dong.name}
         setClickable={false}
         name={dong.slctName}
@@ -287,7 +314,7 @@ const MapFlowDong = () => {
           strokeColor: "#FFFFFF",
           strokeOpacity: 0.5,
         }}
-      />
+      /> */}
       {/* {flowActive && flowShow && flowData && flowData?.length > 0 && (
         <MarkerFlowPopList flowList={flowData} />
       )} */}

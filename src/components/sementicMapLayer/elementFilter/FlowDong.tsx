@@ -20,11 +20,8 @@ import {
   DecoFilterDivider,
   DecoTop,
 } from "@components/sementicMapLayer/elementDeco/Deco";
-import sample from "@src/util/data/sampleBuilding";
 
-type Props = {};
-
-const FlowDong = (props: Props) => {
+const FlowDong = () => {
   const { state } = useContext(NaverMapContext);
   const setFlow = useSetRecoilState(atomFilterFlow);
   const setSv = useSetRecoilState(sementicViewState);
@@ -66,7 +63,7 @@ const FlowDong = (props: Props) => {
         >
           <Flex pos="relative" direction="column">
             <Button variant="filterTopMain" cursor="unset">
-              {dong.slctName.replace(sigungu?.slctName, "")}
+              {dong.slctName}
             </Button>
             <DecoTop width="13rem" />
           </Flex>
@@ -93,7 +90,11 @@ const FlowDong = (props: Props) => {
           variant="filterTop"
           onClick={() => {
             setSv({
-              props: { areaType: "dong", areaCode: dong.slctCode },
+              props: {
+                areaType: "dong",
+                areaCode: dong.slctCode,
+                slctName: dong.slctName,
+              },
               viewId: "eval",
             });
           }}
@@ -109,10 +110,9 @@ const FlowDong = (props: Props) => {
       {isOpen && (
         <NiceFilterDepth
           areaInfo={{
-            areaType: "polygon",
+            areaType: "dong",
             slctName: dong.slctName,
             slctCode: dong.slctCode,
-            slctPath: dong.slctPath[0],
           }}
         />
       )}

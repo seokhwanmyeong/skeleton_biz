@@ -1,5 +1,5 @@
 //  Lib
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   useRecoilState,
   useResetRecoilState,
@@ -107,98 +107,157 @@ const NiceFilter = ({ areaCode }: Props) => {
   const searchHandler = (
     cate?: "flow" | "resi" | "job" | "house" | "upjong" | "sale"
   ) => {
-    let filter: any = {
-      upjongCd: bot.code || "D11002",
-      // code: areaCode,
-      // admiCd: "11530520",
-      ctyCd: "1111",
-      options: null,
-    };
+    if (areaCode) {
+      if ((cate === "upjong" || cate === "sale") && !bot?.code) return;
 
-    if (flowPop.active)
-      filter.options = {
-        ...filter.options,
-        ...transFilter({ type: "inflow", ...filterPop }),
-      };
-    if (resiPop.active)
-      filter.options = {
-        ...filter.options,
-        ...transFilter({ type: "hous", ...filterResi }),
-      };
-    if (jobPop.active)
-      filter.options = {
-        ...filter.options,
-        ...transFilter({ type: "job", ...filterJob }),
-      };
-    if (sale.active)
-      filter.options = {
-        ...filter.options,
-        admiSaleAmt: {},
-      };
-    if (upjongCnt.active)
-      filter.options = {
-        ...filter.options,
-        storeCnt: {},
-      };
-    if (household.active)
-      filter.options = {
-        ...filter.options,
-        housCnt: {},
+      let filter: any = {
+        upjongCd: bot.code || "D11002",
+        ctyCd: areaCode,
+        options: null,
       };
 
-    switch (cate) {
-      case "flow":
+      if (flowPop.active)
         filter.options = {
           ...filter.options,
           ...transFilter({ type: "inflow", ...filterPop }),
         };
-        setFlowPop({ filter: filterPop, show: true, active: true });
-        break;
-      case "resi":
+      if (resiPop.active)
         filter.options = {
           ...filter.options,
           ...transFilter({ type: "hous", ...filterResi }),
         };
-        setResiPop({ filter: filterResi, show: true, active: true });
-        break;
-      case "job":
+      if (jobPop.active)
         filter.options = {
           ...filter.options,
           ...transFilter({ type: "job", ...filterJob }),
         };
-        setJobPop({ filter: filterJob, show: true, active: true });
-        break;
-      case "house":
-        filter.options = {
-          ...filter.options,
-          housCnt: {},
-        };
-        setHouse({ show: true, active: true });
-        break;
-      case "upjong":
-        filter.options = {
-          ...filter.options,
-          storeCnt: {},
-        };
-        setUpjong({ show: true, active: true });
-        break;
-      case "sale":
+      if (sale.active)
         filter.options = {
           ...filter.options,
           admiSaleAmt: {},
         };
-        setSale({ show: true, active: true });
-        break;
-      default:
-        break;
-    }
-    console.log("click");
-    getSigunguRank(filter).then((res: any) => {
-      if (res?.data?.rank && res?.data?.rank.length > 0) {
-        setRank(res?.data?.rank);
+      if (upjongCnt.active)
+        filter.options = {
+          ...filter.options,
+          storeCnt: {},
+        };
+      if (household.active)
+        filter.options = {
+          ...filter.options,
+          housCnt: {},
+        };
+
+      switch (cate) {
+        case "flow":
+          filter.options = {
+            ...filter.options,
+            ...transFilter({ type: "inflow", ...filterPop }),
+          };
+          setFlowPop({ filter: filterPop, show: true, active: true });
+          break;
+        case "resi":
+          filter.options = {
+            ...filter.options,
+            ...transFilter({ type: "hous", ...filterResi }),
+          };
+          setResiPop({ filter: filterResi, show: true, active: true });
+          break;
+        case "job":
+          filter.options = {
+            ...filter.options,
+            ...transFilter({ type: "job", ...filterJob }),
+          };
+          setJobPop({ filter: filterJob, show: true, active: true });
+          break;
+        case "house":
+          filter.options = {
+            ...filter.options,
+            housCnt: {},
+          };
+          setHouse({ show: true, active: true });
+          break;
+        case "upjong":
+          filter.options = {
+            ...filter.options,
+            storeCnt: {},
+          };
+          setUpjong({ show: true, active: true });
+          break;
+        case "sale":
+          filter.options = {
+            ...filter.options,
+            admiSaleAmt: {},
+          };
+          setSale({ show: true, active: true });
+          break;
+        default:
+          break;
       }
-    });
+
+      getSigunguRank(filter).then((res: any) => {
+        if (res?.data?.rank && res?.data?.rank.length > 0) {
+          setRank(res?.data?.rank);
+        }
+      });
+    }
   };
+
+  useEffect(() => {
+    if (
+      bot.code &&
+      (flowPop.active ||
+        resiPop.active ||
+        jobPop.active ||
+        sale.active ||
+        upjongCnt.active ||
+        household.active)
+    ) {
+      if (areaCode) {
+        let filter: any = {
+          upjongCd: bot.code || "D11002",
+          ctyCd: areaCode,
+          options: null,
+        };
+
+        if (flowPop.active)
+          filter.options = {
+            ...filter.options,
+            ...transFilter({ type: "inflow", ...filterPop }),
+          };
+        if (resiPop.active)
+          filter.options = {
+            ...filter.options,
+            ...transFilter({ type: "hous", ...filterResi }),
+          };
+        if (jobPop.active)
+          filter.options = {
+            ...filter.options,
+            ...transFilter({ type: "job", ...filterJob }),
+          };
+        if (sale.active)
+          filter.options = {
+            ...filter.options,
+            admiSaleAmt: {},
+          };
+        if (upjongCnt.active)
+          filter.options = {
+            ...filter.options,
+            storeCnt: {},
+          };
+        if (household.active)
+          filter.options = {
+            ...filter.options,
+            housCnt: {},
+          };
+
+        getSigunguRank(filter).then((res: any) => {
+          if (res?.data?.rank && res?.data?.rank.length > 0) {
+            setRank(res?.data?.rank);
+          }
+        });
+      }
+    }
+  }, [bot.code]);
 
   return (
     <Flex

@@ -71,7 +71,7 @@ const apiMapArea = {
       req
     ),
   getDongList: (req: TypeMapDong["req"]) =>
-    instance.post<TypeMapDong["req"], TypeMapSigungu["res"]>(
+    instance.post<TypeMapDong["req"], TypeMapDong["res"]>(
       MAP_DONG_GET_LIST,
       req
     ),

@@ -27,15 +27,29 @@ const MapFlowEnter = (props: Props) => {
   const [cursorPo, setCursorPo] = useState<any>(null);
   const [infoArea, setInfoArea] = useState<string>("");
   const geoRef = useRef<any>(null);
+  const overEventRef = useRef<any>(null);
+  const outEventRef = useRef<any>(null);
+  const clickEventRef = useRef<any>(null);
 
   useEffect(() => {
     if (!state.map) return;
 
-    if (sido?.slctCode && sido?.slctName && sido?.slctPath) {
+    if (
+      sido?.slctCode &&
+      sido?.slctName &&
+      sido?.slctPath &&
+      sigunguLi &&
+      sigunguLi.length > 0
+    ) {
       console.log("시 진입");
-      if (geoRef.current && geoRef.current.length > 0) {
+      if (overEventRef.current)
+        state.map?.data.removeListener(overEventRef.current);
+      if (outEventRef.current)
+        state.map?.data.removeListener(outEventRef.current);
+      if (clickEventRef.current)
+        state.map?.data.removeListener(clickEventRef.current);
+      if (geoRef.current && geoRef.current.length > 0)
         geoRef.current.map((geo: any) => state.map?.data.removeGeoJson(geo));
-      }
 
       const geo = sigunguLi.map((sigungu) => {
         // @ts-ignore
@@ -45,21 +59,21 @@ const MapFlowEnter = (props: Props) => {
       });
 
       state.map.data.setStyle({
-        fillColor: "#78d6b0",
+        fillColor: "#fadb14",
         fillOpacity: 0.4,
         strokeWeight: 1,
-        strokeColor: "#41be72",
+        strokeColor: "#FFFFFF",
       });
 
       // @ts-ignore
-      state.map.data.addListener("mouseover", (e) => {
+      overEventRef.current = state.map.data.addListener("mouseover", (e) => {
         if (!state.map) return;
 
         state.map.data.overrideStyle(e.feature, {
-          fillColor: "#78d6b0",
-          fillOpacity: 0.65,
+          fillColor: "#fadb14",
+          fillOpacity: 0.75,
           strokeWeight: 1,
-          strokeColor: "#41be72",
+          strokeColor: "#FFFFFF",
         });
 
         window.addEventListener("mousemove", cursorHandler);
@@ -68,7 +82,7 @@ const MapFlowEnter = (props: Props) => {
       });
 
       // @ts-ignore
-      state.map.data.addListener("mouseout", (e) => {
+      outEventRef.current = state.map.data.addListener("mouseout", (e) => {
         if (!state.map) return;
 
         state.map.data.revertStyle(e.feature);
@@ -78,7 +92,7 @@ const MapFlowEnter = (props: Props) => {
       });
 
       // @ts-ignore
-      state.map.data.addListener("click", (e) => {
+      clickEventRef.current = state.map.data.addListener("click", (e) => {
         if (!state.map) return;
         state.map.data.revertStyle(e.feature);
         setSlctArea({
@@ -91,6 +105,7 @@ const MapFlowEnter = (props: Props) => {
             slctLat: e.feature.getProperty("lat"),
             slctLng: e.feature.getProperty("lng"),
             slctZoom: e.feature.getProperty("zoomLevel"),
+            slctBounds: e.feature.getProperty("bounds"),
           },
         });
         setFlow("sigungu");
@@ -98,17 +113,40 @@ const MapFlowEnter = (props: Props) => {
 
       geoRef.current = geo;
 
-      sido.slctLat &&
-        sido.slctLng &&
-        state.map?.setCenter(new naver.maps.LatLng(sido.slctLat, sido.slctLng));
-      sido.slctZoom && state.map?.setZoom(Number(sido.slctZoom));
+      const bounds = sido.slctBounds;
+
+      if (bounds && bounds.length > 0) {
+        const transLatLng = bounds.map(
+          (li) => new naver.maps.LatLng(li[0], li[1])
+        );
+        // @ts-ignore
+        const latLngB = new naver.maps.LatLngBounds(...transLatLng);
+        state.map.fitBounds(latLngB);
+        if (sido.slctLat && sido.slctLng)
+          state.map?.setCenter(
+            new naver.maps.LatLng(sido.slctLat, sido.slctLng)
+          );
+      } else {
+        sido.slctLat &&
+          sido.slctLng &&
+          state.map?.setCenter(
+            new naver.maps.LatLng(sido.slctLat, sido.slctLng)
+          );
+        sido.slctZoom && state.map?.setZoom(Number(sido.slctZoom));
+      }
+
       state.map?.setOptions({
         draggable: false,
       });
     } else {
-      if (geoRef.current && geoRef.current.length > 0) {
+      if (overEventRef.current)
+        state.map?.data.removeListener(overEventRef.current);
+      if (outEventRef.current)
+        state.map?.data.removeListener(outEventRef.current);
+      if (clickEventRef.current)
+        state.map?.data.removeListener(clickEventRef.current);
+      if (geoRef.current && geoRef.current.length > 0)
         geoRef.current.map((geo: any) => state.map?.data.removeGeoJson(geo));
-      }
 
       state.map?.setOptions({
         center: {
@@ -140,7 +178,7 @@ const MapFlowEnter = (props: Props) => {
       });
 
       // @ts-ignore
-      state.map.data.addListener("mouseover", (e) => {
+      overEventRef.current = state.map.data.addListener("mouseover", (e) => {
         if (!state.map) return;
 
         state.map.data.overrideStyle(e.feature, {
@@ -152,14 +190,14 @@ const MapFlowEnter = (props: Props) => {
       });
 
       // @ts-ignore
-      state.map.data.addListener("mouseout", (e) => {
+      outEventRef.current = state.map.data.addListener("mouseout", (e) => {
         if (!state.map) return;
 
         state.map.data.revertStyle(e.feature);
       });
 
       // @ts-ignore
-      state.map.data.addListener("click", (e) => {
+      clickEventRef.current = state.map.data.addListener("click", (e) => {
         if (!state.map) return;
         state.map.data.revertStyle(e.feature);
         setSlctArea({
@@ -171,8 +209,16 @@ const MapFlowEnter = (props: Props) => {
             slctLat: e.feature.getProperty("lat"),
             slctLng: e.feature.getProperty("lng"),
             slctZoom: e.feature.getProperty("zoomLevel"),
+            slctBounds: e.feature.getProperty("bounds"),
           },
-          sigungu,
+          sigungu: {
+            slctName: "",
+            slctCode: "",
+            slctIdx: "",
+            slctPath: undefined,
+            slctLat: undefined,
+            slctLng: undefined,
+          },
         });
       });
 
@@ -183,6 +229,12 @@ const MapFlowEnter = (props: Props) => {
       if (state.map && geoRef.current && geoRef.current.length > 0) {
         geoRef.current.map((geo: any) => state.map?.data.removeGeoJson(geo));
       }
+      if (overEventRef.current)
+        state.map?.data.removeListener(overEventRef.current);
+      if (outEventRef.current)
+        state.map?.data.removeListener(outEventRef.current);
+      if (clickEventRef.current)
+        state.map?.data.removeListener(clickEventRef.current);
     };
   }, [state.map, sido, sigungu, sidoLi, sigunguLi]);
 

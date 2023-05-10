@@ -7,12 +7,16 @@ import {
   DecoTopFilterModal,
 } from "@components/sementicMapLayer/elementDeco/Deco";
 //  Type
-import type { SlctProps, AreaProps } from "@states/sementicMap/stateMap";
+import type {
+  SlctProps,
+  AreaProps,
+  TransAreaProps,
+} from "@states/sementicMap/stateMap";
 
 type Props = {
   title: string;
   isOpen: boolean;
-  list: AreaProps[];
+  list: TransAreaProps[];
   setSlctArea: (props: SlctProps) => any;
   onClick?: (props?: any) => any;
 };
@@ -37,7 +41,7 @@ const AreaListBox = ({ title, isOpen, list, setSlctArea, onClick }: Props) => {
         gap="0.75rem 0.25rem"
       >
         {list.map(
-          ({ _id, lat, lng, zoomLevel, code, name, idx, feature }: any) => {
+          ({ _id, lat, lng, bounds, zoomLevel, code, name, idx, feature }) => {
             return (
               <Button
                 variant="slctArea"
@@ -51,6 +55,7 @@ const AreaListBox = ({ title, isOpen, list, setSlctArea, onClick }: Props) => {
                     slctLat: lat,
                     slctLng: lng,
                     slctZoom: zoomLevel,
+                    slctBounds: bounds,
                   });
                   onClick && onClick();
                 }}

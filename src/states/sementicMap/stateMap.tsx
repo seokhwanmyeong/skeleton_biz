@@ -15,7 +15,6 @@ export type AreaProps = {
   megaNm: string;
   megaCd: string;
   center: string;
-  bounds: string;
   ctyCd: string;
   ctyNm: string;
   admiCd: string;
@@ -23,9 +22,60 @@ export type AreaProps = {
   zoomLevel: string;
   code: string;
   name: string;
+  lat: number;
+  lng: number;
+  idx: string;
+  bounds: number[][] | null;
   feature: {
     type: string;
     geometry: TypeMapGeo;
+    [x: string]: any;
+  };
+};
+
+export type TransAreaProps = {
+  _id: string;
+  megaNm: string;
+  megaCd: string;
+  center: string;
+  ctyCd: string;
+  ctyNm: string;
+  admiCd: string;
+  admiNm: string;
+  zoomLevel: string;
+  code: string;
+  name: string;
+  lat: number;
+  lng: number;
+  idx: string;
+  bounds: number[][] | null;
+  feature: {
+    type: string;
+    geometry?: TypeMapGeo;
+    [x: string]: any;
+  };
+};
+
+export type TransDongProps = {
+  _id: string;
+  megaNm: string;
+  megaCd: string;
+  center: string;
+  ctyCd: string;
+  ctyNm: string;
+  admiCd: string;
+  admiNm: string;
+  zoomLevel: string;
+  code: string;
+  name: string;
+  lat: number;
+  lng: number;
+  idx: number;
+  bounds: number[][] | null;
+  feature: {
+    type: string;
+    geometry?: TypeMapGeo;
+    [x: string]: any;
   };
 };
 
@@ -33,10 +83,32 @@ export type SlctProps = {
   slctName: string;
   slctCode: string;
   slctIdx: string;
-  slctPath: any[] | never[];
+  slctPath?: {
+    type: string;
+    geometry?: TypeMapGeo;
+    [x: string]: any;
+  };
   slctLat?: number;
   slctLng?: number;
   slctZoom?: string;
+  slctBounds?: number[][] | null;
+};
+
+export type SlctDong = {
+  slctName: string;
+  slctCode: string;
+  slctIdx: string;
+  slctPath?: {
+    type: string;
+    geometry?: TypeMapGeo;
+    [x: string]: any;
+  };
+  slctLat?: number;
+  slctLng?: number;
+  slctZoom?: string;
+  slctBounds?: number[][] | null;
+  slctData?: any;
+  slctRank?: number;
 };
 
 export type SlctAreaProps = {
@@ -52,7 +124,7 @@ export const atomFlowEnterArea = atom<SlctAreaProps>({
       slctName: "",
       slctCode: "",
       slctIdx: "",
-      slctPath: [],
+      slctPath: undefined,
       slctLat: undefined,
       slctLng: undefined,
     },
@@ -60,37 +132,37 @@ export const atomFlowEnterArea = atom<SlctAreaProps>({
       slctName: "",
       slctCode: "",
       slctIdx: "",
-      slctPath: [],
+      slctPath: undefined,
       slctLat: undefined,
       slctLng: undefined,
     },
   },
 });
 
-export const atomSidoLi = atom<AreaProps[]>({
+export const atomSidoLi = atom<TransAreaProps[]>({
   key: "sidoLi",
   default: [],
 });
 
-export const atomSigunguLi = atom<AreaProps[]>({
+export const atomSigunguLi = atom<TransAreaProps[]>({
   key: "sigunguLi",
   default: [],
 });
 
-export const atomDongLi = atom<{ [key: string]: any }>({
+export const atomDongLi = atom<TransDongProps[]>({
   key: "DongLi",
   default: [],
 });
 
-export const atomSlctDong = atom<{ [key: string]: any }>({
+export const atomSlctDong = atom<SlctDong>({
   key: "flowDongArea",
   default: {
     slctName: "",
     slctCode: "",
     slctIdx: "",
-    slctPath: [],
-    slctData: [],
-    slctRank: null,
+    slctPath: undefined,
+    slctData: undefined,
+    slctRank: undefined,
   },
 });
 
@@ -101,6 +173,7 @@ export const resetHandler = selector({
   set: ({ set, reset }) => {
     reset(atomFlowEnterArea);
     reset(atomSlctDong);
+    reset(atomFlowEnterArea);
     reset(atomDongLi);
     reset(atomSigunguLi);
   },

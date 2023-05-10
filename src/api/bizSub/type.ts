@@ -34,7 +34,7 @@ type TypeMapArea = {
   admiCd: string;
   admiNm: string;
   zoomLevel: string;
-  geometry: TypeMapGeo;
+  geometry?: TypeMapGeo;
 };
 
 type TypeMapGeo = {

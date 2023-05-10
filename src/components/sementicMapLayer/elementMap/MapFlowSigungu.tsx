@@ -28,6 +28,9 @@ const MapFlowSigungu = (props: Props) => {
   const [cursorPo, setCursorPo] = useState<any>(null);
   const [infoArea, setInfoArea] = useState<string>("");
   const geoRef = useRef<any>(null);
+  const overEventRef = useRef<any>(null);
+  const outEventRef = useRef<any>(null);
+  const clickEventRef = useRef<any>(null);
   const [range, setRange] = useState({
     latMax: 0,
     latMin: 0,
@@ -37,41 +40,50 @@ const MapFlowSigungu = (props: Props) => {
 
   useEffect(() => {
     if (
+      state.map &&
       sigungu?.slctCode &&
       sigungu?.slctName &&
       sigungu?.slctPath &&
-      state.map
+      dongLi &&
+      dongLi.length > 0
     ) {
       if (sigungu.slctZoom) {
         state.map?.setZoom(Number(sigungu.slctZoom));
       }
 
-      let latLngRange = {
-        latMax: 0,
-        latMin: 0,
-        lngMax: 0,
-        lngMin: 0,
-      };
+      // let latLngRange = {
+      //   latMax: 0,
+      //   latMin: 0,
+      //   lngMax: 0,
+      //   lngMin: 0,
+      // };
 
-      sigungu.slctPath[0].map((lngLat: any) => {
-        if (lngLat[1] > latLngRange.latMax || latLngRange.latMax === 0) {
-          latLngRange.latMax = lngLat[1];
-        } else if (lngLat[1] < latLngRange.latMin || latLngRange.latMin === 0) {
-          latLngRange.latMin = lngLat[1];
-        }
+      // sigungu.slctPath[0].map((lngLat: any) => {
+      //   if (lngLat[1] > latLngRange.latMax || latLngRange.latMax === 0) {
+      //     latLngRange.latMax = lngLat[1];
+      //   } else if (lngLat[1] < latLngRange.latMin || latLngRange.latMin === 0) {
+      //     latLngRange.latMin = lngLat[1];
+      //   }
 
-        if (lngLat[0] > latLngRange.lngMax || latLngRange.lngMax === 0) {
-          latLngRange.lngMax = lngLat[0];
-        } else if (lngLat[0] < latLngRange.lngMin || latLngRange.lngMin === 0) {
-          latLngRange.lngMin = lngLat[0];
-        }
-      });
+      //   if (lngLat[0] > latLngRange.lngMax || latLngRange.lngMax === 0) {
+      //     latLngRange.lngMax = lngLat[0];
+      //   } else if (lngLat[0] < latLngRange.lngMin || latLngRange.lngMin === 0) {
+      //     latLngRange.lngMin = lngLat[0];
+      //   }
+      // });
 
-      if (geoRef.current && geoRef.current.length > 0) {
+      // setRange(latLngRange);
+
+      if (overEventRef.current)
+        state.map?.data.removeListener(overEventRef.current);
+      if (outEventRef.current)
+        state.map?.data.removeListener(outEventRef.current);
+      if (clickEventRef.current)
+        state.map?.data.removeListener(clickEventRef.current);
+      if (geoRef.current && geoRef.current.length > 0)
         geoRef.current.map((geo: any) => state.map?.data.removeGeoJson(geo));
-      }
 
-      const geo = dongLi.map((dong: any) => {
+      const geo = dongLi.map((dong) => {
         // @ts-ignore
         state.map.data.addGeoJson(dong.feature);
 
@@ -79,21 +91,21 @@ const MapFlowSigungu = (props: Props) => {
       });
 
       state.map.data.setStyle({
-        fillColor: "#78d6b0",
-        fillOpacity: 0.4,
+        fillColor: "#FF7A45",
+        fillOpacity: 0.35,
         strokeWeight: 1,
-        strokeColor: "#41be72",
+        strokeColor: "#FFFFFF",
       });
 
       // @ts-ignore
-      state.map.data.addListener("mouseover", (e) => {
+      overEventRef.current = state.map.data.addListener("mouseover", (e) => {
         if (!state.map) return;
 
         state.map.data.overrideStyle(e.feature, {
-          fillColor: "#78d6b0",
-          fillOpacity: 0.65,
+          fillColor: "#FF7A45",
+          fillOpacity: 0.5,
           strokeWeight: 1,
-          strokeColor: "#41be72",
+          strokeColor: "#FFFFFF",
         });
 
         window.addEventListener("mousemove", cursorHandler);
@@ -103,7 +115,7 @@ const MapFlowSigungu = (props: Props) => {
       });
 
       // @ts-ignore
-      state.map.data.addListener("mouseout", (e) => {
+      outEventRef.current = state.map.data.addListener("mouseout", (e) => {
         if (!state.map) return;
 
         state.map.data.revertStyle(e.feature);
@@ -114,7 +126,7 @@ const MapFlowSigungu = (props: Props) => {
       });
 
       // @ts-ignore
-      state.map.data.addListener("click", (e) => {
+      clickEventRef.current = state.map.data.addListener("click", (e) => {
         if (!state.map) return;
         state.map.data.revertStyle(e.feature);
 
@@ -126,16 +138,49 @@ const MapFlowSigungu = (props: Props) => {
           slctLat: e.feature.getProperty("lat"),
           slctLng: e.feature.getProperty("lng"),
           slctZoom: e.feature.getProperty("zoomLevel"),
-          slctData: filterData || [],
+          slctBounds: e.feature.getProperty("bounds"),
+          slctData: filterData || undefined,
           slctRank: e.feature.getProperty("idx"),
         });
         setFlow("dong");
       });
 
-      geoRef.current = geo;
+      const bounds = sigungu.slctBounds;
 
-      setRange(latLngRange);
+      if (bounds && bounds.length > 0) {
+        const transLatLng = bounds.map(
+          (li) => new naver.maps.LatLng(li[0], li[1])
+        );
+        // @ts-ignore
+        const latLngB = new naver.maps.LatLngBounds(...transLatLng);
+        state.map.fitBounds(latLngB);
+        if (sigungu.slctLat && sigungu.slctLng)
+          state.map?.setCenter(
+            new naver.maps.LatLng(sigungu.slctLat, sigungu.slctLng)
+          );
+      } else {
+        sigungu.slctLat &&
+          sigungu.slctLng &&
+          state.map?.setCenter(
+            new naver.maps.LatLng(sigungu.slctLat, sigungu.slctLng)
+          );
+        sigungu.slctZoom && state.map?.setZoom(Number(sigungu.slctZoom));
+      }
+
+      geoRef.current = geo;
     }
+
+    return () => {
+      if (state.map && geoRef.current && geoRef.current.length > 0) {
+        geoRef.current.map((geo: any) => state.map?.data.removeGeoJson(geo));
+      }
+      if (overEventRef.current)
+        state.map?.data.removeListener(overEventRef.current);
+      if (outEventRef.current)
+        state.map?.data.removeListener(outEventRef.current);
+      if (clickEventRef.current)
+        state.map?.data.removeListener(clickEventRef.current);
+    };
   }, [state.map, dongLi]);
 
   const onClickArea = (areaIdx: number) => {
@@ -143,7 +188,7 @@ const MapFlowSigungu = (props: Props) => {
       slctName: dongLi[areaIdx].name,
       slctCode: dongLi[areaIdx].code,
       slctIdx: `area${dongLi[areaIdx].code}`,
-      slctPath: dongLi[areaIdx].path,
+      slctPath: dongLi[areaIdx].feature,
       slctData: filterData || [],
       slctRank: areaIdx,
     });
