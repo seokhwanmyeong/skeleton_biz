@@ -18,7 +18,12 @@ const SementicViewer = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
-    if (viewId === "storeInfo" || viewId === "rentInfo" || viewId === "eval") {
+    if (
+      viewId === "storeInfo" ||
+      viewId === "rentInfo" ||
+      viewId === "buildingInfo" ||
+      viewId === "report"
+    ) {
       onOpen();
     } else {
       onClose();
@@ -66,7 +71,7 @@ const SementicViewer = () => {
         }}
       />
     );
-  } else if (viewId === "eval") {
+  } else if (viewId === "report") {
     return (
       <Report
         props={props}

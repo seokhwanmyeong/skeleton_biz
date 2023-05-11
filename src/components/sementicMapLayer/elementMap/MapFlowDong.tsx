@@ -18,6 +18,7 @@ import DepthListBox from "@components/sementicMapLayer/elementFilter/DepthListBo
 //  state
 import {
   infoComBrand,
+  infoComBuilding,
   infoComFlowDepth,
   infoComNiceRank,
 } from "@states/sementicMap/stateFilter";
@@ -41,12 +42,21 @@ type TypePoint = { lv: number; point: [number, number] };
 const MapFlowDong = () => {
   const { state } = useContext(NaverMapContext);
   const dong = useRecoilValue(atomSlctDong);
-  const { show: brandShow, data: brandList } = useRecoilValue(infoComBrand);
   const {
     show: flowShow,
     active: flowActive,
     data: flowList,
   } = useRecoilValue(infoComFlowDepth);
+  const {
+    show: brandShow,
+    active: brandActive,
+    data: brandList,
+  } = useRecoilValue(infoComBrand);
+  const {
+    show: buildShow,
+    active: buildActive,
+    data: buildList,
+  } = useRecoilValue(infoComBuilding);
   const rankList = useRecoilValue(infoComNiceRank);
   const resetSv = useResetRecoilState(sementicViewState);
   const [centerView, setCenterView] = useState<boolean>(true);
@@ -173,10 +183,13 @@ const MapFlowDong = () => {
         // @ts-ignore
         const latLngB = new naver.maps.LatLngBounds(...transLatLng);
         state.map.fitBounds(latLngB);
-        if (dong.slctLat && dong.slctLng)
+        if (dong.slctLat && dong.slctLng) {
           state.map?.setCenter(
             new naver.maps.LatLng(dong.slctLat, dong.slctLng)
           );
+        }
+        const zoom = state.map.getZoom();
+        state.map?.setZoom(zoom - 1);
       } else {
         dong.slctLat &&
           dong.slctLng &&
@@ -207,70 +220,6 @@ const MapFlowDong = () => {
     };
   }, [state.map, dong]);
 
-  // const createPolyHandler = (coordinates: any) => {
-  //   return coordinates[0].map((coordinate: any) => {
-  //     return coordinate.map((arr: any) => {
-  //       return new naver.maps.LatLng(arr[1], arr[0]);
-  //     });
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   // console.log(sampleData.length);
-  //   let bCnt = 0;
-  //   let polyList: any[] = [];
-
-  //   sampleData.map((data: any, idx: number) => {
-  //     if (!data?.buildings || data?.buildings?.length === 0) return;
-  //     const buildings = data?.buildings;
-  //     bCnt += buildings.length;
-
-  //     if (buildings.length > 1) {
-  //       const test = buildings.map((b: any) => {
-  //         if (b.geometry) {
-  //           const coordinates = b.geometry.coordinates;
-  //           const path = createPolyHandler(coordinates);
-  //           const poly = new naver.maps.Polygon({
-  //             map: state.map,
-  //             paths: path,
-  //             fillColor: "#36CFC9",
-  //             fillOpacity: 0.75,
-  //             strokeColor: "#FFFFFF",
-  //             strokeOpacity: 0.6,
-  //             strokeWeight: 1,
-  //           });
-  //           polyList.push(poly);
-  //         }
-  //       });
-  //     } else {
-  //       if (buildings[0].geometry) {
-  //         const coordinates = buildings[0].geometry.coordinates;
-  //         const path = createPolyHandler(coordinates);
-  //         const poly = new naver.maps.Polygon({
-  //           map: state.map,
-  //           paths: path,
-  //           fillColor: "#36CFC9",
-  //           fillOpacity: 0.75,
-  //           strokeColor: "#FFFFFF",
-  //           strokeOpacity: 0.6,
-  //           strokeWeight: 1,
-  //         });
-  //         polyList.push(poly);
-  //       }
-  //     }
-  //   });
-
-  //   // console.log(bCnt);
-  //   // console.log(polyList);
-  // }, [sampleData]);
-
-  // useEffect(() => {
-  //   setSampleData(sample);
-  //   return () => {
-  //     setSampleData([]);
-  //   };
-  // }, []);
-
   return (
     <Fragment>
       {/* --------------------------- 중단 Frame ---------------------------*/}
@@ -280,16 +229,34 @@ const MapFlowDong = () => {
         zIndex={1}
         gap="0.625rem"
         pointerEvents="none"
-        justify="space-between"
+        justify={
+          (dongRank || (flowActive && flowShow)) &&
+          ((brandShow && brandActive) || (buildShow && buildActive))
+            ? "space-between"
+            : dongRank || (flowActive && flowShow)
+            ? "flex-start"
+            : "flex-end"
+        }
       >
-        <DecoFrameL pl="1rem" align="flex-end">
-          {dongRank && <BoxRankingDong rankData={dongRank} />}
-          {flowActive && flowShow && <FlowPopInfo />}
-        </DecoFrameL>
+        {(dongRank || (flowActive && flowShow)) && (
+          <DecoFrameL pl="1rem" align="flex-end">
+            {dongRank && <BoxRankingDong rankData={dongRank} />}
+            {flowActive && flowShow && <FlowPopInfo />}
+          </DecoFrameL>
+        )}
         {/* <DecoFrameCenter isOpen={centerView} activeAni={false} /> */}
-        <DecoFrameR pr="0.25rem">
-          <DepthListBox brandShow={brandShow} brandList={brandList || []} />
-        </DecoFrameR>
+        {((brandShow && brandActive) || (buildShow && buildActive)) && (
+          <DecoFrameR pr="0.25rem">
+            {((brandShow && brandActive) || (buildShow && buildActive)) && (
+              <DepthListBox
+                brandShow={brandShow}
+                brandList={brandList || []}
+                buildShow={buildShow}
+                buildList={buildList || []}
+              />
+            )}
+          </DecoFrameR>
+        )}
       </Flex>
       {/* --------------------------- 맵 Object ---------------------------*/}
       {/* <InteractArea

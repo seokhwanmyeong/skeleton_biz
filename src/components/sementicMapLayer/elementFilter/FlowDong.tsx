@@ -1,6 +1,6 @@
 //  Lib
 import { useContext } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
 import { Box, Button, Flex, Text, useDisclosure } from "@chakra-ui/react";
 import { NaverMapContext } from "@src/lib/src";
 //  Component
@@ -9,7 +9,10 @@ import NiceFilterDepth from "@components/sementicMapLayer/elementFilter/NiceFilt
 import BtnReset from "@components/sementicMapLayer/common/BtnReset";
 import BtnBack from "@components/sementicMapLayer/common/BtnBack";
 //  State
-import { atomFilterFlow } from "@states/sementicMap/stateFilter";
+import {
+  atomFilterFlow,
+  resetNiceDepth,
+} from "@states/sementicMap/stateFilter";
 import { atomFlowEnterArea, atomSlctDong } from "@states/sementicMap/stateMap";
 import { sementicViewState } from "@states/sementicMap/stateView";
 //  Icon
@@ -23,10 +26,11 @@ import {
 
 const FlowDong = () => {
   const { state } = useContext(NaverMapContext);
-  const setFlow = useSetRecoilState(atomFilterFlow);
-  const setSv = useSetRecoilState(sementicViewState);
   const { sigungu } = useRecoilValue(atomFlowEnterArea);
   const dong = useRecoilValue(atomSlctDong);
+  const setFlow = useSetRecoilState(atomFilterFlow);
+  const setSv = useSetRecoilState(sementicViewState);
+  const reset = useResetRecoilState(resetNiceDepth);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -50,6 +54,7 @@ const FlowDong = () => {
               disableDoubleTapZoom: false,
               disableTwoFingerTapZoom: false,
             });
+            reset();
             setFlow("sigungu");
           }}
         />
@@ -92,10 +97,10 @@ const FlowDong = () => {
             setSv({
               props: {
                 areaType: "dong",
-                areaCode: dong.slctCode,
+                slctCode: dong.slctCode,
                 slctName: dong.slctName,
               },
-              viewId: "eval",
+              viewId: "report",
             });
           }}
         >

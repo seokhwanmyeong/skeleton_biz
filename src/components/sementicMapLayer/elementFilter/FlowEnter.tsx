@@ -14,6 +14,7 @@ import BtnReset from "@components/sementicMapLayer/common/BtnReset";
 import BtnBack from "@components/sementicMapLayer/common/BtnBack";
 import AreaListBox from "@components/sementicMapLayer/elementFilter/AreaListBox";
 import UpjongListBox from "@components/sementicMapLayer/elementFilter/UpjongListBox";
+import { BaseSpinner } from "@components/common/Spinner";
 //  Api
 import { apiMapArea } from "@api/bizSub/config";
 //  State
@@ -32,7 +33,7 @@ import {
   DecoTop,
 } from "@components/sementicMapLayer/elementDeco/Deco";
 //  Type
-import type { SlctProps, AreaProps } from "@states/sementicMap/stateMap";
+import type { SlctProps } from "@states/sementicMap/stateMap";
 
 const FlowEnter = () => {
   const { getSidoList, getSigunguList } = apiMapArea;
@@ -41,9 +42,11 @@ const FlowEnter = () => {
   const [sidoLi, setSidoLi] = useRecoilState(atomSidoLi);
   const setFlow = useSetRecoilState(atomFilterFlow);
   const resetSlctSigungu = useResetRecoilState(atomSigunguLi);
+  const resetSlct = useResetRecoilState(atomFlowEnterArea);
   const [sigunguLi, setSigunguLi] = useRecoilState(atomSigunguLi);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [filterType, setType] = useState("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   // const pathTransHandler = (areaList: TypeMapSido["res"][]) => {
   //   return areaList.map(
@@ -91,6 +94,7 @@ const FlowEnter = () => {
   // };
 
   const getSidoHandler = () => {
+    setLoading(true);
     getSidoList({}).then((res) => {
       if (res.data && res.data.length > 0) {
         const addFeature = res.data.map((li, idx: number) => {
@@ -142,9 +146,11 @@ const FlowEnter = () => {
           };
         });
 
+        setLoading(false);
         setSidoLi(addFeature);
         return;
       } else {
+        setLoading(false);
         alert(`시/도 리스트를 불러올 수 없습니다. \n다시 시도해주세요`);
         return;
       }
@@ -152,6 +158,7 @@ const FlowEnter = () => {
   };
 
   const getSigunguHandler = (slctCode: string) => {
+    setLoading(true);
     getSigunguList({ megaCd: slctCode }).then((res) => {
       if (res.data && res.data.length > 0) {
         const addFeature = res.data.map((li, idx: number) => {
@@ -203,9 +210,11 @@ const FlowEnter = () => {
           };
         });
 
+        setLoading(false);
         setSigunguLi(addFeature);
         return;
       } else {
+        setLoading(false);
         alert(`시/군/구 리스트를 불러올 수 없습니다. \n다시 시도해주세요`);
         return;
       }
@@ -237,6 +246,7 @@ const FlowEnter = () => {
 
   return (
     <Fragment>
+      {loading && <BaseSpinner zIndex={1000} />}
       {/* ------------------------------ 상단 ------------------------------*/}
       <Flex
         pos="absolute"
@@ -254,21 +264,22 @@ const FlowEnter = () => {
               scrollWheel: false,
             });
             resetSlctSigungu();
-            setSlctArea({
-              sido: sido,
-              sigungu: {
-                slctName: "",
-                slctCode: "",
-                slctIdx: "",
-                slctPath: undefined,
-                slctLat: undefined,
-                slctLng: undefined,
-                slctZoom: undefined,
-                slctBounds: null,
-              },
-            });
+            resetSlct();
+            // setSlctArea({
+            //   sido: sido,
+            //   sigungu: {
+            //     slctName: "",
+            //     slctCode: "",
+            //     slctIdx: "",
+            //     slctPath: undefined,
+            //     slctLat: undefined,
+            //     slctLng: undefined,
+            //     slctZoom: undefined,
+            //     slctBounds: null,
+            //   },
+            // });
           }}
-          disabled={!sido?.slctName}
+          disabled={!sido?.slctCode}
         />
         <Flex
           pos="relative"
@@ -325,7 +336,11 @@ const FlowEnter = () => {
             />
           )}
         </Flex>
-        <UpjongListBox relateOpen={isOpen} relateSetClose={onClose} />
+        <UpjongListBox
+          isDisabled={true}
+          relateOpen={isOpen}
+          relateSetClose={onClose}
+        />
       </Flex>
       {/* ------------------------------ 하단 ------------------------------*/}
       <DecoBotHightBox>

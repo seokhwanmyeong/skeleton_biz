@@ -7,13 +7,14 @@ import UpjongListBox from "@components/sementicMapLayer/elementFilter/UpjongList
 import NiceFilterDepth from "@components/sementicMapLayer/elementFilter/NiceFilterDepth";
 import BtnReset from "@components/sementicMapLayer/common/BtnReset";
 import FlowPopInfo from "@components/sementicMapLayer/elementFilter/FlowPopInfo";
-import DepthList from "@src/components/sementicMapLayer/elementFilter/DepthListBox";
+import DepthListBox from "@src/components/sementicMapLayer/elementFilter/DepthListBox";
 //  State
 import {
   atomUpjongState,
   infoComBrand,
   infoComFlowDepth,
   infoComBuilding,
+  resetNiceDepth,
 } from "@states/sementicMap/stateFilter";
 import { atomSlctCustom } from "@states/sementicMap/stateMap";
 import { sementicViewState } from "@states/sementicMap/stateView";
@@ -49,6 +50,7 @@ const FlowCustom = () => {
   } = useRecoilValue(infoComBuilding);
   const cutomArea = useRecoilValue(atomSlctCustom);
   const setSv = useSetRecoilState(sementicViewState);
+  const reset = useResetRecoilState(resetNiceDepth);
   const resetSv = useResetRecoilState(sementicViewState);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [filterType, setType] = useState("");
@@ -56,6 +58,7 @@ const FlowCustom = () => {
   useEffect(() => {
     return () => {
       resetSv();
+      reset();
     };
   }, []);
 
@@ -103,7 +106,7 @@ const FlowCustom = () => {
         </DecoFrameL>
         <DecoFrameR pr="0.25rem">
           {((brandShow && brandActive) || (buildShow && buildActive)) && (
-            <DepthList
+            <DepthListBox
               brandShow={brandShow}
               brandList={brandList || []}
               buildShow={buildShow}
@@ -129,7 +132,7 @@ const FlowCustom = () => {
           variant="filterTop"
           isDisabled={!(top.code && mid.code && bot.code)}
           onClick={() => {
-            setSv({ props: cutomArea, viewId: "eval" });
+            setSv({ props: cutomArea, viewId: "report" });
           }}
         >
           <Box>

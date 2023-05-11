@@ -69,7 +69,7 @@ const AreaListBox = ({ title, isOpen, list, setSlctArea, onClick }: Props) => {
       <DecoBoxL
         position="absolute"
         top="50%"
-        left="-0.5rem"
+        left="-0.75rem"
         transform="translateY(-50%)"
         width="5%"
         height="107%"
@@ -78,7 +78,7 @@ const AreaListBox = ({ title, isOpen, list, setSlctArea, onClick }: Props) => {
       <DecoBoxR
         position="absolute"
         top="50%"
-        right="-0.5rem"
+        right="-0.75rem"
         transform="translateY(-50%)"
         width="5%"
         height="107%"

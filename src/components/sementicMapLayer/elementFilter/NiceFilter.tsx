@@ -81,7 +81,7 @@ const NiceFilter = ({ areaCode }: Props) => {
     if (sex.length === 2 && age.length === 5) {
       filter[`${type}CustCnt`] = {};
     } else if (sex.length === 2 && age.length !== 5) {
-      filter[`${type}CustAgeCnt`] = age;
+      filter[`${type}CustAgeCnt`] = { ageGroups: age };
     } else if (sex.length !== 2 && age.length === 5) {
       filter[`${type}CustSexCnt`] = { sex: sex[0] };
     } else {
@@ -348,6 +348,18 @@ const NiceFilter = ({ areaCode }: Props) => {
         onClick={() => {
           setOpenIdx(0);
           reset();
+          setFilterPop({
+            sex: ["male", "female"],
+            age: ["20s", "30s", "40s", "50s", "60s"],
+          });
+          setFilterResi({
+            sex: ["male", "female"],
+            age: ["20s", "30s", "40s", "50s", "60s"],
+          });
+          setFilterJob({
+            sex: ["male", "female"],
+            age: ["20s", "30s", "40s", "50s", "60s"],
+          });
         }}
       >
         <Box>

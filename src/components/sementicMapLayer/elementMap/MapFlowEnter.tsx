@@ -122,10 +122,13 @@ const MapFlowEnter = (props: Props) => {
         // @ts-ignore
         const latLngB = new naver.maps.LatLngBounds(...transLatLng);
         state.map.fitBounds(latLngB);
-        if (sido.slctLat && sido.slctLng)
+        if (sido.slctLat && sido.slctLng) {
           state.map?.setCenter(
             new naver.maps.LatLng(sido.slctLat, sido.slctLng)
           );
+        }
+        const zoom = state.map.getZoom();
+        state.map?.setZoom(zoom - 1);
       } else {
         sido.slctLat &&
           sido.slctLng &&

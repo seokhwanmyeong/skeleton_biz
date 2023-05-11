@@ -1,6 +1,7 @@
 //  Lib
 import React from "react";
 import {
+  Box,
   Button,
   Divider,
   Flex,
@@ -13,7 +14,12 @@ import {
   Text,
 } from "@chakra-ui/react";
 //  Icon
-import { IcoClose, IcoCloseCircle, IcoInfoCircle } from "@assets/icons/icon";
+import {
+  IcoClose,
+  IcoCloseCircle,
+  IcoExclamationCircle,
+  IcoInfoCircle,
+} from "@assets/icons/icon";
 
 type PropsAlert = {
   variant?: string;
@@ -27,6 +33,14 @@ type PropsModal = {
   children: JSX.Element;
   isOpen: boolean;
   onClose: () => void;
+};
+
+type PropsAlertFilter = {
+  text: string;
+  variant?: string;
+  isOpen: boolean;
+  onClose: () => void;
+  onClick?: () => void;
 };
 
 const DialogAlertModal = (props: PropsModal) => {
@@ -325,4 +339,59 @@ const DialogAlertUpjong = (props: {
   );
 };
 
-export { DialogAlertCreateStore, DialogAlertCreateRent, DialogAlertUpjong };
+const DialogAlertFilter = ({
+  text,
+  variant,
+  isOpen,
+  onClose,
+}: PropsAlertFilter) => {
+  return (
+    <DialogAlertModal variant={variant} isOpen={isOpen} onClose={onClose}>
+      <Flex p="1rem 1.5rem" direction="column" align="center" gap="0.5rem">
+        <Flex>
+          <IcoExclamationCircle
+            mr="1rem"
+            width="1.5rem"
+            height="1.5rem"
+            color="primary.type7"
+          />
+          <Heading
+            w="100%"
+            textStyle="base"
+            fontSize="md"
+            fontWeight="strong"
+            lineHeight="1.6rem"
+            color="font.title"
+          >
+            {text}
+          </Heading>
+        </Flex>
+        <Button variant="alert" w="80%" onClick={onClose}>
+          확인
+        </Button>
+        {/* <Flex width="1.5rem" height="1.5rem" justify="center" align="center">
+          <IconButton
+            onClick={onClose}
+            aria-label="닫기"
+            icon={<IcoClose />}
+            w="1rem"
+            h="1rem"
+            bg="transparent"
+            color="neutral.gray6"
+            _hover={{
+              bg: "transparent",
+              color: "neutral.gray9",
+            }}
+          />
+        </Flex> */}
+      </Flex>
+    </DialogAlertModal>
+  );
+};
+
+export {
+  DialogAlertCreateStore,
+  DialogAlertCreateRent,
+  DialogAlertUpjong,
+  DialogAlertFilter,
+};

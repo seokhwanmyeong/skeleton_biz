@@ -154,10 +154,13 @@ const MapFlowSigungu = (props: Props) => {
         // @ts-ignore
         const latLngB = new naver.maps.LatLngBounds(...transLatLng);
         state.map.fitBounds(latLngB);
-        if (sigungu.slctLat && sigungu.slctLng)
+        if (sigungu.slctLat && sigungu.slctLng) {
           state.map?.setCenter(
             new naver.maps.LatLng(sigungu.slctLat, sigungu.slctLng)
           );
+        }
+        const zoom = state.map.getZoom();
+        state.map?.setZoom(zoom - 1);
       } else {
         sigungu.slctLat &&
           sigungu.slctLng &&

@@ -14,11 +14,11 @@ import {
   ModalContent,
   ModalBody,
   IconButton,
-  Spinner,
 } from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
 //  Component
 import { Select } from "@components/common/Select";
+import { ReportSpinner } from "@components/common/Spinner";
 //  Api
 import { apiReport } from "@api/bizSub/config";
 //  State
@@ -923,41 +923,6 @@ const ReportTap = ({
       {icon}
       <Text>{text}</Text>
     </Tab>
-  );
-};
-
-const ReportSpinner = () => {
-  return (
-    <Flex
-      position="absolute"
-      top={0}
-      left={0}
-      zIndex={100}
-      w="100%"
-      h="100%"
-      justify="center"
-      align="center"
-      _after={{
-        content: '""',
-        position: "absolute",
-        top: 0,
-        left: 0,
-        display: "block",
-        w: "100%",
-        h: "100%",
-        bgColor: "#00000090",
-      }}
-    >
-      <Spinner
-        zIndex={101}
-        w="3rem"
-        h="3rem"
-        speed="2s"
-        color="primary.type7"
-        emptyColor="#eeeeee"
-        thickness="7px"
-      />
-    </Flex>
   );
 };
 

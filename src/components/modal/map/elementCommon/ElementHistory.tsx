@@ -21,7 +21,6 @@ const ElementHistory = ({
   const { getHistoryStoreLi, getHistoryStoreDetail, createHistoryStore } =
     erpHistoryApi;
   const [tableData, setTableData] = useState<any[]>([]);
-  const [sampleData, setSampleData] = useState<any[]>([]);
   const [selectData, setSelectData] = useState<any>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
   const [curPage, setCurPage] = useState<number>(1);

@@ -1,5 +1,13 @@
 //  Lib
-import { useContext, useEffect, useState, memo, Fragment } from "react";
+import {
+  useContext,
+  useEffect,
+  useState,
+  useRef,
+  memo,
+  Fragment,
+  useCallback,
+} from "react";
 import OverlayView from "@src/lib/src/components/Overlay/OverlayView";
 import { Marker, NaverMapContext } from "@src/lib/src";
 import {
@@ -39,11 +47,8 @@ type Props = {
 
 const DepthListBox = memo(
   ({ brandShow, brandList, buildShow, buildList }: Props) => {
-    const { isOpen, onOpen, onClose } = useDisclosure();
-
     return (
       <Flex
-        pos="relative"
         m="0.1875rem 0"
         p="1rem 1.375rem 1rem"
         w="19.25rem"
@@ -53,7 +58,7 @@ const DepthListBox = memo(
         borderColor="neutral.gray6"
         borderRight="none"
         bg="linear-gradient(90deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0) 100%)"
-        backdropFilter="blur(2px)"
+        // backdropFilter="blur(2px)"
       >
         <Flex
           w="100%"
@@ -285,6 +290,7 @@ const ListItemBrand = ({
               size: new naver.maps.Size(50, 50),
               anchor: new naver.maps.Point(24, 42),
             },
+            zIndex: 103,
           }}
           onClick={() => {}}
           onMouseOver={() => onHover(true)}
@@ -339,22 +345,31 @@ const ListBuilding = memo(
         {buildList.map(
           (
             {
-              storeNm,
-              xAxis,
-              yAxis,
+              _id,
+              mgmBldrgstPk,
+              bldNm,
+              newPlatPlc,
+              platPlc,
+              geometry,
             }: {
-              storeNm: string;
-              xAxis: number;
-              yAxis: number;
+              _id: string;
+              mgmBldrgstPk: string;
+              bldNm: string;
+              newPlatPlc: string;
+              platPlc: string;
+              geometry: any;
             },
             idx: number
           ) => (
             <ListItemBuilding
-              key={`buildingList-${idx}`}
+              key={`buildingList-${_id}`}
+              _id={_id}
               idx={idx}
-              storeNm={storeNm}
-              lat={yAxis}
-              lng={xAxis}
+              mgmBldrgstPk={mgmBldrgstPk}
+              bldNm={bldNm}
+              newPlatPlc={newPlatPlc}
+              platPlc={platPlc}
+              geometry={geometry}
             />
           )
         )}
@@ -364,37 +379,129 @@ const ListBuilding = memo(
 );
 
 const ListItemBuilding = ({
-  idx,
-  storeNm,
-  lat,
-  lng,
-}: {
-  idx: number;
-  storeNm: string;
-  lat: number;
-  lng: number;
-}) => {
+  _id,
+  mgmBldrgstPk,
+  bldNm,
+  newPlatPlc,
+  platPlc,
+  geometry,
+}: any) => {
   const { state } = useContext(NaverMapContext);
   const setSv = useSetRecoilState(sementicViewState);
   const [isHover, onHover] = useState<boolean>(false);
-  const [cursorPo, setCursorPo] = useState<[number, number] | null>(null);
+  const [cursorPo, setCursorPo] = useState<any>(null);
+  const geoRef = useRef<any | null>(null);
+  const overEventRef = useRef<any | null>(null);
+  const outEventRef = useRef<any | null>(null);
+  const clickEventRef = useRef<any | null>(null);
 
   useEffect(() => {
-    if (isHover && state?.objects && state.objects.size !== 0) {
-      let obj: any = state?.objects.get(`markerBrand-${idx}`);
+    if (geometry && state.map) {
+      if (geoRef.current) state.map?.data.removeGeoJson(geoRef.current);
+      if (overEventRef.current)
+        state.map?.data.removeListener(overEventRef.current);
+      if (outEventRef.current)
+        state.map?.data.removeListener(outEventRef.current);
+      if (clickEventRef.current)
+        state.map?.data.removeListener(clickEventRef.current);
 
-      if (obj) {
-        const pos = obj.getPosition();
-        setCursorPo(pos);
-      }
-    } else {
-      setCursorPo(null);
+      const feature: any = {
+        type: "Feature",
+        id: mgmBldrgstPk,
+        geometry: geometry,
+        properties: {
+          mgmBldrgstPk: mgmBldrgstPk,
+          bldNm: bldNm,
+        },
+      };
+      // @ts-ignore
+      state.map.data.addGeoJson(feature);
+      const tmp = state.map.data.getFeatureById(mgmBldrgstPk);
+
+      tmp.setStyle({
+        fillColor: "#36CFC9",
+        fillOpacity: 1,
+        strokeColor: "#FFFFFF",
+        strokeOpacity: 1,
+        strokeWeight: 1,
+        zIndex: 102,
+      });
+
+      // @ts-ignore
+      overEventRef.current = tmp.addListener("mouseover", (e) => {
+        if (!state.map) return;
+
+        tmp.setStyle({
+          fillColor: "#08979C",
+          fillOpacity: 1,
+        });
+
+        onHover(true);
+        window.addEventListener("mousemove", cursorHandler);
+      });
+
+      // @ts-ignore
+      outEventRef.current = tmp.addListener("mouseout", (e) => {
+        if (!state.map) return;
+
+        state.map.data.revertStyle(e.feature);
+        tmp.setStyle({
+          fillColor: "#36CFC9",
+          fillOpacity: 1,
+        });
+
+        onHover(false);
+        window.removeEventListener("mousemove", cursorHandler);
+      });
+
+      // @ts-ignore
+      clickEventRef.current = tmp.addListener("click", (e) => {
+        if (!state.map) return;
+        onHover(false);
+        window.removeEventListener("mousemove", cursorHandler);
+
+        setSv({
+          viewId: "buildingInfo",
+          props: { id: mgmBldrgstPk, name: bldNm },
+        });
+      });
+
+      geoRef.current = feature;
     }
-  }, [isHover]);
+
+    return () => {
+      if (state.map && geoRef.current)
+        state.map?.data.removeGeoJson(geoRef.current);
+      if (overEventRef.current)
+        state.map?.data.removeListener(overEventRef.current);
+      if (outEventRef.current)
+        state.map?.data.removeListener(outEventRef.current);
+      if (clickEventRef.current)
+        state.map?.data.removeListener(clickEventRef.current);
+    };
+  }, [state.map, geometry]);
+
+  const cursorHandler = useCallback(
+    (e: any) => {
+      setCursorPo({ x: e?.clientX, y: e?.clientY });
+
+      return () => {
+        setCursorPo(null);
+      };
+    },
+    [state.map]
+  );
+
+  useEffect(() => {
+    return () => {
+      window.removeEventListener("mousemove", cursorHandler);
+    };
+  }, []);
 
   return (
     <Fragment>
       <ListItem
+        key={_id}
         p="0rem 0.25rem 1rem"
         display="flex"
         alignItems="center"
@@ -414,11 +521,31 @@ const ListItemBuilding = ({
           console.log("click");
           setSv({
             viewId: "buildingInfo",
-            props: {},
+            props: { id: mgmBldrgstPk, name: bldNm },
           });
         }}
-        onMouseEnter={() => onHover(true)}
-        onMouseLeave={() => onHover(false)}
+        onMouseEnter={() => {
+          if (state.map) {
+            onHover(true);
+            const tmp = state.map.data.getFeatureById(mgmBldrgstPk);
+
+            tmp.setStyle({
+              fillColor: "#08979C",
+              fillOpacity: 1,
+            });
+          }
+        }}
+        onMouseLeave={() => {
+          if (state.map) {
+            onHover(false);
+            const tmp = state.map.data.getFeatureById(mgmBldrgstPk);
+
+            tmp.setStyle({
+              fillColor: "#36CFC9",
+              fillOpacity: 1,
+            });
+          }
+        }}
       >
         <Flex
           w="2rem"
@@ -439,7 +566,7 @@ const ListItemBuilding = ({
             fontWeight="strong"
             color="font.primary"
           >
-            대성빌딩
+            {bldNm || "건물명이 없습니다"}
           </Text>
           <Text
             textStyle="base"
@@ -447,46 +574,33 @@ const ListItemBuilding = ({
             fontWeight="regular"
             color="font.primary"
           >
-            서울 종로구 평창동 7-249
+            {newPlatPlc || platPlc || "주소가 없습니다"}
           </Text>
         </Flex>
       </ListItem>
       {isHover && cursorPo && (
-        <OverlayView
-          id={`infoBox`}
-          position={new naver.maps.LatLng(cursorPo)}
-          pane="floatPane"
-          anchorPoint={{ x: 0, y: 10 }}
+        <Flex
+          pos="absolute"
+          top={cursorPo.y - 10 || 0}
+          left={cursorPo.x + 10 || 0}
+          p="0 0.75rem"
+          w="-webkit-fit-content"
+          h="1.875rem"
+          boxSizing="border-box"
+          justify="center"
+          align="center"
+          bgColor="neutral.gray1"
+          border="1px solid"
+          borderRadius="base"
+          borderColor="neutral.gray6"
+          pointerEvents="none"
+          textStyle="base"
+          fontSize="xs"
+          fontWeight="strong"
+          lineHeight="1.875rem"
         >
-          <Flex
-            pos="relative"
-            top="-5.25rem"
-            left="-50%"
-            p="0.25rem 0.75rem"
-            w="auto"
-            justify="center"
-            align="center"
-            bgColor="#FFFFFFD9"
-            gap="0.5rem"
-            border="1px solid"
-            borderColor="neutral.gray6"
-            borderRadius="base"
-            transition="0.3s"
-            whiteSpace="nowrap"
-          >
-            <Text
-              textStyle="base"
-              fontSize="sm"
-              fontWeight="strong"
-              lineHeight="normal"
-              transition="0.3s"
-              color="font.primary"
-              whiteSpace="nowrap"
-            >
-              {storeNm || ""}
-            </Text>
-          </Flex>
-        </OverlayView>
+          {bldNm}
+        </Flex>
       )}
     </Fragment>
   );
