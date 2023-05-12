@@ -20,7 +20,9 @@ type Props = {};
 const MapFlowInit = (props: Props) => {
   const { state } = useContext(NaverMapContext);
 
-  return <Fragment></Fragment>;
+  return <Fragment>
+    
+  </Fragment>;
 };
 
 export default MapFlowInit;

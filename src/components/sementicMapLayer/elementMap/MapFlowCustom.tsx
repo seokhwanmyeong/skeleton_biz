@@ -39,13 +39,23 @@ const MapFlowCustom = () => {
 
       flowList.map((list: any) => {
         list.map((li: TypeNiceFlowData) => {
-          const { flowLv, xAxis, yAxis } = li;
+          const { flowPop, xAxis, yAxis } = li;
+          const lv =
+            flowPop >= 18000
+              ? 1
+              : flowPop < 18000 && flowPop >= 13000
+              ? 2
+              : flowPop < 13000 && flowPop >= 10000
+              ? 3
+              : flowPop < 10000 && flowPop >= 6000
+              ? 4
+              : 5;
 
           const marker = new naver.maps.Marker({
             map: state.map,
             position: new naver.maps.LatLng(yAxis, xAxis),
             icon: {
-              content: `<div style="width: 6px; height: 6px; border-radius: 50%; background-color: ${flowColor[flowLv]}"/>`,
+              content: `<div style="width: 6px; height: 6px; border-radius: 50%; background-color: ${flowColor[lv]}"/>`,
               size: new naver.maps.Size(6, 6),
               anchor: new naver.maps.Point(3, 3),
             },
