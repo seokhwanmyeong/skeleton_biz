@@ -26,6 +26,7 @@ import {
 //  Icon
 import { IcoBuildingList, IcoVillage } from "@assets/icons/icon";
 import makerBrandS from "@assets/icons/marker_brand_small.png";
+import IconBrandS from "@assets/icons/list_brand.png";
 //  Deco
 import { Deco01 } from "@assets/deco/DecoSvg";
 import { useSetRecoilState } from "recoil";
@@ -51,7 +52,8 @@ const DepthListBox = memo(
       <Flex
         m="0.1875rem 0"
         p="1rem 1.375rem 1rem"
-        w="19.25rem"
+        // w="19.25rem"
+        w="100%"
         h="100%"
         direction="column"
         border="1px solid"
@@ -268,7 +270,7 @@ const ListItemBrand = ({
           borderColor="neutral.gray8"
           borderRadius="2px"
         >
-          <IcoBuildingList color="#FFFFFFD9" />
+          <IcoVillage color="#FFFFFFD9" />
         </Flex>
         <Text
           textStyle="base"

@@ -30,10 +30,15 @@ import { regstrGbCd, roofCd, mainPurpsCd, strctCd } from "@util/define/map";
 import { numRegExp } from "@util/valid/validation";
 //  Icon
 import {
+  IcoBuildingList,
   IcoFileSearch,
   IcoHeatMap,
+  IcoOutpatient,
+  IcoRefresh,
+  IcoSensorOccupied,
   IcoSync,
   IcoTextB,
+  IcoVillage,
 } from "@assets/icons/icon";
 //  Deco
 import { DecoCardBg } from "@components/sementicMapLayer/elementDeco/Deco";
@@ -300,7 +305,7 @@ const NiceFilterDepth = ({
           }}
         >
           <Box>
-            <IcoHeatMap
+            <IcoSensorOccupied
               width="1.125rem"
               height="1.125rem"
               color="font.primary"
@@ -313,8 +318,15 @@ const NiceFilterDepth = ({
           isDisabled={bot ? true : false}
           placement="auto"
           label="업종을 선택하셔야 합니다."
-          p="1rem"
+          p="0.5rem 0.75rem"
+          bgColor="#595959d9"
+          border="1px solid"
+          borderColor="neutral.gray6"
           borderRadius="base"
+          textStyle="base"
+          fontSize="xs"
+          fontWeight="strong"
+          color="font.inverse"
         >
           <Button
             variant="filterTop02"
@@ -329,7 +341,7 @@ const NiceFilterDepth = ({
             }}
           >
             <Box>
-              <IcoTextB
+              <IcoVillage
                 width="1.125rem"
                 height="1.125rem"
                 color="font.primary"
@@ -350,7 +362,7 @@ const NiceFilterDepth = ({
           }}
         >
           <Box>
-            <IcoFileSearch
+            <IcoBuildingList
               width="1.125rem"
               height="1.125rem"
               color="font.primary"
@@ -376,7 +388,11 @@ const NiceFilterDepth = ({
           }}
         >
           <Box>
-            <IcoSync width="1.125rem" height="1.125rem" color="font.primary" />
+            <IcoRefresh
+              width="1.125rem"
+              height="1.125rem"
+              color="font.primary"
+            />
           </Box>
           필터초기화
         </Button>
@@ -399,15 +415,15 @@ const NiceFilterDepth = ({
             border="1px solid #BFBFBF"
           >
             <Flex justify="space-between">
-              <Flex pl="0.25rem" align="center" gap="1rem">
-                <Heading as={"h5"} variant="filterBox">
-                  유동인구
-                </Heading>
-                <IcoHeatMap
+              <Flex pl="0.25rem" align="center" gap="0.5rem">
+                <IcoSensorOccupied
                   width="0.875rem"
                   height="0.875rem"
                   color="font.title"
                 />
+                <Heading as={"h5"} variant="filterBox">
+                  유동인구
+                </Heading>
               </Flex>
               <Flex align="center" gap="0.5rem">
                 <SwitchFilter
@@ -445,23 +461,30 @@ const NiceFilterDepth = ({
             border="1px solid #BFBFBF"
           >
             <Flex justify="space-between">
-              <Flex pl="0.25rem" align="center" gap="1rem">
-                <Heading as={"h5"} variant="filterBox">
-                  사업체 데이터
-                </Heading>
-                <IcoTextB
+              <Flex pl="0.25rem" align="center" gap="0.5rem">
+                <IcoVillage
                   width="0.875rem"
                   height="0.875rem"
                   color="font.title"
                 />
+                <Heading as={"h5"} variant="filterBox">
+                  사업체 데이터
+                </Heading>
               </Flex>
               <Tooltip
                 hasArrow
                 isDisabled={bot.code ? true : false}
                 placement="auto"
                 label="업종을 선택하셔야 합니다."
-                p="1rem"
+                p="0.5rem 0.75rem"
+                bgColor="#595959d9"
+                border="1px solid"
+                borderColor="neutral.gray6"
                 borderRadius="base"
+                textStyle="base"
+                fontSize="xs"
+                fontWeight="strong"
+                color="font.inverse"
               >
                 <Flex align="center" gap="0.5rem">
                   <SwitchFilter
@@ -538,15 +561,15 @@ const NiceFilterDepth = ({
             border="1px solid #BFBFBF"
           >
             <Flex justify="space-between">
-              <Flex pl="0.25rem" align="center" gap="1rem">
-                <Heading as={"h5"} variant="filterBox">
-                  건물조회
-                </Heading>
-                <IcoFileSearch
+              <Flex pl="0.25rem" align="center" gap="0.5rem">
+                <IcoOutpatient
                   width="0.875rem"
                   height="0.875rem"
                   color="font.title"
                 />
+                <Heading as={"h5"} variant="filterBox">
+                  건물조회
+                </Heading>
               </Flex>
               <Flex align="center" gap="0.5rem">
                 <SwitchFilter

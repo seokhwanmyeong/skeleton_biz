@@ -1,14 +1,14 @@
-import { Flex, FormLabel, Text } from "@chakra-ui/react";
+import { Button, Flex, FormLabel, Text } from "@chakra-ui/react";
 import React from "react";
 //  Type
-import type { TypeMapStoreInfo } from "@api/biz/type";
+import type { StoreInfo } from "@api/bizSub/type";
 
 type Props = {};
 
-const StoreBasicInfo = ({ info }: { info: TypeMapStoreInfo["res"] | null }) => {
+const StoreBasicInfo = ({ info }: { info: StoreInfo | null }) => {
   console.log(info);
   return (
-    <Flex w="100%" h="100%" direction="column">
+    <Flex w="100%" h="100%" direction="column" justify="space-between">
       <Flex
         position="relative"
         mb="1.25rem"
@@ -33,6 +33,7 @@ const StoreBasicInfo = ({ info }: { info: TypeMapStoreInfo["res"] | null }) => {
         <ElementLine title="" content={info?.addrDetail || "-"} />
         <ElementLineList title="연동상권" content={info?.linkBsDis || []} />
       </Flex>
+      <Button>수정하기</Button>
     </Flex>
   );
 };
@@ -95,7 +96,7 @@ const ElementLineList = ({
         alignItems="flex-start"
         m="0"
         minW="4.4rem"
-        w="30%"
+        w="40%"
         flex="none"
         textStyle="base"
         fontSize="sm"

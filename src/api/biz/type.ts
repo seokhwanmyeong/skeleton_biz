@@ -42,10 +42,14 @@ type TypeLogin = {
 type TypeMapStoreSearch = {
   req: TypeFilterStore;
   res: {
-    _id: string;
-    storeName: string;
-    lat: number;
-    lng: number;
+    data: {
+      _id: string;
+      storeName: string;
+      storePhone: string;
+      addr: string;
+      lat: string;
+      lng: string;
+    };
   };
 };
 
@@ -54,23 +58,25 @@ type TypeMapStoreInfo = {
     id: string;
   };
   res: {
-    _id: string;
-    storeName: string;
-    storeCode: string;
-    storeStatus: "open" | "ready" | "rest" | "close" | "etc";
-    storeType?: "A" | "B" | "C" | "D" | "E";
-    storePhone?: string;
-    bsNum?: string;
-    ownerName: string;
-    ownerPhone: string;
-    addr: string;
-    addrDetail?: string;
-    linkBsDis?: {
-      bsDisName: string;
-      bsDisCode: string;
-    }[];
-    lat: number;
-    lng: number;
+    data: {
+      _id: string;
+      storeName: string;
+      storeCode: string;
+      storeStatus: "open" | "ready" | "rest" | "close" | "etc";
+      storeType?: "A" | "B" | "C" | "D" | "E";
+      storePhone?: string;
+      bsNum?: string;
+      ownerName: string;
+      ownerPhone: string;
+      addr: string;
+      addrDetail?: string;
+      linkBsDis?: {
+        bsDisName: string;
+        bsDisCode: string;
+      }[];
+      lat: number;
+      lng: number;
+    };
   };
 };
 

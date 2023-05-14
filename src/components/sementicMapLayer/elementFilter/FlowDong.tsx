@@ -16,7 +16,7 @@ import {
 import { atomFlowEnterArea, atomSlctDong } from "@states/sementicMap/stateMap";
 import { sementicViewState } from "@states/sementicMap/stateView";
 //  Icon
-import { IcoBarChart, IcoFilter } from "@assets/icons/icon";
+import { IcoAddBusiness, IcoAddChart } from "@assets/icons/icon";
 //  Deco
 import {
   DecoBotHightBox,
@@ -60,7 +60,7 @@ const FlowDong = () => {
         />
         <Flex
           pos="relative"
-          pt="0.3rem"
+          p="2px 0"
           direction="column"
           justify="flex-start"
           color="#000000"
@@ -86,9 +86,9 @@ const FlowDong = () => {
           onClick={() => (isOpen ? onClose() : onOpen())}
         >
           <Box>
-            <IcoFilter />
+            <IcoAddBusiness width="1rem" height="1rem" />
           </Box>
-          분석필터
+          마켓데이터
         </Button>
         <DecoFilterDivider />
         <Button
@@ -105,7 +105,7 @@ const FlowDong = () => {
           }}
         >
           <Box>
-            <IcoBarChart />
+            <IcoAddChart width="1rem" height="1rem" />
           </Box>
           리포트
         </Button>

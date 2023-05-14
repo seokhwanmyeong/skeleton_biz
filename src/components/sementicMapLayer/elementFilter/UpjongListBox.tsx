@@ -26,7 +26,7 @@ import {
   refUpjongActiveGetter,
 } from "@states/sementicMap/stateFilter";
 //  Api
-import { apiUpjong } from "@api/biz/config";
+import { apiUpjong } from "@api/bizSub/config";
 //  Icon
 import {
   IcoAppStore,

@@ -755,8 +755,15 @@ const NiceFilter = ({ areaCode }: Props) => {
               isDisabled={bot.code ? true : false}
               placement="auto"
               label="업종을 선택하셔야 합니다."
-              p="1rem"
+              p="0.5rem 0.75rem"
+              bgColor="#595959d9"
+              border="1px solid"
+              borderColor="neutral.gray6"
               borderRadius="base"
+              textStyle="base"
+              fontSize="xs"
+              fontWeight="strong"
+              color="font.inverse"
             >
               <Flex align="center" gap="0.5rem">
                 <SwitchFilter
@@ -791,8 +798,15 @@ const NiceFilter = ({ areaCode }: Props) => {
               isDisabled={bot.code ? true : false}
               placement="auto"
               label="업종을 선택하셔야 합니다."
-              p="1rem"
+              p="0.5rem 0.75rem"
+              bgColor="#595959d9"
+              border="1px solid"
+              borderColor="neutral.gray6"
               borderRadius="base"
+              textStyle="base"
+              fontSize="xs"
+              fontWeight="strong"
+              color="font.inverse"
             >
               <Flex align="center" gap="0.5rem">
                 <SwitchFilter

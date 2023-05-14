@@ -18,13 +18,13 @@ import {
 import RentBasicInfo from "@components/modal/map/elementRent/RentBasicInfo";
 import ElementHistory from "@components/modal/map/elementCommon/ElementHistory";
 //  Api
-import { apiErpMap } from "@api/biz/config";
+import { apiErpMap } from "@api/bizSub/config";
 //  Deco
 import { Deco01 } from "@assets/deco/DecoSvg";
 //  Icon
 import { IcoBars, IcoHistory, IcoLeft } from "@assets/icons/icon";
 //  Type
-import type { TypeMapRentInfo } from "@api/biz/type";
+import type { TypeMapRentInfo } from "@api/bizSub/type";
 
 type Props = {
   id: string;

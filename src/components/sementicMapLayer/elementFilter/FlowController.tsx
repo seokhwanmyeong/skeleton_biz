@@ -4,7 +4,11 @@ import { Button, Flex, Text } from "@chakra-ui/react";
 //  State
 import { atomFilterFlow } from "@states/sementicMap/stateFilter";
 //  Icon
-import { IcoDoubleSquere, IcoErp, IcoFilter } from "@assets/icons/icon";
+import {
+  IcoApartment,
+  IcoManageSearch,
+  IcoShareLocation,
+} from "@assets/icons/icon";
 //  Deco
 import { ImgBarLeft, ImgBarRight, ImgDotTop } from "@assets/img/Img";
 import { DecoInitFilter } from "@components/sementicMapLayer/elementDeco/Deco";
@@ -17,7 +21,13 @@ const FlowController = () => {
       <BtnInitFilter
         color="#36CFC9"
         text="분석필터"
-        svg={<IcoFilter width="24px" height="24px" />}
+        svg={
+          <IcoManageSearch
+            width="2rem"
+            height="2rem"
+            filter="drop-shadow(0px 3px 2px rgba(0, 0, 0, 0.5))"
+          />
+        }
         onClick={() => setFlow("enter")}
         bottom="2rem"
         left="3.75rem"
@@ -25,7 +35,13 @@ const FlowController = () => {
       <BtnInitFilter
         color="#FFEC3D"
         text="영역분석"
-        svg={<IcoErp width="24px" height="24px" />}
+        svg={
+          <IcoApartment
+            width="2rem"
+            height="2rem"
+            filter="drop-shadow(0px 3px 2px rgba(0, 0, 0, 0.5))"
+          />
+        }
         onClick={() => setFlow("find")}
         bottom="4.625rem"
         left="50%"
@@ -34,7 +50,13 @@ const FlowController = () => {
       <BtnInitFilter
         color="#FF7A45"
         text="브랜드 데이터"
-        svg={<IcoDoubleSquere width="24px" height="24px" />}
+        svg={
+          <IcoShareLocation
+            width="2rem"
+            height="2rem"
+            filter="drop-shadow(0px 3px 2px rgba(0, 0, 0, 0.5))"
+          />
+        }
         onClick={() => setFlow("erp")}
         bottom="2rem"
         right="3.75rem"

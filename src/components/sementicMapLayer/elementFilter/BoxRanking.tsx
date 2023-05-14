@@ -54,7 +54,6 @@ const BoxRanking = ({ rankData, direction = "left" }: Props) => {
                   color="neutral.gray9"
                 />
               }
-              fillColor="#FF7A45"
               rank={categoryRanks?.housCnt?.rank}
               amount={categoryRanks?.housCnt?.amount}
             />
@@ -68,7 +67,6 @@ const BoxRanking = ({ rankData, direction = "left" }: Props) => {
                   color="neutral.gray9"
                 />
               }
-              fillColor="#FADB14"
               rank={categoryRanks?.inflowCustCnt?.rank}
               amount={categoryRanks?.inflowCustCnt?.amount}
             />
@@ -87,7 +85,6 @@ const BoxRanking = ({ rankData, direction = "left" }: Props) => {
                   color="neutral.gray9"
                 />
               }
-              fillColor="#36CFC9"
               rank={categoryRanks?.storeCnt?.rank}
               amount={categoryRanks?.storeCnt?.amount}
             />
@@ -101,7 +98,6 @@ const BoxRanking = ({ rankData, direction = "left" }: Props) => {
                   color="neutral.gray9"
                 />
               }
-              fillColor="#FADB14"
               rank={categoryRanks?.housCustCnt?.rank}
               amount={categoryRanks?.housCustCnt?.amount}
             />
@@ -116,7 +112,6 @@ const BoxRanking = ({ rankData, direction = "left" }: Props) => {
                   color="neutral.gray9"
                 />
               }
-              fillColor="#D9D9D9"
               rank={categoryRanks?.admiSaleAmt?.rank}
               amount={categoryRanks?.admiSaleAmt?.amount}
               isSale={true}
@@ -131,7 +126,6 @@ const BoxRanking = ({ rankData, direction = "left" }: Props) => {
                   color="neutral.gray9"
                 />
               }
-              fillColor="#36CFC9"
               rank={categoryRanks?.jobCustCnt?.rank}
               amount={categoryRanks?.jobCustCnt?.amount}
             />
@@ -171,7 +165,6 @@ const BoxRanking = ({ rankData, direction = "left" }: Props) => {
                   color="neutral.gray9"
                 />
               }
-              fillColor="#FADB14"
               rank={categoryRanks?.inflowCustCnt?.rank}
               amount={categoryRanks?.inflowCustCnt?.amount || null}
               direction="right"
@@ -186,7 +179,6 @@ const BoxRanking = ({ rankData, direction = "left" }: Props) => {
                   color="neutral.gray9"
                 />
               }
-              fillColor="#FF7A45"
               rank={categoryRanks?.housCnt?.rank}
               amount={categoryRanks?.housCnt?.amount || null}
               direction="right"
@@ -206,7 +198,6 @@ const BoxRanking = ({ rankData, direction = "left" }: Props) => {
                   color="neutral.gray9"
                 />
               }
-              fillColor="#FADB14"
               rank={categoryRanks?.housCustCnt?.rank}
               amount={categoryRanks?.housCustCnt?.amount || null}
               direction="right"
@@ -221,7 +212,6 @@ const BoxRanking = ({ rankData, direction = "left" }: Props) => {
                   color="neutral.gray9"
                 />
               }
-              fillColor="#36CFC9"
               rank={categoryRanks?.storeCnt?.rank}
               amount={categoryRanks?.storeCnt?.amount || null}
               direction="right"
@@ -237,7 +227,6 @@ const BoxRanking = ({ rankData, direction = "left" }: Props) => {
                   color="neutral.gray9"
                 />
               }
-              fillColor="#36CFC9"
               rank={categoryRanks?.jobCustCnt?.rank}
               amount={categoryRanks?.jobCustCnt?.amount || null}
               direction="right"
@@ -252,7 +241,6 @@ const BoxRanking = ({ rankData, direction = "left" }: Props) => {
                   color="neutral.gray9"
                 />
               }
-              fillColor="#D9D9D9"
               rank={categoryRanks?.admiSaleAmt?.rank}
               amount={categoryRanks?.admiSaleAmt?.amount || null}
               direction="right"
@@ -285,78 +273,84 @@ const BoxRankingDong = ({ rankData }: { rankData: RankType }) => {
           <ElementListOne
             icon={
               <IcoGroup
+                pos="relative"
+                top="3px"
                 width="1rem"
                 height="1rem"
                 zIndex="1"
                 color="neutral.gray9"
               />
             }
-            fillColor="#FADB14"
             amount={categoryRanks?.inflowCustCnt?.amount || null}
             rank={categoryRanks?.inflowCustCnt?.rank}
           />
           <ElementListOne
             icon={
               <IcoNice2
+                pos="relative"
+                top="3px"
                 width="1rem"
                 height="1rem"
                 zIndex="1"
                 color="neutral.gray9"
               />
             }
-            fillColor="#FADB14"
             amount={categoryRanks?.housCustCnt?.amount || null}
             rank={categoryRanks?.housCustCnt?.rank}
           />
           <ElementListOne
             icon={
               <IcoNice3
+                pos="relative"
+                top="3px"
                 width="1rem"
                 height="1rem"
                 zIndex="1"
                 color="neutral.gray9"
               />
             }
-            fillColor="#36CFC9"
             amount={categoryRanks?.jobCustCnt?.amount || null}
             rank={categoryRanks?.jobCustCnt?.rank}
           />
           <ElementListOne
             icon={
               <IcoResident
+                pos="relative"
+                top="3px"
                 width="1rem"
                 height="1rem"
                 zIndex="1"
                 color="neutral.gray9"
               />
             }
-            fillColor="#FF7A45"
             amount={categoryRanks?.housCnt?.amount || null}
             rank={categoryRanks?.housCnt?.rank}
           />
           <ElementListOne
             icon={
               <IcoWorkspace
+                pos="relative"
+                top="3px"
                 width="1rem"
                 height="1rem"
                 zIndex="1"
                 color="neutral.gray9"
               />
             }
-            fillColor="#36CFC9"
             amount={categoryRanks?.storeCnt?.amount || null}
             rank={categoryRanks?.storeCnt?.rank}
           />
           <ElementListOne
             icon={
               <IcoMonitoring
+                pos="relative"
+                top="3px"
                 width="1rem"
                 height="1rem"
                 zIndex="1"
                 color="neutral.gray9"
               />
             }
-            fillColor="#D9D9D9"
             amount={categoryRanks?.admiSaleAmt?.amount || null}
             rank={categoryRanks?.admiSaleAmt?.rank}
             isSale={true}
@@ -433,12 +427,12 @@ const ElementRank = ({ rank }: { rank: number }) => {
         lineHeight={1}
         color={
           rank && rank === 1
-            ? "primary.type6"
+            ? "#FADB14"
             : rank === 2
-            ? "secondary.second.type5"
+            ? "#36CFC9"
             : rank === 3
-            ? "secondary.third.type5"
-            : "font.primary"
+            ? "#FF7A45"
+            : "#D9D9D9"
         }
         textShadow={
           rank && rank <= 3
@@ -455,14 +449,12 @@ const ElementRank = ({ rank }: { rank: number }) => {
 
 const ElementList = ({
   icon,
-  fillColor,
   amount,
   rank,
   direction = "left",
   isSale = false,
 }: {
   icon: any;
-  fillColor: string;
   amount?: number;
   rank?: number;
   direction?: "left" | "right";
@@ -500,7 +492,17 @@ const ElementList = ({
           </Text>
         )}
       </Text>
-      <DecoRankTag fillColor={fillColor}>
+      <DecoRankTag
+        fillColor={
+          rank && rank === 1
+            ? "#FADB14"
+            : rank === 2
+            ? "#36CFC9"
+            : rank === 3
+            ? "#FF7A45"
+            : "#D9D9D9"
+        }
+      >
         {icon}
         <Text
           w="0.875rem"
@@ -522,13 +524,11 @@ const ElementList = ({
 
 const ElementListOne = ({
   icon,
-  fillColor,
   amount,
   rank,
   isSale = false,
 }: {
   icon: any;
-  fillColor: string;
   amount?: number;
   rank?: number;
   isSale?: boolean;
@@ -567,7 +567,19 @@ const ElementListOne = ({
           </Text>
         )}
       </Text>
-      <DecoRankTag width="3.125rem" height="1.5rem" fillColor={fillColor}>
+      <DecoRankTag
+        width="3.125rem"
+        height="1.5rem"
+        fillColor={
+          rank && rank === 1
+            ? "#FADB14"
+            : rank === 2
+            ? "#36CFC9"
+            : rank === 3
+            ? "#FF7A45"
+            : "#D9D9D9"
+        }
+      >
         {icon}
         <Text
           zIndex="1"
@@ -576,9 +588,11 @@ const ElementListOne = ({
           fontSize="1.25rem"
           color="font.primary"
           lineHeight={1.5}
+          width="47%"
+          textAlign="center"
         >
           {rank && rank < 10 && "0"}
-          {rank || "-"}
+          {rank || ""}
         </Text>
       </DecoRankTag>
     </Flex>

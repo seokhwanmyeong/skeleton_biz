@@ -19,13 +19,13 @@ import StoreBasicInfo from "@components/modal/map/elementStore/StoreBasicInfo";
 import StoreSale from "@components/modal/map/elementStore/StoreSale";
 import ElementHistory from "@components/modal/map/elementCommon/ElementHistory";
 //  Api
-import { apiErpMap } from "@api/biz/config";
+import { apiErpMap } from "@api/bizSub/config";
 //  Deco
 import { Deco01 } from "@assets/deco/DecoSvg";
 //  Icon
 import { IcoBars, IcoHistory, IcoLeft, IcoLineChart } from "@assets/icons/icon";
 //  Type
-import type { TypeMapStoreInfo } from "@api/biz/type";
+import type { StoreInfo } from "@api/bizSub/type";
 
 type Props = {
   id: string;
@@ -36,16 +36,14 @@ type Props = {
 
 const ModalStoreDetail = ({ id, name, isOpen, onClose }: Props) => {
   const { getStoreInfo } = apiErpMap;
-  const [infoData, setInfoData] = useState<TypeMapStoreInfo["res"] | null>(
-    null
-  );
+  const [infoData, setInfoData] = useState<StoreInfo | null>(null);
   const [tabIdx, setTabIdx] = useState<number>(0);
 
   useEffect(() => {
     if (id && name) {
       getStoreInfo({ id: id }).then((res) => {
-        if (res) {
-          setInfoData(res);
+        if (res.data) {
+          setInfoData(res.data);
         }
       });
     }
@@ -57,6 +55,7 @@ const ModalStoreDetail = ({ id, name, isOpen, onClose }: Props) => {
         <DrawerBody pos="relative" p="1rem 1.5rem" width="fit-content">
           <Flex
             pos="relative"
+            h="100%"
             direction="column"
             justify="center"
             align="center"
@@ -95,6 +94,8 @@ const ModalStoreDetail = ({ id, name, isOpen, onClose }: Props) => {
               variant="detailPage"
               index={tabIdx}
               onChange={(index) => setTabIdx(index)}
+              display="flex"
+              flexDirection="column"
             >
               <TabList
                 mb="1.25rem"
@@ -161,7 +162,7 @@ const ModalStoreDetail = ({ id, name, isOpen, onClose }: Props) => {
                 </Tab>
               </TabList>
               <TabPanels>
-                <TabPanel w="324px">
+                <TabPanel w="384px">
                   {tabIdx === 0 && infoData !== null && (
                     <StoreBasicInfo info={infoData} />
                   )}

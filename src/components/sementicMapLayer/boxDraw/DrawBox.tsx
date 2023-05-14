@@ -7,6 +7,7 @@ import DrawRange from "@components/sementicMapLayer/boxDraw/DrawRange";
 import DrawAddr from "@components/sementicMapLayer/boxDraw/DrawAddr";
 //  Icon
 import { IcoAppStore } from "@assets/icons/icon";
+import { motion } from "framer-motion";
 
 const DrawBox = () => {
   const [activeIdx, setActiveIdx] = useState<number>(-1);
@@ -14,8 +15,8 @@ const DrawBox = () => {
   return (
     <Fragment>
       <Flex
+        as={motion.div}
         pos="absolute"
-        bottom="6rem"
         left="50%"
         zIndex={999}
         transform="translateX(-50%)"
@@ -27,6 +28,19 @@ const DrawBox = () => {
         border="1px solid"
         borderColor="neutral.gray6"
         borderRadius="34px"
+        transition="0.2s 0.1s linear"
+        initial={{
+          opacity: 0,
+          bottom: "-5rem",
+        }}
+        animate={{
+          opacity: 1,
+          bottom: "6.15rem",
+        }}
+        exit={{
+          opacity: 1,
+          bottom: "6.15rem",
+        }}
       >
         <Button
           variant="filterTop02"

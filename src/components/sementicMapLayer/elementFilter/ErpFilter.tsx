@@ -23,7 +23,7 @@ import ModalStoreEditor from "@components/modal/map/ModalStoreEditor";
 import ModalRentEditor from "@components/modal/map/ModalRentEditor";
 import ModalBsnsDEditor from "@components/modal/map/ModalBsnsDEditor";
 //  Api
-import { apiErpMap } from "@api/biz/config";
+import { apiErpMap } from "@api/bizSub/config";
 //  State
 import {
   infoComErpStore,
@@ -56,7 +56,7 @@ import type {
   TypeFilterBsDis,
   TypeFilterRent,
 } from "@states/sementicMap/stateFilter";
-import type { TypeMapStoreInfo, TypeMapRentSearch } from "@api/biz/type";
+import type { TypeMapStoreSearch, TypeMapRentSearch } from "@api/biz/type";
 
 type ErpFilterProps = {
   editorOpen: boolean;
@@ -91,24 +91,36 @@ const ErpFilter = ({ editorOpen, setEditorOpen }: ErpFilterProps) => {
     console.log("store search");
     console.log(filterStore);
 
-    const tmp = { ...filterStore };
+    const tmp: any = { ...filterStore };
     delete tmp.areaCode;
+    delete tmp.areaText;
 
     if (filterStore.storeType.length === 0)
       tmp.storeType = ["A", "B", "C", "D", "E"];
     if (filterStore.storeStatus.length === 0)
       tmp.storeStatus = ["open", "ready", "rest", "close", "etc"];
-    if (filterStore.areaText === "전체") tmp.areaText = "";
+    if (!filterStore.areaCode || filterStore.areaCode?.length <= 2)
+      tmp.sidoCode = filterStore.areaCode;
+    else if (
+      filterStore.areaCode &&
+      filterStore.areaCode.length > 2 &&
+      filterStore.areaCode.length <= 4
+    ) {
+      tmp.sigunguCode = filterStore.areaCode;
+    } else if (filterStore.areaCode.length > 4) {
+      tmp.sigunguCode = filterStore.areaCode.slice(0, 4);
+      tmp.dongCode = `${filterStore.areaCode.slice(0, 4)}00`;
+    }
 
-    getStoreList(tmp).then((res: { records: TypeMapStoreInfo["res"][] }) => {
-      const { records } = res;
+    getStoreList(tmp).then((res: { data: TypeMapStoreSearch["res"][] }) => {
+      const { data } = res;
 
-      records && records.length > 0
+      data && data.length > 0
         ? setErpStore({
             filter: filterStore,
             active: true,
             show: true,
-            data: records,
+            data: data,
           })
         : setErpStore({
             filter: filterStore,
@@ -124,16 +136,30 @@ const ErpFilter = ({ editorOpen, setEditorOpen }: ErpFilterProps) => {
     console.log("bsD search");
     console.log(filterBsD);
 
-    const tmp = { ...filterBsD };
+    const tmp: any = { ...filterBsD };
     delete tmp.areaCode;
+    delete tmp.areaText;
 
-    if (filterBsD.areaText === "전체") tmp.areaText = "";
+    if (filterBsD.bsDisType.length === 0)
+      tmp.bsDisType = ["A", "B", "C", "D", "E"];
+    if (!filterBsD.areaCode || filterBsD.areaCode?.length <= 2)
+      tmp.sidoCode = filterBsD.areaCode;
+    else if (
+      filterBsD.areaCode &&
+      filterBsD.areaCode.length > 2 &&
+      filterBsD.areaCode.length <= 4
+    ) {
+      tmp.sigunguCode = filterBsD.areaCode;
+    } else if (filterBsD.areaCode.length > 4) {
+      tmp.sigunguCode = filterBsD.areaCode.slice(0, 4);
+      tmp.dongCode = `${filterBsD.areaCode.slice(0, 4)}00`;
+    }
 
     getBsDisList(tmp).then((res) => {
-      const { records } = res;
+      const { data } = res;
 
-      if (records && records.length > 0) {
-        const checkList = records.filter((li: any) =>
+      if (data && data.length > 0) {
+        const checkList = data.filter((li: any) =>
           li.polygon_type ? true : false
         );
 
@@ -168,28 +194,44 @@ const ErpFilter = ({ editorOpen, setEditorOpen }: ErpFilterProps) => {
     console.log("rent search");
     console.log(filterRent);
 
-    const tmp = { ...filterRent };
+    const tmp: any = { ...filterRent };
     delete tmp.areaCode;
+    delete tmp.areaText;
 
-    if (filterRent.areaText === "전체") tmp.areaText = "";
+    if (filterRent.rentType.length === 0)
+      tmp.rentType = ["A", "B", "C", "D", "E"];
+    if (!filterRent.areaCode || filterRent.areaCode?.length <= 2)
+      tmp.sidoCode = filterRent.areaCode;
+    else if (
+      filterRent.areaCode &&
+      filterRent.areaCode.length > 2 &&
+      filterRent.areaCode.length <= 4
+    ) {
+      tmp.sigunguCode = filterRent.areaCode;
+    } else if (filterRent.areaCode.length > 4) {
+      tmp.sigunguCode = filterRent.areaCode.slice(0, 4);
+      tmp.dongCode = `${filterRent.areaCode.slice(0, 4)}00`;
+    }
 
-    getRentList(tmp).then((res: { records: TypeMapRentSearch["res"][] }) => {
-      const { records } = res;
-
-      records && records.length > 0
-        ? setErpRent({
-            filter: filterRent,
-            active: true,
-            show: true,
-            data: records,
-          })
-        : setErpRent({
-            filter: filterRent,
-            active: true,
-            show: true,
-            data: [],
-          });
-    });
+    getRentList(tmp).then(
+      (res: { data: { records: TypeMapRentSearch["res"][] } }) => {
+        const { data } = res;
+        console.log(res);
+        data.records && data.records.length > 0
+          ? setErpRent({
+              filter: filterRent,
+              active: true,
+              show: true,
+              data: data.records,
+            })
+          : setErpRent({
+              filter: filterRent,
+              active: true,
+              show: true,
+              data: [],
+            });
+      }
+    );
   };
 
   //  ERP 필터 초기화

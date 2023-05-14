@@ -349,8 +349,15 @@ const FlowEnter = () => {
           isDisabled={false}
           placement="auto"
           label="시군구까지 지역을 선택하셔야 합니다"
-          p="1rem"
+          p="0.5rem 0.75rem"
+          bgColor="#595959d9"
+          border="1px solid"
+          borderColor="neutral.gray6"
           borderRadius="base"
+          textStyle="base"
+          fontSize="xs"
+          fontWeight="strong"
+          color="font.inverse"
         >
           <Button
             variant="filterTop"

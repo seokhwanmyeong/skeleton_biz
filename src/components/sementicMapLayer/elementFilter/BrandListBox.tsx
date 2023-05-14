@@ -34,6 +34,7 @@ import { getCenter } from "@util/map/distance";
 //  Icon
 import markerStore from "@assets/icons/marker_store.png";
 import markerRent from "@assets/icons/marker_rent.png";
+import IcoListRent from "@assets/icons/list_rent.png";
 import markerCluster from "@assets/icons/marker_cluster.png";
 //  Deco
 import { Deco01 } from "@assets/deco/DecoSvg";
@@ -624,10 +625,9 @@ const ListStore = memo(({ storeShow, storeList }: any) => {
           position: new naver.maps.LatLng(pos[0], pos[1]),
           icon: {
             content:
-              `<div style='display: flex; flex-direction: column; justify-content: center; align-items: center; width: 7rem; height: 7rem; background: url(${markerCluster})'>` +
-              `<p style='font-family: 'Roboto';font-weight: 500;'>${key}</p><p style='font-family: 'Roboto';` +
-              `font-weight: 700;` +
-              `font-size: 1.5rem;'>${area[key].length}</p></div>`,
+              `<div style='padding-top: 5px;display: flex; flex-direction: column; justify-content: center; align-items: center; width: 7.125rem; height: 7.125rem; background: url(${markerCluster})'>` +
+              `<p style='font-family:Roboto;font-size: 11px;font-weight: 500;color: #595959'>${key}</p><p style='font-family: Roboto;font-weight: 700;font-size: 20px;color: rgba(0, 0, 0, 0.8)'>` +
+              `${area[key].length}</p></div>`,
           },
         });
 
@@ -669,10 +669,9 @@ const ListStore = memo(({ storeShow, storeList }: any) => {
           position: new naver.maps.LatLng(pos[0], pos[1]),
           icon: {
             content:
-              `<div style='display: flex; flex-direction: column; justify-content: center; align-items: center; width: 7rem; height: 7rem; background: url(${markerCluster})'>` +
-              `<p style='font-family: 'Roboto';font-weight: 500;'>${key}</p><p style='font-family: 'Roboto';` +
-              `font-weight: 700;` +
-              `font-size: 1.5rem;'>${area[key].length}</p></div>`,
+              `<div style='padding-top: 5px;display: flex; flex-direction: column; justify-content: center; align-items: center; width: 7.125rem; height: 7.125rem; background: url(${markerCluster})'>` +
+              `<p style='font-family:Roboto;font-size: 11px;font-weight: 500;color: #595959'>${key}</p><p style='font-family: Roboto;font-weight: 700;font-size: 20px;color: rgba(0, 0, 0, 0.8)'>` +
+              `${area[key].length}</p></div>`,
           },
         });
 
@@ -724,10 +723,9 @@ const ListStore = memo(({ storeShow, storeList }: any) => {
               position: new naver.maps.LatLng(pos[0], pos[1]),
               icon: {
                 content:
-                  `<div style='display: flex; flex-direction: column; justify-content: center; align-items: center; width: 7rem; height: 7rem; background: url(${markerCluster})'>` +
-                  `<p style='font-family: 'Roboto';font-weight: 500;'>${key}</p><p style='font-family: 'Roboto';` +
-                  `font-weight: 700;` +
-                  `font-size: 1.5rem;'>${area[key].length}</p></div>`,
+                  `<div style='padding-top: 5px;display: flex; flex-direction: column; justify-content: center; align-items: center; width: 7.125rem; height: 7.125rem; background: url(${markerCluster})'>` +
+                  `<p style='font-family:Roboto;font-size: 11px;font-weight: 500;color: #595959'>${key}</p><p style='font-family: Roboto;font-weight: 700;font-size: 20px;color: rgba(0, 0, 0, 0.8)'>` +
+                  `${area[key].length}</p></div>`,
               },
             });
 
@@ -770,10 +768,9 @@ const ListStore = memo(({ storeShow, storeList }: any) => {
               position: new naver.maps.LatLng(pos[0], pos[1]),
               icon: {
                 content:
-                  `<div style='display: flex; flex-direction: column; justify-content: center; align-items: center; width: 7rem; height: 7rem; background: url(${markerCluster})'>` +
-                  `<p style='font-family: 'Roboto';font-weight: 500;'>${key}</p><p style='font-family: 'Roboto';` +
-                  `font-weight: 700;` +
-                  `font-size: 1.5rem;'>${area[key].length}</p></div>`,
+                  `<div style='padding-top: 5px;display: flex; flex-direction: column; justify-content: center; align-items: center; width: 7.125rem; height: 7.125rem; background: url(${markerCluster})'>` +
+                  `<p style='font-family:Roboto;font-size: 11px;font-weight: 500;color: #595959'>${key}</p><p style='font-family: Roboto;font-weight: 700;font-size: 20px;color: rgba(0, 0, 0, 0.8)'>` +
+                  `${area[key].length}</p></div>`,
               },
             });
 
@@ -827,6 +824,7 @@ const ListItemStore = ({
   const { state } = useContext(NaverMapContext);
   const setSv = useSetRecoilState(sementicViewState);
   const [isHover, onHover] = useState<boolean>(false);
+  const [showMarker, onShowMarker] = useState<boolean>(false);
   const [cursorPo, setCursorPo] = useState<[number, number] | null>(null);
 
   useEffect(() => {
@@ -840,6 +838,8 @@ const ListItemStore = ({
       obj.setVisible(true);
     }
 
+    zoom >= 13 ? onShowMarker(true) : onShowMarker(false);
+
     const zoomEvent = naver.maps.Event.addListener(
       state.map,
       "zoom_changed",
@@ -849,8 +849,12 @@ const ListItemStore = ({
 
         if (e < 13 && obj && obj.getVisible()) {
           obj.setVisible(false);
+
+          if (showMarker) onShowMarker(false);
         } else if (e >= 13 && obj && !obj.getVisible()) {
           obj.setVisible(true);
+
+          if (!showMarker) onShowMarker(true);
         }
       }
     );
@@ -942,7 +946,7 @@ const ListItemStore = ({
           </Text>
         </Flex>
       </ListItem>
-      {state?.map && state.map.getZoom() >= 13 && isShow && lat && lng && (
+      {state?.map && lat && lng && (
         <Marker
           key={`markerStore-${idx}`}
           id={`markerStore-${idx}`}
@@ -951,6 +955,7 @@ const ListItemStore = ({
             icon: {
               url: markerStore,
             },
+            visible: showMarker && isShow,
           }}
           onClick={() => {}}
           onMouseOver={() => onHover(true)}
@@ -1192,6 +1197,7 @@ const ListRent = memo(({ rentShow, rentList }: any) => {
 const ListItemRent = ({ isShow, idx, _id, rentName, addr, lat, lng }: any) => {
   const { state } = useContext(NaverMapContext);
   const setSv = useSetRecoilState(sementicViewState);
+  const [showMarker, onShowMarker] = useState<boolean>(false);
   const [isHover, onHover] = useState<boolean>(false);
   const [cursorPo, setCursorPo] = useState<[number, number] | null>(null);
 
@@ -1206,6 +1212,8 @@ const ListItemRent = ({ isShow, idx, _id, rentName, addr, lat, lng }: any) => {
       obj.setVisible(true);
     }
 
+    zoom >= 13 ? onShowMarker(true) : onShowMarker(false);
+
     const zoomEvent = naver.maps.Event.addListener(
       state.map,
       "zoom_changed",
@@ -1215,8 +1223,12 @@ const ListItemRent = ({ isShow, idx, _id, rentName, addr, lat, lng }: any) => {
 
         if (e < 13 && obj && obj.getVisible()) {
           obj.setVisible(false);
+
+          if (showMarker) onShowMarker(false);
         } else if (e >= 13 && obj && !obj.getVisible()) {
           obj.setVisible(true);
+
+          if (!showMarker) onShowMarker(true);
         }
       }
     );
@@ -1271,7 +1283,7 @@ const ListItemRent = ({ isShow, idx, _id, rentName, addr, lat, lng }: any) => {
         onMouseLeave={() => onHover(false)}
       >
         <Flex justify="center" align="center" flex="none">
-          <Image src={markerRent} w="auto" bg="transparent" border="0" />
+          <Image src={IcoListRent} w="auto" bg="transparent" border="0" />
         </Flex>
         <Flex direction="column" gap="0.5rem">
           <Text
@@ -1295,7 +1307,7 @@ const ListItemRent = ({ isShow, idx, _id, rentName, addr, lat, lng }: any) => {
           </Text>
         </Flex>
       </ListItem>
-      {state?.map && isShow && lat && lng && (
+      {state?.map && lat > 0 && lng > 0 && (
         <Marker
           key={`markerRent-${idx}`}
           id={`markerRent-${idx}`}
@@ -1305,9 +1317,7 @@ const ListItemRent = ({ isShow, idx, _id, rentName, addr, lat, lng }: any) => {
               url: markerRent,
             },
             title: rentName,
-          }}
-          onClick={() => {
-            console.log(rentName);
+            visible: isShow && showMarker,
           }}
           onMouseOver={() => onHover(true)}
           onMouseOut={() => onHover(false)}
@@ -1328,7 +1338,7 @@ const ListItemRent = ({ isShow, idx, _id, rentName, addr, lat, lng }: any) => {
               as={motion.div}
               animation={infoAnimation}
               pos="relative"
-              top="-4.5rem"
+              top="-5.2rem"
               left="-50%"
               p="0.25rem 0.75rem"
               w="auto"

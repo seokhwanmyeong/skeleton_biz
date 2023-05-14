@@ -2,7 +2,7 @@ import {
   TypeFilterBsDis,
   TypeFilterRent,
   TypeFilterStore,
-} from "@src/states/sementicMap/stateFilter";
+} from "@states/sementicMap/stateFilter";
 import { AxiosInstance } from "axios";
 
 interface AxiosInterceptorManager {}
@@ -63,6 +63,29 @@ type TypeMapDong = {
   };
   res: {
     data: TypeMapArea[];
+  };
+};
+
+type TypeUpjongGet = {
+  res: {
+    data: {
+      dong: {
+        code: string;
+        name: string;
+      }[];
+    };
+  };
+};
+
+type TypeUpjongPost = {
+  req: { code: string };
+  res: {
+    data: {
+      dong: {
+        code: string;
+        name: string;
+      }[];
+    };
   };
 };
 
@@ -177,11 +200,122 @@ type TypeNiceDong = {
   };
 };
 
+type TypeMapStoreSearch = {
+  req: TypeFilterStore;
+  res: {
+    _id: string;
+    storeName: string;
+    lat: number;
+    lng: number;
+  };
+};
+
+type StoreInfo = {
+  _id: string;
+  storeName: string;
+  storeCode: string;
+  storeStatus: "open" | "ready" | "rest" | "close" | "etc";
+  storeType?: "A" | "B" | "C" | "D" | "E";
+  storePhone?: string;
+  bsNum?: string;
+  ownerName: string;
+  ownerPhone: string;
+  addr: string;
+  addrDetail?: string;
+  linkBsDis?: {
+    bsDisName: string;
+    bsDisCode: string;
+  }[];
+  lat: number;
+  lng: number;
+};
+
+type TypeMapStoreInfo = {
+  req: {
+    id: string;
+  };
+  res: {
+    data: StoreInfo;
+  };
+};
+
+type TypeMapBsDisSearch = {
+  req: TypeFilterBsDis;
+  res: {
+    _id: string;
+    bsDisName: string;
+    polygon: [number[]];
+    center: [number, number];
+    polygonType: "single" | "multi";
+  };
+};
+
+type TypeMapBsDisInfo = {
+  req: {
+    id: string;
+  };
+  res: {
+    _id: string;
+    bsDisName: string;
+    bsDisCode: string;
+    bsDisType: "A" | "B" | "C" | "D" | "E";
+    linkStore?: {
+      storeCode: string;
+      storeName: number;
+    }[];
+  };
+};
+
+type TypeMapRentSearch = {
+  req: TypeFilterRent;
+  res: {
+    _id: string;
+    rentName: string;
+    addr: string;
+    lat: number;
+    lng: number;
+  };
+};
+
+type TypeMapRentInfo = {
+  req: {
+    id: string;
+  };
+  res: {
+    _id: string;
+    rentName: string;
+    rentType?: "A" | "B" | "C" | "D" | "E";
+    availableDay: string;
+    curUpjong?: string;
+    realArea?: number;
+    floor?: number;
+    rentalFee?: number;
+    depositFee?: number;
+    premiumFee?: number;
+    manageFee?: number;
+    addr: string;
+    addrDetail?: string;
+    nearbyStore?: {
+      storeName: string;
+      distance: number;
+      addr: string;
+      addrDetail: string;
+      lat: number;
+      lng: number;
+    }[];
+    img?: string[];
+    lat: number;
+    lng: number;
+  };
+};
+
 export type {
   BixApiInstance,
   TypeMapSido,
   TypeMapSigungu,
   TypeMapDong,
+  TypeUpjongGet,
+  TypeUpjongPost,
   TypeSigunguRank,
   TypeNiceStore,
   TypeNiceFlowPop,
@@ -191,4 +325,11 @@ export type {
   TypeNiceSido,
   TypeNiceSigungu,
   TypeNiceDong,
+  TypeMapStoreSearch,
+  TypeMapBsDisSearch,
+  TypeMapRentSearch,
+  TypeMapStoreInfo,
+  StoreInfo,
+  TypeMapBsDisInfo,
+  TypeMapRentInfo,
 };

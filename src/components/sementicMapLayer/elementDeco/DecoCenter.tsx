@@ -185,6 +185,76 @@ const DecoFrameR = ({
   );
 };
 
+// 중앙 좌측 프레임
+const BoxCenterFrameLeft = () => {
+  return (
+    <Box
+      pos="relative"
+      w="16px"
+      h="100%"
+      borderLeft="1px solid"
+      borderColor="neutral.gray8"
+      _before={{
+        content: '""',
+        pos: "absolute",
+        top: "0",
+        left: "0",
+        display: "inline-block",
+        w: "100%",
+        h: "4px",
+        bgColor: "neutral.gray8",
+        flex: "none",
+      }}
+      _after={{
+        content: '""',
+        pos: "absolute",
+        bottom: "0",
+        left: "0",
+        display: "inline-block",
+        w: "100%",
+        h: "4px",
+        bgColor: "neutral.gray8",
+        flex: "none",
+      }}
+    />
+  );
+};
+
+// 중앙 우측 프레임
+const BoxCenterFrameRight = () => {
+  return (
+    <Box
+      pos="relative"
+      w="16px"
+      h="100%"
+      borderRight="1px solid"
+      borderColor="neutral.gray8"
+      _before={{
+        content: '""',
+        pos: "absolute",
+        top: "0",
+        right: "0",
+        display: "inline-block",
+        w: "100%",
+        h: "4px",
+        bgColor: "neutral.gray8",
+        flex: "none",
+      }}
+      _after={{
+        content: '""',
+        pos: "absolute",
+        bottom: "0",
+        right: "0",
+        display: "inline-block",
+        w: "100%",
+        h: "4px",
+        bgColor: "neutral.gray8",
+        flex: "none",
+      }}
+    />
+  );
+};
+
 //  중앙 포커스 라운드
 const DecoFrameCenter = ({
   isOpen = true,
@@ -229,35 +299,7 @@ const DecoFrameCenter = ({
       }}
     >
       {/* 좌측 박스 */}
-      <Box
-        pos="relative"
-        w="16px"
-        h="100%"
-        borderLeft="1px solid"
-        borderColor="neutral.gray8"
-        _before={{
-          content: '""',
-          pos: "absolute",
-          top: "0",
-          left: "0",
-          display: "inline-block",
-          w: "100%",
-          h: "4px",
-          bgColor: "neutral.gray8",
-          flex: "none",
-        }}
-        _after={{
-          content: '""',
-          pos: "absolute",
-          bottom: "0",
-          left: "0",
-          display: "inline-block",
-          w: "100%",
-          h: "4px",
-          bgColor: "neutral.gray8",
-          flex: "none",
-        }}
-      />
+      <BoxCenterFrameLeft />
       {/* 중앙 박스 */}
       <Flex
         ref={boxRef}
@@ -466,37 +508,16 @@ const DecoFrameCenter = ({
         )}
       </Flex>
       {/* 우측 박스 */}
-      <Box
-        pos="relative"
-        w="16px"
-        h="100%"
-        borderRight="1px solid"
-        borderColor="neutral.gray8"
-        _before={{
-          content: '""',
-          pos: "absolute",
-          top: "0",
-          right: "0",
-          display: "inline-block",
-          w: "100%",
-          h: "4px",
-          bgColor: "neutral.gray8",
-          flex: "none",
-        }}
-        _after={{
-          content: '""',
-          pos: "absolute",
-          bottom: "0",
-          right: "0",
-          display: "inline-block",
-          w: "100%",
-          h: "4px",
-          bgColor: "neutral.gray8",
-          flex: "none",
-        }}
-      />
+      <BoxCenterFrameRight />
     </Flex>
   );
 };
 
-export { DecoFrameL, DecoFrameR, DecoFrameCenter, DecoRankTag };
+export {
+  DecoFrameL,
+  DecoFrameR,
+  DecoFrameCenter,
+  DecoRankTag,
+  BoxCenterFrameLeft,
+  BoxCenterFrameRight,
+};

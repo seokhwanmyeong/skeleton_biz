@@ -19,7 +19,7 @@ import {
 import { atomSlctCustom } from "@states/sementicMap/stateMap";
 import { sementicViewState } from "@states/sementicMap/stateView";
 //  Icon
-import { IcoBarChart, IcoFilter } from "@assets/icons/icon";
+import { IcoAddBusiness, IcoAddChart } from "@assets/icons/icon";
 //  Deco
 import {
   DecoTop,
@@ -123,7 +123,7 @@ const FlowCustom = () => {
           onClick={() => (isOpen ? onClose() : onOpen())}
         >
           <Box>
-            <IcoFilter />
+            <IcoAddBusiness width="1rem" height="1rem" />
           </Box>
           마켓데이터
         </Button>
@@ -136,7 +136,7 @@ const FlowCustom = () => {
           }}
         >
           <Box>
-            <IcoBarChart />
+            <IcoAddChart width="1rem" height="1rem" />
           </Box>
           리포트
         </Button>

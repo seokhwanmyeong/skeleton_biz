@@ -5,6 +5,9 @@ import {
   MAP_SIDO_GET_LIST,
   MAP_SIGUNGU_GET_LIST,
   MAP_DONG_GET_LIST,
+  MAP_UPJONG_TOP,
+  MAP_UPJONG_MID,
+  MAP_UPJONG_BOT,
   MAP_NICE_RANKING,
   MAP_NICE_STORE,
   MAP_NICE_FLOWPOP,
@@ -19,6 +22,12 @@ import {
   MAP_NICE_DONG,
   MAP_BUILDING_LIST,
   MAP_BUILDING_DETAIL,
+  ERP_STORE_GET_POINT,
+  ERP_RENT_GET_POINT,
+  ERP_BSDIS_GET_AREA,
+  MAP_ERP_STORE_GET_INFO,
+  MAP_ERP_RENT_GET_INFO,
+  MAP_ERP_BSDIS_GET_INFO,
 } from "@api/bizSub/url";
 //  Type
 import type {
@@ -26,12 +35,20 @@ import type {
   TypeMapSido,
   TypeMapSigungu,
   TypeMapDong,
+  TypeUpjongGet,
+  TypeUpjongPost,
   TypeSigunguRank,
   TypeNiceStore,
   TypeNiceFlowPop,
   TypeNiceSido,
   TypeNiceSigungu,
   TypeNiceDong,
+  TypeMapStoreSearch,
+  TypeMapBsDisSearch,
+  TypeMapRentSearch,
+  TypeMapStoreInfo,
+  TypeMapBsDisInfo,
+  TypeMapRentInfo,
 } from "@api/bizSub/type";
 
 let localStorage = window.localStorage;
@@ -123,4 +140,50 @@ const apiReport = {
   getFacilityList: (req: any) => instance.post(MAP_REPORT_FACILITYLIST, req),
 };
 
-export { apiMapArea, apiMapNice, apiReport, apiNiceAddr, apiMapBuilding };
+const apiErpMap = {
+  getStoreList: (req: TypeMapStoreSearch["req"]) =>
+    instance.post<TypeMapStoreSearch["req"], any>(ERP_STORE_GET_POINT, req),
+  getRentList: (req: TypeMapRentSearch["req"]) =>
+    instance.post<TypeMapRentSearch["req"], any>(ERP_RENT_GET_POINT, req),
+  getBsDisList: (req: TypeMapBsDisSearch["req"]) =>
+    instance.post<TypeMapBsDisSearch["req"], any>(ERP_BSDIS_GET_AREA, req),
+  getStoreInfo: (req: TypeMapStoreInfo["req"]) =>
+    instance.post<TypeMapStoreInfo["req"], TypeMapStoreInfo["res"]>(
+      MAP_ERP_STORE_GET_INFO,
+      req
+    ),
+  getRentInfo: (req: TypeMapRentInfo["req"]) =>
+    instance.post<TypeMapRentInfo["req"], TypeMapRentInfo["res"]>(
+      MAP_ERP_RENT_GET_INFO,
+      req
+    ),
+  getBsDisInfo: (req: TypeMapBsDisInfo["req"]) =>
+    instance.post<TypeMapBsDisInfo["req"], TypeMapBsDisInfo["res"]>(
+      MAP_ERP_BSDIS_GET_INFO,
+      req
+    ),
+};
+
+const apiUpjong = {
+  getTopList: () => instance.get<TypeUpjongGet["res"]>(MAP_UPJONG_TOP),
+  getMidList: (req: TypeUpjongPost["req"]) =>
+    instance.post<TypeUpjongPost["req"], TypeUpjongPost["res"]>(
+      MAP_UPJONG_MID,
+      req
+    ),
+  getBotList: (req: TypeUpjongPost["req"]) =>
+    instance.post<TypeUpjongPost["req"], TypeUpjongPost["res"]>(
+      MAP_UPJONG_BOT,
+      req
+    ),
+};
+
+export {
+  apiMapArea,
+  apiMapNice,
+  apiReport,
+  apiNiceAddr,
+  apiMapBuilding,
+  apiErpMap,
+  apiUpjong,
+};

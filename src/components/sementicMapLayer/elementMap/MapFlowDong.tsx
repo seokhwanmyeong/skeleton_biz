@@ -32,6 +32,8 @@ import { Flex } from "@chakra-ui/react";
 import {
   DecoFrameL,
   DecoFrameR,
+  BoxCenterFrameLeft,
+  BoxCenterFrameRight,
 } from "@components/sementicMapLayer/elementDeco/DecoCenter";
 //  Type
 import type { TypeNiceFlowData } from "@api/bizSub/type";
@@ -258,6 +260,28 @@ const MapFlowDong = () => {
             {flowActive && flowShow && <FlowPopInfo />}
           </DecoFrameL>
         )}
+        <Flex
+          pos="relative"
+          p="6rem 0"
+          w="50%"
+          h="100%"
+          direction="row"
+          justify={
+            (dongRank || (flowActive && flowShow)) &&
+            ((brandShow && brandActive) || (buildShow && buildActive))
+              ? "space-between"
+              : dongRank || (flowActive && flowShow)
+              ? "flex-start"
+              : "flex-end"
+          }
+          gap="0.625rem"
+          zIndex={1}
+        >
+          {(dongRank || (flowActive && flowShow)) && <BoxCenterFrameLeft />}
+          {((brandShow && brandActive) || (buildShow && buildActive)) && (
+            <BoxCenterFrameRight />
+          )}
+        </Flex>
         {/* <DecoFrameCenter isOpen={centerView} activeAni={false} /> */}
         {((brandShow && brandActive) || (buildShow && buildActive)) && (
           <DecoFrameR pr="0.25rem">
