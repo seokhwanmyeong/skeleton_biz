@@ -85,6 +85,7 @@ const DecoFrameL = ({
       {...rest}
     >
       <Box
+        maxW="205px"
         w="100%"
         h="1px"
         bg="linear-gradient(270deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 90%)"
@@ -92,6 +93,7 @@ const DecoFrameL = ({
       />
       {children}
       <Box
+        maxW="205px"
         w="100%"
         h="1px"
         bg="linear-gradient(270deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 90%)"
@@ -169,6 +171,7 @@ const DecoFrameR = ({
       {...rest}
     >
       <Box
+        maxW="205px"
         w="100%"
         h="1px"
         bg="linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 90%)"
@@ -176,6 +179,7 @@ const DecoFrameR = ({
       />
       {children}
       <Box
+        maxW="205px"
         w="100%"
         h="1px"
         bg="linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 90%)"
@@ -259,9 +263,11 @@ const BoxCenterFrameRight = () => {
 const DecoFrameCenter = ({
   isOpen = true,
   activeAni = true,
+  ...rest
 }: {
   isOpen?: boolean;
   activeAni?: boolean;
+  [x: string]: any;
 }) => {
   const boxRef = useRef<HTMLDivElement | null>(null);
 
@@ -297,6 +303,7 @@ const DecoFrameCenter = ({
         bg: "linear-gradient(270deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 90%)",
         flex: "none",
       }}
+      {...rest}
     >
       {/* 좌측 박스 */}
       <BoxCenterFrameLeft />
@@ -325,20 +332,20 @@ const DecoFrameCenter = ({
             initial={{
               width: 0,
               height: 0,
-              maxWidth: "70vh",
-              maxHeight: "70vh",
+              maxWidth: "80vh",
+              maxHeight: "80vh",
             }}
             animate={{
               width: "60vw",
               height: "60vw",
-              maxWidth: "70vh",
-              maxHeight: "70vh",
+              maxWidth: "80vh",
+              maxHeight: "80vh",
             }}
             exit={{
               width: "60vw",
               height: "60vw",
-              maxWidth: "70vh",
-              maxHeight: "70vh",
+              maxWidth: "80vh",
+              maxHeight: "80vh",
             }}
           >
             {/* 중앙 미들 원형 */}

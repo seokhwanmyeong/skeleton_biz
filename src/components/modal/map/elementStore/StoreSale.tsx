@@ -754,7 +754,7 @@ const LineChart = ({ store, brand }: { store: any[]; brand: any[] }) => {
         options={options}
         // @ts-ignore
         data={data}
-        style={{ width: "100%", height: "30vh" }}
+        style={{ width: "100%", height: "28vh" }}
       />
     </Flex>
   );

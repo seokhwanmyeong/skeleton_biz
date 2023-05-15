@@ -1,5 +1,5 @@
 //  Lib
-import { useState, useEffect, Fragment } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
 import { Box, Button, Flex, useDisclosure } from "@chakra-ui/react";
 //  Component
@@ -27,6 +27,7 @@ import {
   DecoFilterDivider,
 } from "@components/sementicMapLayer/elementDeco/Deco";
 import {
+  DecoFrameCenter,
   DecoFrameL,
   DecoFrameR,
 } from "@components/sementicMapLayer/elementDeco/DecoCenter";
@@ -46,6 +47,7 @@ const FlowCustom = () => {
   const {
     show: buildShow,
     active: buildActive,
+    filter: buildFilter,
     data: buildList,
   } = useRecoilValue(infoComBuilding);
   const cutomArea = useRecoilValue(atomSlctCustom);
@@ -101,16 +103,18 @@ const FlowCustom = () => {
         pointerEvents="none"
         justify="space-between"
       >
-        <DecoFrameL pl="0.25rem" align="flex-end">
+        <DecoFrameL pl="0.25rem" align="flex-end" w="20%">
           {flowActive && flowShow && <FlowPopInfo />}
         </DecoFrameL>
-        <DecoFrameR pr="0.25rem">
+        <DecoFrameCenter w="60%" />
+        <DecoFrameR pr="0.25rem" w="20%">
           {((brandShow && brandActive) || (buildShow && buildActive)) && (
             <DepthListBox
               brandShow={brandShow}
               brandList={brandList || []}
               buildShow={buildShow}
               buildList={buildList || []}
+              buildFilter={buildFilter}
             />
           )}
         </DecoFrameR>

@@ -4,6 +4,7 @@ import polylabel from "polylabel";
 interface InteractAreaProps {
   onClick?: (event: MouseEvent) => any;
   name: string;
+  id?: string;
   num: number;
   path:
     | naver.maps.ArrayOfCoords[]
@@ -21,6 +22,7 @@ interface InteractAreaProps {
 const InteractArea = ({
   onClick,
   name,
+  id,
   num,
   path,
   style,
@@ -32,7 +34,7 @@ const InteractArea = ({
   setClickable = true,
 }: InteractAreaProps) => {
   const { state, dispatch } = useContext(NaverMapContext);
-  const [areaId] = useState("area" + num);
+  const [areaId] = useState(id || "area" + num);
 
   const onMouseOverArea = (e: PointerEvent) => {
     const poly = state.objects.get(areaId) as naver.maps.Polygon;

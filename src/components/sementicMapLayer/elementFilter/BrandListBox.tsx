@@ -842,7 +842,7 @@ const ListItemStore = ({
 
     const zoomEvent = naver.maps.Event.addListener(
       state.map,
-      "zoom_changed",
+      "bounds_changed",
       (e) => {
         if (!state?.objects && state.objects.size === 0) return;
         let obj: any = state?.objects.get(`markerStore-${idx}`);
@@ -1216,7 +1216,7 @@ const ListItemRent = ({ isShow, idx, _id, rentName, addr, lat, lng }: any) => {
 
     const zoomEvent = naver.maps.Event.addListener(
       state.map,
-      "zoom_changed",
+      "bounds_changed",
       (e) => {
         if (!state?.objects && state.objects.size === 0) return;
         let obj: any = state?.objects.get(`markerRent-${idx}`);

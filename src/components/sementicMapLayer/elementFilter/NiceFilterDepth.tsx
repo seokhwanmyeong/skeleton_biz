@@ -75,51 +75,53 @@ const NiceFilterDepth = ({
 
   //  세부 유동인구 필터 변화 및 액티브
   const searchPopHandler = () => {
-    if (areaInfo.areaType === "dong" && areaInfo.slctCode) {
-      getFlowPop({
-        // ctyCd: sigungu.slctCode.slice(0, 4),
-        admiCd: areaInfo.slctCode,
-        upjongCd: bot.code || "Q01005",
-      }).then((res: any) => {
-        console.log(res);
+    setFlowPop({ show: true, active: true, data: [] });
+    return;
+    // if (areaInfo.areaType === "dong" && areaInfo.slctCode) {
+    //   getFlowPop({
+    //     // ctyCd: sigungu.slctCode.slice(0, 4),
+    //     admiCd: areaInfo.slctCode,
+    //     upjongCd: bot.code || "Q01005",
+    //   }).then((res: any) => {
+    //     console.log(res);
 
-        if (res.data && res.data.length > 0)
-          setFlowPop({ show: true, active: true, data: res.data || [] });
-      });
-    } else if (areaInfo.areaType === "polygon" && areaInfo.slctPath) {
-      console.log(areaInfo.slctPath);
-      if (areaInfo?.slctPath) {
-        const arr = areaInfo.slctPath.map((path: any): [number, number] => {
-          return [path.x || path[0], path.y || path[1]];
-        });
+    //     if (res.data && res.data.length > 0)
+    //       setFlowPop({ show: true, active: true, data: res.data || [] });
+    //   });
+    // } else if (areaInfo.areaType === "polygon" && areaInfo.slctPath) {
+    //   console.log(areaInfo.slctPath);
+    //   if (areaInfo?.slctPath) {
+    //     const arr = areaInfo.slctPath.map((path: any): [number, number] => {
+    //       return [path.x || path[0], path.y || path[1]];
+    //     });
 
-        getFlowPop({
-          upjongCd: bot.code || "Q01005",
-          wkt: [[arr]],
-        }).then((res: any) => {
-          console.log(res);
+    //     getFlowPop({
+    //       upjongCd: bot.code || "Q01005",
+    //       wkt: [[arr]],
+    //     }).then((res: any) => {
+    //       console.log(res);
 
-          if (res.data && res.data.length > 0)
-            setFlowPop({ show: true, active: true, data: res.data || [] });
-        });
-      }
-    } else if (
-      areaInfo.areaType === "circle" &&
-      areaInfo.center &&
-      areaInfo.range
-    ) {
-      getFlowPop({
-        upjongCd: bot.code || "Q01005",
-        xAxis: areaInfo.center.x,
-        yAxis: areaInfo.center.y,
-        range: Number(areaInfo.range),
-      }).then((res: any) => {
-        console.log(res);
+    //       if (res.data && res.data.length > 0)
+    //         setFlowPop({ show: true, active: true, data: res.data || [] });
+    //     });
+    //   }
+    // } else if (
+    //   areaInfo.areaType === "circle" &&
+    //   areaInfo.center &&
+    //   areaInfo.range
+    // ) {
+    //   getFlowPop({
+    //     upjongCd: bot.code || "Q01005",
+    //     xAxis: areaInfo.center.x,
+    //     yAxis: areaInfo.center.y,
+    //     range: Number(areaInfo.range),
+    //   }).then((res: any) => {
+    //     console.log(res);
 
-        if (res.data && res.data.length > 0)
-          setFlowPop({ show: true, active: true, data: res.data || [] });
-      });
-    }
+    //     if (res.data && res.data.length > 0)
+    //       setFlowPop({ show: true, active: true, data: res.data || [] });
+    //   });
+    // }
   };
 
   const searchBrandHandler = () => {
@@ -227,6 +229,7 @@ const NiceFilterDepth = ({
       const arr = areaInfo.slctPath.map((path: any): [number, number] => {
         return [path.x || path[0], path.y || path[1]];
       });
+      console.log(arr);
 
       getBuildingList({
         wkt: [[arr]],
