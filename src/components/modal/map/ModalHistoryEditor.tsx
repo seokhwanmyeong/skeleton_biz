@@ -1,5 +1,5 @@
 //  LIB
-import { Fragment, useState, useRef, useCallback } from "react";
+import { Fragment, useState, useRef, useCallback, useEffect } from "react";
 import {
   Drawer,
   DrawerBody,
@@ -13,7 +13,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 //  Component
-import FormStoreEditor from "@components/form/map/FormStoreEditor";
+import FormHistory from "@components/form/map/FormHistory";
 import { DialogAlertCreateStore } from "@components/dialog/DialogAlertModal";
 //  Type
 import type { FormikValues } from "formik";
@@ -23,11 +23,20 @@ import { Deco01 } from "@src/assets/deco/DecoSvg";
 
 type Props = {
   isOpen: boolean;
+  fixMode?: boolean;
+  values?: any;
   onOpen: (props?: any) => any;
   onClose: (props?: any) => any;
   setOpenIdx: (props?: any) => any;
 };
-const ModalStoreEditor = ({ isOpen, onOpen, onClose, setOpenIdx }: Props) => {
+const ModalHistoryEditor = ({
+  isOpen,
+  fixMode = false,
+  values,
+  onOpen,
+  onClose,
+  setOpenIdx,
+}: Props) => {
   const submitRef = useRef<FormikValues>(null);
   const {
     isOpen: isAlertOpen,
@@ -35,23 +44,12 @@ const ModalStoreEditor = ({ isOpen, onOpen, onClose, setOpenIdx }: Props) => {
     onClose: onAlertClose,
   } = useDisclosure();
   const [initData, setInitData] = useState({
-    storeName: "",
-    storeCode: "",
-    storeStatus: "",
-    storeType: "",
-    phone: "",
-    bsNum: "",
-    ownerName: "",
-    ownerPhone: "",
-    addrNew: "",
-    addrOld: "",
-    addrDetail: "",
-    addrCode: "",
-    addrHCode: "",
-    openDate: undefined,
-    lat: 0,
-    lng: 0,
-    linkBsDis: [],
+    id: "",
+    writer: "김양일",
+    title: "",
+    content: "",
+    curAddr: "",
+    img: [],
   });
 
   const submitHandler = useCallback(() => {
@@ -68,55 +66,57 @@ const ModalStoreEditor = ({ isOpen, onOpen, onClose, setOpenIdx }: Props) => {
     }
   }, [submitRef.current]);
 
-  const createStore = (val?: StoreInfo) => {
+  const createHistory = (val?: StoreInfo) => {
     console.log("create start");
     console.log(val);
     onClose();
     setOpenIdx(-1);
   };
 
+  const handleSuccess = (pos: GeolocationPosition) => {
+    const { latitude, longitude } = pos.coords;
+    naver.maps.Service.reverseGeocode(
+      {
+        coords: new naver.maps.LatLng(latitude, longitude),
+        orders: [
+          naver.maps.Service.OrderType.ADDR,
+          naver.maps.Service.OrderType.ROAD_ADDR,
+        ].join(","),
+      },
+      (status, response) => {
+        const road = response?.v2?.address?.jibunAddress;
+        const jibun = response?.v2?.address?.roadAddress;
+        if (road || jibun) {
+          setInitData({ ...initData, curAddr: road || jibun || "" });
+        }
+      }
+    );
+  };
+
+  useEffect(() => {
+    const { geolocation } = navigator;
+    if (values) {
+      setInitData(values);
+    }
+
+    if (!geolocation) {
+      return;
+    }
+
+    geolocation.getCurrentPosition(handleSuccess);
+  }, [isOpen]);
+
   return (
     <Fragment>
       <Drawer isOpen={isOpen} onClose={onClose} placement="right">
-        <DrawerContent p="1rem 1.5625rem" maxW="25.3125rem" w="25.3125rem">
-          <DrawerHeader pos="relative" p="0">
-            <Flex direction="column" justify="center" align="center" gap="1rem">
-              <IconButton
-                aria-label="생성 취소"
-                onClick={onClose}
-                icon={
-                  <IcoLeft
-                    width="1.25rem"
-                    height="1.25rem"
-                    color="font.primary"
-                  />
-                }
-                position="absolute"
-                top="0.125rem"
-                left="0rem"
-                bg="transparent"
-                color="font.primary"
-                _hover={{
-                  bg: "transparent",
-                }}
-              />
-              <Heading
-                as={"h5"}
-                fontSize="md"
-                lineHeight="normal"
-                color="font.primary"
-                bg="none"
-              >
-                매장 등록
-              </Heading>
-            </Flex>
-            <Deco01 margin="0.5rem 0 1.3125rem" width="100%" height="auto" />
-          </DrawerHeader>
+        <DrawerContent p="1rem 1.5625rem" maxW="786px" w="786px">
           <DrawerBody pos="relative" p="0" width="100%">
-            <FormStoreEditor
+            <FormHistory
               initVal={initData}
-              setValues={createStore}
+              setValues={createHistory}
               ref={submitRef}
+              fixMode={fixMode}
+              onClose={onClose}
             />
           </DrawerBody>
           <DrawerFooter justifyContent="center">
@@ -127,8 +127,9 @@ const ModalStoreEditor = ({ isOpen, onOpen, onClose, setOpenIdx }: Props) => {
               onClick={submitHandler}
             >
               <IcoPlusCircle />
-              매장생성
+              히스토리 추가하기
             </Button>
+            <Button onClick={onClose}>취소</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
@@ -137,4 +138,4 @@ const ModalStoreEditor = ({ isOpen, onOpen, onClose, setOpenIdx }: Props) => {
   );
 };
 
-export default ModalStoreEditor;
+export default ModalHistoryEditor;

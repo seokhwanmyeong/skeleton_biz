@@ -451,21 +451,23 @@ const FormRentEditor = forwardRef(
                   >
                     <EditorLabel text="주소" need={true} />
                     <Flex w="100%" direction="column" gap="0.5rem">
-                      <Field name="addr" validate={validateNeedStr}>
+                      <Field name="addrNew" validate={validateNeedStr}>
                         {({ form, errors }: any) => {
                           return (
                             <FormControl
-                              isInvalid={form.errors.addr && form.touched.addr}
+                              isInvalid={
+                                form.errors.addrNew && form.touched.addrNew
+                              }
                             >
                               <InputAddr
-                                fieldKey={"addr"}
+                                fieldKey={"addrNew"}
                                 hasIcon={false}
                                 btnProps={{
                                   variant: "filterSearch",
                                   width: "4rem",
                                   lineHeight: "1",
                                 }}
-                                value={form.getFieldProps("addr").value}
+                                value={form.getFieldProps("addrNew").value}
                                 onChange={(val: any) => {
                                   const geocoder =
                                     // @ts-ignore
@@ -475,21 +477,36 @@ const FormRentEditor = forwardRef(
                                     val,
                                     (result: any, status: any) => {
                                       if (status === "OK") {
-                                        const { x, y } = result[0];
+                                        const { x, y, address, road_address } =
+                                          result[0];
 
-                                        console.log(errors);
-                                        form.setFieldValue("addr", val);
-                                        form.setFieldValue("lat", y);
-                                        form.setFieldValue("lng", x);
+                                        form.setFieldValue(
+                                          "addrNew",
+                                          road_address.address_name
+                                        );
+                                        form.setFieldValue(
+                                          "addrOld",
+                                          address.address_name
+                                        );
+                                        form.setFieldValue(
+                                          "addrCode",
+                                          address.b_code
+                                        );
+                                        form.setFieldValue(
+                                          "addrHCode",
+                                          address.h_code
+                                        );
+                                        form.setFieldValue("lat", Number(y));
+                                        form.setFieldValue("lng", Number(x));
                                         setTimeout(() =>
-                                          form.setFieldTouched("addr", true)
+                                          form.setFieldTouched("addrNew", true)
                                         );
                                         addMarker(
                                           new naver.maps.Marker({
                                             map: state.map,
                                             position: {
-                                              lat: y,
-                                              lng: x,
+                                              lat: Number(y),
+                                              lng: Number(x),
                                             },
                                             icon: {
                                               url: markerCreate,
@@ -507,8 +524,8 @@ const FormRentEditor = forwardRef(
                                         );
 
                                         state.map?.setCenter({
-                                          lat: y,
-                                          lng: x,
+                                          lat: Number(y),
+                                          lng: Number(x),
                                         });
                                         state.map?.setZoom(13);
                                       }

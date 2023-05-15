@@ -24,13 +24,16 @@ export type RentInfo = {
   rentType?: "A" | "B" | "C" | "D" | "E";
   availableDay?: string;
   curUpjong: string;
-  realArea: number;
+  size: number;
   floor: number;
   rentalFee: number;
   depositFee: number;
   premiumFee: number;
   manageFee: number;
-  addr: string;
+  addrNew: string;
+  addrOld: string;
+  addrCode: string;
+  addrHCode: string;
   addrDetail?: string;
   img?: [];
   lat: number;
@@ -47,13 +50,16 @@ const ErpRentCreate = () => {
     rentType: undefined,
     availableDay: "",
     curUpjong: "",
-    realArea: 0,
+    size: 0,
     floor: 0,
     rentalFee: 0,
     depositFee: 0,
     premiumFee: 0,
     manageFee: 0,
-    addr: "",
+    addrNew: "",
+    addrOld: "",
+    addrCode: "",
+    addrHCode: "",
     addrDetail: "",
     img: [],
     lat: 0,

@@ -28,7 +28,7 @@ const StoreBasicInfo = ({ info }: { info: StoreInfo | null }) => {
         <ElementLine
           noborder={true}
           title="주소"
-          content={(info?.addr || "") + (info?.addrDetail || "")}
+          content={(info?.addrNew || "") + (info?.addrDetail || "")}
         />
         <ElementLine title="" content={info?.addrDetail || "-"} />
         <ElementLineList title="연동상권" content={info?.linkBsDis || []} />

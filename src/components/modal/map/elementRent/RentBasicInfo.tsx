@@ -22,7 +22,7 @@ const RentBasicInfo = ({ info }: { info: TypeMapRentInfo["res"] | null }) => {
         <ElementLine title="입점 가능일" content={info?.availableDay || ""} />
         <ElementLine
           title="주소"
-          content={(info?.addr || "") + (info?.addrDetail || "")}
+          content={(info?.addrNew || "") + (info?.addrDetail || "")}
         />
         <ElementLine title="현업종" content={info?.curUpjong || ""} />
         <ElementLine title="실평수" content={info?.realArea || ""} />

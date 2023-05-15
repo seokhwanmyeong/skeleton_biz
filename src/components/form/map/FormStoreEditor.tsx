@@ -497,20 +497,22 @@ const FormStoreEditor = forwardRef(
                   >
                     <EditorLabel text="주소" need={true} />
                     <Flex w="100%" direction="column" gap="0.5rem">
-                      <Field name="addr" validate={validateNeedStr}>
+                      <Field name="addrNew" validate={validateNeedStr}>
                         {({ field, form }: any) => (
                           <FormControl
-                            isInvalid={form.errors.addr && form.touched.addr}
+                            isInvalid={
+                              form.errors.addrNew && form.touched.addrNew
+                            }
                           >
                             <InputAddr
-                              fieldKey={"addr"}
+                              fieldKey={"addrNew"}
                               hasIcon={false}
                               btnProps={{
                                 variant: "filterSearch",
                                 width: "4rem",
                                 lineHeight: "1",
                               }}
-                              value={form.getFieldProps("addr").value}
+                              value={form.getFieldProps("addrNew").value}
                               onChange={(val: any) => {
                                 const geocoder =
                                   // @ts-ignore
@@ -520,15 +522,29 @@ const FormStoreEditor = forwardRef(
                                   val,
                                   (result: any, status: any) => {
                                     if (status === "OK") {
-                                      const { x, y } = result[0];
-                                      // setFieldValue("addr", val);
-                                      // setFieldValue("lat", y);
-                                      // setFieldValue("lng", x);
-                                      form.setFieldValue("addr", val);
-                                      form.setFieldValue("lat", y);
-                                      form.setFieldValue("lng", x);
+                                      const { x, y, address, road_address } =
+                                        result[0];
+
+                                      form.setFieldValue(
+                                        "addrNew",
+                                        road_address.address_name
+                                      );
+                                      form.setFieldValue(
+                                        "addrOld",
+                                        address.address_name
+                                      );
+                                      form.setFieldValue(
+                                        "addrCode",
+                                        address.b_code
+                                      );
+                                      form.setFieldValue(
+                                        "addrHCode",
+                                        address.h_code
+                                      );
+                                      form.setFieldValue("lat", Number(y));
+                                      form.setFieldValue("lng", Number(x));
                                       setTimeout(() =>
-                                        form.setFieldTouched("addr", true)
+                                        form.setFieldTouched("addrNew", true)
                                       );
                                       addMarker(
                                         new naver.maps.Marker({

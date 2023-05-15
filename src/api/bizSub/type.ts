@@ -220,7 +220,8 @@ type StoreInfo = {
   bsNum?: string;
   ownerName: string;
   ownerPhone: string;
-  addr: string;
+  addrNew: string;
+  addrOld: string;
   addrDetail?: string;
   linkBsDis?: {
     bsDisName: string;
@@ -293,7 +294,8 @@ type TypeMapRentInfo = {
     depositFee?: number;
     premiumFee?: number;
     manageFee?: number;
-    addr: string;
+    addrNew: string;
+    addrOld: string;
     addrDetail?: string;
     nearbyStore?: {
       storeName: string;
