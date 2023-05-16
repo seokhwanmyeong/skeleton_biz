@@ -6,7 +6,7 @@ import DrawPolygon from "@components/sementicMapLayer/boxDraw/DrawPolygon";
 import DrawRange from "@components/sementicMapLayer/boxDraw/DrawRange";
 import DrawAddr from "@components/sementicMapLayer/boxDraw/DrawAddr";
 //  Icon
-import { IcoAppStore } from "@assets/icons/icon";
+import { IcoPolyline, IcoLineCurve, IcoDistance } from "@assets/icons/icon";
 import { motion } from "framer-motion";
 
 const DrawBox = () => {
@@ -48,7 +48,7 @@ const DrawBox = () => {
           onClick={() => (activeIdx === 0 ? setActiveIdx(-1) : setActiveIdx(0))}
         >
           <Box>
-            <IcoAppStore />
+            <IcoPolyline />
           </Box>
           그리기
         </Button>
@@ -58,7 +58,7 @@ const DrawBox = () => {
           onClick={() => (activeIdx === 1 ? setActiveIdx(-1) : setActiveIdx(1))}
         >
           <Box>
-            <IcoAppStore />
+            <IcoLineCurve />
           </Box>
           반경
         </Button>
@@ -68,7 +68,7 @@ const DrawBox = () => {
           onClick={() => (activeIdx === 2 ? setActiveIdx(-1) : setActiveIdx(2))}
         >
           <Box>
-            <IcoAppStore />
+            <IcoDistance />
           </Box>
           주소지
         </Button>

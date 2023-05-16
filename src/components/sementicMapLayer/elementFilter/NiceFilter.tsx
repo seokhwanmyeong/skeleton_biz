@@ -12,6 +12,7 @@ import {
   Flex,
   FormLabel,
   Heading,
+  Text,
   Tooltip,
 } from "@chakra-ui/react";
 //  Component
@@ -750,6 +751,17 @@ const NiceFilter = ({ areaCode }: Props) => {
                 업소수
               </Heading>
             </Flex>
+            {!bot?.code && (
+              <Text
+                fontFamily="main"
+                fontSize="xs"
+                fontWeight="strong"
+                lineHeight="1.5rem"
+                color="system.accessible.red"
+              >
+                · 업종을 선택해주세요.
+              </Text>
+            )}
             <Tooltip
               hasArrow
               isDisabled={bot.code ? true : false}
@@ -793,6 +805,17 @@ const NiceFilter = ({ areaCode }: Props) => {
                 매출액
               </Heading>
             </Flex>
+            {!bot?.code && (
+              <Text
+                fontFamily="main"
+                fontSize="xs"
+                fontWeight="strong"
+                lineHeight="1.5rem"
+                color="system.accessible.red"
+              >
+                · 업종을 선택해주세요.
+              </Text>
+            )}
             <Tooltip
               hasArrow
               isDisabled={bot.code ? true : false}

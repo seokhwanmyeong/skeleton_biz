@@ -92,8 +92,6 @@ const ErpFilter = ({ editorOpen, setEditorOpen }: ErpFilterProps) => {
     console.log(filterStore);
 
     const tmp: any = { ...filterStore, brandCode: "3" };
-    delete tmp.areaCode;
-    delete tmp.areaText;
 
     if (filterStore.storeType.length === 0)
       tmp.storeType = ["A", "B", "C", "D", "E"];
@@ -111,6 +109,9 @@ const ErpFilter = ({ editorOpen, setEditorOpen }: ErpFilterProps) => {
       tmp.sigunguCode = filterStore.areaCode.slice(0, 4);
       tmp.dongCode = `${filterStore.areaCode.slice(0, 4)}00`;
     }
+
+    delete tmp.areaCode;
+    delete tmp.areaText;
 
     getStoreList(tmp).then((res: { data: TypeMapStoreSearch["res"][] }) => {
       const { data } = res;
@@ -290,8 +291,6 @@ const ErpFilter = ({ editorOpen, setEditorOpen }: ErpFilterProps) => {
     removeMarker();
   }, [modalIdx, isOpen]);
 
-  console.log(filterBsD);
-
   return (
     <Flex
       as={motion.div}
@@ -403,549 +402,558 @@ const ErpFilter = ({ editorOpen, setEditorOpen }: ErpFilterProps) => {
         </Fragment>
       )}
       {/* ============================== infoCom의 필터 박스 ============================== */}
-      <Flex
-        pos="absolute"
-        bottom={
-          divRef?.current
-            ? `calc(${divRef.current.clientHeight}px + 0.25rem)`
-            : "5.25rem"
-        }
-        left="50%"
-        transform="translateX(-50%)"
-        p="1.125rem 1.375rem 1rem"
-        w="29.5rem"
-        display={!isToolOpen && openIdx === 1 ? "flex" : "none"}
-        direction="column"
-        justify="center"
-        border="1px solid #BFBFBF"
-      >
-        <Flex justify="space-between">
-          <Flex pl="0.25rem" align="center" gap="0.5rem">
-            <IcoStore width="0.625rem" height="0.625rem" color="font.primary" />
-            <Heading as={"h5"} variant="filterBox">
-              매장조회
-            </Heading>
+      {openIdx === 1 ? (
+        <Flex
+          pos="absolute"
+          bottom={
+            divRef?.current
+              ? `calc(${divRef.current.clientHeight}px + 0.25rem)`
+              : "5.25rem"
+          }
+          left="50%"
+          transform="translateX(-50%)"
+          p="1.125rem 1.375rem 1rem"
+          w="29.5rem"
+          display={!isToolOpen && openIdx === 1 ? "flex" : "none"}
+          direction="column"
+          justify="center"
+          border="1px solid #BFBFBF"
+        >
+          <Flex justify="space-between">
+            <Flex pl="0.25rem" align="center" gap="0.5rem">
+              <IcoStore
+                width="0.625rem"
+                height="0.625rem"
+                color="font.primary"
+              />
+              <Heading as={"h5"} variant="filterBox">
+                매장조회
+              </Heading>
+            </Flex>
+            <Flex align="center" gap="0.5rem">
+              <SwitchFilter
+                isChecked={erpStore.show}
+                onChange={() => {
+                  setErpStore({ ...erpStore, show: !erpStore.show });
+                }}
+              />
+              <BtnFilterSearch onClick={searchStoreHandler} />
+            </Flex>
           </Flex>
-          <Flex align="center" gap="0.5rem">
-            <SwitchFilter
-              isChecked={erpStore.show}
-              onChange={() => {
-                setErpStore({ ...erpStore, show: !erpStore.show });
-              }}
-            />
-            <BtnFilterSearch onClick={searchStoreHandler} />
-          </Flex>
-        </Flex>
-        <Deco01 margin="0.25rem 0 0.75rem" width="100%" height="0.3125rem" />
-        <Flex p="0 0.25rem" direction="column" gap="0.625rem">
-          <Flex align="center">
-            <FormLabel
-              display="flex"
-              alignItems="center"
-              flex="none"
-              m="0"
-              w="2.8rem"
-              textStyle="base"
-              fontSize="xs"
-              fontWeight="strong"
-              color="font.secondary"
-            >
-              검색
-            </FormLabel>
-            <Flex w="100%" gap="0.5rem">
-              <Select
-                data={[
-                  { text: "매장명", value: "name" },
-                  { text: "매장코드", value: "code" },
-                  { text: "대표자", value: "owner_name" },
+          <Deco01 margin="0.25rem 0 0.75rem" width="100%" height="0.3125rem" />
+          <Flex p="0 0.25rem" direction="column" gap="0.625rem">
+            <Flex align="center">
+              <FormLabel
+                display="flex"
+                alignItems="center"
+                flex="none"
+                m="0"
+                w="2.8rem"
+                textStyle="base"
+                fontSize="xs"
+                fontWeight="strong"
+                color="font.secondary"
+              >
+                검색
+              </FormLabel>
+              <Flex w="100%" gap="0.5rem">
+                <Select
+                  data={[
+                    { text: "매장명", value: "name" },
+                    { text: "매장코드", value: "code" },
+                    { text: "대표자", value: "owner_name" },
+                  ]}
+                  opBaseTxt="text"
+                  opBaseId="value"
+                  opBaseKey="value"
+                  value={filterStore.searchType}
+                  onChange={(val: "name" | "code" | "owner_name") => {
+                    setFilterStore({
+                      ...filterStore,
+                      searchType: val,
+                    });
+                  }}
+                  selectProps={{ w: "30%" }}
+                />
+                <Input
+                  inputProps={{ w: "100%" }}
+                  placeholder={"매장명, 코드, 대표자를 입력해주세요"}
+                  value={filterStore.text || ""}
+                  onChange={(val: any) => {
+                    setFilterStore({
+                      ...filterStore,
+                      text: val || "",
+                    });
+                  }}
+                />
+              </Flex>
+            </Flex>
+            <Flex align="center">
+              <FormLabel
+                display="flex"
+                alignItems="center"
+                flex="none"
+                m="0"
+                w="2.8rem"
+                textStyle="base"
+                fontSize="xs"
+                fontWeight="strong"
+                color="font.secondary"
+              >
+                지역
+              </FormLabel>
+              <Flex w="100%" gap="0.5rem">
+                <SelectAddr
+                  key="store-addr-slct"
+                  value={filterStore.areaCode || ""}
+                  onChange={(code: string) => {
+                    setFilterStore({
+                      ...filterStore,
+                      areaCode: code || "",
+                    });
+                  }}
+                />
+              </Flex>
+            </Flex>
+            <Flex align="center">
+              <FormLabel
+                display="flex"
+                alignItems="center"
+                flex="none"
+                m="0"
+                w="2.8rem"
+                textStyle="base"
+                fontSize="xs"
+                fontWeight="strong"
+                color="font.secondary"
+              >
+                타입
+              </FormLabel>
+              <CheckboxGroup
+                chkboxData={[
+                  { text: "A타입", value: "A" },
+                  { text: "B타입", value: "B" },
+                  { text: "C타입", value: "C" },
+                  { text: "D타입", value: "D" },
+                  { text: "E타입", value: "E" },
                 ]}
-                opBaseTxt="text"
-                opBaseId="value"
-                opBaseKey="value"
-                value={filterStore.searchType}
-                onChange={(val: "name" | "code" | "owner_name") => {
-                  setFilterStore({
-                    ...filterStore,
-                    searchType: val,
-                  });
-                }}
-                selectProps={{ w: "30%" }}
-              />
-              <Input
-                inputProps={{ w: "100%" }}
-                placeholder={"매장명, 코드, 대표자를 입력해주세요"}
-                value={filterStore.text || ""}
+                chkValue={filterStore.storeType || []}
+                activeTotal={true}
                 onChange={(val: any) => {
                   setFilterStore({
                     ...filterStore,
-                    text: val || "",
+                    storeType: val.length === 0 ? [] : val,
                   });
+                }}
+                groupProps={{
+                  w: "max-content",
                 }}
               />
             </Flex>
-          </Flex>
-          <Flex align="center">
-            <FormLabel
-              display="flex"
-              alignItems="center"
-              flex="none"
-              m="0"
-              w="2.8rem"
-              textStyle="base"
-              fontSize="xs"
-              fontWeight="strong"
-              color="font.secondary"
-            >
-              지역
-            </FormLabel>
-            <Flex w="100%" gap="0.5rem">
-              <SelectAddr
-                key="store-addr-slct"
-                value={filterStore.areaCode || ""}
-                onChange={(code: string) => {
-                  setFilterStore({
-                    ...filterStore,
-                    areaCode: code || "",
-                  });
-                }}
-              />
-            </Flex>
-          </Flex>
-          <Flex align="center">
-            <FormLabel
-              display="flex"
-              alignItems="center"
-              flex="none"
-              m="0"
-              w="2.8rem"
-              textStyle="base"
-              fontSize="xs"
-              fontWeight="strong"
-              color="font.secondary"
-            >
-              타입
-            </FormLabel>
-            <CheckboxGroup
-              chkboxData={[
-                { text: "A타입", value: "A" },
-                { text: "B타입", value: "B" },
-                { text: "C타입", value: "C" },
-                { text: "D타입", value: "D" },
-                { text: "E타입", value: "E" },
-              ]}
-              chkValue={filterStore.storeType || []}
-              activeTotal={true}
-              onChange={(val: any) => {
-                setFilterStore({
-                  ...filterStore,
-                  storeType: val.length === 0 ? [] : val,
-                });
-              }}
-              groupProps={{
-                w: "max-content",
-              }}
-            />
-          </Flex>
-          <Flex align="center">
-            <FormLabel
-              display="flex"
-              alignItems="center"
-              flex="none"
-              m="0"
-              w="2.8rem"
-              textStyle="base"
-              fontSize="xs"
-              fontWeight="strong"
-              color="font.secondary"
-            >
-              상태
-            </FormLabel>
-            <CheckboxGroup
-              chkboxData={[
-                { text: "입점", value: "open" },
-                { text: "휴점", value: "rest" },
-                { text: "폐점", value: "close" },
-                { text: "대기", value: "ready" },
-                { text: "기타", value: "etc" },
-              ]}
-              chkValue={filterStore.storeStatus || []}
-              activeTotal={true}
-              onChange={(val: any) => {
-                setFilterStore({
-                  ...filterStore,
-                  storeStatus: val.length === 0 ? [] : val,
-                });
-              }}
-              groupProps={{
-                w: "max-content",
-              }}
-            />
-          </Flex>
-        </Flex>
-        <DecoCardBg />
-      </Flex>
-      <Flex
-        pos="absolute"
-        bottom={
-          divRef?.current
-            ? `calc(${divRef.current.clientHeight}px + 0.25rem)`
-            : "5.25rem"
-        }
-        left="50%"
-        transform="translateX(-50%)"
-        p="1.125rem 1.375rem 1rem"
-        w="29.5rem"
-        display={openIdx === 2 && !isToolOpen ? "flex" : "none"}
-        direction="column"
-        justify="center"
-        border="1px solid #BFBFBF"
-      >
-        <Flex justify="space-between">
-          <Flex pl="0.25rem" align="center" gap="0.5rem">
-            <IcoDoubleSquere
-              width="0.625rem"
-              height="0.625rem"
-              color="font.primary"
-            />
-            <Heading as={"h5"} variant="filterBox">
-              상권조회
-            </Heading>
-          </Flex>
-          <Flex align="center" gap="0.5rem">
-            <SwitchFilter
-              isChecked={erpBsD.show}
-              onChange={() => {
-                setErpBsD({ ...erpBsD, show: !erpBsD.show });
-              }}
-              variant="filterControl"
-            />
-            <BtnFilterSearch onClick={searchBsDHandler} />
-          </Flex>
-        </Flex>
-        <Deco01 margin="0.25rem 0 0.75rem" width="100%" height="0.3125rem" />
-        <Flex p="0 0.25rem" direction="column" gap="0.625rem">
-          <Flex align="center">
-            <FormLabel
-              display="flex"
-              alignItems="center"
-              flex="none"
-              m="0"
-              w="2.8rem"
-              fontSize="xs"
-              fontWeight="strong"
-            >
-              검색
-            </FormLabel>
-            <Flex w="100%" gap="0.5rem">
-              <Select
-                data={[
-                  { text: "상권명", value: "bsDisName" },
-                  { text: "상권코드", value: "bsDisCode" },
+            <Flex align="center">
+              <FormLabel
+                display="flex"
+                alignItems="center"
+                flex="none"
+                m="0"
+                w="2.8rem"
+                textStyle="base"
+                fontSize="xs"
+                fontWeight="strong"
+                color="font.secondary"
+              >
+                상태
+              </FormLabel>
+              <CheckboxGroup
+                chkboxData={[
+                  { text: "입점", value: "open" },
+                  { text: "휴점", value: "rest" },
+                  { text: "폐점", value: "close" },
+                  { text: "대기", value: "ready" },
+                  { text: "기타", value: "etc" },
                 ]}
-                value={filterBsD.searchType}
-                opBaseTxt="text"
-                opBaseId="value"
-                opBaseKey="value"
+                chkValue={filterStore.storeStatus || []}
+                activeTotal={true}
                 onChange={(val: any) => {
-                  setFilterBsD({
-                    ...filterBsD,
-                    searchType: val,
+                  setFilterStore({
+                    ...filterStore,
+                    storeStatus: val.length === 0 ? [] : val,
                   });
                 }}
-                selectProps={{ w: "30%" }}
-              />
-              <Input
-                inputProps={{ w: "100%" }}
-                placeholder={
-                  filterBsD.searchType === "bsDisName"
-                    ? "상권명를 입력해주세요"
-                    : "상권코드를 입력해주세요"
-                }
-                value={filterBsD.text || ""}
-                onChange={(val: any) => {
-                  setFilterBsD({
-                    ...filterBsD,
-                    text: val || "",
-                  });
+                groupProps={{
+                  w: "max-content",
                 }}
               />
             </Flex>
           </Flex>
-          <Flex align="center">
-            <FormLabel
-              display="flex"
-              alignItems="center"
-              flex="none"
-              m="0"
-              w="2.8rem"
-              fontSize="xs"
-              fontWeight="strong"
-            >
-              지역
-            </FormLabel>
-            <Flex w="100%" gap="0.5rem">
-              <SelectAddr
-                key="bs-addr-slct"
-                value={filterBsD.areaCode || ""}
-                onChange={(code: string) => {
+          <DecoCardBg />
+        </Flex>
+      ) : openIdx === 2 ? (
+        <Flex
+          pos="absolute"
+          bottom={
+            divRef?.current
+              ? `calc(${divRef.current.clientHeight}px + 0.25rem)`
+              : "5.25rem"
+          }
+          left="50%"
+          transform="translateX(-50%)"
+          p="1.125rem 1.375rem 1rem"
+          w="29.5rem"
+          display={openIdx === 2 && !isToolOpen ? "flex" : "none"}
+          direction="column"
+          justify="center"
+          border="1px solid #BFBFBF"
+        >
+          <Flex justify="space-between">
+            <Flex pl="0.25rem" align="center" gap="0.5rem">
+              <IcoDoubleSquere
+                width="0.625rem"
+                height="0.625rem"
+                color="font.primary"
+              />
+              <Heading as={"h5"} variant="filterBox">
+                상권조회
+              </Heading>
+            </Flex>
+            <Flex align="center" gap="0.5rem">
+              <SwitchFilter
+                isChecked={erpBsD.show}
+                onChange={() => {
+                  setErpBsD({ ...erpBsD, show: !erpBsD.show });
+                }}
+                variant="filterControl"
+              />
+              <BtnFilterSearch onClick={searchBsDHandler} />
+            </Flex>
+          </Flex>
+          <Deco01 margin="0.25rem 0 0.75rem" width="100%" height="0.3125rem" />
+          <Flex p="0 0.25rem" direction="column" gap="0.625rem">
+            <Flex align="center">
+              <FormLabel
+                display="flex"
+                alignItems="center"
+                flex="none"
+                m="0"
+                w="2.8rem"
+                fontSize="xs"
+                fontWeight="strong"
+              >
+                검색
+              </FormLabel>
+              <Flex w="100%" gap="0.5rem">
+                <Select
+                  data={[
+                    { text: "상권명", value: "bsDisName" },
+                    { text: "상권코드", value: "bsDisCode" },
+                  ]}
+                  value={filterBsD.searchType}
+                  opBaseTxt="text"
+                  opBaseId="value"
+                  opBaseKey="value"
+                  onChange={(val: any) => {
+                    setFilterBsD({
+                      ...filterBsD,
+                      searchType: val,
+                    });
+                  }}
+                  selectProps={{ w: "30%" }}
+                />
+                <Input
+                  inputProps={{ w: "100%" }}
+                  placeholder={
+                    filterBsD.searchType === "bsDisName"
+                      ? "상권명를 입력해주세요"
+                      : "상권코드를 입력해주세요"
+                  }
+                  value={filterBsD.text || ""}
+                  onChange={(val: any) => {
+                    setFilterBsD({
+                      ...filterBsD,
+                      text: val || "",
+                    });
+                  }}
+                />
+              </Flex>
+            </Flex>
+            <Flex align="center">
+              <FormLabel
+                display="flex"
+                alignItems="center"
+                flex="none"
+                m="0"
+                w="2.8rem"
+                fontSize="xs"
+                fontWeight="strong"
+              >
+                지역
+              </FormLabel>
+              <Flex w="100%" gap="0.5rem">
+                <SelectAddr
+                  key="bs-addr-slct"
+                  value={filterBsD.areaCode || ""}
+                  onChange={(code: string) => {
+                    setFilterBsD({
+                      ...filterBsD,
+                      areaCode: code || "",
+                    });
+                  }}
+                />
+              </Flex>
+            </Flex>
+            <Flex align="center">
+              <FormLabel
+                display="flex"
+                alignItems="center"
+                flex="none"
+                m="0"
+                w="2.8rem"
+                fontSize="xs"
+                fontWeight="strong"
+              >
+                타입
+              </FormLabel>
+              <CheckboxGroup
+                chkboxData={[
+                  { text: "상권1", value: "A" },
+                  { text: "상권2", value: "B" },
+                  { text: "상권3", value: "C" },
+                  { text: "상권4", value: "D" },
+                  { text: "상권5", value: "E" },
+                ]}
+                chkValue={filterBsD.bsDisType || []}
+                activeTotal={true}
+                onChange={(val: any) => {
                   setFilterBsD({
                     ...filterBsD,
-                    areaCode: code || "",
+                    bsDisType: val.length === 0 ? [] : val,
                   });
+                }}
+                groupProps={{
+                  w: "max-content",
                 }}
               />
             </Flex>
           </Flex>
-          <Flex align="center">
-            <FormLabel
-              display="flex"
-              alignItems="center"
-              flex="none"
-              m="0"
-              w="2.8rem"
-              fontSize="xs"
-              fontWeight="strong"
-            >
-              타입
-            </FormLabel>
-            <CheckboxGroup
-              chkboxData={[
-                { text: "상권1", value: "A" },
-                { text: "상권2", value: "B" },
-                { text: "상권3", value: "C" },
-                { text: "상권4", value: "D" },
-                { text: "상권5", value: "E" },
-              ]}
-              chkValue={filterBsD.bsDisType || []}
-              activeTotal={true}
-              onChange={(val: any) => {
-                setFilterBsD({
-                  ...filterBsD,
-                  bsDisType: val.length === 0 ? [] : val,
-                });
-              }}
-              groupProps={{
-                w: "max-content",
-              }}
-            />
-          </Flex>
+          <DecoCardBg />
         </Flex>
-        <DecoCardBg />
-      </Flex>
-      <Flex
-        pos="absolute"
-        bottom={
-          divRef?.current
-            ? `calc(${divRef.current.clientHeight}px + 0.25rem)`
-            : "5.25rem"
-        }
-        left="50%"
-        transform="translateX(-50%)"
-        p="1.125rem 1.375rem 1rem"
-        w="29.5rem"
-        display={openIdx === 3 && !isToolOpen ? "flex" : "none"}
-        direction="column"
-        justify="center"
-        border="1px solid #BFBFBF"
-      >
-        <Flex justify="space-between">
-          <Flex pl="0.25rem" align="center" gap="0.5rem">
-            <IcoFileSearch
-              width="0.625rem"
-              height="0.625rem"
-              color="font.primary"
-            />
-            <Heading as={"h5"} variant="filterBox">
-              매물조회
-            </Heading>
+      ) : openIdx === 3 ? (
+        <Flex
+          pos="absolute"
+          bottom={
+            divRef?.current
+              ? `calc(${divRef.current.clientHeight}px + 0.25rem)`
+              : "5.25rem"
+          }
+          left="50%"
+          transform="translateX(-50%)"
+          p="1.125rem 1.375rem 1rem"
+          w="29.5rem"
+          display={openIdx === 3 && !isToolOpen ? "flex" : "none"}
+          direction="column"
+          justify="center"
+          border="1px solid #BFBFBF"
+        >
+          <Flex justify="space-between">
+            <Flex pl="0.25rem" align="center" gap="0.5rem">
+              <IcoFileSearch
+                width="0.625rem"
+                height="0.625rem"
+                color="font.primary"
+              />
+              <Heading as={"h5"} variant="filterBox">
+                매물조회
+              </Heading>
+            </Flex>
+            <Flex align="center" gap="0.5rem">
+              <SwitchFilter
+                isChecked={erpRent.show}
+                onChange={() => {
+                  setErpRent({ ...erpRent, show: !erpRent.show });
+                }}
+                variant="filterControl"
+              />
+              <BtnFilterSearch onClick={searchRentHandler} />
+            </Flex>
           </Flex>
-          <Flex align="center" gap="0.5rem">
-            <SwitchFilter
-              isChecked={erpRent.show}
-              onChange={() => {
-                setErpRent({ ...erpRent, show: !erpRent.show });
-              }}
-              variant="filterControl"
-            />
-            <BtnFilterSearch onClick={searchRentHandler} />
-          </Flex>
-        </Flex>
-        <Deco01 margin="0.25rem 0 0.75rem" width="100%" height="0.3125rem" />
-        <Flex p="0 0.25rem" direction="column" gap="0.625rem">
-          <Flex align="center">
-            <FormLabel
-              display="flex"
-              alignItems="center"
-              flex="none"
-              m="0"
-              w="2.8rem"
-              fontSize="xs"
-              fontWeight="strong"
-            >
-              검색
-            </FormLabel>
-            <Flex w="100%">
-              <Input
-                inputProps={{ w: "100%" }}
-                placeholder={"매물명를 입력해주세요"}
-                value={filterRent.text || ""}
+          <Deco01 margin="0.25rem 0 0.75rem" width="100%" height="0.3125rem" />
+          <Flex p="0 0.25rem" direction="column" gap="0.625rem">
+            <Flex align="center">
+              <FormLabel
+                display="flex"
+                alignItems="center"
+                flex="none"
+                m="0"
+                w="2.8rem"
+                fontSize="xs"
+                fontWeight="strong"
+              >
+                검색
+              </FormLabel>
+              <Flex w="100%">
+                <Input
+                  inputProps={{ w: "100%" }}
+                  placeholder={"매물명를 입력해주세요"}
+                  value={filterRent.text || ""}
+                  onChange={(val: any) => {
+                    setFilterRent({
+                      ...filterRent,
+                      text: val || "",
+                    });
+                  }}
+                />
+              </Flex>
+            </Flex>
+            <Flex align="center">
+              <FormLabel
+                display="flex"
+                alignItems="center"
+                flex="none"
+                m="0"
+                w="2.8rem"
+                fontSize="xs"
+                fontWeight="strong"
+              >
+                지역
+              </FormLabel>
+              <Flex w="100%" gap="0.5rem">
+                <SelectAddr
+                  key="rent-addr-slct"
+                  value={filterRent.areaCode || ""}
+                  onChange={(code: string) => {
+                    setFilterRent({
+                      ...filterRent,
+                      areaCode: code || "",
+                    });
+                  }}
+                />
+              </Flex>
+            </Flex>
+            <Flex align="center">
+              <FormLabel
+                display="flex"
+                alignItems="center"
+                flex="none"
+                m="0"
+                w="2.8rem"
+                fontSize="xs"
+                fontWeight="strong"
+              >
+                타입
+              </FormLabel>
+              <CheckboxGroup
+                chkboxData={[
+                  { text: "A타입", value: "A" },
+                  { text: "B타입", value: "B" },
+                  { text: "C타입", value: "C" },
+                  { text: "D타입", value: "D" },
+                  { text: "E타입", value: "E" },
+                ]}
+                chkValue={filterRent.rentType || []}
+                activeTotal={true}
                 onChange={(val: any) => {
                   setFilterRent({
                     ...filterRent,
-                    text: val || "",
+                    rentType: val.length === 0 ? [] : val,
                   });
+                }}
+                groupProps={{
+                  w: "max-content",
                 }}
               />
             </Flex>
           </Flex>
-          <Flex align="center">
-            <FormLabel
-              display="flex"
-              alignItems="center"
-              flex="none"
-              m="0"
-              w="2.8rem"
-              fontSize="xs"
-              fontWeight="strong"
-            >
-              지역
-            </FormLabel>
-            <Flex w="100%" gap="0.5rem">
-              <SelectAddr
-                key="rent-addr-slct"
-                value={filterRent.areaCode || ""}
-                onChange={(code: string) => {
-                  setFilterRent({
-                    ...filterRent,
-                    areaCode: code || "",
-                  });
-                }}
-              />
-            </Flex>
-          </Flex>
-          <Flex align="center">
-            <FormLabel
-              display="flex"
-              alignItems="center"
-              flex="none"
-              m="0"
-              w="2.8rem"
-              fontSize="xs"
-              fontWeight="strong"
-            >
-              타입
-            </FormLabel>
-            <CheckboxGroup
-              chkboxData={[
-                { text: "A타입", value: "A" },
-                { text: "B타입", value: "B" },
-                { text: "C타입", value: "C" },
-                { text: "D타입", value: "D" },
-                { text: "E타입", value: "E" },
-              ]}
-              chkValue={filterRent.rentType || []}
-              activeTotal={true}
-              onChange={(val: any) => {
-                setFilterRent({
-                  ...filterRent,
-                  rentType: val.length === 0 ? [] : val,
-                });
-              }}
-              groupProps={{
-                w: "max-content",
-              }}
-            />
-          </Flex>
+          <DecoCardBg />
         </Flex>
-        <DecoCardBg />
-      </Flex>
-      <Flex
-        pos="absolute"
-        bottom={
-          divRef?.current
-            ? `calc(${divRef.current.clientHeight}px + 0.25rem)`
-            : "5.25rem"
-        }
-        left="50%"
-        transform="translateX(-50%)"
-        p="1.125rem 1.375rem 1rem"
-        w="29.5rem"
-        display={openIdx === 4 && !isToolOpen ? "flex" : "none"}
-        direction="column"
-        justify="center"
-        border="1px solid #BFBFBF"
-      >
-        <Flex justify="space-between">
-          <Flex pl="0.25rem" align="center" gap="1rem">
-            <Heading as={"h5"} variant="filterBox">
-              생성
-            </Heading>
-            <IcoPlusSquare02
-              width="0.875rem"
-              height="0.875rem"
-              color="font.title"
-            />
-          </Flex>
-          <Flex align="center" gap="0.5rem">
-            <Button
-              variant="filterSearch"
-              aria-label="생성하기"
-              onClick={() => {
-                setEditorOpen(true);
-                if (localModalIdx === 2) {
-                  isOpen && onClose();
-                  setModalIdx(localModalIdx);
-                  toolOpen(true);
-                } else {
-                  setModalIdx(localModalIdx);
-                  onOpen();
-                }
-              }}
-            >
-              <IcoCheck
+      ) : openIdx === 4 ? (
+        <Flex
+          pos="absolute"
+          bottom={
+            divRef?.current
+              ? `calc(${divRef.current.clientHeight}px + 0.25rem)`
+              : "5.25rem"
+          }
+          left="50%"
+          transform="translateX(-50%)"
+          p="1.125rem 1.375rem 1rem"
+          w="29.5rem"
+          display={openIdx === 4 && !isToolOpen ? "flex" : "none"}
+          direction="column"
+          justify="center"
+          border="1px solid #BFBFBF"
+        >
+          <Flex justify="space-between">
+            <Flex pl="0.25rem" align="center" gap="1rem">
+              <Heading as={"h5"} variant="filterBox">
+                생성
+              </Heading>
+              <IcoPlusSquare02
                 width="0.875rem"
                 height="0.875rem"
-                color="primary.inverse"
+                color="font.title"
               />
-              생성
-            </Button>
+            </Flex>
+            <Flex align="center" gap="0.5rem">
+              <Button
+                variant="filterSearch"
+                aria-label="생성하기"
+                onClick={() => {
+                  setEditorOpen(true);
+                  if (localModalIdx === 2) {
+                    isOpen && onClose();
+                    setModalIdx(localModalIdx);
+                    toolOpen(true);
+                  } else {
+                    setModalIdx(localModalIdx);
+                    onOpen();
+                  }
+                }}
+              >
+                <IcoCheck
+                  width="0.875rem"
+                  height="0.875rem"
+                  color="primary.inverse"
+                />
+                생성
+              </Button>
+            </Flex>
           </Flex>
-        </Flex>
-        <Deco01 margin="0.25rem 0 0.75rem" width="100%" height="0.3125rem" />
-        <Flex p="0 0.25rem" direction="column" gap="0.625rem">
-          <Flex align="center">
-            <FormLabel
-              display="flex"
-              alignItems="center"
-              flex="none"
-              m="0"
-              w="2.8rem"
-              fontSize="xs"
-              fontWeight="strong"
-            >
-              타입
-            </FormLabel>
-            <RadioBox
-              variant="filterBox"
-              values={[
-                { text: "매장", value: 1 },
-                { text: "상권", value: 2 },
-                { text: "매물", value: 3 },
-              ]}
-              fieldKey="value"
-              value={localModalIdx}
-              onChange={(val: any) => {
-                setLocalModalIdx(Number(val));
-              }}
-              radioProps={{
-                w: "max-content",
-                justifyContent: "space-between",
-              }}
-            />
+          <Deco01 margin="0.25rem 0 0.75rem" width="100%" height="0.3125rem" />
+          <Flex p="0 0.25rem" direction="column" gap="0.625rem">
+            <Flex align="center">
+              <FormLabel
+                display="flex"
+                alignItems="center"
+                flex="none"
+                m="0"
+                w="2.8rem"
+                fontSize="xs"
+                fontWeight="strong"
+              >
+                타입
+              </FormLabel>
+              <RadioBox
+                variant="filterBox"
+                values={[
+                  { text: "매장", value: 1 },
+                  { text: "상권", value: 2 },
+                  { text: "매물", value: 3 },
+                ]}
+                fieldKey="value"
+                value={localModalIdx}
+                onChange={(val: any) => {
+                  setLocalModalIdx(Number(val));
+                }}
+                radioProps={{
+                  w: "max-content",
+                  justifyContent: "space-between",
+                }}
+              />
+            </Flex>
           </Flex>
+          <DecoCardBg />
         </Flex>
-        <DecoCardBg />
-      </Flex>
+      ) : null}
       {modalIdx === 1 && isOpen ? (
         <ModalStoreEditor
           onOpen={onOpen}

@@ -13,6 +13,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import {
   Flex,
   Heading,
+  Image,
   List,
   ListItem,
   Tab,
@@ -33,8 +34,9 @@ import { apiMapBuilding } from "@api/bizSub/config";
 //  Util
 import { searchRange } from "@util/define/map";
 //  Icon
-import { IcoVillage } from "@assets/icons/icon";
+import { IcoBuildingList } from "@assets/icons/icon";
 import markerBrand from "@assets/icons/marker_brand.png";
+import IconBrand from "@assets/icons/list_brand.png";
 //  Deco
 import { Deco01 } from "@assets/deco/DecoSvg";
 
@@ -60,6 +62,7 @@ const DepthListBox = memo(
     const flow = useRecoilValue(atomFilterFlow);
     const setSv = useSetRecoilState(sementicViewState);
     const buildingList = useRef<any[] | null>(null);
+    const [tabIdx, setTabIdx] = useState<number>(0);
 
     const resetRef = useCallback(() => {
       if (
@@ -388,6 +391,7 @@ const DepthListBox = memo(
         borderRight="none"
         bg="linear-gradient(90deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0) 100%)"
         backdropFilter="blur(2px)"
+        gap="0.75rem"
       >
         <Flex
           w="100%"
@@ -407,80 +411,33 @@ const DepthListBox = memo(
             사업체 데이터
           </Heading>
         </Flex>
-        <Deco01 margin="0.75rem 0 0.5rem" width="100%" height="auto" />
-        <Tabs variant="depthListBox">
+        <Deco01 width="100%" height="auto" />
+        <Tabs
+          variant="depthListBox"
+          // index={tabIdx}
+          // onChange={(index) => setTabIdx(index)}
+        >
           <TabList border="none">
-            {brandList && brandList.length > 0 && <Tab>사업체</Tab>}
-            <Tab>건물</Tab>
-          </TabList>
-          <TabPanels>
-            {/* {brandList && brandList.length > 0 && (
-            <TabPanel>
-              <List display="flex" flexDirection="column">
-                {brandList.map(({ storeNm }, idx: number) => {
-                  return (
-                    <ListItem
-                      key={`brandList-${idx}`}
-                      p="1rem 0rem 0.75rem"
-                      display="flex"
-                      alignItems="center"
-                      gap="0.75rem"
-                      bg={
-                        slctNice?.hoverId === `markerBrand-${idx}`
-                          ? "linear-gradient(90deg, rgba(255, 236, 61, 0) 0%, #FFEC3D 36.2%, rgba(255, 236, 61, 0) 92.66%)"
-                          : "transparent"
-                      }
-                      borderBottom="1px solid"
-                      borderColor="neutral.gray8"
-                      transition="0.2s"
-                      _hover={{
-                        fontWeight: "strong",
-                        cursor: "pointer",
-                      }}
-                      onMouseEnter={() => {
-                        setSlctNice({
-                          ...slctNice,
-                          name: storeNm,
-                          hoverId: `markerBrand-${idx}`,
-                        });
-                      }}
-                      onMouseLeave={() => {
-                        setSlctNice({ ...slctNice, name: "", hoverId: "" });
-                      }}
-                    >
-                      <Flex
-                        justify="center"
-                        align="center"
-                        w="2.5rem"
-                        h="2rem"
-                        bgColor="secondary.third.type5"
-                        border="1px solid"
-                        borderColor="neutral.gray8"
-                        borderRadius="2px"
-                      >
-                        <IcoBuildingList color="#FFFFFFD9" />
-                      </Flex>
-                      <Text
-                        textStyle="base"
-                        fontSize="md"
-                        fontWeight="strong"
-                        color="font.primary"
-                      >
-                        {storeNm}
-                      </Text>
-                    </ListItem>
-                  );
-                })}
-              </List>
-            </TabPanel>
-          )} */}
             {brandShow && brandList && brandList.length > 0 && (
-              <TabPanel>
+              <Tab>사업체</Tab>
+            )}
+            {buildShow && buildList && buildList.length > 0 && <Tab>건물</Tab>}
+          </TabList>
+          <TabPanels
+            overflowY="scroll"
+            sx={{
+              "::-webkit-scrollbar": {
+                w: "0px",
+              },
+            }}
+          >
+            {brandShow && brandList && brandList.length > 0 && (
+              <TabPanel p="0" h="max-content">
                 <ListBrand brandShow={brandShow} brandList={brandList} />
               </TabPanel>
             )}
             {buildShow && buildList && buildList.length > 0 && (
-              <TabPanel>
+              <TabPanel p="0" h="max-content">
                 <ListBuilding buildShow={buildShow} buildList={buildList} />
               </TabPanel>
             )}
@@ -549,19 +506,130 @@ const ListItemBrand = ({
   const { state } = useContext(NaverMapContext);
   const [isHover, onHover] = useState<boolean>(false);
   const [cursorPo, setCursorPo] = useState<[number, number] | null>(null);
+  const markerRef = useRef<any>(null);
 
   useEffect(() => {
-    if (isHover && state?.objects && state.objects.size !== 0) {
-      let obj: any = state?.objects.get(`markerBrand-${idx}`);
-
-      if (obj) {
-        const pos = obj.getPosition();
-        setCursorPo(pos);
-      }
+    if (isHover && markerRef.current) {
+      const pos = markerRef.current.getPosition();
+      setCursorPo(pos);
     } else {
       setCursorPo(null);
     }
   }, [isHover]);
+
+  useEffect(() => {
+    if (state.map) {
+      let zoom = state.map.getZoom() || 0;
+
+      if (zoom >= 17 && isShow) {
+        const center = state.map.getCenter();
+        const circle = new naver.maps.Circle({
+          map: state.map,
+          center: center,
+          radius: searchRange[zoom],
+        });
+        const circleBounds = circle.getBounds();
+        const point = new naver.maps.LatLng(lat, lng);
+
+        if (circleBounds.hasPoint(point) && !markerRef.current) {
+          const marker = new naver.maps.Marker({
+            map: state.map,
+            position: [lng, lat],
+            icon: {
+              url: markerBrand,
+              size: new naver.maps.Size(50, 50),
+              anchor: new naver.maps.Point(24, 42),
+            },
+            zIndex: 103,
+          });
+
+          marker.addListener("mouseover", () => {
+            onHover(true);
+          });
+
+          marker.addListener("mouseout", () => {
+            onHover(false);
+          });
+
+          markerRef.current = marker;
+        } else {
+          if (markerRef.current) markerRef.current.setMap(null);
+          markerRef.current = null;
+        }
+        circle.setMap(null);
+      } else {
+        if (markerRef.current) markerRef.current.setMap(null);
+        markerRef.current = null;
+      }
+    }
+
+    let timer: any;
+    const zoomEvent = naver.maps.Event.addListener(
+      state.map,
+      "bounds_changed",
+      (e) => {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(function () {
+          if (state.map && isShow) {
+            let zoom = state.map?.getZoom() || 0;
+
+            if (zoom < 17 && markerRef.current) {
+              markerRef.current.setMap(null);
+              markerRef.current = null;
+
+              return;
+            } else if (zoom >= 17) {
+              const center = state.map.getCenter();
+              const circle = new naver.maps.Circle({
+                map: state.map,
+                center: center,
+                radius: searchRange[zoom],
+              });
+              const circleBounds = circle.getBounds();
+              const point = new naver.maps.LatLng(lat, lng);
+
+              if (circleBounds.hasPoint(point) && !markerRef.current) {
+                const marker = new naver.maps.Marker({
+                  map: state.map,
+                  position: [lng, lat],
+                  icon: {
+                    url: markerBrand,
+                    size: new naver.maps.Size(50, 50),
+                    anchor: new naver.maps.Point(24, 42),
+                  },
+                  zIndex: 103,
+                });
+
+                marker.addListener("mouseover", () => {
+                  onHover(true);
+                });
+
+                marker.addListener("mouseout", () => {
+                  onHover(false);
+                });
+
+                markerRef.current = marker;
+              } else {
+                if (markerRef.current) markerRef.current.setMap(null);
+                markerRef.current = null;
+              }
+
+              circle.setMap(null);
+            }
+          } else {
+            if (markerRef.current) markerRef.current.setMap(null);
+            markerRef.current = null;
+          }
+        }, 500);
+      }
+    );
+
+    return () => {
+      naver.maps.Event.removeListener(zoomEvent);
+      if (markerRef.current) markerRef.current.setMap(null);
+      markerRef.current = null;
+    };
+  }, [state.map, state.objects]);
 
   return (
     <Fragment>
@@ -583,22 +651,18 @@ const ListItemBrand = ({
           fontWeight: "strong",
           cursor: "pointer",
         }}
-        onClick={() => {}}
+        onClick={() => {
+          if (state.map) {
+            const point = new naver.maps.LatLng(lat, lng);
+
+            state.map.setCenter(point);
+            state.map.setZoom(18);
+          }
+        }}
         onMouseEnter={() => onHover(true)}
         onMouseLeave={() => onHover(false)}
       >
-        <Flex
-          justify="center"
-          align="center"
-          w="2.5rem"
-          h="2rem"
-          bgColor="secondary.third.type5"
-          border="1px solid"
-          borderColor="neutral.gray8"
-          borderRadius="2px"
-        >
-          <IcoVillage color="#FFFFFFD9" />
-        </Flex>
+        <Image src={IconBrand} />
         <Text
           textStyle="base"
           fontSize="md"
@@ -608,24 +672,6 @@ const ListItemBrand = ({
           {storeNm}
         </Text>
       </ListItem>
-      {isShow && lat && lng && (
-        <Marker
-          key={`markerBrand-${idx}`}
-          id={`markerBrand-${idx}`}
-          opts={{
-            position: [lng, lat],
-            icon: {
-              url: markerBrand,
-              size: new naver.maps.Size(50, 50),
-              anchor: new naver.maps.Point(24, 42),
-            },
-            zIndex: 103,
-          }}
-          onClick={() => {}}
-          onMouseOver={() => onHover(true)}
-          onMouseOut={() => onHover(false)}
-        />
-      )}
       {isShow && isHover && cursorPo && (
         <OverlayView
           id={`infoBox`}
@@ -729,108 +775,22 @@ const ListItemBuilding = ({
   const outEventRef = useRef<any | null>(null);
   const clickEventRef = useRef<any | null>(null);
 
-  // useEffect(() => {
-  //   if (geometry && state.map) {
-  //     if (geoRef.current) state.map?.data.removeGeoJson(geoRef.current);
-  //     if (overEventRef.current)
-  //       state.map?.data.removeListener(overEventRef.current);
-  //     if (outEventRef.current)
-  //       state.map?.data.removeListener(outEventRef.current);
-  //     if (clickEventRef.current)
-  //       state.map?.data.removeListener(clickEventRef.current);
+  // const cursorHandler = useCallback(
+  //   (e: any) => {
+  //     setCursorPo({ x: e?.clientX, y: e?.clientY });
 
-  //     const feature: any = {
-  //       type: "Feature",
-  //       id: mgmBldrgstPk,
-  //       geometry: geometry,
-  //       properties: {
-  //         mgmBldrgstPk: mgmBldrgstPk,
-  //         bldNm: bldNm,
-  //       },
+  //     return () => {
+  //       setCursorPo(null);
   //     };
-  //     // @ts-ignore
-  //     state.map.data.addGeoJson(feature);
-  //     const tmp = state.map.data.getFeatureById(mgmBldrgstPk);
+  //   },
+  //   [state.map]
+  // );
 
-  //     tmp.setStyle({
-  //       fillColor: "#36CFC9",
-  //       fillOpacity: 1,
-  //       strokeColor: "#FFFFFF",
-  //       strokeOpacity: 1,
-  //       strokeWeight: 1,
-  //       zIndex: 102,
-  //     });
-
-  //     // @ts-ignore
-  //     overEventRef.current = tmp.addListener("mouseover", (e) => {
-  //       if (!state.map) return;
-
-  //       tmp.setStyle({
-  //         fillColor: "#08979C",
-  //         fillOpacity: 1,
-  //       });
-
-  //       onHover(true);
-  //       window.addEventListener("mousemove", cursorHandler);
-  //     });
-
-  //     // @ts-ignore
-  //     outEventRef.current = tmp.addListener("mouseout", (e) => {
-  //       if (!state.map) return;
-
-  //       state.map.data.revertStyle(e.feature);
-  //       tmp.setStyle({
-  //         fillColor: "#36CFC9",
-  //         fillOpacity: 1,
-  //       });
-
-  //       onHover(false);
-  //       window.removeEventListener("mousemove", cursorHandler);
-  //     });
-
-  //     // @ts-ignore
-  //     clickEventRef.current = tmp.addListener("click", (e) => {
-  //       if (!state.map) return;
-  //       onHover(false);
-  //       window.removeEventListener("mousemove", cursorHandler);
-
-  //       setSv({
-  //         viewId: "buildingInfo",
-  //         props: { id: mgmBldrgstPk, name: bldNm },
-  //       });
-  //     });
-
-  //     geoRef.current = feature;
-  //   }
-
+  // useEffect(() => {
   //   return () => {
-  //     if (state.map && geoRef.current)
-  //       state.map?.data.removeGeoJson(geoRef.current);
-  //     if (overEventRef.current)
-  //       state.map?.data.removeListener(overEventRef.current);
-  //     if (outEventRef.current)
-  //       state.map?.data.removeListener(outEventRef.current);
-  //     if (clickEventRef.current)
-  //       state.map?.data.removeListener(clickEventRef.current);
+  //     window.removeEventListener("mousemove", cursorHandler);
   //   };
-  // }, [state.map, geometry]);
-
-  const cursorHandler = useCallback(
-    (e: any) => {
-      setCursorPo({ x: e?.clientX, y: e?.clientY });
-
-      return () => {
-        setCursorPo(null);
-      };
-    },
-    [state.map]
-  );
-
-  useEffect(() => {
-    return () => {
-      window.removeEventListener("mousemove", cursorHandler);
-    };
-  }, []);
+  // }, []);
 
   return (
     <Fragment>
@@ -900,7 +860,7 @@ const ListItemBuilding = ({
           borderColor="neutral.gray8"
           borderRadius="50%"
         >
-          <IcoVillage width="1.5rem" height="1.5rem" color="#FFFFFF" />
+          <IcoBuildingList width="1.5rem" height="1.5rem" color="#FFFFFF" />
         </Flex>
         <Flex direction="column">
           <Text

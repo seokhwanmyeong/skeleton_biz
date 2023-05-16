@@ -1,5 +1,5 @@
 //  Lib
-import { useContext, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import { Box, Button, Flex, Text, useDisclosure } from "@chakra-ui/react";
 import {
   useRecoilState,
@@ -77,6 +77,7 @@ const FlowSigungu = () => {
               bounds: bounds || null,
               feature: {
                 type: "Feature",
+                id: li.admiCd,
                 properties: {
                   ...li,
                   code: li.admiCd,
@@ -145,7 +146,7 @@ const FlowSigungu = () => {
   }, [rankList]);
 
   return (
-    <>
+    <Fragment>
       {/* ------------------------------ 상단 ------------------------------*/}
       <Flex
         pos="absolute"
@@ -205,8 +206,15 @@ const FlowSigungu = () => {
         <UpjongListBox />
       </Flex>
       {/* --------------------------- 중단 Frame ---------------------------*/}
-      <Flex w="100%" h="100%" zIndex={1} gap="0.625rem" pointerEvents="none">
-        <DecoFrameL pl="1rem" align="flex-end">
+      <Flex
+        w="100%"
+        h="100%"
+        zIndex={1}
+        gap="0.625rem"
+        pointerEvents="none"
+        align="center"
+      >
+        <DecoFrameL pl="1rem" w="20%" h="770px" align="flex-end">
           <Flex
             p="2px 0"
             maxW="19.25rem"
@@ -221,10 +229,11 @@ const FlowSigungu = () => {
               })}
           </Flex>
         </DecoFrameL>
-        <DecoFrameCenter />
-        <DecoFrameR pr="1rem">
+        <DecoFrameCenter w="60%" h="770px" />
+        <DecoFrameR pr="1rem" w="20%" h="770px">
           <Flex
             p="2px 0"
+            maxW="19.25rem"
             h="100%"
             direction="column"
             justify="space-between"
@@ -261,7 +270,7 @@ const FlowSigungu = () => {
       {isOpen && sigungu?.slctCode && (
         <NiceFilter areaCode={sigungu.slctCode} />
       )}
-    </>
+    </Fragment>
   );
 };
 

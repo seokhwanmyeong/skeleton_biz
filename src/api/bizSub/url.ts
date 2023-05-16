@@ -6,7 +6,7 @@ export const MAP_DONG_GET_LIST = "/v1/area/getAdmiCdArea";
 //  MAP_UPJONG
 export const MAP_UPJONG_TOP = "/v1/franchise_utils/high";
 export const MAP_UPJONG_MID = "/v1/franchise_utils/middle";
-export const MAP_UPJONG_BOT = "/v1/franchise_utils/low";
+export const MAP_UPJONG_BOT = "/v1/franchise_utils/small";
 
 //  MAP_NICE_RANKING
 export const MAP_NICE_RANKING = "/v1/niceapi/getGuCustDataList";

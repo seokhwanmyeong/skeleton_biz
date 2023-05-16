@@ -758,7 +758,7 @@ const DrawAddr = () => {
                     ? `그리기 (반경: ${distance?.toFixed(2)}m)`
                     : `반경 ${distance}m`}
                 </Text>
-                {distance > 1000 && (
+                {distance > 2000 && (
                   <Text
                     textStyle="base"
                     fontSize="sm"

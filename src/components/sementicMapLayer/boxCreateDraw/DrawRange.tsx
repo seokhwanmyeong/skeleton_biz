@@ -293,7 +293,7 @@ const DrawRange = ({ modalOpen, setActiveIdx }: any) => {
             top="0.5rem"
             left="0.5rem"
             p="1rem"
-            w={distance <= 1000 ? "13rem" : "20rem"}
+            w={distance <= 2000 ? "13rem" : "20rem"}
             direction="column"
             gap="0.5rem"
             bgColor="#FFFFFFD9"
@@ -324,7 +324,7 @@ const DrawRange = ({ modalOpen, setActiveIdx }: any) => {
                 >
                   반경
                 </Text>
-                {distance <= 1000 ? (
+                {distance <= 2000 ? (
                   <Text
                     textStyle="base"
                     fontSize="sm"
@@ -432,11 +432,11 @@ const DrawRange = ({ modalOpen, setActiveIdx }: any) => {
                 fontWeight="strong"
                 lineHeight="normal"
                 transition="0.3s"
-                color={distance > 1000 ? "system.default.red" : "font.primary"}
+                color={distance > 2000 ? "system.default.red" : "font.primary"}
               >
-                반경 {distance * 2}m
+                반경 {distance}m
               </Text>
-              {distance > 1000 && (
+              {distance > 2000 && (
                 <Text
                   textStyle="base"
                   fontSize="sm"
@@ -444,7 +444,7 @@ const DrawRange = ({ modalOpen, setActiveIdx }: any) => {
                   lineHeight="normal"
                   transition="0.3s"
                   color={
-                    distance > 1000 ? "system.default.red" : "font.primary"
+                    distance > 2000 ? "system.default.red" : "font.primary"
                   }
                 >
                   반경 2000m를 넘기실 수 없습니다.

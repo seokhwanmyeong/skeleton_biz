@@ -1,7 +1,14 @@
 //  Lib
-import { useContext, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
-import { Box, Button, Flex, Text, useDisclosure } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Text,
+  Tooltip,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { NaverMapContext } from "@src/lib/src";
 //  Component
 import UpjongListBox from "@components/sementicMapLayer/elementFilter/UpjongListBox";
@@ -14,6 +21,7 @@ import DepthListBox from "@components/sementicMapLayer/elementFilter/DepthListBo
 //  State
 import {
   atomFilterFlow,
+  atomUpjongState,
   infoComBrand,
   infoComBuilding,
   infoComFlowDepth,
@@ -40,6 +48,7 @@ import type { RankType } from "@states/sementicMap/stateFilter";
 
 const FlowDong = () => {
   const { state } = useContext(NaverMapContext);
+  const { top, mid, bot } = useRecoilValue(atomUpjongState);
   const { sigungu } = useRecoilValue(atomFlowEnterArea);
   const dong = useRecoilValue(atomSlctDong);
   const {
@@ -82,7 +91,7 @@ const FlowDong = () => {
   }, [rankList]);
 
   return (
-    <>
+    <Fragment>
       <Flex
         pos="absolute"
         top="1%"
@@ -133,14 +142,14 @@ const FlowDong = () => {
         zIndex={1}
         gap="0.625rem"
         pointerEvents="none"
-        justify="space-between"
+        align="center"
       >
-        <DecoFrameL pl="0.25rem" align="flex-end" w="20%">
+        <DecoFrameL pl="1rem" w="20%" h="770px" align="flex-end">
           {dongRank && <BoxRankingDong rankData={dongRank} />}
           {flowActive && flowShow && <FlowPopInfo />}
         </DecoFrameL>
-        <DecoFrameCenter activeAni={false} w="60%" />
-        <DecoFrameR pr="0.25rem" w="20%">
+        <DecoFrameCenter activeAni={false} w="60%" h="770px" />
+        <DecoFrameR pr="1rem" w="20%" h="770px">
           {((brandShow && brandActive) || (buildShow && buildActive)) && (
             <DepthListBox
               brandShow={brandShow}
@@ -165,24 +174,41 @@ const FlowDong = () => {
           마켓데이터
         </Button>
         <DecoFilterDivider />
-        <Button
-          variant="filterTop"
-          onClick={() => {
-            setSv({
-              props: {
-                areaType: "dong",
-                slctCode: dong.slctCode,
-                slctName: dong.slctName,
-              },
-              viewId: "report",
-            });
-          }}
+        <Tooltip
+          hasArrow
+          isDisabled={bot.code ? true : false}
+          placement="top"
+          label="업종을 선택하셔야 합니다."
+          p="0.5rem 0.75rem"
+          bgColor="#595959d9"
+          border="1px solid"
+          borderColor="neutral.gray6"
+          borderRadius="base"
+          textStyle="base"
+          fontSize="xs"
+          fontWeight="strong"
+          color="font.inverse"
         >
-          <Box>
-            <IcoAddChart width="1rem" height="1rem" />
-          </Box>
-          리포트
-        </Button>
+          <Button
+            variant="filterTop"
+            isDisabled={!(top.code && mid.code && bot.code)}
+            onClick={() => {
+              setSv({
+                props: {
+                  areaType: "dong",
+                  slctCode: dong.slctCode,
+                  slctName: dong.slctName,
+                },
+                viewId: "report",
+              });
+            }}
+          >
+            <Box>
+              <IcoAddChart width="1rem" height="1rem" />
+            </Box>
+            리포트
+          </Button>
+        </Tooltip>
         <DecoFilterDivider />
         <BtnReset />
       </DecoBotHightBox>
@@ -195,7 +221,7 @@ const FlowDong = () => {
           }}
         />
       )}
-    </>
+    </Fragment>
   );
 };
 

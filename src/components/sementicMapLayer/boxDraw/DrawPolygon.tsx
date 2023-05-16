@@ -329,7 +329,7 @@ const DrawPolygon = (props: Props) => {
             top="0.5rem"
             left="0.5rem"
             p="1rem"
-            w={distance <= 1000 ? "13rem" : "20rem"}
+            w={distance <= 2000 ? "13rem" : "20rem"}
             direction="column"
             gap="0.5rem"
             bgColor="#FFFFFFD9"

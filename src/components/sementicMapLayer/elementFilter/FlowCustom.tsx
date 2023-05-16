@@ -1,7 +1,7 @@
 //  Lib
 import { Fragment, useState, useEffect } from "react";
 import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
-import { Box, Button, Flex, useDisclosure } from "@chakra-ui/react";
+import { Box, Button, Flex, Tooltip, useDisclosure } from "@chakra-ui/react";
 //  Component
 import UpjongListBox from "@components/sementicMapLayer/elementFilter/UpjongListBox";
 import NiceFilterDepth from "@components/sementicMapLayer/elementFilter/NiceFilterDepth";
@@ -100,13 +100,13 @@ const FlowCustom = () => {
         zIndex={1}
         gap="0.625rem"
         pointerEvents="none"
-        justify="space-between"
+        align="center"
       >
-        <DecoFrameL pl="0.25rem" align="flex-end" w="20%">
+        <DecoFrameL pl="1rem" w="20%" h="770px" align="flex-end">
           {flowActive && flowShow && <FlowPopInfo />}
         </DecoFrameL>
-        <DecoFrameCenter w="60%" />
-        <DecoFrameR pr="0.25rem" w="20%">
+        <DecoFrameCenter w="60%" h="770px" />
+        <DecoFrameR pr="1rem" w="20%" h="770px">
           {((brandShow && brandActive) || (buildShow && buildActive)) && (
             <DepthListBox
               brandShow={brandShow}
@@ -131,18 +131,34 @@ const FlowCustom = () => {
           마켓데이터
         </Button>
         <DecoFilterDivider />
-        <Button
-          variant="filterTop"
-          isDisabled={!(top.code && mid.code && bot.code)}
-          onClick={() => {
-            setSv({ props: cutomArea, viewId: "report" });
-          }}
+        <Tooltip
+          hasArrow
+          isDisabled={bot.code ? true : false}
+          placement="top"
+          label="업종을 선택하셔야 합니다."
+          p="0.5rem 0.75rem"
+          bgColor="#595959d9"
+          border="1px solid"
+          borderColor="neutral.gray6"
+          borderRadius="base"
+          textStyle="base"
+          fontSize="xs"
+          fontWeight="strong"
+          color="font.inverse"
         >
-          <Box>
-            <IcoAddChart width="1rem" height="1rem" />
-          </Box>
-          리포트
-        </Button>
+          <Button
+            variant="filterTop"
+            isDisabled={!(top.code && mid.code && bot.code)}
+            onClick={() => {
+              setSv({ props: cutomArea, viewId: "report" });
+            }}
+          >
+            <Box>
+              <IcoAddChart width="1rem" height="1rem" />
+            </Box>
+            리포트
+          </Button>
+        </Tooltip>
         <DecoFilterDivider />
         <BtnReset />
       </DecoBotHightBox>

@@ -209,6 +209,31 @@ const createTheme = (name: string) => {
       Tabs: themeTabs,
       Text: themeText,
       List: themeList,
+      // IconButton: {
+      //   baseStyle: {},
+      //   variants: {
+      //     ghost: {
+      //       display: "none",
+      //       appearance: "none",
+      //       alignItems: "center",
+      //       justifyContent: "center",
+      //       userSelect: "none",
+      //       position: "relative",
+      //       whiteSpace: "nowrap",
+      //       verticalAlign: "middle",
+      //       outline: "2px solid transparent",
+      //       outlineOffset: "2px",
+      //       width: "auto",
+      //       lineheight: 1.2,
+      //       borderRadius: "base",
+      //       p: 0,
+      //       height: "fit-content",
+      //       fontFamily: "main",
+      //       fontStyle: "normal",
+      //       fontSize: "md",
+      //     },
+      //   },
+      // },
     },
   });
 

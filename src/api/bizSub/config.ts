@@ -156,9 +156,9 @@ const apiErpMap = {
   getStoreList: (req: TypeMapStoreSearch["req"]) =>
     instance.post<TypeMapStoreSearch["req"], any>(ERP_STORE_GET_POINT, req),
   getRentList: (req: TypeMapRentSearch["req"]) =>
-    instanceLocal.post<TypeMapRentSearch["req"], any>(ERP_RENT_GET_POINT, req),
+    instance.post<TypeMapRentSearch["req"], any>(ERP_RENT_GET_POINT, req),
   getBsDisList: (req: TypeMapBsDisSearch["req"]) =>
-    instanceLocal.post<TypeMapBsDisSearch["req"], any>(ERP_BSDIS_GET_AREA, req),
+    instance.post<TypeMapBsDisSearch["req"], any>(ERP_BSDIS_GET_AREA, req),
   getStoreInfo: (req: TypeMapStoreInfo["req"]) =>
     instance.post<TypeMapStoreInfo["req"], TypeMapStoreInfo["res"]>(
       MAP_ERP_STORE_GET_INFO,

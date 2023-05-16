@@ -4,7 +4,7 @@ const themeBtn = {
       p: "0.25rem 1rem",
       w: "auto",
       h: "fit-content",
-      bg: "primary.type8",
+      // bg: "primary.type8",
       fontFamily: "main",
       fontStyle: "normal",
       fontSize: "md",

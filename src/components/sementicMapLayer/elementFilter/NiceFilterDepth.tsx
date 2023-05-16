@@ -7,6 +7,7 @@ import {
   Flex,
   FormLabel,
   Heading,
+  Text,
   Tooltip,
 } from "@chakra-ui/react";
 import { DatePicker } from "chakra-ui-date-input";
@@ -15,6 +16,7 @@ import { SwitchFilter } from "@components/common/Switch";
 import { BtnFilterSearch } from "@components/common/Btn";
 import { Select } from "@components/common/Select";
 import { Input } from "@components/common/Input";
+import { DialogAlertFilter } from "@components/dialog/DialogAlertModal";
 //  State
 import {
   infoComFlowDepth,
@@ -39,7 +41,6 @@ import {
 //  Deco
 import { DecoCardBg } from "@components/sementicMapLayer/elementDeco/Deco";
 import { Deco01 } from "@assets/deco/DecoSvg";
-import { DialogAlertFilter } from "@src/components/dialog/DialogAlertModal";
 
 const NiceFilterDepth = ({
   areaInfo,
@@ -124,12 +125,11 @@ const NiceFilterDepth = ({
   const searchBrandHandler = () => {
     // if (!bot.code || !bot.name || !sigungu?.slctCode || !slctCode) return;
     if (!bot.code || !bot.name) return;
-    console.log(areaInfo.areaType);
     if (areaInfo.areaType === "dong" && areaInfo.slctCode) {
       getBrandList({
         // ctyCd: sigungu.slctCode.slice(0, 4),
         admiCd: areaInfo.slctCode,
-        upjongCd: bot.code,
+        upjongCd: bot?.code || "Q13007",
         pageNo: 1,
       }).then((res: any) => {
         console.log(res);
@@ -143,7 +143,7 @@ const NiceFilterDepth = ({
       });
 
       getBrandList({
-        upjongCd: bot.code,
+        upjongCd: bot?.code || "Q13007",
         wkt: [[arr]],
         pageNo: 1,
       }).then((res: any) => {
@@ -158,7 +158,7 @@ const NiceFilterDepth = ({
       areaInfo.range
     ) {
       getBrandList({
-        upjongCd: bot.code,
+        upjongCd: bot?.code || "Q13007",
         xAxis: areaInfo.center.x,
         yAxis: areaInfo.center.y,
         range: Number(areaInfo.range),
@@ -491,10 +491,21 @@ const NiceFilterDepth = ({
                   사업체 데이터
                 </Heading>
               </Flex>
+              {!bot?.code && (
+                <Text
+                  fontFamily="main"
+                  fontSize="xs"
+                  fontWeight="strong"
+                  lineHeight="1.5rem"
+                  color="system.accessible.red"
+                >
+                  · 업종을 선택해주세요.
+                </Text>
+              )}
               <Tooltip
                 hasArrow
                 isDisabled={bot.code ? true : false}
-                placement="auto"
+                placement="top"
                 label="업종을 선택하셔야 합니다."
                 p="0.5rem 0.75rem"
                 bgColor="#595959d9"
@@ -636,6 +647,11 @@ const NiceFilterDepth = ({
                     }}
                     bgColor="#FFFFFF"
                     borderColor="neutral.gray5"
+                    __css={{
+                      div: {
+                        bg: "transparent!important",
+                      },
+                    }}
                   />
                   <DatePicker
                     placeholder="날짜를 입력하세요."

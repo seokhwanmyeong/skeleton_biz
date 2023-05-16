@@ -11,6 +11,7 @@ import Report from "@src/components/sementicMapLayer/elementViewer/Report";
 //  States
 import { sementicViewState } from "@states/sementicMap/stateView";
 import ModalBuilding from "../modal/map/ModalBuilding";
+import ModalBsDisDetail from "../modal/map/ModalBsDisDetail";
 
 const SementicViewer = () => {
   const { viewId, props } = useRecoilValue(sementicViewState);
@@ -22,6 +23,7 @@ const SementicViewer = () => {
       viewId === "storeInfo" ||
       viewId === "rentInfo" ||
       viewId === "buildingInfo" ||
+      viewId === "bsDisInfo" ||
       viewId === "report"
     ) {
       onOpen();
@@ -76,6 +78,19 @@ const SementicViewer = () => {
     return (
       <Report
         props={props}
+        isOpen={isOpen}
+        onClose={() => {
+          onClose();
+          reset();
+        }}
+      />
+    );
+  } else if (viewId === "bsDisInfo") {
+    return (
+      <ModalBsDisDetail
+        id={props?.id}
+        name={props.name}
+        code={props.code}
         isOpen={isOpen}
         onClose={() => {
           onClose();

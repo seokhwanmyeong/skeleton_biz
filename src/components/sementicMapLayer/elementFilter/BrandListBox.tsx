@@ -91,7 +91,6 @@ const BrandListBox = memo(
 
       if (zoom < 13) {
         setBsList([]);
-        return;
       } else if (zoom >= 13) {
         const list: any = [];
 
@@ -457,10 +456,13 @@ const BrandListBox = memo(
         {bsList &&
           bsList.length > 0 &&
           bsList.map((li) => {
+            if (li.polygonType === "circle") {
+              console.log(li);
+            }
             return li.polygonType === "circle" ? (
               <Circle
-                id={`circle-${li._id}`}
-                key={`circle-${li._id}`}
+                id={`bsDisArea-${li._id}`}
+                key={`bsDisArea-${li._id}`}
                 onMouseOver={(e: any) => {
                   setCursorPo(li.center);
                   setName(li.bisName);
@@ -485,7 +487,7 @@ const BrandListBox = memo(
                 id={`bsDisArea-${li._id}`}
                 onMouseOver={(e: any) => {
                   setCursorPo(li.center);
-                  setName(li.bisName);
+                  setName(li.bsDisName);
                 }}
                 onMouseOut={(e: any) => {
                   setCursorPo(null);
@@ -1063,15 +1065,26 @@ const ListItemBsDis = ({
         }}
         onClick={() => {
           console.log("click");
+
+          if (state.map) {
+            const point = new naver.maps.LatLng(center[1], center[0]);
+
+            state.map.setCenter(point);
+            state.map.setZoom(16);
+          }
+
           setSv({
             viewId: "bsDisInfo",
             props: {
               id: _id,
+              code: bsDisCode,
               name: bsDisName,
             },
           });
         }}
-        onMouseEnter={() => onHover(true)}
+        onMouseEnter={() => {
+          onHover(true);
+        }}
         onMouseLeave={() => onHover(false)}
       >
         <Flex

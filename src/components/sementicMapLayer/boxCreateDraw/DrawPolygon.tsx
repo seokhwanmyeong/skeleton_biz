@@ -325,7 +325,7 @@ const DrawPolygon = ({ modalOpen, setActiveIdx }: any) => {
             top="0.5rem"
             left="0.5rem"
             p="1rem"
-            w={distance <= 1000 ? "13rem" : "20rem"}
+            w={distance <= 2000 ? "13rem" : "20rem"}
             direction="column"
             gap="0.5rem"
             bgColor="#FFFFFFD9"
@@ -356,7 +356,7 @@ const DrawPolygon = ({ modalOpen, setActiveIdx }: any) => {
                 >
                   그리기
                 </Text>
-                {distance <= 1000 ? (
+                {distance?.toFixed(2) <= 2000 ? (
                   <Text
                     textStyle="base"
                     fontSize="sm"
@@ -391,7 +391,7 @@ const DrawPolygon = ({ modalOpen, setActiveIdx }: any) => {
               >
                 <Text>다시 그리기</Text>
               </Button>
-              {distance <= 1000 && (
+              {distance <= 2000 && (
                 <Button
                   variant="infoBox"
                   aria-label="영역확정"
@@ -479,11 +479,11 @@ const DrawPolygon = ({ modalOpen, setActiveIdx }: any) => {
                 fontWeight="strong"
                 lineHeight="normal"
                 transition="0.3s"
-                color={distance > 1000 ? "system.default.red" : "font.primary"}
+                color={distance > 2000 ? "system.default.red" : "font.primary"}
               >
-                그리기 (반경: {distance?.toFixed(2) * 2}m)
+                그리기 (반경: {distance?.toFixed(2)}m)
               </Text>
-              {distance > 1000 && (
+              {distance?.toFixed(2) > 2000 && (
                 <Text
                   textStyle="base"
                   fontSize="sm"
@@ -491,7 +491,9 @@ const DrawPolygon = ({ modalOpen, setActiveIdx }: any) => {
                   lineHeight="normal"
                   transition="0.3s"
                   color={
-                    distance > 1000 ? "system.default.red" : "font.primary"
+                    distance?.toFixed(2) > 2000
+                      ? "system.default.red"
+                      : "font.primary"
                   }
                 >
                   반경 2000m를 넘기실 수 없습니다.

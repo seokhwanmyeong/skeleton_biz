@@ -272,7 +272,7 @@ const ToolRound = ({ exitHandler }: Props) => {
                 transition="0.3s"
                 color="font.primary"
               >
-                총 반경 : {distance * 2}m
+                총 반경 : {distance}m
               </Text>
               <Text
                 textStyle="base"

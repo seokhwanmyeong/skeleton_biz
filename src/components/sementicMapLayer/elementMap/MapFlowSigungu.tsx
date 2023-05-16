@@ -1,22 +1,17 @@
 //  Lib
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
+import { Flex, useDisclosure } from "@chakra-ui/react";
 import { NaverMapContext } from "@src/lib/src";
-//  Components
-import GuPanel from "./GuPanel";
-import InteractArea from "./InteractArea";
-//  Atom
+//  State
 import { atomFilterFlow, dataCollector } from "@states/sementicMap/stateFilter";
 import {
   atomDongLi,
   atomFlowEnterArea,
   atomSlctDong,
 } from "@states/sementicMap/stateMap";
-import { Flex, useDisclosure } from "@chakra-ui/react";
 
-type Props = {};
-
-const MapFlowSigungu = (props: Props) => {
+const MapFlowSigungu = () => {
   const { state } = useContext(NaverMapContext);
   const { sigungu } = useRecoilValue(atomFlowEnterArea);
   const filterData = useRecoilValue(dataCollector);
@@ -107,6 +102,11 @@ const MapFlowSigungu = (props: Props) => {
           strokeWeight: 1,
           strokeColor: "#FFFFFF",
         });
+        const element = document.getElementById(e.feature.id);
+
+        if (element) {
+          element.style.backgroundColor = "#FADB14";
+        }
 
         window.addEventListener("mousemove", cursorHandler);
         setSlctDong(e.feature.getProperty("idx"));
@@ -117,6 +117,12 @@ const MapFlowSigungu = (props: Props) => {
       // @ts-ignore
       outEventRef.current = state.map.data.addListener("mouseout", (e) => {
         if (!state.map) return;
+        const element = document.getElementById(e.feature.id);
+
+        if (element) {
+          // @ts-ignore
+          element.style.backgroundColor = null;
+        }
 
         state.map.data.revertStyle(e.feature);
         window.removeEventListener("mousemove", cursorHandler);

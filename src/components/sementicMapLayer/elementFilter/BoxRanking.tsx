@@ -1,6 +1,10 @@
 //  Lib
-import { Fragment } from "react";
+import { Fragment, useContext } from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { Box, Flex, Heading, Text } from "@chakra-ui/react";
+import { NaverMapContext } from "@src/lib/src";
+//  State
+import { atomSlctDong } from "@states/sementicMap/stateMap";
 //  Icon
 import {
   IcoGroup,
@@ -14,7 +18,11 @@ import {
 import { Deco01 } from "@assets/deco/DecoSvg";
 import { DecoRankTag } from "@components/sementicMapLayer/elementDeco/DecoCenter";
 //  Type
-import type { RankType } from "@states/sementicMap/stateFilter";
+import {
+  RankType,
+  atomFilterFlow,
+  dataCollector,
+} from "@states/sementicMap/stateFilter";
 
 type Props = {
   rankData: RankType;
@@ -22,10 +30,15 @@ type Props = {
 };
 
 const BoxRanking = ({ rankData, direction = "left" }: Props) => {
-  const { dongName, rank, categoryRanks } = rankData;
+  const { dongName, dongCode, rank, categoryRanks } = rankData;
+  const { state } = useContext(NaverMapContext);
+  const filterData = useRecoilValue(dataCollector);
+  const setFlow = useSetRecoilState(atomFilterFlow);
+  const setDong = useSetRecoilState(atomSlctDong);
 
   return direction === "left" ? (
     <Flex
+      id={dongCode}
       pos="relative"
       p="1rem 1.375rem 0rem"
       w="100%"
@@ -36,6 +49,53 @@ const BoxRanking = ({ rankData, direction = "left" }: Props) => {
       borderLeft="none"
       bg="linear-gradient(270deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0) 100%)"
       backdropFilter="blur(2px)"
+      cursor="pointer"
+      _hover={{ bgColor: "primary.type6" }}
+      onMouseEnter={() => {
+        if (state.map) {
+          const feature = state.map.data.getFeatureById(dongCode);
+
+          if (feature) {
+            state.map.data.overrideStyle(feature, {
+              fillColor: "#FF7A45",
+              fillOpacity: 0.5,
+              strokeWeight: 1,
+              strokeColor: "#FFFFFF",
+            });
+          }
+        }
+      }}
+      onMouseLeave={() => {
+        if (state.map) {
+          const feature = state.map.data.getFeatureById(dongCode);
+
+          if (feature) {
+            state.map.data.revertStyle(feature);
+          }
+        }
+      }}
+      onClick={() => {
+        if (state.map) {
+          const feature = state.map.data.getFeatureById(dongCode);
+
+          if (feature) {
+            setDong({
+              slctName: feature.getProperty("name"),
+              slctCode: feature.getProperty("code"),
+              slctIdx: feature.getProperty("idx"),
+              slctPath: feature.getProperty("feature"),
+              slctLat: feature.getProperty("lat"),
+              slctLng: feature.getProperty("lng"),
+              slctZoom: feature.getProperty("zoomLevel"),
+              slctBounds: feature.getProperty("bounds"),
+              slctData: filterData || undefined,
+              slctRank: feature.getProperty("idx"),
+              slctId: feature.getProperty("id"),
+            });
+            setFlow("dong");
+          }
+        }
+      }}
     >
       <ElementHeader name={dongName} />
       <Flex gap="0.5rem">
@@ -136,6 +196,7 @@ const BoxRanking = ({ rankData, direction = "left" }: Props) => {
     </Flex>
   ) : (
     <Flex
+      id={dongCode}
       pos="relative"
       p="1rem 1.375rem 0rem"
       w="100%"
@@ -146,6 +207,53 @@ const BoxRanking = ({ rankData, direction = "left" }: Props) => {
       borderRight="none"
       bg="linear-gradient(90deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0) 100%)"
       backdropFilter="blur(2px)"
+      cursor="pointer"
+      _hover={{ bgColor: "primary.type6" }}
+      onMouseEnter={() => {
+        if (state.map) {
+          const feature = state.map.data.getFeatureById(dongCode);
+
+          if (feature) {
+            state.map.data.overrideStyle(feature, {
+              fillColor: "#FF7A45",
+              fillOpacity: 0.5,
+              strokeWeight: 1,
+              strokeColor: "#FFFFFF",
+            });
+          }
+        }
+      }}
+      onMouseLeave={() => {
+        if (state.map) {
+          const feature = state.map.data.getFeatureById(dongCode);
+
+          if (feature) {
+            state.map.data.revertStyle(feature);
+          }
+        }
+      }}
+      onClick={() => {
+        if (state.map) {
+          const feature = state.map.data.getFeatureById(dongCode);
+
+          if (feature) {
+            setDong({
+              slctName: feature.getProperty("name"),
+              slctCode: feature.getProperty("code"),
+              slctIdx: feature.getProperty("idx"),
+              slctPath: feature.getProperty("feature"),
+              slctLat: feature.getProperty("lat"),
+              slctLng: feature.getProperty("lng"),
+              slctZoom: feature.getProperty("zoomLevel"),
+              slctBounds: feature.getProperty("bounds"),
+              slctData: filterData || undefined,
+              slctRank: feature.getProperty("idx"),
+              slctId: feature.getProperty("id"),
+            });
+            setFlow("dong");
+          }
+        }
+      }}
     >
       <ElementHeader name={dongName} />
       <Flex gap="0.5rem">
