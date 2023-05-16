@@ -436,7 +436,7 @@ const SelectAddr = ({
 }: PropSlctAddr) => {
   const { getSidoAddr, getSigunguAddr, getDongAddr } = apiNiceAddr;
   const [addr, setAddr] = useState({
-    top: value.length > 0 ? value.slice(0, 2) : value,
+    top: value.length > 0 ? value.slice(0, 2) : value || "",
     mid: value.length > 2 ? value.slice(0, 4) : "",
     bot: value.length > 4 ? value : "",
   });
@@ -518,12 +518,12 @@ const SelectAddr = ({
             bot: [],
           });
         }
-        result = val ? val : "";
+        result = val ? val : addr.top;
         break;
       case "bot":
         setAddr({ ...addr, bot: val });
 
-        result = val ? val : "";
+        result = val ? val : addr.mid;
         break;
       default:
         result = val;
@@ -535,6 +535,7 @@ const SelectAddr = ({
 
   useEffect(() => {
     if (addrList.top.length < 2 && value === "") {
+      console.log("in");
       getSidoAddr({}).then((res) => {
         if (res.data && res.data.length > 0) {
           const tmp = res.data.map((li) => ({

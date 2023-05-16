@@ -109,6 +109,7 @@ export type SlctDong = {
   slctBounds?: number[][] | null;
   slctData?: any;
   slctRank?: number;
+  slctId?: string;
 };
 
 export type SlctAreaProps = {
@@ -163,6 +164,7 @@ export const atomSlctDong = atom<SlctDong>({
     slctPath: undefined,
     slctData: undefined,
     slctRank: undefined,
+    slctId: undefined,
   },
 });
 

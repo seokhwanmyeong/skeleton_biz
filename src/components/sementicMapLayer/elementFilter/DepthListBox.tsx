@@ -9,7 +9,7 @@ import {
   useCallback,
   useMemo,
 } from "react";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import {
   Flex,
   Heading,
@@ -25,9 +25,13 @@ import {
 import OverlayView from "@src/lib/src/components/Overlay/OverlayView";
 import { Marker, NaverMapContext } from "@src/lib/src";
 //  State
+import { atomFilterFlow } from "@states/sementicMap/stateFilter";
 import { sementicViewState } from "@states/sementicMap/stateView";
 //  Api
 import { apiMapBuilding } from "@api/bizSub/config";
+//  Util
+//  Util
+import { searchRange } from "@util/define/map";
 //  Icon
 import { IcoVillage } from "@assets/icons/icon";
 import markerBrand from "@assets/icons/marker_brand.png";
@@ -53,10 +57,16 @@ const DepthListBox = memo(
   ({ brandShow, brandList, buildShow, buildList, buildFilter }: Props) => {
     const { getBuildingList } = apiMapBuilding;
     const { state } = useContext(NaverMapContext);
+    const flow = useRecoilValue(atomFilterFlow);
+    const setSv = useSetRecoilState(sementicViewState);
     const buildingList = useRef<any[] | null>(null);
 
     const resetRef = useCallback(() => {
-      if (buildingList.current && buildingList.current.length > 0) {
+      if (
+        state.map &&
+        buildingList.current &&
+        buildingList.current.length > 0
+      ) {
         buildingList.current.map((building) =>
           state.map?.data.removeGeoJson(building)
         );
@@ -78,11 +88,11 @@ const DepthListBox = memo(
 
     useEffect(() => {
       if (!state.map) return;
-      resetRef();
-      let zoom = state.map?.getZoom() || 0;
 
-      if (zoom >= 18) {
-        const filter = filterBuilding;
+      let zoom = state.map?.getZoom() || 0;
+      resetRef();
+
+      if (zoom >= 17 && buildShow) {
         const bounds: any = state.map.getBounds();
         const transBounds: any[] = [];
 
@@ -92,46 +102,129 @@ const DepthListBox = memo(
           transBounds.push([bounds._min.x, bounds._min.y]);
           transBounds.push([bounds._max.x, bounds._min.y]);
           transBounds.push([bounds._max.x, bounds._max.y]);
+          const center = state.map.getCenter();
 
           getBuildingList({
+            ...filterBuilding,
             wkt: [[transBounds]],
-            ...filter,
-          }).then((res: any) => {
-            if (res.data) {
-              const arr: any[] = [];
+          })
+            .then((res: any) => {
+              if (res.data && res.data.length > 0 && state.map) {
+                const arr: any[] = [];
+                const circle = new naver.maps.Circle({
+                  map: state.map,
+                  center: center,
+                  radius: searchRange[zoom],
+                });
+                const circleBounds = circle.getBounds();
 
-              res.data.map((li: any) => {
-                if (state.map) {
-                  const feature: any = {
-                    type: "Feature",
-                    id: li.mgmBldrgstPk,
-                    geometry: li.geometry,
-                    properties: {
-                      mgmBldrgstPk: li.mgmBldrgstPk,
-                      bldNm: li.bldNm,
-                    },
-                  };
+                res.data.map((li: any) => {
+                  const geoCenter = new naver.maps.LatLngBounds(
+                    li.geometry.coordinates[0][0]
+                  ).getCenter();
+                  const element = document.getElementById(li._id);
 
-                  // @ts-ignore
-                  state.map.data.addGeoJson(feature);
-                  const tmp = state.map.data.getFeatureById(li.mgmBldrgstPk);
+                  if (
+                    state.map &&
+                    // @ts-ignore
+                    // objBounds.hasLatLng(geoCenter) &&
+                    // @ts-ignore
+                    circleBounds.hasLatLng(geoCenter) &&
+                    element
+                  ) {
+                    const feature: any = {
+                      type: "Feature",
+                      id: li._id,
+                      geometry: li.geometry,
+                      properties: {
+                        mgmBldrgstPk: li.mgmBldrgstPk,
+                        bldNm: li.bldNm,
+                        id: li._id,
+                      },
+                    };
 
-                  tmp.setStyle({
-                    fillColor: "#36CFC9",
-                    fillOpacity: 1,
-                    strokeColor: "#FFFFFF",
-                    strokeOpacity: 1,
-                    strokeWeight: 1,
-                    zIndex: 102,
-                  });
+                    // @ts-ignore
+                    state.map.data.addGeoJson(feature);
+                    const tmp = state.map.data.getFeatureById(li._id);
 
-                  arr.push(feature);
-                }
-              });
+                    tmp.setStyle({
+                      fillColor: "#36CFC9",
+                      fillOpacity: 1,
+                      strokeColor: "#FFFFFF",
+                      strokeOpacity: 1,
+                      strokeWeight: 1,
+                      zIndex: 102,
+                    });
 
-              buildingList.current = arr;
-            }
-          });
+                    tmp.addListener("click", () => {
+                      if (element) {
+                        element.scrollIntoView({ behavior: "smooth" });
+                      }
+                      // setSv({
+                      //   viewId: "buildingInfo",
+                      //   props: { id: li._id, name: li.bldNm },
+                      // });
+                      // if (state.map) {
+                      //   const geoCenter = new naver.maps.LatLngBounds(
+                      //     li.geometry.coordinates[0][0]
+                      //   ).getCenter();
+
+                      //   state.map.setCenter(geoCenter);
+                      //   state.map.setZoom(18);
+                      // }
+                    });
+
+                    // @ts-ignore
+                    tmp.addListener("mouseover", (e) => {
+                      if (!state.map) return;
+
+                      tmp.setStyle({
+                        fillColor: "#08979C",
+                        fillOpacity: 1,
+                        strokeColor: "#FFFFFF",
+                        strokeOpacity: 1,
+                        strokeWeight: 1,
+                      });
+
+                      if (element) {
+                        element.style.background =
+                          "linear-gradient(90deg, rgba(255, 236, 61, 0) 0%, #FFEC3D 36.2%, rgba(255, 236, 61, 0) 92.66%)";
+                      }
+                    });
+
+                    // @ts-ignore
+                    tmp.addListener("mouseout", (e) => {
+                      if (!state.map) return;
+
+                      state.map.data.revertStyle(e.feature);
+                      tmp.setStyle({
+                        fillColor: "#36CFC9",
+                        fillOpacity: 1,
+                        strokeColor: "#FFFFFF",
+                        strokeOpacity: 1,
+                        strokeWeight: 1,
+                      });
+
+                      if (element) {
+                        // @ts-ignore
+                        element.style.background = null;
+                      }
+                    });
+
+                    arr.push(feature);
+                  }
+                });
+
+                circle.setMap(null);
+                resetRef();
+                buildingList.current = arr;
+              } else {
+                resetRef();
+              }
+            })
+            .catch(() => {
+              resetRef();
+            });
         }
       }
 
@@ -142,98 +235,135 @@ const DepthListBox = memo(
         (e) => {
           if (timer) clearTimeout(timer);
           timer = setTimeout(function () {
-            if (!state.map) return;
-            resetRef();
-            let zoom = state.map?.getZoom() || 0;
-            if (zoom < 16) {
-              resetRef();
-              return;
-            } else if (zoom >= 16) {
-              if (!state.map) return;
+            if (state.map && buildShow) {
+              let zoom = state.map?.getZoom() || 0;
 
-              const filter = filterBuilding;
-              const transBounds: any[] = [];
-              const test: { [x: number]: number } = {
-                16: 500,
-                17: 250,
-                18: 150,
-                19: 100,
-              };
+              if (zoom < 17) {
+                resetRef();
+                return;
+              } else if (zoom >= 17) {
+                if (!state.map) return;
+                const transBounds: any[] = [];
 
-              if (e) {
-                transBounds.push([e._max.x, e._max.y]);
-                transBounds.push([e._min.x, e._max.y]);
-                transBounds.push([e._min.x, e._min.y]);
-                transBounds.push([e._max.x, e._min.y]);
-                transBounds.push([e._max.x, e._max.y]);
-                const center = state.map.getCenter();
+                if (e) {
+                  transBounds.push([e._max.x, e._max.y]);
+                  transBounds.push([e._min.x, e._max.y]);
+                  transBounds.push([e._min.x, e._min.y]);
+                  transBounds.push([e._max.x, e._min.y]);
+                  transBounds.push([e._max.x, e._max.y]);
+                  const center = state.map.getCenter();
 
-                getBuildingList({
-                  wkt: [[transBounds]],
-                  // range: test[zoom],
-                  // xAxis: center.x,
-                  // yAxis: center.y,
-                  ...filter,
-                }).then((res: any) => {
-                  if (res.data) {
-                    const arr: any[] = [];
-                    const circle = new naver.maps.Circle({
-                      map: state.map,
-                      center: center,
-                      radius: test[zoom],
-                    });
-                    const objBounds = circle.getBounds();
+                  getBuildingList({
+                    wkt: [[transBounds]],
+                    ...filterBuilding,
+                  })
+                    .then((res: any) => {
+                      if (res.data && res.data.length > 0 && state.map) {
+                        const arr: any[] = [];
+                        const circle = new naver.maps.Circle({
+                          map: state.map,
+                          center: center,
+                          radius: searchRange[zoom],
+                        });
+                        const circleBounds = circle.getBounds();
 
-                    res.data.map((li: any) => {
-                      if (state.map) {
-                        const feature: any = {
-                          type: "Feature",
-                          id: li.mgmBldrgstPk,
-                          geometry: li.geometry,
-                          properties: {
-                            mgmBldrgstPk: li.mgmBldrgstPk,
-                            bldNm: li.bldNm,
-                          },
-                        };
-                        // console.log(li.geometry.coordinates[0][0]);
-                        // console.log(
-                        //   new naver.maps.LatLngBounds(
-                        //     li.geometry.coordinates[0][0]
-                        //   ).getCenter()
-                        // );
-                        if (
-                          // @ts-ignore
-                          objBounds.hasLatLng(
-                            new naver.maps.LatLngBounds(
-                              li.geometry.coordinates[0][0]
-                            ).getCenter()
-                          )
-                        ) {
-                          // @ts-ignore
-                          state.map.data.addGeoJson(feature);
-                          const tmp = state.map.data.getFeatureById(
-                            li.mgmBldrgstPk
-                          );
+                        res.data.map((li: any) => {
+                          const geoCenter = new naver.maps.LatLngBounds(
+                            li.geometry.coordinates[0][0]
+                          ).getCenter();
+                          const element = document.getElementById(li._id);
 
-                          tmp.setStyle({
-                            fillColor: "#36CFC9",
-                            fillOpacity: 1,
-                            strokeColor: "#FFFFFF",
-                            strokeOpacity: 1,
-                            strokeWeight: 1,
-                            zIndex: 102,
-                          });
+                          if (
+                            state.map &&
+                            // @ts-ignore
+                            circleBounds.hasLatLng(geoCenter) &&
+                            element
+                          ) {
+                            const feature: any = {
+                              type: "Feature",
+                              id: li._id,
+                              geometry: li.geometry,
+                              properties: {
+                                mgmBldrgstPk: li.mgmBldrgstPk,
+                                bldNm: li.bldNm,
+                                id: li._id,
+                              },
+                            };
 
-                          arr.push(feature);
-                        }
+                            // @ts-ignore
+                            state.map.data.addGeoJson(feature);
+                            const tmp = state.map.data.getFeatureById(li._id);
+
+                            tmp.setStyle({
+                              fillColor: "#36CFC9",
+                              fillOpacity: 1,
+                              strokeColor: "#FFFFFF",
+                              strokeOpacity: 1,
+                              strokeWeight: 1,
+                              zIndex: 102,
+                            });
+
+                            tmp.addListener("click", () => {
+                              if (element) {
+                                element.scrollIntoView({ behavior: "smooth" });
+                              }
+                            });
+
+                            // @ts-ignore
+                            tmp.addListener("mouseover", (e) => {
+                              if (!state.map) return;
+
+                              tmp.setStyle({
+                                fillColor: "#08979C",
+                                fillOpacity: 1,
+                                strokeColor: "#FFFFFF",
+                                strokeOpacity: 1,
+                                strokeWeight: 1,
+                              });
+
+                              if (element) {
+                                element.style.background =
+                                  "linear-gradient(90deg, rgba(255, 236, 61, 0) 0%, #FFEC3D 36.2%, rgba(255, 236, 61, 0) 92.66%)";
+                              }
+                            });
+
+                            // @ts-ignore
+                            tmp.addListener("mouseout", (e) => {
+                              if (!state.map) return;
+
+                              state.map.data.revertStyle(e.feature);
+                              tmp.setStyle({
+                                fillColor: "#36CFC9",
+                                fillOpacity: 1,
+                                strokeColor: "#FFFFFF",
+                                strokeOpacity: 1,
+                                strokeWeight: 1,
+                              });
+
+                              if (element) {
+                                // @ts-ignore
+                                element.style.background = null;
+                              }
+                            });
+
+                            arr.push(feature);
+                          }
+                        });
+
+                        circle.setMap(null);
+                        resetRef();
+                        buildingList.current = arr;
+                      } else {
+                        resetRef();
                       }
+                    })
+                    .catch(() => {
+                      resetRef();
                     });
-
-                    circle.setMap(null);
-                    buildingList.current = arr;
-                  }
-                });
+                }
               }
+            } else {
+              resetRef();
             }
           }, 500);
         }
@@ -540,7 +670,12 @@ const ListItemBrand = ({
 const ListBuilding = memo(
   ({ buildShow, buildList }: { buildShow: boolean; buildList: any[] }) => {
     return buildList ? (
-      <List display="flex" flexDirection="column">
+      <List
+        key={"ul-building"}
+        id={"ulBuilding"}
+        display="flex"
+        flexDirection="column"
+      >
         {buildList.map(
           (
             {
@@ -700,6 +835,7 @@ const ListItemBuilding = ({
   return (
     <Fragment>
       <ListItem
+        id={_id}
         key={_id}
         p="1rem 0.25rem 1rem"
         display="flex"
@@ -720,29 +856,37 @@ const ListItemBuilding = ({
           console.log("click");
           setSv({
             viewId: "buildingInfo",
-            props: { id: mgmBldrgstPk, name: bldNm },
+            props: { id: _id, name: bldNm, mgmBldrgstPk: mgmBldrgstPk },
           });
+          if (state.map) {
+            const geoCenter = new naver.maps.LatLngBounds(
+              geometry.coordinates[0][0]
+            ).getCenter();
+
+            state.map.setCenter(geoCenter);
+            state.map.setZoom(18);
+          }
         }}
         onMouseEnter={() => {
           if (state.map) {
             onHover(true);
-            // const tmp = state.map.data.getFeatureById(mgmBldrgstPk);
+            const tmp = state.map.data.getFeatureById(_id);
 
-            // tmp.setStyle({
-            //   fillColor: "#08979C",
-            //   fillOpacity: 1,
-            // });
+            tmp?.setStyle({
+              fillColor: "#08979C",
+              fillOpacity: 1,
+            });
           }
         }}
         onMouseLeave={() => {
           if (state.map) {
             onHover(false);
-            // const tmp = state.map.data.getFeatureById(mgmBldrgstPk);
+            const tmp = state.map.data.getFeatureById(_id);
 
-            // tmp.setStyle({
-            //   fillColor: "#36CFC9",
-            //   fillOpacity: 1,
-            // });
+            tmp?.setStyle({
+              fillColor: "#36CFC9",
+              fillOpacity: 1,
+            });
           }
         }}
       >
@@ -764,6 +908,7 @@ const ListItemBuilding = ({
             fontSize="md"
             fontWeight="strong"
             color="font.primary"
+            noOfLines={1}
           >
             {bldNm || "건물명이 없습니다"}
           </Text>
@@ -772,6 +917,7 @@ const ListItemBuilding = ({
             fontSize="xs"
             fontWeight="regular"
             color="font.primary"
+            noOfLines={1}
           >
             {newPlatPlc || platPlc || "주소가 없습니다"}
           </Text>

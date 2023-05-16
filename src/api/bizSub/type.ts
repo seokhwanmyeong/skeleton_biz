@@ -245,9 +245,17 @@ type TypeMapBsDisSearch = {
   res: {
     _id: string;
     bsDisName: string;
-    polygon: [number[]];
-    center: [number, number];
+    bsDisCode: string;
+    center: {
+      type: string;
+      coordinate: [number, number];
+    };
+    geometry: {
+      type: string;
+      coordinates: any[];
+    };
     polygonType: "single" | "multi";
+    range?: string;
   };
 };
 
@@ -271,10 +279,10 @@ type TypeMapRentSearch = {
   req: TypeFilterRent;
   res: {
     _id: string;
-    rentName: string;
+    name: string;
     addr: string;
-    lat: number;
-    lng: number;
+    lat: string;
+    lng: string;
   };
 };
 

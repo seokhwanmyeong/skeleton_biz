@@ -141,6 +141,7 @@ const MapFlowSigungu = (props: Props) => {
           slctBounds: e.feature.getProperty("bounds"),
           slctData: filterData || undefined,
           slctRank: e.feature.getProperty("idx"),
+          slctId: e.feature.getProperty("id"),
         });
         setFlow("dong");
       });

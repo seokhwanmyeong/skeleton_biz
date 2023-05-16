@@ -21,18 +21,19 @@ import { BaseSpinner } from "@src/components/common/Spinner";
 type Props = {
   id: string;
   name: string;
+  mgmBldrgstPk: string;
   isOpen: boolean;
   onClose: (props?: any) => any;
 };
 
-const ModalBuilding = ({ id, name, isOpen, onClose }: Props) => {
+const ModalBuilding = ({ id, name, isOpen, mgmBldrgstPk, onClose }: Props) => {
   const { getBuildingDetail } = apiMapBuilding;
   const [info, setInfo] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     setLoading(true);
-    getBuildingDetail({ mgmBldrgstPk: id })
+    getBuildingDetail({ mgmBldrgstPk: mgmBldrgstPk })
       .then((res: any) => {
         console.log(res);
 

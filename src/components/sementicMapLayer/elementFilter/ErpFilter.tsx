@@ -91,7 +91,7 @@ const ErpFilter = ({ editorOpen, setEditorOpen }: ErpFilterProps) => {
     console.log("store search");
     console.log(filterStore);
 
-    const tmp: any = { ...filterStore };
+    const tmp: any = { ...filterStore, brandCode: "3" };
     delete tmp.areaCode;
     delete tmp.areaText;
 
@@ -136,7 +136,7 @@ const ErpFilter = ({ editorOpen, setEditorOpen }: ErpFilterProps) => {
     console.log("bsD search");
     console.log(filterBsD);
 
-    const tmp: any = { ...filterBsD };
+    const tmp: any = { ...filterBsD, brandCode: "3" };
     delete tmp.areaCode;
     delete tmp.areaText;
 
@@ -152,20 +152,33 @@ const ErpFilter = ({ editorOpen, setEditorOpen }: ErpFilterProps) => {
       tmp.sigunguCode = filterBsD.areaCode;
     } else if (filterBsD.areaCode.length > 4) {
       tmp.sigunguCode = filterBsD.areaCode.slice(0, 4);
-      tmp.dongCode = `${filterBsD.areaCode.slice(0, 4)}00`;
+      tmp.dongCode = `${filterBsD.areaCode.slice(
+        4,
+        filterBsD.areaCode.length
+      )}00`;
     }
-
+    // delete tmp.brandCode;
+    delete tmp.bsDisType;
+    // console.log(tmp);
+    // setErpBsD({
+    //   filter: filterBsD,
+    //   active: true,
+    //   show: true,
+    //   data: [],
+    // });
+    // return;
     getBsDisList(tmp).then((res) => {
       const { data } = res;
-
+      console.log(data);
       if (data && data.length > 0) {
         const checkList = data.filter((li: any) =>
-          li.polygon_type ? true : false
+          li.polygonType ? true : false
         );
 
         const makeCenter = checkList.map((li: any) => {
           if (li.center) {
-            return li;
+            const center = li.center.coordinates;
+            return { ...li, center: center };
           } else {
             const center = getCenter(li.polygon[0]);
             return { ...li, center: center };
@@ -194,7 +207,7 @@ const ErpFilter = ({ editorOpen, setEditorOpen }: ErpFilterProps) => {
     console.log("rent search");
     console.log(filterRent);
 
-    const tmp: any = { ...filterRent };
+    const tmp: any = { ...filterRent, brandCode: "3" };
     delete tmp.areaCode;
     delete tmp.areaText;
 
@@ -213,25 +226,23 @@ const ErpFilter = ({ editorOpen, setEditorOpen }: ErpFilterProps) => {
       tmp.dongCode = `${filterRent.areaCode.slice(0, 4)}00`;
     }
 
-    getRentList(tmp).then(
-      (res: { data: { records: TypeMapRentSearch["res"][] } }) => {
-        const { data } = res;
-        console.log(res);
-        data.records && data.records.length > 0
-          ? setErpRent({
-              filter: filterRent,
-              active: true,
-              show: true,
-              data: data.records,
-            })
-          : setErpRent({
-              filter: filterRent,
-              active: true,
-              show: true,
-              data: [],
-            });
-      }
-    );
+    getRentList(tmp).then((res: { data: TypeMapRentSearch["res"][] }) => {
+      const { data } = res;
+      console.log(res);
+      data && data.length > 0
+        ? setErpRent({
+            filter: filterRent,
+            active: true,
+            show: true,
+            data: data,
+          })
+        : setErpRent({
+            filter: filterRent,
+            active: true,
+            show: true,
+            data: [],
+          });
+    });
   };
 
   //  ERP 필터 초기화
@@ -244,9 +255,30 @@ const ErpFilter = ({ editorOpen, setEditorOpen }: ErpFilterProps) => {
     toolOpen(false);
     reset();
     setEditorOpen(false);
-    // setFilterStore()
-    // setFilterBsD()
-    // setFilterRent()
+    setFilterStore({
+      brandCode: "",
+      searchType: "name",
+      text: "",
+      areaCode: "",
+      areaText: "",
+      storeType: ["A", "B", "C", "D", "E"],
+      storeStatus: ["open", "ready", "rest", "close", "etc"],
+    });
+    setFilterBsD({
+      brandCode: "",
+      searchType: "bsDisName",
+      text: "",
+      areaCode: "",
+      areaText: "",
+      bsDisType: ["A", "B", "C", "D", "E"],
+    });
+    setFilterRent({
+      brandCode: "",
+      text: "",
+      areaCode: "",
+      areaText: "",
+      rentType: ["A", "B", "C", "D", "E"],
+    });
   };
 
   const removeMarker = () => {
@@ -257,6 +289,8 @@ const ErpFilter = ({ editorOpen, setEditorOpen }: ErpFilterProps) => {
     console.log("active");
     removeMarker();
   }, [modalIdx, isOpen]);
+
+  console.log(filterBsD);
 
   return (
     <Flex
@@ -750,31 +784,10 @@ const ErpFilter = ({ editorOpen, setEditorOpen }: ErpFilterProps) => {
             >
               검색
             </FormLabel>
-            <Flex w="100%" gap="0.5rem">
-              <Select
-                data={[
-                  { text: "매물명", value: "rentName" },
-                  { text: "매물코드", value: "rentCode" },
-                ]}
-                opBaseTxt="text"
-                opBaseId="value"
-                opBaseKey="value"
-                value={filterRent.searchType}
-                onChange={(val: any) => {
-                  setFilterRent({
-                    ...filterRent,
-                    searchType: val,
-                  });
-                }}
-                selectProps={{ w: "30%" }}
-              />
+            <Flex w="100%">
               <Input
                 inputProps={{ w: "100%" }}
-                placeholder={
-                  filterRent.searchType === "rentName"
-                    ? "매물명를 입력해주세요"
-                    : "매물코드를 입력해주세요"
-                }
+                placeholder={"매물명를 입력해주세요"}
                 value={filterRent.text || ""}
                 onChange={(val: any) => {
                   setFilterRent({

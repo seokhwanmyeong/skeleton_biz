@@ -39,11 +39,10 @@ export const ERP_STORE_GET_POINT = "/v1/Franchise_branch/mapsearch";
 export const MAP_ERP_STORE_GET_INFO = "/v1/Franchise_branch/mapdetailsearch";
 
 //  MAP_ERP_RENT
-export const ERP_RENT_GET_POINT = "/v1/Franchise_unsoldshop/mapunsoldsearch";
-export const MAP_ERP_RENT_GET_INFO = "/v1/Franchise_unsoldshop/mapdetailsearch";
+export const ERP_RENT_GET_POINT = "/v1/Franchise_Unsoldshop/searchShops";
+export const MAP_ERP_RENT_GET_INFO = "/v1/Franchise_Unsoldshop/mapdetailsearch";
 
 //  MAP_ERP_BSDIS
-export const ERP_BSDIS_GET_AREA = "/v1/Franchise_businessarea/mapbusisearch";
-// export const ERP_BSDIS_GET_AREA = "/v1/franchise_businessarea/newsearch";
+export const ERP_BSDIS_GET_AREA = "/v1/Franchise_BusinessArea/searchAreas";
 export const MAP_ERP_BSDIS_GET_INFO =
-  "/v1/Franchise_unsoldshop/mapdetailsearch";
+  "/v1/Franchise_BusinessArea/mapdetailsearch";

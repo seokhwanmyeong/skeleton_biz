@@ -1,6 +1,6 @@
 //  Lib
 import { useContext } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
 import { Box, Button } from "@chakra-ui/react";
 import { NaverMapContext } from "@src/lib/src";
 //  State
@@ -13,6 +13,7 @@ import {
 import { resetHandler } from "@states/sementicMap/stateMap";
 //  Icon
 import { IcoReset } from "@assets/icons/icon";
+import { sementicViewState } from "@src/states/sementicMap/stateView";
 
 type Props = {
   activeReset?: boolean;
@@ -22,10 +23,11 @@ type Props = {
 const BtnReset = ({ activeReset = true, onClick }: Props) => {
   const { state } = useContext(NaverMapContext);
   const [flow, setFlow] = useRecoilState(atomFilterFlow);
-  const resetSlctArea = useSetRecoilState(resetHandler);
-  const resetNiceFilter = useSetRecoilState(resetNice);
-  const resetNiceDepthFilter = useSetRecoilState(resetNiceDepth);
-  const resetErpFilter = useSetRecoilState(resetErp);
+  const resetSlctArea = useResetRecoilState(resetHandler);
+  const resetNiceFilter = useResetRecoilState(resetNice);
+  const resetNiceDepthFilter = useResetRecoilState(resetNiceDepth);
+  const resetErpFilter = useResetRecoilState(resetErp);
+  const resetSementicView = useResetRecoilState(sementicViewState);
 
   return (
     <Button
@@ -48,6 +50,7 @@ const BtnReset = ({ activeReset = true, onClick }: Props) => {
           resetNiceDepthFilter();
           resetErpFilter();
           (flow === "sigungu" || flow === "dong") && resetNiceFilter();
+          resetSementicView();
           setFlow("init");
         }
       }}

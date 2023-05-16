@@ -1,15 +1,16 @@
 //  LIB
 import { useMemo, useState, useEffect } from "react";
-import { Flex } from "@chakra-ui/react";
+import { Button, Flex, useDisclosure } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 //  Components
 import SearchHistory from "@components/search/SearchHistory";
 import Table from "@components/table/Table";
 //  Form & Column
 import { columnHistoryModal } from "@components/table/column/erp";
-import ModalHistoryEditor from "@src/components/modal/erp/ModalHistoryEditor";
+import ModalHistoryEditor from "@components/modal/map/ModalHistoryEditor";
 import Divider from "@src/components/common/Divider";
-import { erpHistoryApi } from "@src/api/biz/config";
+import { erpHistoryApi } from "@api/biz/config";
+import { BtnEditor } from "@components/common/Btn";
 
 const ElementHistory = ({
   id,
@@ -30,6 +31,7 @@ const ElementHistory = ({
     text: "",
   });
   const column = useMemo(() => columnHistoryModal, []);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const searchHandler = (values: any) => {
     console.log(values);
@@ -103,7 +105,12 @@ const ElementHistory = ({
           setValues={setInitVal}
           onClick={searchHandler}
         />
-        <ModalHistoryEditor />
+        <BtnEditor
+          onClick={onOpen}
+          text="히스토리 추가하기"
+          variant="search"
+          lineHeight="-1px"
+        />
       </Flex>
       <Divider m="1rem 0 0.75rem" />
       <Table
@@ -118,6 +125,12 @@ const ElementHistory = ({
         getPage={setCurPage}
         getSelectData={setSelectData}
         tdH="1.5rem"
+      />
+      <ModalHistoryEditor
+        isOpen={isOpen}
+        onOpen={onOpen}
+        onClose={onClose}
+        fixMode={true}
       />
     </Flex>
   );

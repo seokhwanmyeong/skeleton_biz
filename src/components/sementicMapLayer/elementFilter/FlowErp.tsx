@@ -1,5 +1,5 @@
 //  Lib
-import { Fragment, useContext, useState, useEffect } from "react";
+import { Fragment, useContext, useState } from "react";
 import { Box, Button, Flex, useDisclosure } from "@chakra-ui/react";
 import { Marker, NaverMapContext } from "@src/lib/src";
 //  Component
@@ -17,7 +17,6 @@ import {
   DecoFilterDivider,
   DecoTop,
 } from "@components/sementicMapLayer/elementDeco/Deco";
-import { erpHistoryApi } from "@api/biz/config";
 
 const FlowErp = () => {
   const { state } = useContext(NaverMapContext);

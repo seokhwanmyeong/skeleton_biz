@@ -1,43 +1,18 @@
 //  Lib
-import {
-  useContext,
-  useEffect,
-  useState,
-  Fragment,
-  useRef,
-  useCallback,
-} from "react";
+import { useContext, useEffect, useRef, useCallback } from "react";
 import { useRecoilValue, useResetRecoilState } from "recoil";
 import { NaverMapContext } from "@src/lib/src";
-//  Components
-import { BoxRankingDong } from "@components/sementicMapLayer/elementFilter/BoxRanking";
-import FlowPopInfo from "@components/sementicMapLayer/elementFilter/FlowPopInfo";
-import DepthListBox from "@components/sementicMapLayer/elementFilter/DepthListBox";
 //  state
-import {
-  infoComBrand,
-  infoComBuilding,
-  infoComFlowDepth,
-  infoComNiceRank,
-} from "@states/sementicMap/stateFilter";
+import { infoComFlowDepth } from "@states/sementicMap/stateFilter";
 import { atomSlctDong } from "@states/sementicMap/stateMap";
 import { sementicViewState } from "@states/sementicMap/stateView";
 //  Api
 import { apiMapNice } from "@api/bizSub/config";
 //  Util
-import { flowColor } from "@util/define/map";
-//  Icon
-import { Flex } from "@chakra-ui/react";
-//  Deco
-import {
-  DecoFrameL,
-  DecoFrameR,
-  BoxCenterFrameLeft,
-  BoxCenterFrameRight,
-} from "@components/sementicMapLayer/elementDeco/DecoCenter";
+import { flowColor, lvHandler } from "@util/define/map";
+import { searchRange } from "@util/define/map";
 //  Type
 import type { TypeNiceFlowData } from "@api/bizSub/type";
-import type { RankType } from "@states/sementicMap/stateFilter";
 
 type TypePoint = { lv: number; point: [number, number] };
 
@@ -50,20 +25,7 @@ const MapFlowDong = () => {
     active: flowActive,
     data: flowList,
   } = useRecoilValue(infoComFlowDepth);
-  const {
-    show: brandShow,
-    active: brandActive,
-    data: brandList,
-  } = useRecoilValue(infoComBrand);
-  const {
-    show: buildShow,
-    active: buildActive,
-    fitler: buildFilter,
-    data: buildList,
-  } = useRecoilValue(infoComBuilding);
-  const rankList = useRecoilValue(infoComNiceRank);
   const resetSv = useResetRecoilState(sementicViewState);
-  const [dongRank, setDongRank] = useState<RankType | null>(null);
   const geoRef = useRef<any | null>(null);
   const flowPoint = useRef<TypePoint[] | null>(null);
 
@@ -75,12 +37,12 @@ const MapFlowDong = () => {
   }, [state, flowShow, flowActive]);
 
   useEffect(() => {
-    if (!state.map) return;
+    if (!state?.map || !flowActive || !dong?.slctPath) return;
 
     let zoom = state.map?.getZoom() || 0;
     resetRef();
 
-    if (zoom >= 18 && flowActive && flowShow) {
+    if (zoom >= 17 && flowActive && flowShow) {
       const bounds: any = state.map.getBounds();
       const transBounds: any[] = [];
 
@@ -90,45 +52,70 @@ const MapFlowDong = () => {
         transBounds.push([bounds._min.x, bounds._min.y]);
         transBounds.push([bounds._max.x, bounds._min.y]);
         transBounds.push([bounds._max.x, bounds._max.y]);
+        const center = state.map.getCenter();
 
         getFlowPop({
           upjongCd: "Q01005",
           wkt: [[transBounds]],
-        }).then((res: any) => {
-          if (res.data && res.data.length > 0) {
-            const markerLi: any[] = [];
-
-            res.data.map((list: any) => {
-              list.map((li: TypeNiceFlowData) => {
-                const { flowPop, xAxis, yAxis } = li;
-                const lv =
-                  flowPop >= 18000
-                    ? 1
-                    : flowPop < 18000 && flowPop >= 13000
-                    ? 2
-                    : flowPop < 13000 && flowPop >= 10000
-                    ? 3
-                    : flowPop < 10000 && flowPop >= 6000
-                    ? 4
-                    : 5;
-
-                const marker = new naver.maps.Marker({
-                  map: state.map,
-                  position: new naver.maps.LatLng(yAxis, xAxis),
-                  icon: {
-                    content: `<div style="width: 6px; height: 6px; border-radius: 50%; background-color: ${flowColor[lv]}"/>`,
-                    size: new naver.maps.Size(6, 6),
-                    anchor: new naver.maps.Point(3, 3),
-                  },
-                });
-
-                markerLi.push(marker);
+        })
+          .then((res: any) => {
+            if (
+              res.data &&
+              res.data.length > 0 &&
+              state?.map &&
+              dong?.slctId !== undefined
+            ) {
+              const markerLi: any[] = [];
+              const obj = state.map.data.getFeatureById(dong.slctId);
+              const objBounds: any = obj.getBounds();
+              const circle = new naver.maps.Circle({
+                map: state.map,
+                center: center,
+                radius: searchRange[zoom],
               });
-            });
+              const circleBounds: any = circle.getBounds();
 
-            flowPoint.current = markerLi;
-          }
-        });
+              res.data.map((list: any) => {
+                list.map((li: TypeNiceFlowData) => {
+                  const { flowPop, xAxis, yAxis } = li;
+
+                  if (
+                    objBounds._max.x > xAxis &&
+                    circleBounds._max.x > xAxis &&
+                    objBounds._min.x < xAxis &&
+                    circleBounds._min.x < xAxis &&
+                    objBounds._max.y > yAxis &&
+                    circleBounds._max.y > yAxis &&
+                    objBounds._min.y < yAxis &&
+                    circleBounds._min.y < yAxis
+                  ) {
+                    const lv = lvHandler(flowPop);
+
+                    const marker = new naver.maps.Marker({
+                      map: state.map,
+                      position: new naver.maps.LatLng(yAxis, xAxis),
+                      icon: {
+                        content: `<div style="width: 6px; height: 6px; border-radius: 50%; background-color: ${flowColor[lv]}"/>`,
+                        size: new naver.maps.Size(6, 6),
+                        anchor: new naver.maps.Point(3, 3),
+                      },
+                    });
+
+                    markerLi.push(marker);
+                  } else {
+                    return null;
+                  }
+                });
+              });
+
+              circle.setMap(null);
+              resetRef();
+              flowPoint.current = markerLi;
+            }
+          })
+          .catch(() => {
+            resetRef();
+          });
       }
     }
 
@@ -140,16 +127,14 @@ const MapFlowDong = () => {
         if (timer) clearTimeout(timer);
         timer = setTimeout(function () {
           if (!state.map || !flowActive || !flowShow) {
-            resetRef();
             return;
           }
           let zoom = state.map?.getZoom() || 0;
 
-          resetRef();
-
-          if (zoom < 18) {
+          if (zoom < 17) {
+            resetRef();
             return;
-          } else if (zoom >= 18) {
+          } else if (zoom >= 17) {
             if (!state.map) return;
             const transBounds: any[] = [];
 
@@ -159,48 +144,69 @@ const MapFlowDong = () => {
               transBounds.push([e._min.x, e._min.y]);
               transBounds.push([e._max.x, e._min.y]);
               transBounds.push([e._max.x, e._max.y]);
+              const center = state.map.getCenter();
 
               getFlowPop({
                 upjongCd: "Q01005",
                 wkt: [[transBounds]],
-              }).then((res: any) => {
-                if (res.data) {
-                  const markerLi: any[] = [];
-
-                  res.data.map((list: any) => {
-                    list.map((li: TypeNiceFlowData) => {
-                      const { flowPop, xAxis, yAxis } = li;
-                      const lv =
-                        flowPop >= 18000
-                          ? 1
-                          : flowPop < 18000 && flowPop >= 13000
-                          ? 2
-                          : flowPop < 13000 && flowPop >= 10000
-                          ? 3
-                          : flowPop < 10000 && flowPop >= 6000
-                          ? 4
-                          : 5;
-
-                      const marker = new naver.maps.Marker({
-                        map: state.map,
-                        position: new naver.maps.LatLng(yAxis, xAxis),
-                        icon: {
-                          content: `<div style="width: 6px; height: 6px; border-radius: 50%; background-color: ${flowColor[lv]}"/>`,
-                          size: new naver.maps.Size(6, 6),
-                          anchor: new naver.maps.Point(3, 3),
-                        },
-                      });
-
-                      markerLi.push(marker);
+              })
+                .then((res: any) => {
+                  if (
+                    res.data &&
+                    res.data.length > 0 &&
+                    state?.map &&
+                    dong?.slctId !== undefined
+                  ) {
+                    const markerLi: any[] = [];
+                    const obj = state.map.data.getFeatureById(dong.slctId);
+                    const objBounds: any = obj.getBounds();
+                    const circle = new naver.maps.Circle({
+                      map: state.map,
+                      center: center,
+                      radius: searchRange[zoom],
                     });
-                  });
+                    const circleBounds: any = circle.getBounds();
 
-                  flowPoint.current = markerLi;
-                }
-              });
+                    res.data.map((list: any) => {
+                      list.map((li: TypeNiceFlowData) => {
+                        const { flowPop, xAxis, yAxis } = li;
+                        if (
+                          objBounds._max.x > xAxis &&
+                          circleBounds._max.x > xAxis &&
+                          objBounds._min.x < xAxis &&
+                          circleBounds._min.x < xAxis &&
+                          objBounds._max.y > yAxis &&
+                          circleBounds._max.y > yAxis &&
+                          objBounds._min.y < yAxis &&
+                          circleBounds._min.y < yAxis
+                        ) {
+                          const lv = lvHandler(flowPop);
+
+                          const marker = new naver.maps.Marker({
+                            map: state.map,
+                            position: new naver.maps.LatLng(yAxis, xAxis),
+                            icon: {
+                              content: `<div style="width: 6px; height: 6px; border-radius: 50%; background-color: ${flowColor[lv]}"/>`,
+                              size: new naver.maps.Size(6, 6),
+                              anchor: new naver.maps.Point(3, 3),
+                            },
+                          });
+
+                          markerLi.push(marker);
+                        }
+                      });
+                    });
+                    circle.setMap(null);
+                    resetRef();
+                    flowPoint.current = markerLi;
+                  }
+                })
+                .catch(() => {
+                  resetRef();
+                });
             }
           }
-        }, 300);
+        }, 500);
       }
     );
 
@@ -208,23 +214,7 @@ const MapFlowDong = () => {
       naver.maps.Event.removeListener(zoomEvent);
       resetRef();
     };
-  }, [flowList, flowShow, flowActive, state.map]);
-
-  useEffect(() => {
-    let rank;
-
-    for (let i = 0; i < rankList.length; i++) {
-      if (rankList[i].dongName === dong.slctName) {
-        rank = rankList[i];
-        break;
-      }
-    }
-    if (rank) setDongRank(rank);
-
-    return () => {
-      setDongRank(null);
-    };
-  }, [rankList]);
+  }, [flowList, flowShow, flowActive, state.map, dong]);
 
   useEffect(() => {
     if (dong.slctPath && state.map) {
@@ -241,8 +231,13 @@ const MapFlowDong = () => {
       if (geoRef.current) {
         state.map?.data.removeGeoJson(geoRef.current);
       }
+      console.log(dong.slctPath);
+      const feature: any = {
+        ...dong.slctPath,
+        id: dong.slctId,
+      };
       // @ts-ignore
-      state.map.data.addGeoJson(dong.slctPath);
+      state.map.data.addGeoJson(feature);
 
       state.map.data.setStyle({
         fillColor: "#36CFC9",
@@ -251,10 +246,9 @@ const MapFlowDong = () => {
         strokeOpacity: 0.5,
       });
 
-      geoRef.current = dong.slctPath;
+      geoRef.current = feature;
 
       const bounds = dong.slctBounds;
-      console.log(bounds);
       if (bounds && bounds.length > 0) {
         const transLatLng = bounds.map(
           (li) => new naver.maps.LatLng(li[0], li[1])
@@ -287,69 +281,7 @@ const MapFlowDong = () => {
     };
   }, [state.map, dong]);
 
-  return (
-    <Fragment>
-      {/* --------------------------- 중단 Frame ---------------------------*/}
-      <Flex
-        w="100%"
-        h="100%"
-        zIndex={1}
-        gap="0.625rem"
-        pointerEvents="none"
-        justify={
-          (dongRank || (flowActive && flowShow)) &&
-          ((brandShow && brandActive) || (buildShow && buildActive))
-            ? "space-between"
-            : dongRank || (flowActive && flowShow)
-            ? "flex-start"
-            : "flex-end"
-        }
-      >
-        {(dongRank || (flowActive && flowShow)) && (
-          <DecoFrameL pl="1rem" align="flex-end">
-            {dongRank && <BoxRankingDong rankData={dongRank} />}
-            {flowActive && flowShow && <FlowPopInfo />}
-          </DecoFrameL>
-        )}
-        <Flex
-          pos="relative"
-          p="6rem 0"
-          w="50%"
-          h="100%"
-          direction="row"
-          justify={
-            (dongRank || (flowActive && flowShow)) &&
-            ((brandShow && brandActive) || (buildShow && buildActive))
-              ? "space-between"
-              : dongRank || (flowActive && flowShow)
-              ? "flex-start"
-              : "flex-end"
-          }
-          gap="0.625rem"
-          zIndex={1}
-        >
-          {(dongRank || (flowActive && flowShow)) && <BoxCenterFrameLeft />}
-          {((brandShow && brandActive) || (buildShow && buildActive)) && (
-            <BoxCenterFrameRight />
-          )}
-        </Flex>
-        {/* <DecoFrameCenter isOpen={centerView} activeAni={false} /> */}
-        {((brandShow && brandActive) || (buildShow && buildActive)) && (
-          <DecoFrameR pr="0.25rem">
-            {((brandShow && brandActive) || (buildShow && buildActive)) && (
-              <DepthListBox
-                brandShow={brandShow}
-                brandList={brandList || []}
-                buildShow={buildShow}
-                buildList={buildList || []}
-                buildFilter={buildFilter}
-              />
-            )}
-          </DecoFrameR>
-        )}
-      </Flex>
-    </Fragment>
-  );
+  return null;
 };
 
 export default MapFlowDong;

@@ -67,6 +67,18 @@ const instance: BixApiInstance = axios.create({
   },
 });
 
+const instanceLocal: BixApiInstance = axios.create({
+  baseURL: import.meta.env.VITE_API_BIZLOCAL_SERVER,
+  responseType: "json",
+  responseEncoding: "utf8",
+  timeout: 10000,
+  headers: {
+    Accept: "*/*",
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+  },
+});
+
 //  Axios interceptors
 instance.interceptors.request.use((req: any) => {
   console.log(req);
@@ -144,9 +156,9 @@ const apiErpMap = {
   getStoreList: (req: TypeMapStoreSearch["req"]) =>
     instance.post<TypeMapStoreSearch["req"], any>(ERP_STORE_GET_POINT, req),
   getRentList: (req: TypeMapRentSearch["req"]) =>
-    instance.post<TypeMapRentSearch["req"], any>(ERP_RENT_GET_POINT, req),
+    instanceLocal.post<TypeMapRentSearch["req"], any>(ERP_RENT_GET_POINT, req),
   getBsDisList: (req: TypeMapBsDisSearch["req"]) =>
-    instance.post<TypeMapBsDisSearch["req"], any>(ERP_BSDIS_GET_AREA, req),
+    instanceLocal.post<TypeMapBsDisSearch["req"], any>(ERP_BSDIS_GET_AREA, req),
   getStoreInfo: (req: TypeMapStoreInfo["req"]) =>
     instance.post<TypeMapStoreInfo["req"], TypeMapStoreInfo["res"]>(
       MAP_ERP_STORE_GET_INFO,

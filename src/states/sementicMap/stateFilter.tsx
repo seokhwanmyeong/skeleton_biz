@@ -318,34 +318,46 @@ export type Infocome<Filter> = {
 };
 
 export type TypeFilterStore = {
+  brandCode: string;
   searchType: "name" | "code" | "owner_name";
   text: string;
-  areaCode?: string;
-  areaText: string;
   storeType: ("A" | "B" | "C" | "D" | "E")[];
   storeStatus: ("open" | "ready" | "rest" | "close" | "etc")[];
+  sidoCode?: string;
+  sigunguCode?: string;
+  dongCode?: string;
+  areaCode?: string;
+  areaText?: string;
 };
 
 export type TypeFilterBsDis = {
+  brandCode: string;
   searchType: "bsDisName" | "bsDisCode";
   text: string;
-  areaCode?: string;
-  areaText: string;
   bsDisType: ("A" | "B" | "C" | "D" | "E")[];
+  sidoCode?: string;
+  sigunguCode?: string;
+  dongCode?: string;
+  areaCode?: string;
+  areaText?: string;
 };
 
 export type TypeFilterRent = {
-  searchType: "rentName" | "rentCode";
+  brandCode: string;
   text: string;
-  areaCode?: string;
-  areaText: string;
   rentType: ("A" | "B" | "C" | "D" | "E")[];
+  sidoCode?: string;
+  sigunguCode?: string;
+  dongCode?: string;
+  areaCode?: string;
+  areaText?: string;
 };
 
 export const infoComErpStore = atom<Infocome<TypeFilterStore>>({
   key: "infoComErpStore",
   default: {
     filter: {
+      brandCode: "",
       searchType: "name",
       text: "",
       areaCode: "",
@@ -363,6 +375,7 @@ export const infoComErpBsnsD = atom<Infocome<TypeFilterBsDis>>({
   key: "infoComErpBsnsD",
   default: {
     filter: {
+      brandCode: "",
       searchType: "bsDisName",
       text: "",
       areaCode: "",
@@ -379,7 +392,7 @@ export const infoComErpRent = atom<Infocome<TypeFilterRent>>({
   key: "infoComErpRent",
   default: {
     filter: {
-      searchType: "rentName",
+      brandCode: "",
       text: "",
       areaCode: "",
       areaText: "",

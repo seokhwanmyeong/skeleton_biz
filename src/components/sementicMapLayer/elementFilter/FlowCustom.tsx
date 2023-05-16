@@ -55,7 +55,6 @@ const FlowCustom = () => {
   const reset = useResetRecoilState(resetNiceDepth);
   const resetSv = useResetRecoilState(sementicViewState);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [filterType, setType] = useState("");
 
   useEffect(() => {
     return () => {

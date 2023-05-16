@@ -27,7 +27,7 @@ type Props = {
   values?: any;
   onOpen: (props?: any) => any;
   onClose: (props?: any) => any;
-  setOpenIdx: (props?: any) => any;
+  setOpenIdx?: (props?: any) => any;
 };
 const ModalHistoryEditor = ({
   isOpen,
@@ -70,7 +70,7 @@ const ModalHistoryEditor = ({
     console.log("create start");
     console.log(val);
     onClose();
-    setOpenIdx(-1);
+    setOpenIdx && setOpenIdx(-1);
   };
 
   const handleSuccess = (pos: GeolocationPosition) => {

@@ -40,6 +40,7 @@ import markerCluster from "@assets/icons/marker_cluster.png";
 import { Deco01 } from "@assets/deco/DecoSvg";
 //  Ani
 import { infoAnimation } from "@styles/animation/keyFremes";
+import { TypeMapRentSearch } from "@src/api/bizSub/type";
 
 type Props = {
   storeShow: boolean;
@@ -52,11 +53,14 @@ type Props = {
 
 type TypeBsDis = {
   _id: string;
-  bisName: string;
-  bsDisType: string;
-  polygon_type: "circle" | "single" | "multi";
-  polygon: any[];
-  range: string;
+  bsDisName: string;
+  bsDisCode: string;
+  polygonType: "circle" | "single" | "multi";
+  geometry: {
+    type: string;
+    coordinates: any[];
+  };
+  range?: string;
   center: [number, number];
 };
 
@@ -66,9 +70,10 @@ type BsDisList = {
   _id: string;
   bsDisName: string;
   bsDisType: string;
+  bsDisCode: string;
   polygonType: "circle" | "single" | "multi";
-  polygon: any[];
-  range: string;
+  geometry: any;
+  range: Number;
   center: [number, number];
 };
 
@@ -91,43 +96,33 @@ const BrandListBox = memo(
         const list: any = [];
 
         if (bsDis && bsDis.length > 0) {
-          bsDis.map(
-            (li: {
-              _id: string;
-              bisName: string;
-              bsDisType: string;
-              polygon_type: "circle" | "single" | "multi";
-              polygon: any[];
-              range: string;
-              center: [number, number];
-            }) => {
-              const mapBounds: any = state.map?.getBounds();
-              const minLat = mapBounds._min._lat;
-              const minLng = mapBounds._min._lng;
-              const maxLat = mapBounds._max._lat;
-              const maxLng = mapBounds._max._lng;
+          bsDis.map((li) => {
+            const mapBounds: any = state.map?.getBounds();
+            const minLat = mapBounds._min._lat;
+            const minLng = mapBounds._min._lng;
+            const maxLat = mapBounds._max._lat;
+            const maxLng = mapBounds._max._lng;
 
-              if (li.polygon_type === "single") {
-                if (
-                  li.center[1] >= minLat &&
-                  li.center[1] <= maxLat &&
-                  li.center[0] >= minLng &&
-                  li.center[0] <= maxLng
-                ) {
-                  list.push(li);
-                }
-              } else if (li.polygon_type === "circle") {
-                if (
-                  li.center[1] >= minLat &&
-                  li.center[1] <= maxLat &&
-                  li.center[0] >= minLng &&
-                  li.center[0] <= maxLng
-                ) {
-                  list.push(li);
-                }
+            if (li.polygonType === "single") {
+              if (
+                li.center[1] >= minLat &&
+                li.center[1] <= maxLat &&
+                li.center[0] >= minLng &&
+                li.center[0] <= maxLng
+              ) {
+                list.push(li);
+              }
+            } else if (li.polygonType === "circle") {
+              if (
+                li.center[1] >= minLat &&
+                li.center[1] <= maxLat &&
+                li.center[0] >= minLng &&
+                li.center[0] <= maxLng
+              ) {
+                list.push(li);
               }
             }
-          );
+          });
         }
         setBsList(list);
       }
@@ -155,37 +150,28 @@ const BrandListBox = memo(
                 const list: any = [];
 
                 if (bsDis && bsDis.length > 0) {
-                  bsDis.map(
-                    (li: {
-                      _id: string;
-                      bisName: string;
-                      bsDisType: string;
-                      polygon_type: "circle" | "single" | "multi";
-                      polygon: any[];
-                      range: string;
-                      center: [number, number];
-                    }) => {
-                      if (li.polygon_type === "single") {
-                        if (
-                          li.center[1] >= minLat &&
-                          li.center[1] <= maxLat &&
-                          li.center[0] >= minLng &&
-                          li.center[0] <= maxLng
-                        ) {
-                          list.push(li);
-                        }
-                      } else if (li.polygon_type === "circle") {
-                        if (
-                          li.center[1] >= minLat &&
-                          li.center[1] <= maxLat &&
-                          li.center[0] >= minLng &&
-                          li.center[0] <= maxLng
-                        ) {
-                          list.push(li);
-                        }
+                  console.log(bsDis);
+                  bsDis.map((li) => {
+                    if (li.polygonType === "single") {
+                      if (
+                        li.center[1] >= minLat &&
+                        li.center[1] <= maxLat &&
+                        li.center[0] >= minLng &&
+                        li.center[0] <= maxLng
+                      ) {
+                        list.push(li);
+                      }
+                    } else if (li.polygonType === "circle") {
+                      if (
+                        li.center[1] >= minLat &&
+                        li.center[1] <= maxLat &&
+                        li.center[0] >= minLng &&
+                        li.center[0] <= maxLng
+                      ) {
+                        list.push(li);
                       }
                     }
-                  );
+                  });
                 } else {
                   return;
                 }
@@ -195,29 +181,19 @@ const BrandListBox = memo(
                 const list: any = [];
 
                 if (bsDis && bsDis.length > 0) {
-                  bsDis.map(
-                    (li: {
-                      _id: string;
-                      bisName: string;
-                      bsDisType: string;
-                      polygon_type: "circle" | "single" | "multi";
-                      polygon: any[];
-                      range: string;
-                      center: [number, number];
-                    }) => {
-                      if (li.polygon_type === "single") {
-                        if (
-                          li.center[1] >= minLat &&
-                          li.center[1] <= maxLat &&
-                          li.center[0] >= minLng &&
-                          li.center[0] <= maxLng
-                        ) {
-                          list.push(li);
-                        }
-                      } else if (li.polygon_type === "circle") {
+                  bsDis.map((li) => {
+                    if (li.polygonType === "single") {
+                      if (
+                        li.center[1] >= minLat &&
+                        li.center[1] <= maxLat &&
+                        li.center[0] >= minLng &&
+                        li.center[0] <= maxLng
+                      ) {
+                        list.push(li);
                       }
+                    } else if (li.polygonType === "circle") {
                     }
-                  );
+                  });
                 }
 
                 setBsList(list);
@@ -480,62 +456,52 @@ const BrandListBox = memo(
         </Tabs>
         {bsList &&
           bsList.length > 0 &&
-          bsList.map(
-            (li: {
-              _id: string;
-              bisName: string;
-              bsDisType: string;
-              polygon_type: "circle" | "single" | "multi";
-              polygon: any[];
-              range: string;
-              center: [number, number];
-            }) => {
-              return li.polygon_type === "circle" ? (
-                <Circle
-                  id={`circle-${li._id}`}
-                  key={`circle-${li._id}`}
-                  onMouseOver={(e: any) => {
-                    setCursorPo(li.center);
-                    setName(li.bisName);
-                  }}
-                  onMouseOut={(e: any) => {
-                    setCursorPo(null);
-                    setName(null);
-                  }}
-                  opts={{
-                    center: li.center,
-                    radius: Number(li.range) || 0,
-                    fillColor: bsDisColor[li.bsDisType] || "#FF7A45",
-                    fillOpacity: 0.5,
-                    strokeWeight: 1,
-                    strokeColor: "#FFFFFF",
-                    clickable: true,
-                  }}
-                />
-              ) : li.polygon_type === "single" ? (
-                <Polygon
-                  key={`bsDisArea-${li._id}`}
-                  id={`bsDisArea-${li._id}`}
-                  onMouseOver={(e: any) => {
-                    setCursorPo(li.center);
-                    setName(li.bisName);
-                  }}
-                  onMouseOut={(e: any) => {
-                    setCursorPo(null);
-                    setName(null);
-                  }}
-                  opts={{
-                    paths: li.polygon,
-                    fillColor: bsDisColor[li.bsDisType] || "#FF7A45",
-                    fillOpacity: 0.5,
-                    strokeWeight: 1,
-                    strokeColor: "#FFFFFF",
-                    clickable: true,
-                  }}
-                />
-              ) : null;
-            }
-          )}
+          bsList.map((li) => {
+            return li.polygonType === "circle" ? (
+              <Circle
+                id={`circle-${li._id}`}
+                key={`circle-${li._id}`}
+                onMouseOver={(e: any) => {
+                  setCursorPo(li.center);
+                  setName(li.bisName);
+                }}
+                onMouseOut={(e: any) => {
+                  setCursorPo(null);
+                  setName(null);
+                }}
+                opts={{
+                  center: li.center,
+                  radius: Number(li.range) || 0,
+                  fillColor: bsDisColor[li.bsDisType] || "#FF7A45",
+                  fillOpacity: 0.5,
+                  strokeWeight: 1,
+                  strokeColor: "#FFFFFF",
+                  clickable: true,
+                }}
+              />
+            ) : li.polygonType === "single" ? (
+              <Polygon
+                key={`bsDisArea-${li._id}`}
+                id={`bsDisArea-${li._id}`}
+                onMouseOver={(e: any) => {
+                  setCursorPo(li.center);
+                  setName(li.bisName);
+                }}
+                onMouseOut={(e: any) => {
+                  setCursorPo(null);
+                  setName(null);
+                }}
+                opts={{
+                  paths: li.geometry.coordinates[0],
+                  fillColor: bsDisColor[li.bsDisType] || "#FF7A45",
+                  fillOpacity: 0.5,
+                  strokeWeight: 1,
+                  strokeColor: "#FFFFFF",
+                  clickable: true,
+                }}
+              />
+            ) : null;
+          })}
         {bsDisShow && cursorPo && name && (
           <OverlayView
             id={`infoBox`}
@@ -1004,54 +970,58 @@ const ListItemStore = ({
   );
 };
 
-const ListBsDis = ({
-  bsDisShow,
-  bsDisList,
-}: {
-  bsDisShow: boolean;
-  bsDisList: TypeBsDis[];
-}) => {
-  console.log("render");
-  return bsDisList ? (
-    <List display="flex" flexDirection="column">
-      {bsDisList.map(
-        (
-          {
-            _id,
-            bisName,
-            bsDisType,
-            polygon,
-            polygon_type,
-            range,
-            center,
-          }: TypeBsDis,
-          idx: number
-        ) => {
-          return (
-            <ListItemBsDis
-              key={`bsDisList-${idx}`}
-              isShow={bsDisShow}
-              idx={idx}
-              _id={_id}
-              bsDisName={bisName}
-              bsDisType={bsDisType}
-              polygonType={polygon_type}
-              polygon={polygon}
-              range={range}
-              center={center}
-            />
-          );
-        }
-      )}
-    </List>
-  ) : null;
-};
+const ListBsDis = memo(
+  ({
+    bsDisShow,
+    bsDisList,
+  }: {
+    bsDisShow: boolean;
+    bsDisList: TypeBsDis[];
+  }) => {
+    console.log("render");
+    return bsDisList ? (
+      <List display="flex" flexDirection="column">
+        {bsDisList.map(
+          (
+            {
+              _id,
+              bsDisName,
+              bsDisCode,
+              geometry,
+              polygonType,
+              range,
+              center,
+            }: TypeBsDis,
+            idx: number
+          ) => {
+            return (
+              <ListItemBsDis
+                key={`bsDisList-${idx}`}
+                isShow={bsDisShow}
+                idx={idx}
+                _id={_id}
+                bsDisName={bsDisName}
+                bsDisCode={bsDisCode}
+                bsDisType={"A"}
+                polygonType={polygonType}
+                geometry={geometry}
+                range={Number(range) || 0}
+                center={center}
+              />
+            );
+          }
+        )}
+      </List>
+    ) : null;
+  }
+);
 
 const ListItemBsDis = ({
   isShow,
   idx,
   _id,
   bsDisName,
+  bsDisCode,
   bsDisType,
   center,
 }: BsDisList) => {
@@ -1178,18 +1148,23 @@ const ListItemBsDis = ({
 const ListRent = memo(({ rentShow, rentList }: any) => {
   return rentList ? (
     <List display="flex" flexDirection="column">
-      {rentList.map(({ _id, rentName, addr, lat, lng }: any, idx: number) => (
-        <ListItemRent
-          key={`rentList-${idx}`}
-          isShow={rentShow}
-          idx={idx}
-          _id={_id}
-          rentName={rentName}
-          addr={addr}
-          lat={lat}
-          lng={lng}
-        />
-      ))}
+      {rentList.map(
+        (
+          { _id, name, addr, lat, lng }: TypeMapRentSearch["res"],
+          idx: number
+        ) => (
+          <ListItemRent
+            key={`rentList-${idx}`}
+            isShow={rentShow}
+            idx={idx}
+            _id={_id}
+            rentName={name}
+            addr={addr}
+            lat={Number(lat)}
+            lng={Number(lng)}
+          />
+        )
+      )}
     </List>
   ) : null;
 });
@@ -1312,7 +1287,7 @@ const ListItemRent = ({ isShow, idx, _id, rentName, addr, lat, lng }: any) => {
           key={`markerRent-${idx}`}
           id={`markerRent-${idx}`}
           opts={{
-            position: [Number(lng), Number(lat)],
+            position: [lng, lat],
             icon: {
               url: markerRent,
             },

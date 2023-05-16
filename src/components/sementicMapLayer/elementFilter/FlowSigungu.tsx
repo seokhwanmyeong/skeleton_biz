@@ -73,6 +73,7 @@ const FlowSigungu = () => {
               lat: Number(lat),
               lng: Number(lng),
               idx: idx,
+              id: li._id,
               bounds: bounds || null,
               feature: {
                 type: "Feature",
@@ -83,11 +84,13 @@ const FlowSigungu = () => {
                   lat: Number(lat),
                   lng: Number(lng),
                   bounds: bounds || null,
+                  id: li._id,
                   feature: {
                     type: "Feature",
                     properties: {
                       ...li,
-                      ode: li.admiCd,
+                      id: li._id,
+                      code: li.admiCd,
                       name: li.admiNm,
                       lat: Number(lat),
                       lng: Number(lng),
@@ -96,7 +99,10 @@ const FlowSigungu = () => {
                     geometry: li.geometry,
                   },
                 },
-                geometry: li.geometry,
+                geometry: {
+                  ...li.geometry,
+                  id: li._id,
+                },
               },
             };
           });

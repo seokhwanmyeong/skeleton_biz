@@ -8,12 +8,24 @@ const bsDisColor: any = {
 };
 
 //  상권타입별 색상
+// const flowColor: { [x: number]: string } = {
+//   1: "#FF3B30",
+//   2: "#FF9500",
+//   3: "#FFCC00",
+//   4: "#007AFF",
+//   5: "#5856D6",
+// };
 const flowColor: { [x: number]: string } = {
-  1: "#FF3B30",
-  2: "#FF9500",
-  3: "#FFCC00",
-  4: "#007AFF",
-  5: "#5856D6",
+  1: "#3D0019",
+  2: "#C40098",
+  3: "#C01F09",
+  4: "#DD8100",
+  5: "#E0B300",
+  6: "#FFCC00",
+  7: "#00F160",
+  8: "#08CDB5",
+  9: "#007AFF",
+  10: "#007AFF",
 };
 
 //  대장종류
@@ -105,4 +117,44 @@ const strctCd = [
   { value: "99", text: "기타구조" },
 ];
 
-export { bsDisColor, flowColor, regstrGbCd, roofCd, mainPurpsCd, strctCd };
+const searchRange: { [x: number]: number } = {
+  16: 500,
+  17: 250,
+  18: 150,
+  19: 100,
+  20: 50,
+  21: 25,
+};
+
+const lvHandler = (flowPop: number) => {
+  return flowPop >= 10000
+    ? 1
+    : flowPop < 10000 && flowPop >= 5000
+    ? 2
+    : flowPop < 5000 && flowPop >= 3000
+    ? 3
+    : flowPop < 3000 && flowPop >= 2000
+    ? 4
+    : flowPop < 2000 && flowPop >= 1000
+    ? 5
+    : flowPop < 1000 && flowPop >= 500
+    ? 6
+    : flowPop < 500 && flowPop >= 300
+    ? 7
+    : flowPop < 300 && flowPop >= 200
+    ? 8
+    : flowPop < 200 && flowPop >= 10
+    ? 9
+    : 10;
+};
+
+export {
+  bsDisColor,
+  flowColor,
+  regstrGbCd,
+  roofCd,
+  mainPurpsCd,
+  strctCd,
+  searchRange,
+  lvHandler,
+};

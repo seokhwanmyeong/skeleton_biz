@@ -64,6 +64,7 @@ const SementicViewer = () => {
       <ModalBuilding
         id={props?.id}
         name={props.name}
+        mgmBldrgstPk={props.mgmBldrgstPk}
         isOpen={isOpen}
         onClose={() => {
           onClose();

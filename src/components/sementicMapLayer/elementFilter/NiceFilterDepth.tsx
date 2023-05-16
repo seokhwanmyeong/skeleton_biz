@@ -31,13 +31,9 @@ import { numRegExp } from "@util/valid/validation";
 //  Icon
 import {
   IcoBuildingList,
-  IcoFileSearch,
-  IcoHeatMap,
   IcoOutpatient,
   IcoRefresh,
   IcoSensorOccupied,
-  IcoSync,
-  IcoTextB,
   IcoVillage,
 } from "@assets/icons/icon";
 //  Deco
@@ -76,6 +72,7 @@ const NiceFilterDepth = ({
   //  세부 유동인구 필터 변화 및 액티브
   const searchPopHandler = () => {
     setFlowPop({ show: true, active: true, data: [] });
+    setOpenIdx(0);
     return;
     // if (areaInfo.areaType === "dong" && areaInfo.slctCode) {
     //   getFlowPop({
@@ -173,6 +170,8 @@ const NiceFilterDepth = ({
           setBrand({ show: true, active: true, data: res.data || [] });
       });
     }
+
+    setOpenIdx(0);
   };
 
   const searchBuildingHandler = () => {
@@ -213,18 +212,23 @@ const NiceFilterDepth = ({
       getBuildingList({
         admiCd: areaInfo.slctCode,
         ...req,
-      }).then((res: any) => {
-        console.log(res);
+      })
+        .then((res: any) => {
+          console.log(res);
 
-        if (res.data) {
-          setBuilding({
-            filter: filterBuilding,
-            data: res.data,
-            show: true,
-            active: true,
-          });
-        }
-      });
+          if (res.data) {
+            setBuilding({
+              filter: filterBuilding,
+              data: res.data,
+              show: true,
+              active: true,
+            });
+          }
+          setOpenIdx(0);
+        })
+        .catch(() => {
+          setOpenIdx(0);
+        });
     } else if (areaInfo.areaType === "polygon" && areaInfo.slctPath) {
       const arr = areaInfo.slctPath.map((path: any): [number, number] => {
         return [path.x || path[0], path.y || path[1]];
@@ -234,18 +238,23 @@ const NiceFilterDepth = ({
       getBuildingList({
         wkt: [[arr]],
         ...req,
-      }).then((res: any) => {
-        console.log(res);
+      })
+        .then((res: any) => {
+          console.log(res);
 
-        if (res.data) {
-          setBuilding({
-            filter: filterBuilding,
-            data: res.data,
-            show: true,
-            active: true,
-          });
-        }
-      });
+          if (res.data) {
+            setBuilding({
+              filter: filterBuilding,
+              data: res.data,
+              show: true,
+              active: true,
+            });
+          }
+          setOpenIdx(0);
+        })
+        .catch(() => {
+          setOpenIdx(0);
+        });
     } else if (
       areaInfo.areaType === "circle" &&
       areaInfo.center &&
@@ -256,18 +265,26 @@ const NiceFilterDepth = ({
         yAxis: areaInfo.center.y,
         range: Number(areaInfo.range),
         ...req,
-      }).then((res: any) => {
-        console.log(res);
+      })
+        .then((res: any) => {
+          console.log(res);
 
-        if (res.data) {
-          setBuilding({
-            filter: filterBuilding,
-            data: res.data,
-            show: true,
-            active: true,
-          });
-        }
-      });
+          if (res.data) {
+            setBuilding({
+              filter: filterBuilding,
+              data: res.data,
+              show: true,
+              active: true,
+            });
+          }
+
+          setOpenIdx(0);
+        })
+        .catch(() => {
+          setOpenIdx(0);
+        });
+    } else {
+      setOpenIdx(0);
     }
   };
 
