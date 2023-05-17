@@ -16,9 +16,9 @@ import {
   Input,
 } from "@chakra-ui/react";
 //  Component
-import { SelectBsDisLayer } from "@components/common/Select";
+import { Select, SelectBsDisLayer } from "@components/common/Select";
 //  API
-import { apiCommon } from "@api/biz/config";
+import { apiCommon } from "@api/bizSub/config";
 //  State
 import { atomCreateArea } from "@states/sementicMap/stateMap";
 //  Util
@@ -46,6 +46,7 @@ const FormBsnsD = forwardRef(
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [searchText, setSearchText] = useState<string>("");
     const [searchLi, setSearchLi] = useState<any[]>([]);
+    const [type, setType] = useState<"name" | "code">("name");
     const [isChckId, setIsChKId] = useState<{
       text: string;
       chk: boolean;
@@ -363,6 +364,20 @@ const FormBsnsD = forwardRef(
                               pointerEvents="all"
                             >
                               <Flex gap="0.5rem">
+                                <Select
+                                  data={[
+                                    { text: "상권명", value: "name" },
+                                    { text: "상권코드", value: "code" },
+                                  ]}
+                                  opBaseTxt="text"
+                                  opBaseId="value"
+                                  opBaseKey="value"
+                                  variant="modalEditor"
+                                  value={type}
+                                  onChange={(val: any) => {
+                                    setType(val);
+                                  }}
+                                />
                                 <Input
                                   variant="modalEditor"
                                   w="100%"
@@ -379,7 +394,8 @@ const FormBsnsD = forwardRef(
                                   variant="filterSearch"
                                   onClick={() =>
                                     getAvailableStoreLink({
-                                      type: "store",
+                                      brandCode: "3",
+                                      type: type,
                                       text: searchText,
                                     }).then((res: any) => {
                                       if (res.data && res.data.length > 0) {

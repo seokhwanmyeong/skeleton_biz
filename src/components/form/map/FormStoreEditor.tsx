@@ -232,7 +232,12 @@ const FormStoreEditor = forwardRef(
                                     code: code,
                                   }).then((res: any) => {
                                     console.log(res);
-                                    if (res?.result === false) {
+                                    if (res?.data?.result === false) {
+                                      console.log({
+                                        text: code,
+                                        chk: true,
+                                        state: "pass",
+                                      });
                                       setIsChKId({
                                         text: code,
                                         chk: true,

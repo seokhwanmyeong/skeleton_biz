@@ -48,6 +48,6 @@ export const MAP_ERP_BSDIS_GET_INFO =
   "/v1/Franchise_BusinessArea/mapdetailsearch";
 
 //  COMMON
-export const ERP_CODE_CHECKER = "/v1/franchise_common/duplicatecheck";
-export const ERP_LINK_STORE_GET = "/v1/franchise_common/connectedbranch";
-export const ERP_LINK_BSDIS_GET = "/v1/franchise_common/connectedbusinessarea";
+export const ERP_CODE_CHECKER = "/v1/Franchise_Branch/duplicateCheck";
+export const ERP_LINK_STORE_GET = "/v1/Franchise_Branch/connectedBranches";
+export const ERP_LINK_BSDIS_GET = "/v1/Franchise_Branch/connectedBis";
