@@ -102,11 +102,11 @@ const FlowCustom = () => {
         pointerEvents="none"
         align="center"
       >
-        <DecoFrameL pl="1rem" w="20%" h="770px" align="flex-end">
+        <DecoFrameL pl="1rem" w="22%" h="770px" align="flex-end">
           {flowActive && flowShow && <FlowPopInfo />}
         </DecoFrameL>
-        <DecoFrameCenter w="60%" h="770px" />
-        <DecoFrameR pr="1rem" w="20%" h="770px">
+        <DecoFrameCenter w="56%" h="770px" />
+        <DecoFrameR pr="1rem" w="22%" h="770px">
           {((brandShow && brandActive) || (buildShow && buildActive)) && (
             <DepthListBox
               brandShow={brandShow}

@@ -203,10 +203,18 @@ type TypeNiceDong = {
 type TypeMapStoreSearch = {
   req: TypeFilterStore;
   res: {
-    _id: string;
-    storeName: string;
-    lat: number;
-    lng: number;
+    data: StoreList[];
+  };
+};
+
+type StoreList = {
+  _id: string;
+  storeName: string;
+  storePhone: string;
+  addr: string;
+  location: {
+    type: string;
+    coordinates?: [number, number];
   };
 };
 
@@ -319,6 +327,45 @@ type TypeMapRentInfo = {
   };
 };
 
+type TypeChkCode = {
+  req: {
+    type: "store" | "bsDis";
+    code: string;
+  };
+  res: {
+    result: boolean;
+  };
+};
+
+type TypeSearchLinkStore = {
+  req: {
+    type: "name" | "code";
+    text: string;
+    brandCode: string;
+  };
+  res: {
+    data: {
+      storeName: string;
+      storeCode: string;
+    }[];
+  };
+};
+
+type TypeSearchLinkBsDis = {
+  req: {
+    type: "name" | "code";
+    text: string;
+    brandCode: string;
+  };
+  res: {
+    data: {
+      bsDisName: string;
+      bsDisCode: string;
+      bsDisType: string;
+    }[];
+  };
+};
+
 export type {
   BixApiInstance,
   TypeMapSido,
@@ -336,10 +383,14 @@ export type {
   TypeNiceSigungu,
   TypeNiceDong,
   TypeMapStoreSearch,
+  StoreList,
   TypeMapBsDisSearch,
   TypeMapRentSearch,
   TypeMapStoreInfo,
   StoreInfo,
   TypeMapBsDisInfo,
   TypeMapRentInfo,
+  TypeChkCode,
+  TypeSearchLinkStore,
+  TypeSearchLinkBsDis,
 };

@@ -28,6 +28,9 @@ import {
   MAP_ERP_STORE_GET_INFO,
   MAP_ERP_RENT_GET_INFO,
   MAP_ERP_BSDIS_GET_INFO,
+  ERP_CODE_CHECKER,
+  ERP_LINK_STORE_GET,
+  ERP_LINK_BSDIS_GET,
 } from "@api/bizSub/url";
 //  Type
 import type {
@@ -49,6 +52,9 @@ import type {
   TypeMapStoreInfo,
   TypeMapBsDisInfo,
   TypeMapRentInfo,
+  TypeChkCode,
+  TypeSearchLinkStore,
+  TypeSearchLinkBsDis,
 } from "@api/bizSub/type";
 
 let localStorage = window.localStorage;
@@ -177,7 +183,7 @@ const apiErpMap = {
 };
 
 const apiUpjong = {
-  getTopList: () => instance.get<TypeUpjongGet["res"]>(MAP_UPJONG_TOP),
+  getTopList: () => instance.post<{}, TypeUpjongGet["res"]>(MAP_UPJONG_TOP, {}),
   getMidList: (req: TypeUpjongPost["req"]) =>
     instance.post<TypeUpjongPost["req"], TypeUpjongPost["res"]>(
       MAP_UPJONG_MID,
@@ -190,6 +196,24 @@ const apiUpjong = {
     ),
 };
 
+const apiCommon = {
+  checkCode: (req: TypeChkCode["req"]) =>
+    instance.post<TypeChkCode["req"], TypeChkCode["res"]>(
+      ERP_CODE_CHECKER,
+      req
+    ),
+  getAvailableStoreLink: (req: TypeSearchLinkStore["req"]) =>
+    instance.post<TypeSearchLinkStore["req"], TypeSearchLinkStore["res"]>(
+      ERP_LINK_STORE_GET,
+      req
+    ),
+  getAvailableBsDisLink: (req: TypeSearchLinkBsDis["req"]) =>
+    instance.post<TypeSearchLinkBsDis["req"], TypeSearchLinkBsDis["res"]>(
+      ERP_LINK_BSDIS_GET,
+      req
+    ),
+};
+
 export {
   apiMapArea,
   apiMapNice,
@@ -198,4 +222,5 @@ export {
   apiMapBuilding,
   apiErpMap,
   apiUpjong,
+  apiCommon,
 };

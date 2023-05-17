@@ -17,24 +17,23 @@ const MapFlowErp = () => {
   const { show: rentShow, data: rentList } = useRecoilValue(infoComErpRent);
   const { show: bsDisShow, data: bsDisList } = useRecoilValue(infoComErpBsnsD);
 
-  return (
-    <Flex w="100%" h="100%" justify="flex-end" zIndex={1} pointerEvents="none">
-      {(storeList?.length > 0 ||
-        rentList?.length > 0 ||
-        bsDisList?.length > 0) && (
-        <DecoFrameR pr="0.25rem">
-          <BrandListBox
-            storeShow={storeShow}
-            bsDisShow={bsDisShow}
-            rentShow={rentShow}
-            store={storeList || []}
-            rent={rentList || []}
-            bsDis={bsDisList || []}
-          />
-        </DecoFrameR>
-      )}
-    </Flex>
-  );
+  return null;
+  // <Flex w="100%" h="100%" justify="flex-end" zIndex={1} pointerEvents="none">
+  //   {(storeList?.length > 0 ||
+  //     rentList?.length > 0 ||
+  //     bsDisList?.length > 0) && (
+  //     <DecoFrameR pr="0.25rem">
+  //       <BrandListBox
+  //         storeShow={storeShow}
+  //         bsDisShow={bsDisShow}
+  //         rentShow={rentShow}
+  //         store={storeList || []}
+  //         rent={rentList || []}
+  //         bsDis={bsDisList || []}
+  //       />
+  //     </DecoFrameR>
+  //   )}
+  // </Flex>
 };
 
 export default MapFlowErp;

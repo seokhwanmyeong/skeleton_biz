@@ -47,8 +47,10 @@ type TypeMapStoreSearch = {
       storeName: string;
       storePhone: string;
       addr: string;
-      lat: string;
-      lng: string;
+      location: {
+        type: string;
+        coordinates?: [number, number];
+      };
     };
   };
 };

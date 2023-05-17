@@ -1,5 +1,5 @@
 //  Lib
-import { useState, Fragment } from "react";
+import { useState, Fragment, useEffect, useContext } from "react";
 import { Box, Button, Flex, Image } from "@chakra-ui/react";
 //  Component
 import ToolRound from "@components/sementicMapLayer/boxTool/ToolRound";
@@ -9,11 +9,55 @@ import ToolRoadView from "@components/sementicMapLayer/boxTool/ToolRoadView";
 import icoDistance from "@assets/icons/ico_Distance.png";
 import icoRoadview from "@assets/icons/ico_Roadview.png";
 import icoRuler from "@assets/icons/ico_Ruler.png";
+import { NaverMapContext } from "@src/lib/src";
 
 type Props = {};
 
-const ToolBox = (props: Props) => {
+const ToolBox = ({ list, toolOpen }: any) => {
+  const { state } = useContext(NaverMapContext);
   const [activeIdx, setActiveIdx] = useState<number>(-1);
+
+  useEffect(() => {
+    if (!state.map && activeIdx === -1) return;
+    if (state.objects && state.objects.size > 0 && list.length > 0) {
+      state.objects.forEach((li: any) => li.setOptions("clickable", false));
+    }
+
+    let timer: any;
+    const zoomEvent = naver.maps.Event.addListener(
+      state.map,
+      "bounds_changed",
+      (e) => {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(function () {
+          if (state.map && state.objects && state.objects.size > 0) {
+            state.objects.forEach((li: any) => {
+              if (
+                li.OVERLAY_TYPE === "Polygon" ||
+                li.OVERLAY_TYPE === "Circle" ||
+                li.OVERLAY_TYPE === "Marker"
+              )
+                li.setOptions("clickable", false);
+            });
+          }
+        }, 300);
+      }
+    );
+
+    return () => {
+      naver.maps.Event.removeListener(zoomEvent);
+      if (state.map && state.objects && state.objects.size > 0) {
+        state.objects.forEach((li: any) => {
+          if (
+            li.OVERLAY_TYPE === "Polygon" ||
+            li.OVERLAY_TYPE === "Circle" ||
+            li.OVERLAY_TYPE === "Marker"
+          )
+            li.setOptions("clickable", false);
+        });
+      }
+    };
+  }, [state, list, toolOpen]);
 
   return (
     <Fragment>

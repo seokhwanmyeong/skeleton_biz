@@ -42,7 +42,7 @@ const MapFlowDong = () => {
     let zoom = state.map?.getZoom() || 0;
     resetRef();
 
-    if (zoom >= 17 && flowActive && flowShow) {
+    if (zoom >= 16 && flowActive && flowShow) {
       const bounds: any = state.map.getBounds();
       const transBounds: any[] = [];
 
@@ -67,6 +67,7 @@ const MapFlowDong = () => {
             ) {
               const markerLi: any[] = [];
               const obj = state.map.data.getFeatureById(dong.slctId);
+              console.log(obj);
               const objBounds: any = obj.getBounds();
               const circle = new naver.maps.Circle({
                 map: state.map,
@@ -74,39 +75,85 @@ const MapFlowDong = () => {
                 radius: searchRange[zoom],
               });
               const circleBounds: any = circle.getBounds();
+              const tmp: any[] = [];
+              const arr: any[] = [];
 
               res.data.map((list: any) => {
                 list.map((li: TypeNiceFlowData) => {
-                  const { flowPop, xAxis, yAxis } = li;
-
-                  if (
-                    objBounds._max.x > xAxis &&
-                    circleBounds._max.x > xAxis &&
-                    objBounds._min.x < xAxis &&
-                    circleBounds._min.x < xAxis &&
-                    objBounds._max.y > yAxis &&
-                    circleBounds._max.y > yAxis &&
-                    objBounds._min.y < yAxis &&
-                    circleBounds._min.y < yAxis
-                  ) {
-                    const lv = lvHandler(flowPop);
-
-                    const marker = new naver.maps.Marker({
-                      map: state.map,
-                      position: new naver.maps.LatLng(yAxis, xAxis),
-                      icon: {
-                        content: `<div style="width: 6px; height: 6px; border-radius: 50%; background-color: ${flowColor[lv]}"/>`,
-                        size: new naver.maps.Size(6, 6),
-                        anchor: new naver.maps.Point(3, 3),
-                      },
-                    });
-
-                    markerLi.push(marker);
-                  } else {
-                    return null;
-                  }
+                  tmp.push(li);
                 });
               });
+
+              tmp.sort((x, y) => x.xAxis + x.yAxis - (y.xAxis + y.yAxis));
+              const divide =
+                zoom === 16 ? 6 : zoom === 16 ? 5 : zoom === 17 ? 4 : 3;
+              for (let i = 0; i < tmp.length; i++) {
+                if (i % divide === 0) {
+                  arr.push(tmp[i]);
+                }
+              }
+
+              arr.map((li: TypeNiceFlowData) => {
+                const { flowPop, xAxis, yAxis } = li;
+                const point = new naver.maps.LatLng(yAxis, xAxis);
+                if (
+                  objBounds._max.x > xAxis &&
+                  circleBounds._max.x > xAxis &&
+                  objBounds._min.x < xAxis &&
+                  circleBounds._min.x < xAxis &&
+                  objBounds._max.y > yAxis &&
+                  circleBounds._max.y > yAxis &&
+                  objBounds._min.y < yAxis &&
+                  circleBounds._min.y < yAxis
+                ) {
+                  const lv = lvHandler(flowPop);
+
+                  const marker = new naver.maps.Marker({
+                    map: state.map,
+                    position: new naver.maps.LatLng(yAxis, xAxis),
+                    icon: {
+                      content: `<div style="width: 6px; height: 6px; border-radius: 50%; background-color: ${flowColor[lv]}"/>`,
+                      size: new naver.maps.Size(6, 6),
+                      anchor: new naver.maps.Point(3, 3),
+                    },
+                  });
+
+                  markerLi.push(marker);
+                }
+              });
+
+              // res.data.map((list: any) => {
+              //   list.map((li: TypeNiceFlowData) => {
+              //     const { flowPop, xAxis, yAxis } = li;
+
+              //     if (
+              //       objBounds._max.x > xAxis &&
+              //       circleBounds._max.x > xAxis &&
+              //       objBounds._min.x < xAxis &&
+              //       circleBounds._min.x < xAxis &&
+              //       objBounds._max.y > yAxis &&
+              //       circleBounds._max.y > yAxis &&
+              //       objBounds._min.y < yAxis &&
+              //       circleBounds._min.y < yAxis
+              //     ) {
+              //       const lv = lvHandler(flowPop);
+
+              //       const marker = new naver.maps.Marker({
+              //         map: state.map,
+              //         position: new naver.maps.LatLng(yAxis, xAxis),
+              //         icon: {
+              //           content: `<div style="width: 6px; height: 6px; border-radius: 50%; background-color: ${flowColor[lv]}"/>`,
+              //           size: new naver.maps.Size(6, 6),
+              //           anchor: new naver.maps.Point(3, 3),
+              //         },
+              //       });
+
+              //       markerLi.push(marker);
+              //     } else {
+              //       return null;
+              //     }
+              //   });
+              // });
 
               circle.setMap(null);
               resetRef();
@@ -131,10 +178,10 @@ const MapFlowDong = () => {
           }
           let zoom = state.map?.getZoom() || 0;
 
-          if (zoom < 17) {
+          if (zoom < 16) {
             resetRef();
             return;
-          } else if (zoom >= 17) {
+          } else if (zoom >= 16) {
             if (!state.map) return;
             const transBounds: any[] = [];
 
@@ -166,36 +213,85 @@ const MapFlowDong = () => {
                       radius: searchRange[zoom],
                     });
                     const circleBounds: any = circle.getBounds();
-
+                    const tmp: any[] = [];
+                    const arr: any[] = [];
+                    console.log(obj);
                     res.data.map((list: any) => {
                       list.map((li: TypeNiceFlowData) => {
-                        const { flowPop, xAxis, yAxis } = li;
-                        if (
-                          objBounds._max.x > xAxis &&
-                          circleBounds._max.x > xAxis &&
-                          objBounds._min.x < xAxis &&
-                          circleBounds._min.x < xAxis &&
-                          objBounds._max.y > yAxis &&
-                          circleBounds._max.y > yAxis &&
-                          objBounds._min.y < yAxis &&
-                          circleBounds._min.y < yAxis
-                        ) {
-                          const lv = lvHandler(flowPop);
-
-                          const marker = new naver.maps.Marker({
-                            map: state.map,
-                            position: new naver.maps.LatLng(yAxis, xAxis),
-                            icon: {
-                              content: `<div style="width: 6px; height: 6px; border-radius: 50%; background-color: ${flowColor[lv]}"/>`,
-                              size: new naver.maps.Size(6, 6),
-                              anchor: new naver.maps.Point(3, 3),
-                            },
-                          });
-
-                          markerLi.push(marker);
-                        }
+                        tmp.push(li);
                       });
                     });
+
+                    tmp.sort((x, y) => x.xAxis + x.yAxis - (y.xAxis + y.yAxis));
+                    const divide =
+                      zoom === 16 ? 6 : zoom === 16 ? 5 : zoom === 17 ? 4 : 3;
+                    for (let i = 0; i < tmp.length; i++) {
+                      if (i % divide === 0) {
+                        arr.push(tmp[i]);
+                      }
+                    }
+
+                    arr.map((li: TypeNiceFlowData) => {
+                      const { flowPop, xAxis, yAxis } = li;
+                      const point = new naver.maps.LatLng(yAxis, xAxis);
+                      if (
+                        objBounds._max.x > xAxis &&
+                        circleBounds._max.x > xAxis &&
+                        objBounds._min.x < xAxis &&
+                        circleBounds._min.x < xAxis &&
+                        objBounds._max.y > yAxis &&
+                        circleBounds._max.y > yAxis &&
+                        objBounds._min.y < yAxis &&
+                        circleBounds._min.y < yAxis
+                      ) {
+                        const lv = lvHandler(flowPop);
+
+                        const marker = new naver.maps.Marker({
+                          map: state.map,
+                          position: new naver.maps.LatLng(yAxis, xAxis),
+                          icon: {
+                            content: `<div style="width: 6px; height: 6px; border-radius: 50%; background-color: ${flowColor[lv]}"/>`,
+                            size: new naver.maps.Size(6, 6),
+                            anchor: new naver.maps.Point(3, 3),
+                          },
+                        });
+
+                        markerLi.push(marker);
+                      } else {
+                        return;
+                      }
+                    });
+
+                    // res.data.map((list: any) => {
+                    //   list.map((li: TypeNiceFlowData) => {
+                    //     const { flowPop, xAxis, yAxis } = li;
+                    //     if (
+                    //       objBounds._max.x > xAxis &&
+                    //       circleBounds._max.x > xAxis &&
+                    //       objBounds._min.x < xAxis &&
+                    //       circleBounds._min.x < xAxis &&
+                    //       objBounds._max.y > yAxis &&
+                    //       circleBounds._max.y > yAxis &&
+                    //       objBounds._min.y < yAxis &&
+                    //       circleBounds._min.y < yAxis
+                    //     ) {
+                    //       const lv = lvHandler(flowPop);
+
+                    //       const marker = new naver.maps.Marker({
+                    //         map: state.map,
+                    //         position: new naver.maps.LatLng(yAxis, xAxis),
+                    //         icon: {
+                    //           content: `<div style="width: 6px; height: 6px; border-radius: 50%; background-color: ${flowColor[lv]}"/>`,
+                    //           size: new naver.maps.Size(6, 6),
+                    //           anchor: new naver.maps.Point(3, 3),
+                    //         },
+                    //       });
+
+                    //       markerLi.push(marker);
+                    //     }
+                    //   });
+                    // });
+
                     circle.setMap(null);
                     resetRef();
                     flowPoint.current = markerLi;
@@ -206,7 +302,7 @@ const MapFlowDong = () => {
                 });
             }
           }
-        }, 500);
+        }, 700);
       }
     );
 

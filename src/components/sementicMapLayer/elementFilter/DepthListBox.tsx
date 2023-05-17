@@ -63,6 +63,7 @@ const DepthListBox = memo(
     const setSv = useSetRecoilState(sementicViewState);
     const buildingList = useRef<any[] | null>(null);
     const [tabIdx, setTabIdx] = useState<number>(0);
+    const [tabLen, setTabLen] = useState(0);
 
     const resetRef = useCallback(() => {
       if (
@@ -95,7 +96,7 @@ const DepthListBox = memo(
       let zoom = state.map?.getZoom() || 0;
       resetRef();
 
-      if (zoom >= 17 && buildShow) {
+      if (zoom >= 16 && buildShow) {
         const bounds: any = state.map.getBounds();
         const transBounds: any[] = [];
 
@@ -160,8 +161,18 @@ const DepthListBox = memo(
                     });
 
                     tmp.addListener("click", () => {
-                      if (element) {
-                        element.scrollIntoView({ behavior: "smooth" });
+                      console.log(tabLen);
+                      if (tabLen === 2) {
+                        setTabIdx(1);
+                        setTimeout(() => {
+                          if (element) {
+                            element.scrollIntoView({ behavior: "smooth" });
+                          }
+                        }, 50);
+                      } else {
+                        if (element) {
+                          element.scrollIntoView({ behavior: "smooth" });
+                        }
                       }
                       // setSv({
                       //   viewId: "buildingInfo",
@@ -241,10 +252,10 @@ const DepthListBox = memo(
             if (state.map && buildShow) {
               let zoom = state.map?.getZoom() || 0;
 
-              if (zoom < 17) {
+              if (zoom < 16) {
                 resetRef();
                 return;
-              } else if (zoom >= 17) {
+              } else if (zoom >= 16) {
                 if (!state.map) return;
                 const transBounds: any[] = [];
 
@@ -307,8 +318,21 @@ const DepthListBox = memo(
                             });
 
                             tmp.addListener("click", () => {
-                              if (element) {
-                                element.scrollIntoView({ behavior: "smooth" });
+                              if (tabLen === 2) {
+                                setTabIdx(1);
+                                setTimeout(() => {
+                                  if (element) {
+                                    element.scrollIntoView({
+                                      behavior: "smooth",
+                                    });
+                                  }
+                                }, 50);
+                              } else {
+                                if (element) {
+                                  element.scrollIntoView({
+                                    behavior: "smooth",
+                                  });
+                                }
                               }
                             });
 
@@ -378,11 +402,23 @@ const DepthListBox = memo(
       };
     }, [state.map, buildShow, buildList]);
 
+    useEffect(() => {
+      if (
+        buildList &&
+        buildList.length > 0 &&
+        brandList &&
+        brandList.length > 0
+      ) {
+        setTabLen(2);
+      } else {
+        setTabLen(1);
+      }
+    }, [buildList, brandList]);
+
     return (
       <Flex
         m="0.1875rem 0"
         p="1rem 1.375rem 1rem"
-        // w="19.25rem"
         w="100%"
         h="100%"
         direction="column"
@@ -414,8 +450,8 @@ const DepthListBox = memo(
         <Deco01 width="100%" height="auto" />
         <Tabs
           variant="depthListBox"
-          // index={tabIdx}
-          // onChange={(index) => setTabIdx(index)}
+          index={tabIdx}
+          onChange={(index) => setTabIdx(index)}
         >
           <TabList border="none">
             {brandShow && brandList && brandList.length > 0 && (
@@ -521,7 +557,7 @@ const ListItemBrand = ({
     if (state.map) {
       let zoom = state.map.getZoom() || 0;
 
-      if (zoom >= 17 && isShow) {
+      if (zoom >= 16 && isShow) {
         const center = state.map.getCenter();
         const circle = new naver.maps.Circle({
           map: state.map,
@@ -531,27 +567,29 @@ const ListItemBrand = ({
         const circleBounds = circle.getBounds();
         const point = new naver.maps.LatLng(lat, lng);
 
-        if (circleBounds.hasPoint(point) && !markerRef.current) {
-          const marker = new naver.maps.Marker({
-            map: state.map,
-            position: [lng, lat],
-            icon: {
-              url: markerBrand,
-              size: new naver.maps.Size(50, 50),
-              anchor: new naver.maps.Point(24, 42),
-            },
-            zIndex: 103,
-          });
+        if (circleBounds.hasPoint(point)) {
+          if (!markerRef.current) {
+            const marker = new naver.maps.Marker({
+              map: state.map,
+              position: [lng, lat],
+              icon: {
+                url: markerBrand,
+                size: new naver.maps.Size(50, 50),
+                anchor: new naver.maps.Point(24, 42),
+              },
+              zIndex: 103,
+            });
 
-          marker.addListener("mouseover", () => {
-            onHover(true);
-          });
+            marker.addListener("mouseover", () => {
+              onHover(true);
+            });
 
-          marker.addListener("mouseout", () => {
-            onHover(false);
-          });
+            marker.addListener("mouseout", () => {
+              onHover(false);
+            });
 
-          markerRef.current = marker;
+            markerRef.current = marker;
+          }
         } else {
           if (markerRef.current) markerRef.current.setMap(null);
           markerRef.current = null;
@@ -573,12 +611,12 @@ const ListItemBrand = ({
           if (state.map && isShow) {
             let zoom = state.map?.getZoom() || 0;
 
-            if (zoom < 17 && markerRef.current) {
+            if (zoom < 16 && markerRef.current) {
               markerRef.current.setMap(null);
               markerRef.current = null;
 
               return;
-            } else if (zoom >= 17) {
+            } else if (zoom >= 16) {
               const center = state.map.getCenter();
               const circle = new naver.maps.Circle({
                 map: state.map,
@@ -588,27 +626,29 @@ const ListItemBrand = ({
               const circleBounds = circle.getBounds();
               const point = new naver.maps.LatLng(lat, lng);
 
-              if (circleBounds.hasPoint(point) && !markerRef.current) {
-                const marker = new naver.maps.Marker({
-                  map: state.map,
-                  position: [lng, lat],
-                  icon: {
-                    url: markerBrand,
-                    size: new naver.maps.Size(50, 50),
-                    anchor: new naver.maps.Point(24, 42),
-                  },
-                  zIndex: 103,
-                });
+              if (circleBounds.hasPoint(point)) {
+                if (!markerRef.current) {
+                  const marker = new naver.maps.Marker({
+                    map: state.map,
+                    position: [lng, lat],
+                    icon: {
+                      url: markerBrand,
+                      size: new naver.maps.Size(50, 50),
+                      anchor: new naver.maps.Point(24, 42),
+                    },
+                    zIndex: 103,
+                  });
 
-                marker.addListener("mouseover", () => {
-                  onHover(true);
-                });
+                  marker.addListener("mouseover", () => {
+                    onHover(true);
+                  });
 
-                marker.addListener("mouseout", () => {
-                  onHover(false);
-                });
+                  marker.addListener("mouseout", () => {
+                    onHover(false);
+                  });
 
-                markerRef.current = marker;
+                  markerRef.current = marker;
+                }
               } else {
                 if (markerRef.current) markerRef.current.setMap(null);
                 markerRef.current = null;

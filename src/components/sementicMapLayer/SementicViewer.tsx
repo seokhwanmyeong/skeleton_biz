@@ -1,9 +1,7 @@
 //  LIB
-import { useState, useRef, useEffect } from "react";
+import { useEffect } from "react";
 import { useRecoilValue, useResetRecoilState } from "recoil";
-import { Flex, Button, useDisclosure } from "@chakra-ui/react";
-//  Page
-import ErpRentDetail from "@page/erp/rent/ErpRentDetail";
+import { useDisclosure } from "@chakra-ui/react";
 //  Component
 import ModalStoreDetail from "@components/modal/map/ModalStoreDetail";
 import ModalRentDetail from "@components/modal/map/ModalRentDetail";

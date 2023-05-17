@@ -10,7 +10,7 @@ const FlowPopInfo = (props: Props) => {
       pos="relative"
       m="0.1875rem 0"
       p="1rem 1.375rem 1rem"
-      w="19.25rem"
+      w="100%"
       h="50%"
       direction="column"
       border="1px solid"

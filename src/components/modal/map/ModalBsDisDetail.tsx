@@ -97,51 +97,56 @@ const ModalBsDisDetail = ({ id, name, code, isOpen, onClose }: Props) => {
     }
   };
 
-  const flowCustomNavigator = () => {
+  const flowCustomNavigator = useCallback(() => {
     const type = "circle";
-    if (type === "circle") {
-      // @ts-ignore
-      const geocoder = new kakao.maps.services.Geocoder();
+    if (state.map && state.objects) {
+      const obj: any = state.objects.get(`bsDisArea-${id}`);
+      const bounds = obj.getBounds();
+      const center = bounds.getCenter();
+      const type = obj.OVERLAY_TYPE;
 
-      geocoder.coord2RegionCode(center?._lng, center?._lat, (result: any) => {
-        setSlceCustom({
-          areaType: "circle",
-          slctName: result[0].address_name || "",
-          pathType: "circle",
-          slctPath: bounds,
-          range: range,
-          center: center,
+      if (type === "Circle" && state.map && state.objects) {
+        // @ts-ignore
+        const geocoder = new kakao.maps.services.Geocoder();
+        const range = obj.getRadius();
+
+        geocoder.coord2RegionCode(center?._lng, center?._lat, (result: any) => {
+          setSlceCustom({
+            areaType: "circle",
+            slctName: `상권: ${name}`,
+            pathType: "circle",
+            slctPath: bounds,
+            range: range,
+            center: center,
+          });
+          setFlow("custom");
+          reserView();
         });
-        setFlow("custom");
-        reserView();
-      });
-    } else {
-      const polygon: any = [];
-      const path: any = polygon?.getPath();
-      const bounds: any = polygon?.getBounds();
-      const center: any = bounds?.getCenter();
-      // @ts-ignore
-      const geocoder = new kakao.maps.services.Geocoder();
+      } else {
+        // @ts-ignore
+        const geocoder = new kakao.maps.services.Geocoder();
+        const path: any = obj?.getPath();
 
-      if (!path || path.length - 1 <= 2) {
-        alert("영역을 제대로 설정해주세요");
-        return;
+        if (!path || path.length - 1 <= 2) {
+          alert("영역을 제대로 설정해주세요");
+          return;
+        }
+
+        geocoder.coord2RegionCode(center?._lng, center?._lat, (result: any) => {
+          setSlceCustom({
+            areaType: "polygon",
+            pathType: "polygon",
+            slctName: `상권: ${name}`,
+            slctPath: path._array,
+            range: undefined,
+            center: center,
+          });
+          setFlow("custom");
+          reserView();
+        });
       }
-
-      geocoder.coord2RegionCode(center?._lng, center?._lat, (result: any) => {
-        setSlceCustom({
-          areaType: "polygon",
-          slctName: result[0].address_name || "",
-          slctPath: path._array,
-          range: undefined,
-          center: center,
-          pathType: "polygon",
-        });
-        setFlow("custom");
-        reserView();
-      });
     }
-  };
+  }, [state]);
 
   useEffect(() => {
     if (state.map) {
@@ -377,40 +382,46 @@ const ModalBsDisDetail = ({ id, name, code, isOpen, onClose }: Props) => {
           </DrawerBody>
         </DrawerContent>
       </Drawer>
-      <Modal isOpen={modalOpen} isCentered={true} onClose={onModalClose}>
-        <ModalOverlay />
-        <ModalContent w="480px" maxW="auto">
-          <ModalHeader display="flex" justifyContent="flex-end">
-            <IconButton
-              onClick={onModalClose}
-              aria-label="닫기"
-              icon={<IcoClose color="font.primary" />}
-              w="1rem"
-              h="1rem"
-              bg="transparent"
-              color="neutral.gray6"
-              _hover={{
-                bg: "transparent",
-                color: "neutral.gray9",
-              }}
-            />
-          </ModalHeader>
-          <ModalBody p="0rem 3rem">
-            <FormBsnsD initVal={{}} setValues={updateBsnsDis} ref={submitRef} />
-          </ModalBody>
-          <ModalFooter w="100%" justifyContent="center">
-            <Button
-              variant="modalSubmit"
-              w="80%"
-              zIndex={1}
-              onClick={submitHandler}
-            >
-              <IcoPlusCircle />
-              정보 수정
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      {modalOpen && (
+        <Modal isOpen={modalOpen} isCentered={true} onClose={onModalClose}>
+          <ModalOverlay />
+          <ModalContent w="480px" maxW="auto">
+            <ModalHeader display="flex" justifyContent="flex-end">
+              <IconButton
+                onClick={onModalClose}
+                aria-label="닫기"
+                icon={<IcoClose color="font.primary" />}
+                w="1rem"
+                h="1rem"
+                bg="transparent"
+                color="neutral.gray6"
+                _hover={{
+                  bg: "transparent",
+                  color: "neutral.gray9",
+                }}
+              />
+            </ModalHeader>
+            <ModalBody p="0rem 3rem">
+              <FormBsnsD
+                initVal={{}}
+                setValues={updateBsnsDis}
+                ref={submitRef}
+              />
+            </ModalBody>
+            <ModalFooter w="100%" justifyContent="center">
+              <Button
+                variant="modalSubmit"
+                w="80%"
+                zIndex={1}
+                onClick={submitHandler}
+              >
+                <IcoPlusCircle />
+                정보 수정
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      )}
     </Fragment>
   );
 };

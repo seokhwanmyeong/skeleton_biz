@@ -44,7 +44,7 @@ OverlayViewProps): React.ReactPortal | null => {
     // 오버레이 추가
     overlay.onAdd = () => {
       if (pointerevent === false) {
-        container.style.position = "relative";
+        container.style.position = "absolute";
         container.style.pointerEvents = "none";
         container.style.zIndex = "1";
       } else {

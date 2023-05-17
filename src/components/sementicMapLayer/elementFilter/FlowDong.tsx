@@ -144,12 +144,12 @@ const FlowDong = () => {
         pointerEvents="none"
         align="center"
       >
-        <DecoFrameL pl="1rem" w="20%" h="770px" align="flex-end">
+        <DecoFrameL pl="1rem" w="22%" h="770px" align="flex-end">
           {dongRank && <BoxRankingDong rankData={dongRank} />}
           {flowActive && flowShow && <FlowPopInfo />}
         </DecoFrameL>
-        <DecoFrameCenter activeAni={false} w="60%" h="770px" />
-        <DecoFrameR pr="1rem" w="20%" h="770px">
+        <DecoFrameCenter activeAni={false} w="56%" h="770px" />
+        <DecoFrameR pr="1rem" w="22%" h="770px">
           {((brandShow && brandActive) || (buildShow && buildActive)) && (
             <DepthListBox
               brandShow={brandShow}

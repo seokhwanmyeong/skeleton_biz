@@ -1,5 +1,5 @@
 //  Lib
-import { Fragment, useState, useContext } from "react";
+import { Fragment, useState, useContext, useEffect } from "react";
 import { useRecoilValue, useResetRecoilState } from "recoil";
 import { Box, Button } from "@chakra-ui/react";
 import { NaverMapContext, Polygon } from "@src/lib/src";
@@ -19,6 +19,29 @@ const DrawBox = ({ toolOpen, setLocalModalIdx, onOpen, onClose }: any) => {
   const resetCreateArea = useResetRecoilState(atomCreateArea);
   const [activeIdx, setActiveIdx] = useState<number>(-1);
 
+  useEffect(() => {
+    if (!state.map || !state.objects) return;
+    state.objects.forEach((li: any) => li.setOptions("clickable", false));
+
+    let timer: any;
+    const zoomEvent = naver.maps.Event.addListener(
+      state.map,
+      "bounds_changed",
+      (e) => {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(function () {
+          state.objects.forEach((li: any) => li.setOptions("clickable", false));
+        }, 300);
+      }
+    );
+
+    return () => {
+      naver.maps.Event.removeListener(zoomEvent);
+      if (state.map && state.objects) {
+        state.objects.forEach((li: any) => li.setOptions("clickable", true));
+      }
+    };
+  }, [state]);
   return (
     <Fragment>
       {/* <Flex
@@ -81,7 +104,7 @@ const DrawBox = ({ toolOpen, setLocalModalIdx, onOpen, onClose }: any) => {
           onClose();
           setLocalModalIdx(0);
           resetCreateArea();
-          toolOpen(false);
+          toolOpen && toolOpen(false);
         }}
       >
         <Box>

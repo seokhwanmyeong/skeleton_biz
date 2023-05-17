@@ -32,6 +32,7 @@ import {
   resetErp,
 } from "@states/sementicMap/stateFilter";
 import { atomCreateArea } from "@states/sementicMap/stateMap";
+import { sementicViewState } from "@states/sementicMap/stateView";
 //  Util
 import { getCenter } from "@util/map/distance";
 //  Icon
@@ -56,7 +57,7 @@ import type {
   TypeFilterBsDis,
   TypeFilterRent,
 } from "@states/sementicMap/stateFilter";
-import type { TypeMapStoreSearch, TypeMapRentSearch } from "@api/biz/type";
+import type { TypeMapStoreSearch, TypeMapRentSearch } from "@api/bizSub/type";
 
 type ErpFilterProps = {
   editorOpen: boolean;
@@ -68,6 +69,7 @@ const ErpFilter = ({ editorOpen, setEditorOpen }: ErpFilterProps) => {
   const divRef = useRef<HTMLDivElement | null>(null);
   const { getStoreList, getRentList, getBsDisList } = apiErpMap;
   const resetCreateArea = useResetRecoilState(atomCreateArea);
+  const resetView = useResetRecoilState(sementicViewState);
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [openIdx, setOpenIdx] = useState(0);
   const [localModalIdx, setLocalModalIdx] = useState(0);
@@ -93,10 +95,18 @@ const ErpFilter = ({ editorOpen, setEditorOpen }: ErpFilterProps) => {
 
     const tmp: any = { ...filterStore, brandCode: "3" };
 
-    if (filterStore.storeType.length === 0)
-      tmp.storeType = ["A", "B", "C", "D", "E"];
-    if (filterStore.storeStatus.length === 0)
+    if (
+      filterStore.storeType.length === 0 ||
+      filterStore.storeType.length === 5
+    )
+      // tmp.storeType = ["A", "B", "C", "D", "E"];
+      tmp.storeType = [];
+    if (
+      filterStore.storeStatus.length === 0 ||
+      filterStore.storeStatus.length === 5
+    )
       tmp.storeStatus = ["open", "ready", "rest", "close", "etc"];
+    // tmp.storeStatus = [];
     if (!filterStore.areaCode || filterStore.areaCode?.length <= 2)
       tmp.sidoCode = filterStore.areaCode;
     else if (
@@ -112,31 +122,39 @@ const ErpFilter = ({ editorOpen, setEditorOpen }: ErpFilterProps) => {
 
     delete tmp.areaCode;
     delete tmp.areaText;
+    delete tmp.storeType;
 
-    getStoreList(tmp).then((res: { data: TypeMapStoreSearch["res"][] }) => {
-      const { data } = res;
+    getStoreList(tmp)
+      .then((res: TypeMapStoreSearch["res"]) => {
+        const { data } = res;
+        if (data && data.length > 0) {
+          const tmp = data.filter((li) => li.location.coordinates);
 
-      data && data.length > 0
-        ? setErpStore({
+          setErpStore({
             filter: filterStore,
             active: true,
             show: true,
-            data: data,
-          })
-        : setErpStore({
+            data: tmp,
+          });
+        } else {
+          setErpStore({
             filter: filterStore,
             active: true,
             show: true,
             data: [],
           });
-    });
+        }
+
+        setOpenIdx(0);
+      })
+      .catch(() => {
+        setOpenIdx(0);
+      });
   };
 
   //  상권 필터 검색
   const searchBsDHandler = () => {
     console.log("bsD search");
-    console.log(filterBsD);
-
     const tmp: any = { ...filterBsD, brandCode: "3" };
     delete tmp.areaCode;
     delete tmp.areaText;
@@ -168,39 +186,49 @@ const ErpFilter = ({ editorOpen, setEditorOpen }: ErpFilterProps) => {
     //   data: [],
     // });
     // return;
-    getBsDisList(tmp).then((res) => {
-      const { data } = res;
-      console.log(data);
-      if (data && data.length > 0) {
-        const checkList = data.filter((li: any) =>
-          li.polygonType ? true : false
-        );
+    getBsDisList(tmp)
+      .then((res) => {
+        const { data } = res;
+        console.log(data);
+        if (data && data.length > 0) {
+          const checkList = data.filter((li: any) => {
+            if (li.polygonType !== "single") {
+              console.log(li);
+            }
 
-        const makeCenter = checkList.map((li: any) => {
-          if (li.center) {
-            const center = li.center.coordinates;
-            return { ...li, center: center };
-          } else {
-            const center = getCenter(li.polygon[0]);
-            return { ...li, center: center };
-          }
-        });
+            return li.polygonType ? true : false;
+          });
 
-        setErpBsD({
-          filter: filterBsD,
-          active: true,
-          show: true,
-          data: makeCenter || [],
-        });
-      } else {
-        setErpBsD({
-          filter: filterBsD,
-          active: true,
-          show: true,
-          data: [],
-        });
-      }
-    });
+          const makeCenter = checkList.map((li: any) => {
+            if (li.center) {
+              const center = li.center.coordinates;
+              return { ...li, center: center };
+            } else {
+              const center = getCenter(li.polygon[0]);
+              return { ...li, center: center };
+            }
+          });
+
+          setErpBsD({
+            filter: filterBsD,
+            active: true,
+            show: true,
+            data: makeCenter || [],
+          });
+          setOpenIdx(0);
+        } else {
+          setErpBsD({
+            filter: filterBsD,
+            active: true,
+            show: true,
+            data: [],
+          });
+          setOpenIdx(0);
+        }
+      })
+      .catch(() => {
+        setOpenIdx(0);
+      });
   };
 
   //  매물 필터 검색
@@ -227,23 +255,29 @@ const ErpFilter = ({ editorOpen, setEditorOpen }: ErpFilterProps) => {
       tmp.dongCode = `${filterRent.areaCode.slice(0, 4)}00`;
     }
 
-    getRentList(tmp).then((res: { data: TypeMapRentSearch["res"][] }) => {
-      const { data } = res;
-      console.log(res);
-      data && data.length > 0
-        ? setErpRent({
-            filter: filterRent,
-            active: true,
-            show: true,
-            data: data,
-          })
-        : setErpRent({
-            filter: filterRent,
-            active: true,
-            show: true,
-            data: [],
-          });
-    });
+    getRentList(tmp)
+      .then((res: { data: TypeMapRentSearch["res"][] }) => {
+        const { data } = res;
+        console.log(res);
+        data && data.length > 0
+          ? setErpRent({
+              filter: filterRent,
+              active: true,
+              show: true,
+              data: data,
+            })
+          : setErpRent({
+              filter: filterRent,
+              active: true,
+              show: true,
+              data: [],
+            });
+
+        setOpenIdx(0);
+      })
+      .catch(() => {
+        setOpenIdx(0);
+      });
   };
 
   //  ERP 필터 초기화
@@ -899,6 +933,8 @@ const ErpFilter = ({ editorOpen, setEditorOpen }: ErpFilterProps) => {
                 aria-label="생성하기"
                 onClick={() => {
                   setEditorOpen(true);
+                  resetCreateArea();
+                  resetView();
                   if (localModalIdx === 2) {
                     isOpen && onClose();
                     setModalIdx(localModalIdx);

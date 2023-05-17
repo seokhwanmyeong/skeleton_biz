@@ -71,4 +71,16 @@ const getCenter = (paths: [number, number][]): [number, number] => {
   return [xcos / area, ycos / area];
 };
 
-export { calDist, calcPolyDistance, getCenterPolygon, getCenter };
+const pathAvg = (paths: [number, number][]): [number, number] => {
+  const length = paths.length;
+  let x = 0;
+  let y = 0;
+
+  paths.map((path) => {
+    x += path[0];
+    y += path[1];
+  });
+  return [x / length, y / length];
+};
+
+export { calDist, calcPolyDistance, getCenterPolygon, getCenter, pathAvg };

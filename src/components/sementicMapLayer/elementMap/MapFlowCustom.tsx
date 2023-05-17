@@ -5,15 +5,15 @@ import { NaverMapContext } from "@src/lib/src";
 import Circle from "@src/lib/src/components/Overlay/Circle";
 //  Components
 import InteractArea from "./InteractArea";
+//  Api
+import { apiMapNice } from "@api/bizSub/config";
 //  State
 import { atomSlctCustom } from "@states/sementicMap/stateMap";
 import { infoComFlowDepth } from "@src/states/sementicMap/stateFilter";
 //  Util
-import { lvHandler, searchRange } from "@util/define/map";
+import { lvHandler, searchRange, flowColor } from "@util/define/map";
 //  Type
 import type { TypeNiceFlowData } from "@api/bizSub/type";
-import { flowColor } from "@src/util/define/map";
-import { apiMapNice } from "@src/api/bizSub/config";
 
 type TypePoint = { lv: number; point: [number, number] };
 
@@ -41,7 +41,7 @@ const MapFlowCustom = () => {
     let zoom = state.map?.getZoom() || 0;
     resetRef();
 
-    if (zoom >= 17 && flowActive && flowShow) {
+    if (zoom >= 16 && flowActive && flowShow) {
       const bounds: any = state.map.getBounds();
       const transBounds: any[] = [];
 
@@ -68,58 +68,71 @@ const MapFlowCustom = () => {
                 radius: searchRange[zoom],
               });
               const circleBounds: any = circle.getBounds();
+              const tmp: any[] = [];
+              const arr: any[] = [];
+
               res.data.map((list: any) => {
                 list.map((li: TypeNiceFlowData) => {
-                  const { flowPop, xAxis, yAxis } = li;
-                  const point = new naver.maps.LatLng(yAxis, xAxis);
-
-                  if (
-                    objBounds.hasLatLng(point) &&
-                    circleBounds.hasLatLng(point)
-                  ) {
-                    const lv = lvHandler(flowPop);
-
-                    const marker = new naver.maps.Marker({
-                      map: state.map,
-                      position: new naver.maps.LatLng(yAxis, xAxis),
-                      icon: {
-                        content: `<div style="width: 6px; height: 6px; border-radius: 50%; background-color: ${flowColor[lv]}"/>`,
-                        size: new naver.maps.Size(6, 6),
-                        anchor: new naver.maps.Point(3, 3),
-                      },
-                    });
-
-                    markerLi.push(marker);
-                  }
+                  tmp.push(li);
                 });
               });
 
-              res.data.map((list: any) => {
-                list.map((li: TypeNiceFlowData) => {
-                  const { flowPop, xAxis, yAxis } = li;
-                  const point = new naver.maps.LatLng(yAxis, xAxis);
+              tmp.sort((x, y) => x.xAxis + x.yAxis - (y.xAxis + y.yAxis));
 
-                  if (
-                    objBounds.hasLatLng(point) &&
-                    circleBounds.hasLatLng(point)
-                  ) {
-                    const lv = lvHandler(flowPop);
+              const divide =
+                zoom === 16 ? 6 : zoom === 16 ? 5 : zoom === 17 ? 4 : 3;
+              for (let i = 0; i < tmp.length; i++) {
+                if (i % divide === 0) {
+                  arr.push(tmp[i]);
+                }
+              }
+              // res.data.map((list: any) => {
+              //   list.map((li: TypeNiceFlowData) => {
+              //     const { flowPop, xAxis, yAxis } = li;
+              //     const point = new naver.maps.LatLng(yAxis, xAxis);
 
-                    const marker = new naver.maps.Marker({
-                      map: state.map,
-                      position: new naver.maps.LatLng(yAxis, xAxis),
-                      icon: {
-                        content: `<div style="width: 6px; height: 6px; border-radius: 50%; background-color: ${flowColor[lv]}"/>`,
-                        size: new naver.maps.Size(6, 6),
-                        anchor: new naver.maps.Point(3, 3),
-                      },
-                    });
+              //     if (
+              //       objBounds.hasLatLng(point) &&
+              //       circleBounds.hasLatLng(point)
+              //     ) {
+              //       const lv = lvHandler(flowPop);
 
-                    markerLi.push(marker);
-                  } else {
-                    return null;
-                  }
-                });
+              //       const marker = new naver.maps.Marker({
+              //         map: state.map,
+              //         position: new naver.maps.LatLng(yAxis, xAxis),
+              //         icon: {
+              //           content: `<div style="width: 6px; height: 6px; border-radius: 50%; background-color: ${flowColor[lv]}"/>`,
+              //           size: new naver.maps.Size(6, 6),
+              //           anchor: new naver.maps.Point(3, 3),
+              //         },
+              //       });
+
+              //       markerLi.push(marker);
+              //     }
+              //   });
+              // });
+
+              arr.map((li: TypeNiceFlowData) => {
+                const { flowPop, xAxis, yAxis } = li;
+                const point = new naver.maps.LatLng(yAxis, xAxis);
+                if (
+                  objBounds.hasLatLng(point) &&
+                  circleBounds.hasLatLng(point)
+                ) {
+                  const lv = lvHandler(flowPop);
+
+                  const marker = new naver.maps.Marker({
+                    map: state.map,
+                    position: new naver.maps.LatLng(yAxis, xAxis),
+                    icon: {
+                      content: `<div style="width: 6px; height: 6px; border-radius: 50%; background-color: ${flowColor[lv]}"/>`,
+                      size: new naver.maps.Size(6, 6),
+                      anchor: new naver.maps.Point(3, 3),
+                    },
+                  });
+
+                  markerLi.push(marker);
+                }
               });
 
               circle.setMap(null);
@@ -145,10 +158,10 @@ const MapFlowCustom = () => {
           }
           let zoom = state.map?.getZoom() || 0;
 
-          if (zoom < 17) {
+          if (zoom < 16) {
             resetRef();
             return;
-          } else if (zoom >= 17) {
+          } else if (zoom >= 16) {
             if (!state.map) return;
             const transBounds: any[] = [];
 
@@ -175,31 +188,69 @@ const MapFlowCustom = () => {
                       radius: searchRange[zoom],
                     });
                     const circleBounds: any = circle.getBounds();
+                    const tmp: any[] = [];
+                    const arr: any[] = [];
 
                     res.data.map((list: any) => {
                       list.map((li: TypeNiceFlowData) => {
-                        const { flowPop, xAxis, yAxis } = li;
-                        const point = new naver.maps.LatLng(yAxis, xAxis);
-
-                        if (
-                          objBounds.hasLatLng(point) &&
-                          circleBounds.hasLatLng(point)
-                        ) {
-                          const lv = lvHandler(flowPop);
-
-                          const marker = new naver.maps.Marker({
-                            map: state.map,
-                            position: new naver.maps.LatLng(yAxis, xAxis),
-                            icon: {
-                              content: `<div style="width: 6px; height: 6px; border-radius: 50%; background-color: ${flowColor[lv]}"/>`,
-                              size: new naver.maps.Size(6, 6),
-                              anchor: new naver.maps.Point(3, 3),
-                            },
-                          });
-
-                          markerLi.push(marker);
-                        }
+                        tmp.push(li);
                       });
+                    });
+
+                    tmp.sort((x, y) => x.xAxis + x.yAxis - (y.xAxis + y.yAxis));
+                    const divide =
+                      zoom === 16 ? 6 : zoom === 16 ? 5 : zoom === 17 ? 4 : 3;
+                    for (let i = 0; i < tmp.length; i++) {
+                      if (i % divide === 0) {
+                        arr.push(tmp[i]);
+                      }
+                    }
+
+                    // res.data.map((list: any) => {
+                    //   list.map((li: TypeNiceFlowData) => {
+                    //     const { flowPop, xAxis, yAxis } = li;
+                    //     const point = new naver.maps.LatLng(yAxis, xAxis);
+                    //     if (
+                    //       objBounds.hasLatLng(point) &&
+                    //       circleBounds.hasLatLng(point)
+                    //     ) {
+                    //       const lv = lvHandler(flowPop);
+
+                    //       const marker = new naver.maps.Marker({
+                    //         map: state.map,
+                    //         position: new naver.maps.LatLng(yAxis, xAxis),
+                    //         icon: {
+                    //           content: `<div style="width: 6px; height: 6px; border-radius: 50%; background-color: ${flowColor[lv]}"/>`,
+                    //           size: new naver.maps.Size(6, 6),
+                    //           anchor: new naver.maps.Point(3, 3),
+                    //         },
+                    //       });
+
+                    //       markerLi.push(marker);
+                    //     }
+                    //   });
+                    // });
+                    arr.map((li: TypeNiceFlowData) => {
+                      const { flowPop, xAxis, yAxis } = li;
+                      const point = new naver.maps.LatLng(yAxis, xAxis);
+                      if (
+                        objBounds.hasLatLng(point) &&
+                        circleBounds.hasLatLng(point)
+                      ) {
+                        const lv = lvHandler(flowPop);
+
+                        const marker = new naver.maps.Marker({
+                          map: state.map,
+                          position: new naver.maps.LatLng(yAxis, xAxis),
+                          icon: {
+                            content: `<div style="width: 6px; height: 6px; border-radius: 50%; background-color: ${flowColor[lv]}"/>`,
+                            size: new naver.maps.Size(6, 6),
+                            anchor: new naver.maps.Point(3, 3),
+                          },
+                        });
+
+                        markerLi.push(marker);
+                      }
                     });
 
                     circle.setMap(null);
@@ -212,7 +263,7 @@ const MapFlowCustom = () => {
                 });
             }
           }
-        }, 500);
+        }, 700);
       }
     );
 

@@ -4,9 +4,9 @@ export const MAP_SIGUNGU_GET_LIST = "/v1/area/getCtyCdArea";
 export const MAP_DONG_GET_LIST = "/v1/area/getAdmiCdArea";
 
 //  MAP_UPJONG
-export const MAP_UPJONG_TOP = "/v1/franchise_utils/high";
-export const MAP_UPJONG_MID = "/v1/franchise_utils/middle";
-export const MAP_UPJONG_BOT = "/v1/franchise_utils/small";
+export const MAP_UPJONG_TOP = "/v1/upjong/high";
+export const MAP_UPJONG_MID = "/v1/upjong/middle";
+export const MAP_UPJONG_BOT = "/v1/upjong/small";
 
 //  MAP_NICE_RANKING
 export const MAP_NICE_RANKING = "/v1/niceapi/getGuCustDataList";
@@ -46,3 +46,8 @@ export const MAP_ERP_RENT_GET_INFO = "/v1/Franchise_Unsoldshop/mapdetailsearch";
 export const ERP_BSDIS_GET_AREA = "/v1/Franchise_BusinessArea/searchAreas";
 export const MAP_ERP_BSDIS_GET_INFO =
   "/v1/Franchise_BusinessArea/mapdetailsearch";
+
+//  COMMON
+export const ERP_CODE_CHECKER = "/v1/franchise_common/duplicatecheck";
+export const ERP_LINK_STORE_GET = "/v1/franchise_common/connectedbranch";
+export const ERP_LINK_BSDIS_GET = "/v1/franchise_common/connectedbusinessarea";

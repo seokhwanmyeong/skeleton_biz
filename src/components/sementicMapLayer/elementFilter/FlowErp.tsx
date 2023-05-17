@@ -1,5 +1,6 @@
 //  Lib
 import { Fragment, useContext, useState } from "react";
+import { useRecoilValue } from "recoil";
 import { Box, Button, Flex, useDisclosure } from "@chakra-ui/react";
 import { Marker, NaverMapContext } from "@src/lib/src";
 //  Component
@@ -7,6 +8,13 @@ import ErpFilter from "@components/sementicMapLayer/elementFilter/ErpFilter";
 import ToolBox from "@components/sementicMapLayer/boxTool/ToolBox";
 import BtnReset from "@components/sementicMapLayer/common/BtnReset";
 import ModalDaumAddr from "@components/modal/common/ModalDaumAddr";
+import BrandListBox from "@components/sementicMapLayer/elementFilter/BrandListBox";
+//  State
+import {
+  infoComErpBsnsD,
+  infoComErpRent,
+  infoComErpStore,
+} from "@states/sementicMap/stateFilter";
 //  Icon
 import { IcoDoubleSquere } from "@assets/icons/icon";
 import marker from "@assets/icons/marker.png";
@@ -17,9 +25,13 @@ import {
   DecoFilterDivider,
   DecoTop,
 } from "@components/sementicMapLayer/elementDeco/Deco";
+import { DecoFrameR } from "@components/sementicMapLayer/elementDeco/DecoCenter";
 
 const FlowErp = () => {
   const { state } = useContext(NaverMapContext);
+  const { show: storeShow, data: storeList } = useRecoilValue(infoComErpStore);
+  const { show: rentShow, data: rentList } = useRecoilValue(infoComErpRent);
+  const { show: bsDisShow, data: bsDisList } = useRecoilValue(infoComErpBsnsD);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [editorOpen, setEditorOpen] = useState<boolean>(false);
   const [addr, setAddr] = useState<{
@@ -95,6 +107,31 @@ const FlowErp = () => {
           </Flex>
         </Flex>
       )}
+      {/* --------------------------- 중단 Frame ---------------------------*/}
+      <Flex
+        w="100%"
+        h="100%"
+        zIndex={1}
+        gap="0.625rem"
+        pointerEvents="none"
+        align="center"
+        justify="flex-end"
+      >
+        {(storeList?.length > 0 ||
+          rentList?.length > 0 ||
+          bsDisList?.length > 0) && (
+          <DecoFrameR pr="0.25rem" w="22%" h="770px">
+            <BrandListBox
+              storeShow={storeShow}
+              bsDisShow={bsDisShow}
+              rentShow={rentShow}
+              store={storeList || []}
+              rent={rentList || []}
+              bsDis={bsDisList || []}
+            />
+          </DecoFrameR>
+        )}
+      </Flex>
       {/* ------------------------------ 하단 ------------------------------*/}
       <DecoBotHightBox>
         <Button
@@ -113,7 +150,7 @@ const FlowErp = () => {
         <BtnReset />
       </DecoBotHightBox>
       <ErpFilter editorOpen={editorOpen} setEditorOpen={setEditorOpen} />
-      <ToolBox />
+      <ToolBox list={bsDisList || []} />
       {!editorOpen && addr?.point && (
         <Marker
           key={`markerAddr`}

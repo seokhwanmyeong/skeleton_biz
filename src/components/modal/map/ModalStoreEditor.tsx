@@ -39,7 +39,6 @@ const ModalStoreEditor = ({ isOpen, onOpen, onClose, setOpenIdx }: Props) => {
     storeCode: "",
     storeStatus: "",
     storeType: "",
-    phone: "",
     bsNum: "",
     ownerName: "",
     ownerPhone: "",

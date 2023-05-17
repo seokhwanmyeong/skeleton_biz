@@ -132,8 +132,6 @@ const NiceFilterDepth = ({
         upjongCd: bot?.code || "Q13007",
         pageNo: 1,
       }).then((res: any) => {
-        console.log(res);
-
         if (res.data && res.data.length > 0)
           setBrand({ show: true, active: true, data: res.data || [] });
       });
@@ -147,8 +145,6 @@ const NiceFilterDepth = ({
         wkt: [[arr]],
         pageNo: 1,
       }).then((res: any) => {
-        console.log(res);
-
         if (res.data && res.data.length > 0)
           setBrand({ show: true, active: true, data: res.data || [] });
       });
@@ -164,8 +160,6 @@ const NiceFilterDepth = ({
         range: Number(areaInfo.range),
         pageNo: 1,
       }).then((res: any) => {
-        console.log(res);
-
         if (res.data && res.data.length > 0)
           setBrand({ show: true, active: true, data: res.data || [] });
       });
@@ -214,8 +208,6 @@ const NiceFilterDepth = ({
         ...req,
       })
         .then((res: any) => {
-          console.log(res);
-
           if (res.data) {
             setBuilding({
               filter: filterBuilding,
@@ -233,15 +225,12 @@ const NiceFilterDepth = ({
       const arr = areaInfo.slctPath.map((path: any): [number, number] => {
         return [path.x || path[0], path.y || path[1]];
       });
-      console.log(arr);
 
       getBuildingList({
         wkt: [[arr]],
         ...req,
       })
         .then((res: any) => {
-          console.log(res);
-
           if (res.data) {
             setBuilding({
               filter: filterBuilding,
@@ -258,17 +247,24 @@ const NiceFilterDepth = ({
     } else if (
       areaInfo.areaType === "circle" &&
       areaInfo.center &&
-      areaInfo.range
+      areaInfo.range &&
+      areaInfo.slctPath
     ) {
+      const arr = [
+        [areaInfo.slctPath._max.x, areaInfo.slctPath._max.y],
+        [areaInfo.slctPath._max.x, areaInfo.slctPath._min.y],
+        [areaInfo.slctPath._min.x, areaInfo.slctPath._min.y],
+        [areaInfo.slctPath._min.x, areaInfo.slctPath._max.y],
+        [areaInfo.slctPath._max.x, areaInfo.slctPath._max.y],
+      ];
       getBuildingList({
-        xAxis: areaInfo.center.x,
-        yAxis: areaInfo.center.y,
-        range: Number(areaInfo.range),
+        wkt: [[arr]],
+        // xAxis: areaInfo.center.x,
+        // yAxis: areaInfo.center.y,
+        // range: Number(areaInfo.range),
         ...req,
       })
         .then((res: any) => {
-          console.log(res);
-
           if (res.data) {
             setBuilding({
               filter: filterBuilding,
@@ -828,7 +824,6 @@ const NiceFilterDepth = ({
                     value={filterBuilding.endTotArea || ""}
                     onChange={(val: any) => {
                       if (numRegExp.test(val)) {
-                        console.log(val);
                         const tmp = Number(val);
 
                         setFilterBuilding({

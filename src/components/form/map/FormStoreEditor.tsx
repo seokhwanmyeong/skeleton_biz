@@ -19,7 +19,7 @@ import { NaverMapContext } from "@src/lib/src";
 import { Select } from "@components/common/Select";
 import { InputAddr } from "@components/common/Input";
 //  Api
-import { apiCommon } from "@api/biz/config";
+import { apiCommon } from "@api/bizSub/config";
 //  Util
 import {
   phoneRegExp,
@@ -46,6 +46,7 @@ const FormStoreEditor = forwardRef(
     const [searchText, setSearchText] = useState<string>("");
     const [searchLi, setSearchLi] = useState<any[]>([]);
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const [type, setType] = useState<"name" | "code">("name");
     const [isChckId, setIsChKId] = useState<{
       text: string;
       chk: boolean;
@@ -604,8 +605,10 @@ const FormStoreEditor = forwardRef(
                   <Flex
                     pb="0.75rem"
                     w="100%"
+                    direction="column"
                     borderBottom="1px solid"
                     borderColor="neutral.gray8"
+                    gap="0.5rem"
                   >
                     <EditorLabel text="연동상권" />
                     <Field name="linkBsDis">
@@ -644,6 +647,20 @@ const FormStoreEditor = forwardRef(
                               pointerEvents="all"
                             >
                               <Flex gap="0.5rem">
+                                <Select
+                                  data={[
+                                    { text: "상권명", value: "name" },
+                                    { text: "상권코드", value: "code" },
+                                  ]}
+                                  opBaseTxt="text"
+                                  opBaseId="value"
+                                  opBaseKey="value"
+                                  variant="modalEditor"
+                                  value={type}
+                                  onChange={(val: any) => {
+                                    setType(val);
+                                  }}
+                                />
                                 <Input
                                   variant="modalEditor"
                                   w="100%"
@@ -660,8 +677,9 @@ const FormStoreEditor = forwardRef(
                                   variant="filterSearch"
                                   onClick={() =>
                                     getAvailableBsDisLink({
-                                      type: "bsDis",
+                                      type: type,
                                       text: searchText,
+                                      brandCode: "3",
                                     }).then((res: any) => {
                                       if (res.data && res.data.length > 0) {
                                         setSearchLi(res.data);
