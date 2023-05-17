@@ -286,11 +286,17 @@ type TypeMapBsDisInfo = {
 type TypeMapRentSearch = {
   req: TypeFilterRent;
   res: {
-    _id: string;
-    name: string;
-    addr: string;
-    lat: string;
-    lng: string;
+    data: RentList[];
+  };
+};
+
+type RentList = {
+  _id: string;
+  name: string;
+  addr: string;
+  location: {
+    type: string;
+    coordinates?: [number, number];
   };
 };
 
@@ -386,6 +392,7 @@ export type {
   StoreList,
   TypeMapBsDisSearch,
   TypeMapRentSearch,
+  RentList,
   TypeMapStoreInfo,
   StoreInfo,
   TypeMapBsDisInfo,

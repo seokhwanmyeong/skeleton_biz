@@ -231,16 +231,16 @@ const FormBsnsD = forwardRef(
                                     code: code,
                                   }).then((res: any) => {
                                     console.log(res);
-                                    if (res?.result === false) {
+                                    if (res?.data?.result === false) {
                                       setIsChKId({
                                         text: code,
                                         chk: true,
                                         state: "pass",
                                       });
                                       form.setFieldValue(code);
-                                      setTimeout(() =>
-                                        form.setFieldTouched("bsDisCode", true)
-                                      );
+                                      setTimeout(() => {
+                                        form.setFieldTouched("bsDisCode", true);
+                                      }, 1);
                                     } else {
                                       !isChckId.chk &&
                                         setIsChKId({

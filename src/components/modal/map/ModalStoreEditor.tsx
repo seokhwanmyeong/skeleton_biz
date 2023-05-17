@@ -125,7 +125,7 @@ const ModalStoreEditor = ({ isOpen, onOpen, onClose, setOpenIdx }: Props) => {
               zIndex={1}
               onClick={submitHandler}
             >
-              <IcoPlusCircle />
+              <IcoPlusCircle width="0.875rem" height="0.875rem" />
               매장생성
             </Button>
           </DrawerFooter>

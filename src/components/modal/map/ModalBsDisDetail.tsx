@@ -25,8 +25,10 @@ import { Deco01 } from "@assets/deco/DecoSvg";
 import {
   IcoClose,
   IcoCloseCircle,
+  IcoFilter02,
   IcoLeft,
   IcoPlusCircle,
+  IcoUpdate,
 } from "@assets/icons/icon";
 import { bsDisColor } from "@src/util/define/map";
 import FormBsnsD from "@src/components/form/map/FormBsnsD";
@@ -55,11 +57,6 @@ const ModalBsDisDetail = ({ id, name, code, isOpen, onClose }: Props) => {
     isOpen: modalOpen,
     onOpen: onModalOpen,
     onClose: onModalClose,
-  } = useDisclosure();
-  const {
-    isOpen: toolOpen,
-    onOpen: onToolOpen,
-    onClose: onToolClose,
   } = useDisclosure();
   const submitRef = useRef<FormikValues>(null);
 
@@ -167,8 +164,9 @@ const ModalBsDisDetail = ({ id, name, code, isOpen, onClose }: Props) => {
           <DrawerBody pos="relative" p="1rem 1.5rem" width="390px">
             <Flex
               pos="relative"
+              w="100%"
+              h="100%"
               direction="column"
-              justify="center"
               align="center"
               gap="1.125rem"
             >
@@ -202,11 +200,10 @@ const ModalBsDisDetail = ({ id, name, code, isOpen, onClose }: Props) => {
               </Heading>
               <Deco01 w="100%" h="auto" />
               <Flex
-                pt="1rem"
+                pt="40%"
                 w="100%"
                 h="100%"
                 direction="column"
-                justify="center"
                 align="center"
               >
                 <Flex
@@ -221,16 +218,15 @@ const ModalBsDisDetail = ({ id, name, code, isOpen, onClose }: Props) => {
                   borderRadius="50%"
                 />
                 <List
-                  mb="3.5rem"
+                  mb="4.75rem"
                   w="100%"
-                  h="100%"
                   display="flex"
                   flexDirection="column"
                   alignItems="center"
                   gap="28px"
                 >
                   <ListItem
-                    w="50%"
+                    w="60%"
                     display="flex"
                     justifyContent="space-between"
                   >
@@ -254,7 +250,7 @@ const ModalBsDisDetail = ({ id, name, code, isOpen, onClose }: Props) => {
                     </Text>
                   </ListItem>
                   <ListItem
-                    w="50%"
+                    w="60%"
                     display="flex"
                     justifyContent="space-between"
                   >
@@ -278,7 +274,7 @@ const ModalBsDisDetail = ({ id, name, code, isOpen, onClose }: Props) => {
                     </Text>
                   </ListItem>
                   <ListItem
-                    w="50%"
+                    w="60%"
                     display="flex"
                     justifyContent="space-between"
                   >
@@ -305,12 +301,9 @@ const ModalBsDisDetail = ({ id, name, code, isOpen, onClose }: Props) => {
                 <Flex w="100%" direction="column" align="center" gap="1.25rem">
                   <Button
                     variant="modalSubmit"
-                    disabled={toolOpen}
                     w="80%"
                     bg="transparent"
-                    fontSize="sm"
                     color="primary.type8"
-                    lineHeight="1.2rem"
                     zIndex={1}
                     _hover={{
                       bg: "transparent",
@@ -320,16 +313,19 @@ const ModalBsDisDetail = ({ id, name, code, isOpen, onClose }: Props) => {
                       onModalOpen();
                     }}
                   >
-                    정보 수정
+                    <IcoUpdate
+                      width="0.875rem"
+                      height="0.875rem"
+                      color="font.title"
+                    />
+                    수정
                   </Button>
-                  <Button
+                  {/* <Button
                     variant="modalSubmit"
                     disabled={toolOpen}
                     w="80%"
                     bg="transparent"
-                    fontSize="sm"
                     color="primary.type8"
-                    lineHeight="1.2rem"
                     zIndex={1}
                     _hover={{
                       bg: "transparent",
@@ -341,9 +337,7 @@ const ModalBsDisDetail = ({ id, name, code, isOpen, onClose }: Props) => {
                     variant="modalSubmit"
                     w="80%"
                     bg="transparent"
-                    fontSize="sm"
                     color="primary.type8"
-                    lineHeight="1.2rem"
                     zIndex={1}
                     _hover={{
                       bg: "transparent",
@@ -362,18 +356,16 @@ const ModalBsDisDetail = ({ id, name, code, isOpen, onClose }: Props) => {
                         onClose={onToolClose}
                       />
                     </Flex>
-                  )}
+                  )} */}
                   <Button
                     variant="modalSubmit"
-                    disabled={toolOpen}
                     w="80%"
                     fontSize="sm"
                     lineHeight="1.2rem"
                     zIndex={1}
-                    onClick={() => {
-                      flowCustomNavigator();
-                    }}
+                    onClick={flowCustomNavigator}
                   >
+                    <IcoFilter02 />
                     상권 분석
                   </Button>
                 </Flex>
@@ -382,7 +374,7 @@ const ModalBsDisDetail = ({ id, name, code, isOpen, onClose }: Props) => {
           </DrawerBody>
         </DrawerContent>
       </Drawer>
-      {modalOpen && (
+      {/* {modalOpen && (
         <Modal isOpen={modalOpen} isCentered={true} onClose={onModalClose}>
           <ModalOverlay />
           <ModalContent w="480px" maxW="auto">
@@ -415,13 +407,13 @@ const ModalBsDisDetail = ({ id, name, code, isOpen, onClose }: Props) => {
                 zIndex={1}
                 onClick={submitHandler}
               >
-                <IcoPlusCircle />
+                <IcoPlusCircle width="0.875rem" height="0.875rem" />
                 정보 수정
               </Button>
             </ModalFooter>
           </ModalContent>
         </Modal>
-      )}
+      )} */}
     </Fragment>
   );
 };

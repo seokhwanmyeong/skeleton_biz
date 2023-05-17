@@ -288,7 +288,7 @@ const ToolRound = ({ exitHandler }: Props) => {
         </OverlayView>
       )}
       {isConOpen && cursorPo && (
-        <OverlayView id={`confirmBox`} position={cursorPo} pane="floatPane">
+        <OverlayView id={`toolConfirmBox`} position={cursorPo} pane="floatPane">
           <Flex
             as={motion.div}
             animation={alertAnimation}

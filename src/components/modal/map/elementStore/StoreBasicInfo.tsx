@@ -2,6 +2,7 @@ import { Button, Flex, FormLabel, Text } from "@chakra-ui/react";
 import React from "react";
 //  Type
 import type { StoreInfo } from "@api/bizSub/type";
+import { IcoUpdate } from "@src/assets/icons/icon";
 
 type Props = {};
 
@@ -36,7 +37,24 @@ const StoreBasicInfo = ({ info }: { info: StoreInfo | null }) => {
         <ElementLine title="" content={info?.addrDetail || "-"} />
         <ElementLineList title="연동상권" content={info?.linkBsDis || []} />
       </Flex>
-      <Button>수정하기</Button>
+      <Flex w="100%" justify="center">
+        <Button
+          variant="modalSubmit"
+          w="60%"
+          bg="transparent"
+          color="primary.type8"
+          zIndex={1}
+          _hover={{
+            bg: "transparent",
+          }}
+          onClick={() => {
+            console.log("click");
+          }}
+        >
+          <IcoUpdate width="0.875rem" height="0.875rem" />
+          수정
+        </Button>
+      </Flex>
     </Flex>
   );
 };

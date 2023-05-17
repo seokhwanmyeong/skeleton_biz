@@ -445,7 +445,7 @@ const DrawPolygon = ({ modalOpen, setActiveIdx }: any) => {
       )}
       {isInfoOpen && cursorPo && (
         <OverlayView
-          id={`infoBox`}
+          id={`createConfirmBox`}
           position={cursorPo}
           pane="floatPane"
           anchorPoint={{ x: 16, y: 16 }}

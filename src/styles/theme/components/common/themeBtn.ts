@@ -428,9 +428,9 @@ const themeBtn = {
       border: "1px solid",
       borderColor: "primary.type8",
       textStyle: "base",
-      fontSize: "xs",
+      fontSize: "sm",
       fontWeight: "medium",
-      lineHeight: "1",
+      lineHeight: "1.1875rem",
       _hover: {
         bgColor: "primary.type7",
       },

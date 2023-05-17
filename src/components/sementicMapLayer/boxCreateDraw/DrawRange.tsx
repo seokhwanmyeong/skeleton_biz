@@ -285,7 +285,11 @@ const DrawRange = ({ modalOpen, setActiveIdx }: any) => {
   return (
     <Fragment>
       {isConOpen && cursorPo && (
-        <OverlayView id={`confirmBox`} position={cursorPo} pane="floatPane">
+        <OverlayView
+          id={`createConfirmBox`}
+          position={cursorPo}
+          pane="floatPane"
+        >
           <Flex
             as={motion.div}
             animation={toolAnimation}

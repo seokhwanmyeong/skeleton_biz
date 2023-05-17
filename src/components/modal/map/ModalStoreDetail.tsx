@@ -1,5 +1,5 @@
 //  LIB
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Drawer,
   DrawerBody,
@@ -63,7 +63,9 @@ const ModalStoreDetail = ({ id, name, isOpen, onClose }: Props) => {
           >
             <IconButton
               aria-label="리스트로 돌아가기"
-              onClick={onClose}
+              onClick={() => {
+                onClose();
+              }}
               icon={
                 <IcoLeft
                   width="1.25rem"

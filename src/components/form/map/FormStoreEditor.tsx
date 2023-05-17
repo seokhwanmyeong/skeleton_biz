@@ -43,9 +43,9 @@ const FormStoreEditor = forwardRef(
     const { initVal, setValues } = props;
     const { checkCode, getAvailableBsDisLink } = apiCommon;
     const { state, dispatch } = useContext(NaverMapContext);
+    const { isOpen, onOpen, onClose } = useDisclosure();
     const [searchText, setSearchText] = useState<string>("");
     const [searchLi, setSearchLi] = useState<any[]>([]);
-    const { isOpen, onOpen, onClose } = useDisclosure();
     const [type, setType] = useState<"name" | "code">("name");
     const [isChckId, setIsChKId] = useState<{
       text: string;
@@ -243,8 +243,10 @@ const FormStoreEditor = forwardRef(
                                         chk: true,
                                         state: "pass",
                                       });
-                                      form.setFieldTouched("storeCode", true);
                                       form.setFieldValue(code);
+                                      setTimeout(() => {
+                                        form.setFieldTouched("storeCode", true);
+                                      }, 1);
                                     } else {
                                       !isChckId.chk &&
                                         setIsChKId({

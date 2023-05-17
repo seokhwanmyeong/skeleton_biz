@@ -32,7 +32,7 @@ const SementicViewer = () => {
     return () => {
       onClose();
     };
-  }, [viewId]);
+  }, [viewId, props]);
 
   if (viewId === "storeInfo" && props?.id) {
     console.log(props);
@@ -42,6 +42,7 @@ const SementicViewer = () => {
         name={props.name || ""}
         isOpen={isOpen}
         onClose={() => {
+          console.log("click");
           onClose();
           reset();
         }}

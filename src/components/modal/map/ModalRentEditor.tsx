@@ -130,7 +130,7 @@ const ModalRentEditor = ({ isOpen, onOpen, onClose, setOpenIdx }: Props) => {
               zIndex={1}
               onClick={submitHandler}
             >
-              <IcoPlusCircle />
+              <IcoPlusCircle width="0.875rem" height="0.875rem" />
               매물생성
             </Button>
           </DrawerFooter>
