@@ -44,11 +44,27 @@ type Props = {
   id: string;
   name: string;
   code: string;
+  polygonType: "circle" | "single" | "multi";
+  geometry: {
+    type: string;
+    coordinates: any[];
+  };
+  range?: number | undefined;
+  center: [number, number];
   isOpen: boolean;
   onClose: (props?: any) => any;
 };
 
-const ModalBsDisDetail = ({ id, name, code, isOpen, onClose }: Props) => {
+const ModalBsDisDetail = ({
+  id,
+  name,
+  code,
+  polygonType,
+  geometry,
+  range,
+  isOpen,
+  onClose,
+}: Props) => {
   const { state } = useContext(NaverMapContext);
   const setFlow = useSetRecoilState(atomFilterFlow);
   const setSlceCustom = useSetRecoilState(atomSlctCustom);
@@ -95,7 +111,6 @@ const ModalBsDisDetail = ({ id, name, code, isOpen, onClose }: Props) => {
   };
 
   const flowCustomNavigator = useCallback(() => {
-    const type = "circle";
     if (state.map && state.objects) {
       const obj: any = state.objects.get(`bsDisArea-${id}`);
       const bounds = obj.getBounds();
@@ -107,18 +122,17 @@ const ModalBsDisDetail = ({ id, name, code, isOpen, onClose }: Props) => {
         const geocoder = new kakao.maps.services.Geocoder();
         const range = obj.getRadius();
 
-        geocoder.coord2RegionCode(center?._lng, center?._lat, (result: any) => {
-          setSlceCustom({
-            areaType: "circle",
-            slctName: `상권: ${name}`,
-            pathType: "circle",
-            slctPath: bounds,
-            range: range,
-            center: center,
-          });
-          setFlow("custom");
-          reserView();
+        setSlceCustom({
+          areaType: "circle",
+          slctName: `상권: ${name}`,
+          pathType: "circle",
+          slctPath: bounds,
+          range: range,
+          center: center,
+          enterPath: "erp",
         });
+        setFlow("custom");
+        reserView();
       } else {
         // @ts-ignore
         const geocoder = new kakao.maps.services.Geocoder();
@@ -129,18 +143,17 @@ const ModalBsDisDetail = ({ id, name, code, isOpen, onClose }: Props) => {
           return;
         }
 
-        geocoder.coord2RegionCode(center?._lng, center?._lat, (result: any) => {
-          setSlceCustom({
-            areaType: "polygon",
-            pathType: "polygon",
-            slctName: `상권: ${name}`,
-            slctPath: path._array,
-            range: undefined,
-            center: center,
-          });
-          setFlow("custom");
-          reserView();
+        setSlceCustom({
+          areaType: "polygon",
+          pathType: "polygon",
+          slctName: `상권: ${name}`,
+          slctPath: path._array,
+          range: undefined,
+          center: center,
+          enterPath: "erp",
         });
+        setFlow("custom");
+        reserView();
       }
     }
   }, [state]);

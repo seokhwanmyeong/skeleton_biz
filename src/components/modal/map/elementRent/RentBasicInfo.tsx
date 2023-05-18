@@ -1,11 +1,13 @@
+//  Lib
 import { Button, Flex, FormLabel, Text } from "@chakra-ui/react";
+//  Icon
+import { IcoPlusSquare02, IcoUpdate } from "@assets/icons/icon";
 //  Type
-import type { TypeMapRentInfo } from "@api/biz/type";
-import { IcoPlusSquare02, IcoUpdate } from "@src/assets/icons/icon";
+import type { RentInfo } from "@api/bizSub/type";
 
 type Props = {};
 
-const RentBasicInfo = ({ info }: { info: TypeMapRentInfo["res"] | null }) => {
+const RentBasicInfo = ({ info }: { info: RentInfo | null }) => {
   console.log(info);
   return (
     <Flex w="100%" h="100%" direction="column">
@@ -131,13 +133,16 @@ const RentBasicInfo = ({ info }: { info: TypeMapRentInfo["res"] | null }) => {
           </Flex>
         </Flex>
         <ElementLine title="매물타입" content={info?.rentType || ""} />
-        <ElementLine title="입점 가능일" content={info?.availableDay || ""} />
+        <ElementLine
+          title="입점 가능일"
+          content={String(info?.availableDay) || ""}
+        />
         <ElementLine
           title="주소"
           content={(info?.addrNew || "") + (info?.addrDetail || "")}
         />
         <ElementLine title="현업종" content={info?.curUpjong || ""} />
-        <ElementLine title="실평수" content={info?.realArea || ""} />
+        <ElementLine title="실평수" content={info?.size || ""} />
         <ElementLine title="층수" content={info?.floor || ""} />
         <ElementLine title="권리금" content={info?.premiumFee || ""} />
         <ElementLine title="관리비" content={info?.manageFee || ""} />

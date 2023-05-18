@@ -15,6 +15,7 @@ import {
   infoComFlowDepth,
   infoComBuilding,
   resetNiceDepth,
+  atomFilterFlow,
 } from "@states/sementicMap/stateFilter";
 import { atomSlctCustom } from "@states/sementicMap/stateMap";
 import { sementicViewState } from "@states/sementicMap/stateView";
@@ -31,8 +32,10 @@ import {
   DecoFrameL,
   DecoFrameR,
 } from "@components/sementicMapLayer/elementDeco/DecoCenter";
+import BtnBack from "../common/BtnBack";
 
 const FlowCustom = () => {
+  const setFlow = useSetRecoilState(atomFilterFlow);
   const { top, mid, bot } = useRecoilValue(atomUpjongState);
   const {
     show: flowShow,
@@ -74,6 +77,22 @@ const FlowCustom = () => {
         transform="translateX(-50%)"
         gap={"4rem"}
       >
+        {cutomArea.enterPath === "erp" && (
+          <Flex pos="absolute" left="-4rem">
+            <BtnBack
+              onClick={() => {
+                // state.map?.setOptions({
+                //   minZoom: 0,
+                //   maxZoom: 22,
+                //   scrollWheel: false,
+                // });
+                // resetSlctSigungu();
+                // resetSlct();
+                setFlow("erp");
+              }}
+            />
+          </Flex>
+        )}
         <Flex
           pos="relative"
           pt="0.3rem"

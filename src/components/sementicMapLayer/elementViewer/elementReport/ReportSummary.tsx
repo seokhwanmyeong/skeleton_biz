@@ -6,7 +6,13 @@ import ChartDo from "@components/charts/ChartDo";
 
 type Props = {};
 
-const ReportSummary = ({ data }: any) => {
+const ReportSummary = ({
+  data,
+  popRank,
+  resiRank,
+  jobRank,
+  houseRank,
+}: any) => {
   const [block, setBlock] = useState<any[]>([]);
   const [label, setLabel] = useState<any[]>([]);
   const [chartData, setChartData] = useState<any[]>([]);
@@ -60,7 +66,11 @@ const ReportSummary = ({ data }: any) => {
                 block.length > 0 &&
                 block.map((li: any, idx: number) => {
                   return (
-                    <Flex align="center" gap="0.25rem">
+                    <Flex
+                      key={`summary-type-${idx}`}
+                      align="center"
+                      gap="0.25rem"
+                    >
                       <Box
                         w="0.5rem"
                         h="0.5rem"
@@ -125,7 +135,7 @@ const ReportSummary = ({ data }: any) => {
                 lineHeight="1.375rem"
                 color="neutral.gray10"
               >
-                {data.avgLv || "-"}
+                {data.avgScore || "-"}
               </Text>
               <Text
                 textStyle="base"
@@ -134,7 +144,7 @@ const ReportSummary = ({ data }: any) => {
                 lineHeight="1.2"
                 color="font.primary"
               >
-                등급
+                {" / 1000"}
               </Text>
             </Flex>
           </ElementCardBox>
@@ -148,7 +158,7 @@ const ReportSummary = ({ data }: any) => {
                 lineHeight="1.375rem"
                 color="neutral.gray10"
               >
-                {data.avgScore || "-"}
+                {data.avgLv || "-"}
               </Text>
               <Text
                 textStyle="base"
@@ -157,7 +167,7 @@ const ReportSummary = ({ data }: any) => {
                 lineHeight="1.2"
                 color="font.primary"
               >
-                {" / 1000"}
+                등급
               </Text>
             </Flex>
           </ElementCardBox>
@@ -189,7 +199,12 @@ const ReportSummary = ({ data }: any) => {
             </Flex>
           </ElementCardBox>
           <ElementCardBox width={width[1]}>
-            <ElementCardTitle title="유동 인구수" subTitle="40대 여성 1위" />
+            <ElementCardTitle
+              title="유동 인구수"
+              subTitle={`${popRank?.age || ""} ${popRank?.sex || ""} ${
+                popRank?.age || popRank?.sex ? "1위" : ""
+              }`}
+            />
             <Flex align="flex-end">
               <Text
                 textStyle="base"
@@ -237,7 +252,12 @@ const ReportSummary = ({ data }: any) => {
             </Flex>
           </ElementCardBox>
           <ElementCardBox width={width[1]}>
-            <ElementCardTitle title="주거 인구수" subTitle="50대 여성 1위" />
+            <ElementCardTitle
+              title="주거 인구수"
+              subTitle={`${resiRank?.age || ""} ${resiRank?.sex || ""} ${
+                resiRank?.age || resiRank?.sex ? "1위" : ""
+              }`}
+            />
             <Flex align="flex-end">
               <Text
                 textStyle="base"
@@ -262,7 +282,10 @@ const ReportSummary = ({ data }: any) => {
         </Flex>
         <Flex w="100%" gap="0.5rem">
           <ElementCardBox width={width[0]}>
-            <ElementCardTitle title="세대수" subTitle="아파트 1위" />
+            <ElementCardTitle
+              title="세대수"
+              subTitle={houseRank ? `${houseRank} 1위` : ""}
+            />
             <Flex align="flex-end">
               <Text
                 textStyle="base"
@@ -285,7 +308,12 @@ const ReportSummary = ({ data }: any) => {
             </Flex>
           </ElementCardBox>
           <ElementCardBox width={width[1]}>
-            <ElementCardTitle title="직장 인구수" subTitle="20대 남성 1위" />
+            <ElementCardTitle
+              title="직장 인구수"
+              subTitle={`${jobRank?.age || ""} ${jobRank?.sex || ""} ${
+                jobRank?.age || jobRank?.sex ? "1위" : ""
+              }`}
+            />
             <Flex align="flex-end">
               <Text
                 textStyle="base"

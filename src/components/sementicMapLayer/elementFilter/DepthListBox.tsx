@@ -444,7 +444,7 @@ const DepthListBox = memo(
             color="font.title"
             textAlign="center"
           >
-            사업체 데이터
+            마켓 데이터
           </Heading>
         </Flex>
         <Deco01 width="100%" height="auto" />

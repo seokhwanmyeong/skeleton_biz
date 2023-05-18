@@ -25,7 +25,7 @@ const ReportCost = ({ data }: any) => {
     cost: null,
   });
 
-  console.log("test");
+  console.log(data);
   const handlePrev = useCallback((num: number) => {
     if (!sliderRef.current) return;
     // @ts-ignore

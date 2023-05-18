@@ -854,7 +854,7 @@ const TooltipContent = (
           }}
         >
           {searchLi.map((li: any, idx: number) => {
-            const { bsDisCode, bsDisName } = li;
+            const { bsDisCode, bsDisName, bsDisType } = li;
 
             return (
               <ListItem
@@ -878,6 +878,7 @@ const TooltipContent = (
                       origin.push({
                         bsDisCode: bsDisCode,
                         bsDisName: bsDisName,
+                        bsDisType: bsDisType,
                       });
                       form.setFieldTouched("linkBsDis", true);
                       form.setFieldValue("linkBsDis", origin);
@@ -887,6 +888,7 @@ const TooltipContent = (
                     origin.push({
                       bsDisCode: bsDisCode,
                       bsDisName: bsDisName,
+                      bsDisType: bsDisType,
                     });
                     form.setFieldTouched("linkBsDis", true);
                     form.setFieldValue("linkBsDis", origin);

@@ -645,6 +645,7 @@ const DrawAddr = () => {
                               range: undefined,
                               center: center,
                               pathType: "polygon",
+                              enterPath: "custom",
                             });
                             onConClose();
                             resetAllElement();
@@ -673,6 +674,7 @@ const DrawAddr = () => {
                               range: range,
                               center: center,
                               pathType: "circle",
+                              enterPath: "custom",
                             });
                             onConClose();
                             resetAllElement();
@@ -695,6 +697,7 @@ const DrawAddr = () => {
                           range: range,
                           center: center,
                           pathType: "circle",
+                          enterPath: "custom",
                         });
 
                         onConClose();

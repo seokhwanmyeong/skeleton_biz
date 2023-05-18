@@ -90,6 +90,10 @@ const SementicViewer = () => {
         id={props?.id}
         name={props.name}
         code={props.code}
+        polygonType={props.polygonType}
+        geometry={props.geometry}
+        range={Number(props.range) || 0}
+        center={props.center}
         isOpen={isOpen}
         onClose={() => {
           onClose();

@@ -391,6 +391,7 @@ const DrawRange = () => {
                           slctPath: bounds,
                           range: range,
                           center: center,
+                          enterPath: "custom",
                         });
                         onConClose();
                         resetAllElement();

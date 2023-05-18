@@ -535,7 +535,6 @@ const SelectAddr = ({
 
   useEffect(() => {
     if (addrList.top.length < 2 && value === "") {
-      console.log("in");
       getSidoAddr({}).then((res) => {
         if (res.data && res.data.length > 0) {
           const tmp = res.data.map((li) => ({

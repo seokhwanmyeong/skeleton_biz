@@ -190,6 +190,8 @@ export const atomSlctCustom = atom<{
   slctPath?: any[];
   center?: any;
   range?: any;
+  enterPath: "custom" | "erp";
+  id?: string;
 }>({
   key: "flowCustomArea",
   default: {
@@ -199,6 +201,7 @@ export const atomSlctCustom = atom<{
     pathType: "",
     center: null,
     range: null,
+    enterPath: "custom",
   },
 });
 

@@ -22,39 +22,39 @@ const ReportJob = ({ data }: Props) => {
     console.log(data);
     if (data) {
       const man =
-        data?.housCustM10 +
-        data?.housCustM20 +
-        data?.housCustM30 +
-        data?.housCustM40 +
-        data?.housCustM50;
+        data?.jobCustM10 +
+        data?.jobCustM20 +
+        data?.jobCustM30 +
+        data?.jobCustM40 +
+        data?.jobCustM50;
 
       const woman =
-        data?.housCustW10 +
-        data?.housCustW20 +
-        data?.housCustW30 +
-        data?.housCustW40 +
-        data?.housCustW50;
+        data?.jobCustW10 +
+        data?.jobCustW20 +
+        data?.jobCustW30 +
+        data?.jobCustW40 +
+        data?.jobCustW50;
 
       const age = {
-        "10대": data?.housCustM10 + data?.housCustW10,
-        "20대": data?.housCustM20 + data?.housCustW20,
-        "30대": data?.housCustM30 + data?.housCustW30,
-        "40대": data?.housCustM40 + data?.housCustW40,
-        "50대": data?.housCustM50 + data?.housCustW50,
+        "10대": data?.jobCustM10 + data?.jobCustW10,
+        "20대": data?.jobCustM20 + data?.jobCustW20,
+        "30대": data?.jobCustM30 + data?.jobCustW30,
+        "40대": data?.jobCustM40 + data?.jobCustW40,
+        "50대": data?.jobCustM50 + data?.jobCustW50,
       };
       const ageManGroup = {
-        "10대": data?.housCustM10,
-        "20대": data?.housCustM20,
-        "30대": data?.housCustM30,
-        "40대": data?.housCustM40,
-        "50대": data?.housCustM50,
+        "10대": data?.jobCustM10,
+        "20대": data?.jobCustM20,
+        "30대": data?.jobCustM30,
+        "40대": data?.jobCustM40,
+        "50대": data?.jobCustM50,
       };
       const ageWomanGroup = {
-        "10대": data?.housCustW10,
-        "20대": data?.housCustW20,
-        "30대": data?.housCustW30,
-        "40대": data?.housCustW40,
-        "50대": data?.housCustW50,
+        "10대": data?.jobCustW10,
+        "20대": data?.jobCustW20,
+        "30대": data?.jobCustW30,
+        "40대": data?.jobCustW40,
+        "50대": data?.jobCustW50,
       };
 
       const ageVal = Object.values(age);
@@ -100,7 +100,7 @@ const ReportJob = ({ data }: Props) => {
           borderColor="neutral.gray6"
         />
         <List p="0 0.75rem" w="100%">
-          {data?.housCustCnt && (
+          {data?.jobCustCnt && (
             <ListItem w="100%" display="flex" gap="4rem">
               <Text
                 w="100%"
@@ -110,7 +110,7 @@ const ReportJob = ({ data }: Props) => {
                 lineHeight="1.75rem"
               >
                 <Highlight
-                  query={[`${data?.housCustCnt}명`]}
+                  query={[`${data?.jobCustCnt}명`]}
                   styles={{
                     w: "100%",
                     textStyle: "base",
@@ -121,7 +121,9 @@ const ReportJob = ({ data }: Props) => {
                     textDecoration: "underline",
                   }}
                 >
-                  {`선택 영역의 일 평균 직장인구수는 ${data?.housCustCnt}명 이며`}
+                  {max
+                    ? `선택 영역의 일 평균 직장인구수는 ${data?.jobCustCnt}명 이며`
+                    : `선택 영역의 일 평균 직장인구수는 ${data?.jobCustCnt}명 입니다`}
                 </Highlight>
               </Text>
             </ListItem>

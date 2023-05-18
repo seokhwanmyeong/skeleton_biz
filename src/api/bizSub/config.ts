@@ -31,6 +31,12 @@ import {
   ERP_CODE_CHECKER,
   ERP_LINK_STORE_GET,
   ERP_LINK_BSDIS_GET,
+  ERP_STORE_CREATE,
+  ERP_STORE_UPDATE,
+  ERP_STORE_DELETE,
+  ERP_RENT_CREATE,
+  ERP_RENT_UPDATE,
+  ERP_RENT_DELETE,
 } from "@api/bizSub/url";
 //  Type
 import type {
@@ -55,6 +61,8 @@ import type {
   TypeChkCode,
   TypeSearchLinkStore,
   TypeSearchLinkBsDis,
+  TypeCreateStore,
+  TypeCreateRent,
 } from "@api/bizSub/type";
 
 let localStorage = window.localStorage;
@@ -65,19 +73,7 @@ const instance: BixApiInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BIZSUB_SERVER,
   responseType: "json",
   responseEncoding: "utf8",
-  timeout: 10000,
-  headers: {
-    Accept: "*/*",
-    "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
-  },
-});
-
-const instanceLocal: BixApiInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BIZLOCAL_SERVER,
-  responseType: "json",
-  responseEncoding: "utf8",
-  timeout: 10000,
+  timeout: 20000,
   headers: {
     Accept: "*/*",
     "Content-Type": "application/json",
@@ -214,6 +210,36 @@ const apiCommon = {
     ),
 };
 
+const apiErpStore = {
+  createStore: (req: TypeCreateStore["req"]) =>
+    instance.post<TypeCreateStore["req"], TypeCreateStore["res"]>(
+      ERP_STORE_CREATE,
+      req
+    ),
+  updateStore: (req: TypeChkCode["req"]) =>
+    instance.post<TypeChkCode["req"], TypeChkCode["res"]>(
+      ERP_STORE_UPDATE,
+      req
+    ),
+  deleteStore: (req: TypeChkCode["req"]) =>
+    instance.post<TypeChkCode["req"], TypeChkCode["res"]>(
+      ERP_STORE_DELETE,
+      req
+    ),
+};
+
+const apiErpRent = {
+  createRent: (req: TypeCreateRent["req"]) =>
+    instance.post<TypeCreateRent["req"], TypeCreateRent["res"]>(
+      ERP_RENT_CREATE,
+      req
+    ),
+  updateRent: (req: TypeChkCode["req"]) =>
+    instance.post<TypeChkCode["req"], TypeChkCode["res"]>(ERP_RENT_UPDATE, req),
+  deleteRent: (req: TypeChkCode["req"]) =>
+    instance.post<TypeChkCode["req"], TypeChkCode["res"]>(ERP_RENT_DELETE, req),
+};
+
 export {
   apiMapArea,
   apiMapNice,
@@ -222,5 +248,7 @@ export {
   apiMapBuilding,
   apiErpMap,
   apiUpjong,
+  apiErpStore,
+  apiErpRent,
   apiCommon,
 };

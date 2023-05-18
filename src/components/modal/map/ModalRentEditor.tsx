@@ -1,5 +1,6 @@
 //  LIB
 import { useState, useRef, useCallback, Fragment } from "react";
+import { useRecoilState } from "recoil";
 import {
   Drawer,
   DrawerBody,
@@ -13,15 +14,23 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { FormikValues } from "formik";
-import dayjs from "dayjs";
 //  Components
 import FormRentEditor from "@components/form/map/FormRentEditor";
 import { DialogAlertCreateRent } from "@components/dialog/DialogAlertModal";
+import { BaseSpinner } from "@components/common/Spinner";
+//  State
+import {
+  Infocome,
+  TypeFilterRent,
+  infoComErpRent,
+} from "@states/sementicMap/stateFilter";
+//  Api
+import { apiErpMap, apiErpRent } from "@api/bizSub/config";
 //  Icons
 import { Deco01 } from "@assets/deco/DecoSvg";
 import { IcoLeft, IcoPlusCircle } from "@assets/icons/icon";
 //  Type
-import type { RentInfo } from "@page/erp/rent/ErpRentCreate";
+import type { TypeCreateRent, TypeMapRentSearch } from "@api/bizSub/type";
 
 type Props = {
   isOpen: boolean;
@@ -31,17 +40,24 @@ type Props = {
 };
 
 const ModalRentEditor = ({ isOpen, onOpen, onClose, setOpenIdx }: Props) => {
+  const { getRentList } = apiErpMap;
+  const { createRent } = apiErpRent;
+  const [erpRent, setErpRent] =
+    useRecoilState<Infocome<TypeFilterRent>>(infoComErpRent);
+  const [filterRent, setFilterRent] = useState<TypeFilterRent>(erpRent.filter);
+  const [isLoading, setLoading] = useState<boolean>(false);
   const submitRef = useRef<FormikValues>(null);
   const {
     isOpen: isAlertOpen,
     onOpen: onAlertOpen,
     onClose: onAlertClose,
   } = useDisclosure();
-  const [initData, setInitData] = useState<RentInfo>({
+  const [initData, setInitData] = useState<TypeCreateRent["req"]>({
+    brandCode: "3",
     rentName: "",
     rentType: undefined,
-    availableDay: undefined,
     curUpjong: "",
+    availableDay: undefined,
     size: 0,
     floor: 0,
     rentalFee: 0,
@@ -53,34 +69,98 @@ const ModalRentEditor = ({ isOpen, onOpen, onClose, setOpenIdx }: Props) => {
     addrCode: "",
     addrHCode: "",
     addrDetail: "",
-    img: [],
     lat: 0,
     lng: 0,
+    img: [],
   });
 
   const submitHandler = useCallback(() => {
     console.log("submit start");
     console.log(submitRef.current);
     if (submitRef?.current) {
-      const { errors, touched } = submitRef.current;
-      if (Object.keys(touched).length > 0 || !errors) {
+      const { errors } = submitRef.current;
+
+      if (Object.keys(errors).length === 0) {
         submitRef?.current && submitRef.current.handleSubmit();
       } else {
-        submitRef?.current && submitRef.current.handleSubmit();
         !isAlertOpen && onAlertOpen();
       }
     }
   }, [submitRef.current]);
 
-  const createRent = (val?: RentInfo) => {
+  const searchRentHandler = () => {
+    console.log("rent search");
+    console.log(filterRent);
+    setLoading(true);
+    // const tmp: any = { ...filterRent, brandCode: "3" };
+    const tmp: any = { ...filterRent };
+    delete tmp.areaCode;
+    delete tmp.areaText;
+
+    if (filterRent.rentType.length === 0) tmp.rentType = [];
+    if (!filterRent.areaCode || filterRent.areaCode?.length <= 2)
+      tmp.sidoCode = filterRent.areaCode;
+    if (!filterRent.areaCode || filterRent.areaCode?.length <= 2)
+      tmp.sidoCode = filterRent.areaCode;
+    else if (
+      filterRent.areaCode &&
+      filterRent.areaCode.length > 2 &&
+      filterRent.areaCode.length <= 4
+    ) {
+      tmp.sigunguCode = filterRent.areaCode;
+    } else if (filterRent.areaCode.length > 4) {
+      tmp.sigunguCode = filterRent.areaCode.slice(0, 4);
+      tmp.dongCode = `${filterRent.areaCode.slice(
+        4,
+        filterRent.areaCode.length
+      )}00`;
+    }
+
+    delete tmp.rentType;
+
+    getRentList(tmp)
+      .then((res: { data: TypeMapRentSearch["res"][] }) => {
+        const { data } = res;
+        console.log(res);
+        data && data.length > 0
+          ? setErpRent({
+              filter: filterRent,
+              active: true,
+              show: true,
+              data: data,
+            })
+          : setErpRent({
+              filter: filterRent,
+              active: true,
+              show: true,
+              data: [],
+            });
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  };
+
+  const createRentHandler = (val: TypeCreateRent["req"]) => {
     console.log("create start");
     console.log(val);
-    onClose();
-    setOpenIdx(-1);
+    createRent(val).then((res) => {
+      console.log(res);
+      if (res) {
+        searchRentHandler();
+        onClose();
+        setOpenIdx(-1);
+      } else {
+        onClose();
+        setOpenIdx(-1);
+      }
+    });
   };
 
   return (
     <Fragment>
+      {isLoading && <BaseSpinner zIndex={1000} />}
       <Drawer isOpen={isOpen} onClose={onClose} placement="right">
         <DrawerContent p="1rem 1.5625rem" maxW="25.3125rem" w="25.3125rem">
           <DrawerHeader pos="relative" p="0">
@@ -119,7 +199,7 @@ const ModalRentEditor = ({ isOpen, onOpen, onClose, setOpenIdx }: Props) => {
           <DrawerBody pos="relative" p="0" width="100%">
             <FormRentEditor
               initVal={initData}
-              setValues={createRent}
+              setValues={createRentHandler}
               ref={submitRef}
             />
           </DrawerBody>

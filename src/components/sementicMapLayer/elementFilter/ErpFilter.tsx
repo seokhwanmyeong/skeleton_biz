@@ -22,6 +22,7 @@ import DrawBox from "@components/sementicMapLayer/boxCreateDraw/DrawBox";
 import ModalStoreEditor from "@components/modal/map/ModalStoreEditor";
 import ModalRentEditor from "@components/modal/map/ModalRentEditor";
 import ModalBsnsDEditor from "@components/modal/map/ModalBsnsDEditor";
+import { BaseSpinner } from "@components/common/Spinner";
 //  Api
 import { apiErpMap } from "@api/bizSub/config";
 //  State
@@ -58,7 +59,6 @@ import type {
   TypeFilterRent,
 } from "@states/sementicMap/stateFilter";
 import type { TypeMapStoreSearch, TypeMapRentSearch } from "@api/bizSub/type";
-import { BaseSpinner } from "@src/components/common/Spinner";
 
 type ErpFilterProps = {
   editorOpen: boolean;
@@ -96,6 +96,7 @@ const ErpFilter = ({ editorOpen, setEditorOpen }: ErpFilterProps) => {
     console.log(filterStore);
     setLoading(true);
     const tmp: any = { ...filterStore, brandCode: "3" };
+    // const tmp: any = { ...filterStore };
 
     if (
       filterStore.storeType.length === 0 ||
@@ -163,6 +164,7 @@ const ErpFilter = ({ editorOpen, setEditorOpen }: ErpFilterProps) => {
     console.log(filterBsD);
     setLoading(true);
     const tmp: any = { ...filterBsD, brandCode: "3" };
+    // const tmp: any = { ...filterBsD };
     delete tmp.areaCode;
     delete tmp.areaText;
 

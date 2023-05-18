@@ -291,9 +291,11 @@ type TypeMapRentSearch = {
 };
 
 type RentList = {
-  _id: string;
-  name: string;
-  addr: string;
+  id: string;
+  rentName: string;
+  addrNew: string;
+  addrOld: string;
+  addrDetail: string;
   location: {
     type: string;
     coordinates?: [number, number];
@@ -305,32 +307,36 @@ type TypeMapRentInfo = {
     id: string;
   };
   res: {
-    _id: string;
-    rentName: string;
-    rentType?: "A" | "B" | "C" | "D" | "E";
-    availableDay: string;
-    curUpjong?: string;
-    realArea?: number;
-    floor?: number;
-    rentalFee?: number;
-    depositFee?: number;
-    premiumFee?: number;
-    manageFee?: number;
-    addrNew: string;
-    addrOld: string;
-    addrDetail?: string;
-    nearbyStore?: {
-      storeName: string;
-      distance: number;
-      addr: string;
-      addrDetail: string;
-      lat: number;
-      lng: number;
-    }[];
-    img?: string[];
+    data: RentInfo;
+  };
+};
+
+type RentInfo = {
+  _id: string;
+  rentName: string;
+  rentType?: "A" | "B" | "C" | "D" | "E";
+  curUpjong?: string;
+  availableDay?: Date;
+  size?: number;
+  floor?: number;
+  rentalFee?: number;
+  depositFee?: number;
+  premiumFee?: number;
+  manageFee?: number;
+  addrNew: string;
+  addrOld: string;
+  addrDetail?: string;
+  nearbyStore?: {
+    storeName: string;
+    distance: number;
+    addr: string;
+    addrDetail: string;
     lat: number;
     lng: number;
-  };
+  }[];
+  img?: string[];
+  lat: number;
+  lng: number;
 };
 
 type TypeChkCode = {
@@ -372,6 +378,63 @@ type TypeSearchLinkBsDis = {
   };
 };
 
+type TypeCreateStore = {
+  req: {
+    brandCode: string;
+    storeName: string;
+    storeCode: string;
+    storeType?: "A" | "B" | "C" | "D" | "E";
+    storeStatus: "open" | "close" | "rest" | "ready" | "etc";
+    storePhone?: string;
+    bsNum?: string;
+    ownerName: string;
+    ownerPhone: string;
+    addrNew: string;
+    addrOld: string;
+    addrDetail: string;
+    addrCode: string;
+    addrHCode: string;
+    openDate?: Date;
+    lat: number;
+    lng: number;
+    linkBsDis?: {
+      bsDisCode: string;
+      bsDisName: string;
+      bsDisType: string;
+    }[];
+  };
+  res: {
+    result: boolean;
+  };
+};
+
+type TypeCreateRent = {
+  req: {
+    brandCode: string;
+    rentName: string;
+    rentType?: "A" | "B" | "C" | "D" | "E";
+    curUpjong?: string;
+    availableDay?: Date;
+    size?: number;
+    floor?: number;
+    rentalFee?: number;
+    depositFee?: number;
+    premiumFee?: number;
+    manageFee?: number;
+    addrNew: string;
+    addrOld: string;
+    addrDetail?: string;
+    addrCode: string;
+    addrHCode: string;
+    lat: number;
+    lng: number;
+    img: string[] | [];
+  };
+  res: {
+    result: boolean;
+  };
+};
+
 export type {
   BixApiInstance,
   TypeMapSido,
@@ -397,7 +460,10 @@ export type {
   StoreInfo,
   TypeMapBsDisInfo,
   TypeMapRentInfo,
+  RentInfo,
   TypeChkCode,
   TypeSearchLinkStore,
   TypeSearchLinkBsDis,
+  TypeCreateStore,
+  TypeCreateRent,
 };

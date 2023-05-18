@@ -51,6 +51,7 @@ import ReportCost from "./elementReport/ReportCost";
 const Report = ({ props, isOpen, onClose }: any) => {
   const { areaType, slctName, slctCode, pathType, slctPath, center, range } =
     props;
+  console.log(areaType, props);
   const {
     getSummary,
     getPop,
@@ -71,9 +72,33 @@ const Report = ({ props, isOpen, onClose }: any) => {
   const [ubjongSale, setUpjongSale] = useState<any>(null);
   const [facility, setFacility] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [popRank, setPopRank] = useState<{
+    sex: string;
+    age: string;
+  }>({
+    sex: "",
+    age: "",
+  });
+  const [resiRank, setResiRank] = useState<{
+    sex: string;
+    age: string;
+  }>({
+    sex: "",
+    age: "",
+  });
+  const [jobRank, setJobRank] = useState<{
+    sex: string;
+    age: string;
+  }>({
+    sex: "",
+    age: "",
+  });
+  const [houseRank, setHouseRank] = useState<
+    "아파트" | "단독주택" | "복합주택" | "오피스텔" | null
+  >(null);
 
   const summaryHandler = () => {
-    setLoading(true);
+    // setLoading(true);
 
     if (areaType === "dong") {
       getSummary({
@@ -84,11 +109,11 @@ const Report = ({ props, isOpen, onClose }: any) => {
         .then((res: any) => {
           if (res?.data) {
             setSummary(res.data);
-            setLoading(false);
+            // setLoading(false);
           }
         })
         .catch(() => {
-          setLoading(false);
+          // setLoading(false);
         });
     } else if (areaType === "circle" && pathType === "circle") {
       getSummary({
@@ -101,10 +126,10 @@ const Report = ({ props, isOpen, onClose }: any) => {
           if (res?.data) {
             setSummary(res.data);
           }
-          setLoading(false);
+          // setLoading(false);
         })
         .catch(() => {
-          setLoading(false);
+          // setLoading(false);
         });
     } else if (areaType === "polygon" && pathType === "polygon") {
       if (slctPath) {
@@ -120,19 +145,79 @@ const Report = ({ props, isOpen, onClose }: any) => {
             if (res?.data) {
               setSummary(res.data);
             }
-            setLoading(false);
+            // setLoading(false);
           })
           .catch(() => {
-            setLoading(false);
+            // setLoading(false);
           });
       } else {
-        setLoading(false);
+        // setLoading(false);
       }
     }
   };
 
-  const popHandler = (index: number) => {
-    setLoading(true);
+  const rankTranlater = (data: any, text: "inflow" | "hous" | "job") => {
+    if (text === "inflow") {
+      const man =
+        data[`${text}CustM20`] +
+        data[`${text}CustM30`] +
+        data[`${text}CustM40`] +
+        data[`${text}CustM50`] +
+        data[`${text}CustM60`];
+      const woman =
+        data[`${text}CustW20`] +
+        data[`${text}CustW30`] +
+        data[`${text}CustW40`] +
+        data[`${text}CustW50`] +
+        data[`${text}CustW60`];
+      const age = {
+        "20대": data[`${text}CustM20`] + data[`${text}CustW20`],
+        "30대": data[`${text}CustM30`] + data[`${text}CustW30`],
+        "40대": data[`${text}CustM40`] + data[`${text}CustW40`],
+        "50대": data[`${text}CustM50`] + data[`${text}CustW50`],
+        "60대": data[`${text}CustM60`] + data[`${text}CustW60`],
+      };
+      const ageVal = Object.values(age);
+      const maxAge = Math.max.apply(null, ageVal);
+      const ageIdx = ageVal.indexOf(maxAge);
+
+      return {
+        sex: man > woman ? "남성" : "여성",
+        age: Object.keys(age)[ageIdx],
+      };
+    } else {
+      const man =
+        data[`${text}CustM10`] +
+        data[`${text}CustM20`] +
+        data[`${text}CustM30`] +
+        data[`${text}CustM40`] +
+        data[`${text}CustM50over`];
+      const woman =
+        data[`${text}CustW10`] +
+        data[`${text}CustW20`] +
+        data[`${text}CustW30`] +
+        data[`${text}CustW40`] +
+        data[`${text}CustW50over`];
+      const age = {
+        "10대": (data[`${text}CustM10`] || 0) + data[`${text}CustW10`],
+        "20대": data[`${text}CustM20`] + data[`${text}CustW20`],
+        "30대": data[`${text}CustM30`] + data[`${text}CustW30`],
+        "40대": data[`${text}CustM40`] + data[`${text}CustW40`],
+        "50대": data[`${text}CustM50over`] + data[`${text}CustW50over`],
+      };
+      const ageVal = Object.values(age);
+      const maxAge = Math.max.apply(null, ageVal);
+      const ageIdx = ageVal.indexOf(maxAge);
+
+      return {
+        sex: man > woman ? "남성" : "여성",
+        age: Object.keys(age)[ageIdx],
+      };
+    }
+  };
+
+  const popHandler = (index?: number) => {
+    // setLoading(true);
 
     if (areaType === "dong") {
       getPop({
@@ -143,13 +228,20 @@ const Report = ({ props, isOpen, onClose }: any) => {
         .then((res: any) => {
           if (res.data) {
             setPop(res.data);
+            const inflowRank = rankTranlater(res.data, "inflow");
+            const houseRank = rankTranlater(res.data, "hous");
+            const jobRank = rankTranlater(res.data, "job");
+
+            setPopRank(inflowRank);
+            setResiRank(houseRank);
+            setJobRank(jobRank);
           }
-          setLoading(false);
-          setTabIdx(index);
+          // setLoading(false);
+          // setTabIdx(index);
         })
         .catch(() => {
-          setPop(null);
-          setLoading(false);
+          // setPop(null);
+          // setLoading(false);
         });
     } else if (areaType === "circle" && pathType === "circle") {
       getPop({
@@ -161,13 +253,20 @@ const Report = ({ props, isOpen, onClose }: any) => {
         .then((res: any) => {
           if (res.data) {
             setPop(res.data);
+            const inflowRank = rankTranlater(res.data, "inflow");
+            const houseRank = rankTranlater(res.data, "hous");
+            const jobRank = rankTranlater(res.data, "job");
+
+            setPopRank(inflowRank);
+            setResiRank(houseRank);
+            setJobRank(jobRank);
           }
-          setLoading(false);
-          setTabIdx(index);
+          // setLoading(false);
+          // setTabIdx(index);
         })
         .catch(() => {
-          setPop(null);
-          setLoading(false);
+          // setPop(null);
+          // setLoading(false);
         });
     } else if (areaType === "polygon" && pathType === "polygon") {
       if (slctPath) {
@@ -182,20 +281,27 @@ const Report = ({ props, isOpen, onClose }: any) => {
           .then((res: any) => {
             if (res.data) {
               setPop(res.data);
+              const inflowRank = rankTranlater(res.data, "inflow");
+              const houseRank = rankTranlater(res.data, "hous");
+              const jobRank = rankTranlater(res.data, "job");
+
+              setPopRank(inflowRank);
+              setResiRank(houseRank);
+              setJobRank(jobRank);
             }
-            setLoading(false);
-            setTabIdx(index);
+            // setLoading(false);
+            // setTabIdx(index);
           })
           .catch(() => {
-            setPop(null);
-            setLoading(false);
+            // setPop(null);
+            // setLoading(false);
           });
       }
     }
   };
 
-  const houseHandler = (index: number) => {
-    setLoading(true);
+  const houseHandler = (index?: number) => {
+    // setLoading(true);
 
     if (areaType === "dong") {
       getHouse({
@@ -206,12 +312,29 @@ const Report = ({ props, isOpen, onClose }: any) => {
         .then((res: any) => {
           if (res?.data) {
             setHouse(res.data);
-            setLoading(false);
-            setTabIdx(index);
+            // setLoading(false);
+            // setTabIdx(index);
+
+            const label: ("아파트" | "단독주택" | "복합주택" | "오피스텔")[] = [
+              "아파트",
+              "단독주택",
+              "복합주택",
+              "오피스텔",
+            ];
+            const houseVal: any = [
+              res.data.apt || 0,
+              res.data.com || 0,
+              res.data.noe || 0,
+              res.data.offtel || 0,
+            ];
+            const maxHouse = Math.max.apply(null, houseVal);
+            const maxIdx: number = houseVal.indexOf(maxHouse);
+            console.log(label[maxIdx]);
+            setHouseRank(label[maxIdx]);
           }
         })
         .catch(() => {
-          setLoading(false);
+          // setLoading(false);
         });
     } else if (areaType === "circle" && pathType === "circle") {
       getHouse({
@@ -222,13 +345,31 @@ const Report = ({ props, isOpen, onClose }: any) => {
       })
         .then((res: any) => {
           if (res?.data) {
+            console.log(res.data);
             setHouse(res.data);
-            setLoading(false);
-            setTabIdx(index);
+            // setLoading(false);
+            // setTabIdx(index);
+
+            const label: ("아파트" | "단독주택" | "복합주택" | "오피스텔")[] = [
+              "아파트",
+              "단독주택",
+              "복합주택",
+              "오피스텔",
+            ];
+            const houseVal: any = [
+              res.data.apt || 0,
+              res.data.com || 0,
+              res.data.noe || 0,
+              res.data.offtel || 0,
+            ];
+            const maxHouse = Math.max.apply(null, houseVal);
+            const maxIdx: number = houseVal.indexOf(maxHouse);
+            console.log(label[maxIdx]);
+            setHouseRank(label[maxIdx]);
           }
         })
         .catch(() => {
-          setLoading(false);
+          // setLoading(false);
         });
     } else if (areaType === "polygon" && pathType === "polygon") {
       if (slctPath) {
@@ -241,22 +382,33 @@ const Report = ({ props, isOpen, onClose }: any) => {
           wkt: [[arr]],
         })
           .then((res: any) => {
-            console.log(res);
-
             if (res?.data) {
               setHouse(res.data);
-              setLoading(false);
-              setTabIdx(index);
+              // setLoading(false);
+              // setTabIdx(index);
+
+              const label: ("아파트" | "단독주택" | "복합주택" | "오피스텔")[] =
+                ["아파트", "단독주택", "복합주택", "오피스텔"];
+              const houseVal: any = [
+                res.data.apt || 0,
+                res.data.noe || 0,
+                res.data.com || 0,
+                res.data.offtel || 0,
+              ];
+              const maxHouse = Math.max.apply(null, houseVal);
+              const maxIdx: number = houseVal.indexOf(maxHouse);
+              console.log(label[maxIdx]);
+              setHouseRank(label[maxIdx]);
             }
           })
           .catch(() => {
-            setLoading(false);
+            // setLoading(false);
           });
       }
     }
   };
 
-  const upjongSaleHandler = (index: number) => {
+  const upjongSaleHandler = (index?: number) => {
     setLoading(true);
 
     if (areaType === "dong") {
@@ -268,7 +420,7 @@ const Report = ({ props, isOpen, onClose }: any) => {
         .then((res: any) => {
           if (res.data && res.data.length > 0) {
             setUpjongSale(res.data);
-            setTabIdx(index);
+            // setTabIdx(index);
           }
           setLoading(false);
         })
@@ -285,7 +437,7 @@ const Report = ({ props, isOpen, onClose }: any) => {
         .then((res: any) => {
           if (res.data && res.data.length > 0) {
             setUpjongSale(res.data);
-            setTabIdx(index);
+            // setTabIdx(index);
           }
           setLoading(false);
         })
@@ -305,7 +457,7 @@ const Report = ({ props, isOpen, onClose }: any) => {
           .then((res: any) => {
             if (res.data && res.data.length > 0) {
               setUpjongSale(res.data);
-              setTabIdx(index);
+              // setTabIdx(index);
             }
             setLoading(false);
           })
@@ -318,8 +470,8 @@ const Report = ({ props, isOpen, onClose }: any) => {
     }
   };
 
-  const facilityHandler = (index: number) => {
-    setLoading(true);
+  const facilityHandler = (index?: number) => {
+    // setLoading(true);
 
     if (areaType === "dong") {
       getFacility({
@@ -338,12 +490,12 @@ const Report = ({ props, isOpen, onClose }: any) => {
                 ...res.data[0],
                 ...depthRes.data,
               });
-              setLoading(false);
-              setTabIdx(index);
+              // setLoading(false);
+              // setTabIdx(index);
             }
           })
           .catch(() => {
-            setLoading(false);
+            // setLoading(false);
           });
       });
     } else if (areaType === "circle" && pathType === "circle") {
@@ -365,12 +517,12 @@ const Report = ({ props, isOpen, onClose }: any) => {
                 ...res.data[0],
                 ...depthRes.data,
               });
-              setLoading(false);
-              setTabIdx(index);
+              // setLoading(false);
+              // setTabIdx(index);
             }
           })
           .catch(() => {
-            setLoading(false);
+            // setLoading(false);
           });
       });
     } else if (areaType === "polygon" && pathType === "polygon") {
@@ -393,12 +545,12 @@ const Report = ({ props, isOpen, onClose }: any) => {
                   ...res.data[0],
                   ...depthRes.data,
                 });
-                setLoading(false);
-                setTabIdx(index);
+                // setLoading(false);
+                // setTabIdx(index);
               }
             })
             .catch(() => {
-              setLoading(false);
+              // setLoading(false);
             });
         });
       }
@@ -407,7 +559,6 @@ const Report = ({ props, isOpen, onClose }: any) => {
 
   useEffect(() => {
     if (!pop) return;
-    console.log(pop);
     let flow = {
       inflowCustCnt: pop?.inflowCustCnt | 0,
       inflowCustM20: pop?.inflowCustM20 | 0,
@@ -433,7 +584,7 @@ const Report = ({ props, isOpen, onClose }: any) => {
       inflow1418: pop?.inflow1418 | 0,
       inflow1821: pop?.inflow1821 | 0,
     };
-    let job = {
+    let resi = {
       housCustCnt: pop?.housCustCnt | 0,
       housCustM10: pop?.housCustM10 | 0,
       housCustM20: pop?.housCustM20 | 0,
@@ -446,7 +597,7 @@ const Report = ({ props, isOpen, onClose }: any) => {
       housCustW40: pop?.housCustW40 | 0,
       housCustW50: pop?.housCustW50over | 0,
     };
-    let resi = {
+    let job = {
       jobCustCnt: pop?.jobCustCnt | 0,
       jobCustM10: pop?.jobCustM10 | 0,
       jobCustM20: pop?.jobCustM20 | 0,
@@ -468,6 +619,10 @@ const Report = ({ props, isOpen, onClose }: any) => {
   useEffect(() => {
     if (summary) return;
     summaryHandler();
+    popHandler();
+    houseHandler();
+    upjongSaleHandler();
+    facilityHandler();
   }, []);
 
   return (
@@ -830,7 +985,13 @@ const Report = ({ props, isOpen, onClose }: any) => {
               <TabPanels position="relative" h="100%">
                 <TabPanel p="1.75rem 0.5rem" w="100%" h="100%">
                   {tabIdx === 0 && summary && !loading && (
-                    <ReportSummary data={summary} />
+                    <ReportSummary
+                      data={summary}
+                      popRank={popRank}
+                      resiRank={resiRank}
+                      jobRank={jobRank}
+                      houseRank={houseRank}
+                    />
                   )}
                 </TabPanel>
                 <TabPanel p="1rem 0.5rem" w="100%" width="100%">

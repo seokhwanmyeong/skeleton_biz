@@ -40,12 +40,22 @@ export const MAP_ERP_STORE_GET_INFO = "/v1/Franchise_branch/mapdetailsearch";
 
 //  MAP_ERP_RENT
 export const ERP_RENT_GET_POINT = "/v1/Franchise_Unsoldshop/searchShops";
-export const MAP_ERP_RENT_GET_INFO = "/v1/Franchise_Unsoldshop/mapdetailsearch";
+export const MAP_ERP_RENT_GET_INFO = "/v1/Franchise_Unsoldshop/search";
 
 //  MAP_ERP_BSDIS
 export const ERP_BSDIS_GET_AREA = "/v1/Franchise_BusinessArea/searchAreas";
 export const MAP_ERP_BSDIS_GET_INFO =
   "/v1/Franchise_BusinessArea/mapdetailsearch";
+
+//  ERP_STORE
+export const ERP_STORE_CREATE = "/v1/Franchise_Branch/create";
+export const ERP_STORE_UPDATE = "/v1/Franchise_Branch/create";
+export const ERP_STORE_DELETE = "/v1/Franchise_Branch/create";
+
+//  ERP_RENT
+export const ERP_RENT_CREATE = "/v1/Franchise_Unsoldshop/create";
+export const ERP_RENT_UPDATE = "/v1/Franchise_Unsoldshop/create";
+export const ERP_RENT_DELETE = "/v1/Franchise_Unsoldshop/create";
 
 //  COMMON
 export const ERP_CODE_CHECKER = "/v1/Franchise_Branch/duplicateCheck";

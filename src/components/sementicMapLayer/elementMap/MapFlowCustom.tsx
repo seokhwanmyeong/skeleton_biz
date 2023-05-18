@@ -11,7 +11,7 @@ import { apiMapNice } from "@api/bizSub/config";
 import { atomSlctCustom } from "@states/sementicMap/stateMap";
 import { infoComFlowDepth } from "@src/states/sementicMap/stateFilter";
 //  Util
-import { lvHandler, searchRange, flowColor } from "@util/define/map";
+import { lvHandler, searchRange, flowColor, flowSize } from "@util/define/map";
 //  Type
 import type { TypeNiceFlowData } from "@api/bizSub/type";
 
@@ -27,7 +27,6 @@ const MapFlowCustom = () => {
     data: flowList,
   } = useRecoilValue(infoComFlowDepth);
   const flowPoint = useRef<TypePoint[] | null>(null);
-
   const resetRef = useCallback(() => {
     if (state.map && flowPoint.current && flowPoint.current.length > 0) {
       flowPoint.current.map((point: any) => point.setMap(null));
@@ -60,8 +59,6 @@ const MapFlowCustom = () => {
           .then((res: any) => {
             if (res.data) {
               const markerLi: any[] = [];
-              const obj: any = state.objects.get("customArea");
-              const objBounds = obj.getBounds();
               const circle = new naver.maps.Circle({
                 map: state.map,
                 center: center,
@@ -70,6 +67,26 @@ const MapFlowCustom = () => {
               const circleBounds: any = circle.getBounds();
               const tmp: any[] = [];
               const arr: any[] = [];
+              let obj: any;
+              let objBounds: any;
+
+              if (customArea.enterPath === "custom") {
+                obj = state.objects.get("customArea");
+                objBounds = obj.getBounds();
+              } else if (customArea.enterPath === "erp") {
+                if (customArea.areaType === "polygon" && customArea.slctPath) {
+                  objBounds = new naver.maps.LatLngBounds(
+                    // @ts-ignore
+                    customArea.slctPath
+                  );
+                } else if (customArea.areaType === "circle") {
+                  objBounds = customArea.slctPath;
+                }
+              }
+
+              if (!objBounds) {
+                objBounds = state.map?.getBounds();
+              }
 
               res.data.map((list: any) => {
                 list.map((li: TypeNiceFlowData) => {
@@ -86,38 +103,19 @@ const MapFlowCustom = () => {
                   arr.push(tmp[i]);
                 }
               }
-              // res.data.map((list: any) => {
-              //   list.map((li: TypeNiceFlowData) => {
-              //     const { flowPop, xAxis, yAxis } = li;
-              //     const point = new naver.maps.LatLng(yAxis, xAxis);
-
-              //     if (
-              //       objBounds.hasLatLng(point) &&
-              //       circleBounds.hasLatLng(point)
-              //     ) {
-              //       const lv = lvHandler(flowPop);
-
-              //       const marker = new naver.maps.Marker({
-              //         map: state.map,
-              //         position: new naver.maps.LatLng(yAxis, xAxis),
-              //         icon: {
-              //           content: `<div style="width: 6px; height: 6px; border-radius: 50%; background-color: ${flowColor[lv]}"/>`,
-              //           size: new naver.maps.Size(6, 6),
-              //           anchor: new naver.maps.Point(3, 3),
-              //         },
-              //       });
-
-              //       markerLi.push(marker);
-              //     }
-              //   });
-              // });
 
               arr.map((li: TypeNiceFlowData) => {
                 const { flowPop, xAxis, yAxis } = li;
-                const point = new naver.maps.LatLng(yAxis, xAxis);
+
                 if (
-                  objBounds.hasLatLng(point) &&
-                  circleBounds.hasLatLng(point)
+                  objBounds._max.x > xAxis &&
+                  circleBounds._max.x > xAxis &&
+                  objBounds._min.x < xAxis &&
+                  circleBounds._min.x < xAxis &&
+                  objBounds._max.y > yAxis &&
+                  circleBounds._max.y > yAxis &&
+                  objBounds._min.y < yAxis &&
+                  circleBounds._min.y < yAxis
                 ) {
                   const lv = lvHandler(flowPop);
 
@@ -125,7 +123,13 @@ const MapFlowCustom = () => {
                     map: state.map,
                     position: new naver.maps.LatLng(yAxis, xAxis),
                     icon: {
-                      content: `<div style="width: 6px; height: 6px; border-radius: 50%; background-color: ${flowColor[lv]}"/>`,
+                      content: `<div style="width: ${
+                        flowSize[zoom] || flowSize[19]
+                      }px; height: ${
+                        flowSize[zoom] || flowSize[19]
+                      }px; border-radius: 50%; background-color: ${
+                        flowColor[lv]
+                      }"/>`,
                       size: new naver.maps.Size(6, 6),
                       anchor: new naver.maps.Point(3, 3),
                     },
@@ -180,8 +184,6 @@ const MapFlowCustom = () => {
                 .then((res: any) => {
                   if (res.data) {
                     const markerLi: any[] = [];
-                    const obj: any = state.objects.get("customArea");
-                    const objBounds = obj.getBounds();
                     const circle = new naver.maps.Circle({
                       map: state.map,
                       center: center,
@@ -190,6 +192,29 @@ const MapFlowCustom = () => {
                     const circleBounds: any = circle.getBounds();
                     const tmp: any[] = [];
                     const arr: any[] = [];
+                    let obj: any;
+                    let objBounds: any;
+
+                    if (customArea.enterPath === "custom") {
+                      obj = state.objects.get("customArea");
+                      objBounds = obj.getBounds();
+                    } else if (customArea.enterPath === "erp") {
+                      if (
+                        customArea.areaType === "polygon" &&
+                        customArea.slctPath
+                      ) {
+                        objBounds = new naver.maps.LatLngBounds(
+                          // @ts-ignore
+                          customArea.slctPath
+                        );
+                      } else if (customArea.areaType === "circle") {
+                        objBounds = customArea.slctPath;
+                      }
+                    }
+
+                    if (!objBounds) {
+                      objBounds = state.map?.getBounds();
+                    }
 
                     res.data.map((list: any) => {
                       list.map((li: TypeNiceFlowData) => {
@@ -198,6 +223,7 @@ const MapFlowCustom = () => {
                     });
 
                     tmp.sort((x, y) => x.xAxis + x.yAxis - (y.xAxis + y.yAxis));
+
                     const divide =
                       zoom === 16 ? 6 : zoom === 16 ? 5 : zoom === 17 ? 4 : 3;
                     for (let i = 0; i < tmp.length; i++) {
@@ -206,36 +232,18 @@ const MapFlowCustom = () => {
                       }
                     }
 
-                    // res.data.map((list: any) => {
-                    //   list.map((li: TypeNiceFlowData) => {
-                    //     const { flowPop, xAxis, yAxis } = li;
-                    //     const point = new naver.maps.LatLng(yAxis, xAxis);
-                    //     if (
-                    //       objBounds.hasLatLng(point) &&
-                    //       circleBounds.hasLatLng(point)
-                    //     ) {
-                    //       const lv = lvHandler(flowPop);
-
-                    //       const marker = new naver.maps.Marker({
-                    //         map: state.map,
-                    //         position: new naver.maps.LatLng(yAxis, xAxis),
-                    //         icon: {
-                    //           content: `<div style="width: 6px; height: 6px; border-radius: 50%; background-color: ${flowColor[lv]}"/>`,
-                    //           size: new naver.maps.Size(6, 6),
-                    //           anchor: new naver.maps.Point(3, 3),
-                    //         },
-                    //       });
-
-                    //       markerLi.push(marker);
-                    //     }
-                    //   });
-                    // });
                     arr.map((li: TypeNiceFlowData) => {
                       const { flowPop, xAxis, yAxis } = li;
-                      const point = new naver.maps.LatLng(yAxis, xAxis);
+
                       if (
-                        objBounds.hasLatLng(point) &&
-                        circleBounds.hasLatLng(point)
+                        objBounds._max.x > xAxis &&
+                        circleBounds._max.x > xAxis &&
+                        objBounds._min.x < xAxis &&
+                        circleBounds._min.x < xAxis &&
+                        objBounds._max.y > yAxis &&
+                        circleBounds._max.y > yAxis &&
+                        objBounds._min.y < yAxis &&
+                        circleBounds._min.y < yAxis
                       ) {
                         const lv = lvHandler(flowPop);
 
@@ -243,7 +251,13 @@ const MapFlowCustom = () => {
                           map: state.map,
                           position: new naver.maps.LatLng(yAxis, xAxis),
                           icon: {
-                            content: `<div style="width: 6px; height: 6px; border-radius: 50%; background-color: ${flowColor[lv]}"/>`,
+                            content: `<div style="width: ${
+                              flowSize[zoom] || flowSize[19]
+                            }px; height: ${
+                              flowSize[zoom] || flowSize[19]
+                            }px; border-radius: 50%; background-color: ${
+                              flowColor[lv]
+                            }"/>`,
                             size: new naver.maps.Size(6, 6),
                             anchor: new naver.maps.Point(3, 3),
                           },
@@ -253,6 +267,7 @@ const MapFlowCustom = () => {
                       }
                     });
 
+                    console.log(markerLi);
                     circle.setMap(null);
                     resetRef();
                     flowPoint.current = markerLi;

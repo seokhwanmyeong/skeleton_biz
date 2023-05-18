@@ -25,7 +25,16 @@ const ReportSale = ({ data }: any) => {
   const [labelBar, setLabelBar] = useState<any[]>([]);
   const [chartBarMData, setChartBarMData] = useState<any[]>([]);
   const [chartBarWData, setChartBarWData] = useState<any[]>([]);
-  const [textArr, setTextArr] = useState<any>({
+  const [textArr, setTextArr] = useState<{
+    avgSalesAmt: number | null;
+    salesAmtTop20: number | null;
+    salesAmtBottom20: number | null;
+    medianSalesAmt: number | null;
+    gender: string | null;
+    age: string | null;
+    day: string | null;
+    time: string | null;
+  }>({
     avgSalesAmt: null,
     salesAmtTop20: null,
     salesAmtBottom20: null,
@@ -69,20 +78,20 @@ const ReportSale = ({ data }: any) => {
   };
 
   const timeText: { [x: number]: string } = {
-    0: "06-09",
-    1: "09-12",
-    2: "12-15",
-    3: "15-18",
-    4: "18-21",
-    5: "21-24",
-    6: "24-06",
+    0: "06-09 시",
+    1: "09-12 시",
+    2: "12-15 시",
+    3: "15-18 시",
+    4: "18-21 시",
+    5: "21-24 시",
+    6: "24-06 시",
   };
 
   useEffect(() => {
     console.log(data);
 
     for (let i = 0; i < data.length; i++) {
-      const list = data[i];
+      const list = data[data.length - i - 1];
       if (
         list.avgSalesAmt &&
         list.salesAmtTop20 &&
@@ -101,9 +110,9 @@ const ReportSale = ({ data }: any) => {
         const time = list.salesHourPer
           .split(",")
           .map((str: any) => Number(str));
-        const ageIdx = age[Math.max(...age)];
-        const dayIdx = day[Math.max(...day)];
-        const timeIdx = time[Math.max(...time)];
+        const ageIdx = age.indexOf(Math.max(...age));
+        const dayIdx = day.indexOf(Math.max(...day));
+        const timeIdx = time.indexOf(Math.max(...time));
 
         setTextArr({
           avgSalesAmt: list.avgSalesAmt,
@@ -156,7 +165,7 @@ const ReportSale = ({ data }: any) => {
     setChartBarMData(chartBarMData);
     setChartBarWData(chartBarWData);
   }, [data]);
-
+  console.log(textArr);
   return (
     <Flex p="0" w="100%" h="100%" direction="column" gap="1rem">
       <Flex
@@ -196,7 +205,18 @@ const ReportSale = ({ data }: any) => {
               lineHeight="1.75rem"
             >
               <Highlight
-                query={["3,032만원", "4,736만원"]}
+                query={
+                  textArr?.avgSalesAmt && textArr?.salesAmtTop20
+                    ? [
+                        `${textArr.avgSalesAmt.toFixed(0)}`,
+                        `${textArr.salesAmtTop20.toFixed(0)}`,
+                      ]
+                    : textArr?.avgSalesAmt
+                    ? [`${textArr.avgSalesAmt.toFixed(0)}`]
+                    : textArr?.salesAmtTop20
+                    ? [`${textArr.salesAmtTop20.toFixed(0)}`]
+                    : []
+                }
                 styles={{
                   w: "100%",
                   textStyle: "base",
@@ -207,8 +227,18 @@ const ReportSale = ({ data }: any) => {
                   textDecoration: "underline",
                 }}
               >
-                선택 영역의 평균 매출은 3,032만원 입니다. 상위 20% 매출 -
-                4,736만원 ,
+                {textArr?.avgSalesAmt && textArr?.salesAmtTop20
+                  ? `선택 영역의 평균 매출은 ${textArr.avgSalesAmt.toFixed(
+                      0
+                    )}만원 입니다.
+                상위 20% 매출 - ${textArr.salesAmtTop20.toFixed(0)}만원,`
+                  : textArr?.avgSalesAmt
+                  ? `선택 영역의 평균 매출은 ${textArr.avgSalesAmt.toFixed(
+                      0
+                    )}만원 입니다.`
+                  : textArr?.salesAmtTop20
+                  ? `상위 20% 매출 - ${textArr.salesAmtTop20.toFixed(0)}만원,`
+                  : ""}
               </Highlight>
             </Text>
           </ListItem>
@@ -221,7 +251,18 @@ const ReportSale = ({ data }: any) => {
               lineHeight="1.75rem"
             >
               <Highlight
-                query={["1,736만원", "2,736만원"]}
+                query={
+                  textArr?.salesAmtBottom20 && textArr?.medianSalesAmt
+                    ? [
+                        `${textArr.salesAmtBottom20.toFixed(0)}`,
+                        `${textArr.medianSalesAmt.toFixed(0)}`,
+                      ]
+                    : textArr?.salesAmtBottom20
+                    ? [`${textArr.salesAmtBottom20.toFixed(0)}`]
+                    : textArr?.medianSalesAmt
+                    ? [`${textArr.medianSalesAmt.toFixed(0)}`]
+                    : []
+                }
                 styles={{
                   w: "100%",
                   textStyle: "base",
@@ -232,7 +273,18 @@ const ReportSale = ({ data }: any) => {
                   textDecoration: "underline",
                 }}
               >
-                하위 20% 매출 - 1,736만원 , 중간값 - 2,736만원 입니다.
+                {textArr?.salesAmtBottom20 && textArr?.medianSalesAmt
+                  ? `하위 20% 매출 - ${textArr.salesAmtBottom20.toFixed(
+                      0
+                    )}만원 , 
+                  중간값  - ${textArr.medianSalesAmt.toFixed(0)}만원 입니다.`
+                  : textArr?.salesAmtBottom20
+                  ? `하위 20% 매출 - ${textArr.salesAmtBottom20.toFixed(
+                      0
+                    )}만원 입니다.`
+                  : textArr?.medianSalesAmt
+                  ? `중간값 - ${textArr.medianSalesAmt.toFixed(0)}만원 입니다.`
+                  : ""}
               </Highlight>
             </Text>
           </ListItem>
@@ -245,7 +297,12 @@ const ReportSale = ({ data }: any) => {
               lineHeight="1.75rem"
             >
               <Highlight
-                query={["남성", "화요일", "14~18시"]}
+                query={[
+                  `${textArr?.gender}`,
+                  `${textArr?.age}`,
+                  `${textArr?.day}`,
+                  `${textArr?.time}`,
+                ]}
                 styles={{
                   w: "100%",
                   textStyle: "base",
@@ -256,7 +313,11 @@ const ReportSale = ({ data }: any) => {
                   textDecoration: "underline",
                 }}
               >
-                주요 매출 구성은 남성, 40대, 화요일, 14~18시 입니다.
+                {`주요 매출 구성은 ${
+                  textArr?.gender ? `${textArr.gender}, ` : null
+                }${textArr?.age ? `${textArr.age}, ` : null}${
+                  textArr?.day ? `${textArr.day}, ` : null
+                }${textArr?.time ? `${textArr.time}` : null} 입니다.`}
               </Highlight>
             </Text>
           </ListItem>

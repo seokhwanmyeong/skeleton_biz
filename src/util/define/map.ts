@@ -28,6 +28,13 @@ const flowColor: { [x: number]: string } = {
   10: "#007AFF",
 };
 
+const flowSize: { [x: number]: string } = {
+  16: "10",
+  17: "10",
+  18: "8",
+  19: "6",
+};
+
 //  대장종류
 const regstrGbCd = [
   { text: "전체", value: "" },
@@ -151,6 +158,7 @@ const lvHandler = (flowPop: number) => {
 export {
   bsDisColor,
   flowColor,
+  flowSize,
   regstrGbCd,
   roofCd,
   mainPurpsCd,

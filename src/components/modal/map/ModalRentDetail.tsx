@@ -24,7 +24,7 @@ import { Deco01 } from "@assets/deco/DecoSvg";
 //  Icon
 import { IcoBars, IcoHistory, IcoLeft } from "@assets/icons/icon";
 //  Type
-import type { TypeMapRentInfo } from "@api/bizSub/type";
+import type { RentInfo } from "@api/bizSub/type";
 
 type Props = {
   id: string;
@@ -35,14 +35,15 @@ type Props = {
 
 const ModalRentDetail = ({ id, name, isOpen, onClose }: Props) => {
   const { getRentInfo } = apiErpMap;
-  const [infoData, setInfoData] = useState<TypeMapRentInfo["res"] | null>(null);
+  const [infoData, setInfoData] = useState<RentInfo | null>(null);
   const [tabIdx, setTabIdx] = useState<number>(0);
 
   useEffect(() => {
     if (id && name) {
       getRentInfo({ id: id }).then((res) => {
-        if (res) {
-          setInfoData(res);
+        if (res.data) {
+          setInfoData(res.data);
+        } else {
         }
       });
     }

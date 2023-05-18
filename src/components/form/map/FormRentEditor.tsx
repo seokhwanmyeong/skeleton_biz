@@ -85,12 +85,7 @@ const FormRentEditor = forwardRef(
             setValues(values);
           }}
         >
-          {({
-            handleSubmit,
-            getFieldProps,
-            setFieldValue,
-            setFieldTouched,
-          }) => {
+          {({ handleSubmit }) => {
             return (
               <Form
                 onSubmit={(values) => {
@@ -183,11 +178,22 @@ const FormRentEditor = forwardRef(
                           <DatePicker
                             placeholder="날짜를 입력하세요."
                             name="date"
-                            dateFormat="YYYY/MM/DD"
-                            value={form.getFieldProps("availableDay").value}
+                            dateFormat="YYYY-MM-DD"
+                            value={
+                              form.getFieldProps("availableDay").value
+                                ? new Date(
+                                    form.getFieldProps("availableDay").value
+                                  )
+                                    .toISOString()
+                                    .split("T")[0]
+                                : ""
+                            }
                             onChange={(date: string) => {
                               form.setFieldTouched("availableDay", true);
-                              form.setFieldValue("availableDay", date);
+                              form.setFieldValue(
+                                "availableDay",
+                                new Date(date)
+                              );
                             }}
                           />
                         </FormControl>
@@ -224,12 +230,10 @@ const FormRentEditor = forwardRef(
                     borderColor="neutral.gray8"
                   >
                     <EditorLabel text="실평수" />
-                    <Field name="realArea" validate={validateNumber}>
+                    <Field name="size" validate={validateNumber}>
                       {({ form, field }: any) => (
                         <FormControl
-                          isInvalid={
-                            form.errors.realArea && form.touched.realArea
-                          }
+                          isInvalid={form.errors.size && form.touched.size}
                         >
                           <Input
                             variant="modalEditor"
@@ -239,14 +243,14 @@ const FormRentEditor = forwardRef(
                             value={field.value}
                             onChange={(e: any) => {
                               if (numRegExp.test(e.target.value)) {
-                                form.setFieldTouched("realArea", true);
+                                form.setFieldTouched("size", true);
                                 form.setFieldValue(
-                                  "realArea",
+                                  "size",
                                   Number(e.target.value)
                                 );
                               } else if (e.target.value === "") {
-                                form.setFieldTouched("realArea", true);
-                                form.setFieldValue("realArea", 0);
+                                form.setFieldTouched("size", true);
+                                form.setFieldValue("size", 0);
                               }
                             }}
                           />

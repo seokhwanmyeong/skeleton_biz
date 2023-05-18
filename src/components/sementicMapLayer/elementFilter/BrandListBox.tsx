@@ -222,7 +222,7 @@ const BrandListBox = memo(
         setBsList(null);
         naver.maps.Event.removeListener(panningEventHandelr);
       };
-    }, [state, bsDis]);
+    }, [state, bsDis, bsDisShow]);
     console.log("box");
     // useEffect(() => {
     //   if (!state?.map) return;
@@ -438,7 +438,7 @@ const BrandListBox = memo(
             color="font.title"
             textAlign="center"
           >
-            브랜드 조회
+            브랜드 데이터
           </Heading>
         </Flex>
         <Deco01 margin="0.75rem 0 0.5rem" width="100%" height="auto" />
@@ -676,7 +676,12 @@ const ListStore = memo(
     storeList: StoreList[];
   }) => {
     const { state } = useContext(NaverMapContext);
+    const [isHover, onHover] = useState<boolean>(false);
+    const [name, setName] = useState<string | null>("");
+    const [cursorPo, setCursorPo] = useState<[number, number] | null>(null);
     const markerRef = useRef<any[] | null>([]);
+    const storeRef = useRef<any[] | null>([]);
+    const eventRef = useRef<any[] | null>([]);
 
     const reset = useCallback(() => {
       if (markerRef.current && markerRef.current.length > 0) {
@@ -685,23 +690,36 @@ const ListStore = memo(
       }
     }, [markerRef.current]);
 
+    const resetObj = useCallback(() => {
+      if (storeRef.current && storeRef.current.length > 0) {
+        storeRef.current.map((li) => li.setMap(null));
+        storeRef.current = null;
+      }
+      if (eventRef.current && eventRef.current.length > 0) {
+        eventRef.current.map((event: any) =>
+          naver.maps.Event.removeListener(event)
+        );
+        eventRef.current = null;
+      }
+      setCursorPo(null);
+      onHover(false);
+    }, [storeRef.current, eventRef.current]);
+
     useEffect(() => {
       if (!state.map) return;
       let zoom = state.map.getZoom();
+      let bounds: any = state.map?.getBounds();
 
-      if (10 < zoom && zoom < 13) {
+      if (10 < zoom && zoom < 13 && storeShow) {
         reset();
+        resetObj();
 
         const markerLi: any[] = [];
         const area: { [x: string]: any } = {};
-        const areaTmp: { [x: string]: any } = {
-          서울특별시: [],
-          인천광역시: [],
-        };
 
         storeList.map((store) => {
           if (store.location.coordinates) {
-            const addr = store.addr.split(" ")[1];
+            const addr = store?.addr?.split(" ")[1];
 
             if (area[addr]) {
               area[addr].push([
@@ -715,14 +733,6 @@ const ListStore = memo(
                 Number(store.location.coordinates[0]),
               ]);
             }
-          }
-        });
-
-        Object.keys(area).map((key: string) => {
-          if (key === "서울특별시" || key === "서울시" || key === "서울") {
-            areaTmp["서울특별시"].push(area[key]);
-          } else if (key === "인천" || key === "인천광역시") {
-            areaTmp["인천광역시"].push(area[key]);
           }
         });
 
@@ -743,24 +753,115 @@ const ListStore = memo(
         });
 
         markerRef.current = markerLi;
-      } else if (zoom <= 10) {
+      } else if (zoom <= 10 && storeShow) {
         reset();
+        resetObj();
 
         const markerLi: any[] = [];
-        const area: { [x: string]: any } = {};
+        const area: { [x: string]: any } = {
+          서울특별시: [],
+          인천광역시: [],
+          경기도: [],
+          강원도: [],
+          충청북도: [],
+          충청남도: [],
+          전라북도: [],
+          전라남도: [],
+          세종특별자치시: [],
+          대전광역시: [],
+          광주광역시: [],
+          대구광역시: [],
+          경상북도: [],
+          경상남도: [],
+          울산광역시: [],
+          부산광역시: [],
+        };
 
         storeList.map((store) => {
           if (store.location.coordinates) {
-            const addr = store.addr.split(" ")[0];
+            const addr = store?.addr?.split(" ")[0];
 
-            if (area[addr]) {
-              area[addr].push([
+            if (addr === "서울특별시" || addr === "서울시" || addr === "서울") {
+              area["서울특별시"].push([
                 Number(store.location.coordinates[1]),
                 Number(store.location.coordinates[0]),
               ]);
-            } else {
-              area[addr] = [];
-              area[addr].push([
+            } else if (addr === "인천" || addr === "인천광역시") {
+              area["인천광역시"].push([
+                Number(store.location.coordinates[1]),
+                Number(store.location.coordinates[0]),
+              ]);
+            } else if (addr === "경기도" || addr === "경기") {
+              area["경기도"].push([
+                Number(store.location.coordinates[1]),
+                Number(store.location.coordinates[0]),
+              ]);
+            } else if (addr === "강원도" || addr === "강원") {
+              area["경기도"].push([
+                Number(store.location.coordinates[1]),
+                Number(store.location.coordinates[0]),
+              ]);
+            } else if (addr === "충청북도" || addr === "충북") {
+              area["충청북도"].push([
+                Number(store.location.coordinates[1]),
+                Number(store.location.coordinates[0]),
+              ]);
+            } else if (addr === "충청남도" || addr === "충남") {
+              area["충청남도"].push([
+                Number(store.location.coordinates[1]),
+                Number(store.location.coordinates[0]),
+              ]);
+            } else if (addr === "전라북도" || addr === "전북") {
+              area["전라북도"].push([
+                Number(store.location.coordinates[1]),
+                Number(store.location.coordinates[0]),
+              ]);
+            } else if (addr === "전라남도" || addr === "전남") {
+              area["전라남도"].push([
+                Number(store.location.coordinates[1]),
+                Number(store.location.coordinates[0]),
+              ]);
+            } else if (addr === "대전광역시" || addr === "대전") {
+              area["대전광역시"].push([
+                Number(store.location.coordinates[1]),
+                Number(store.location.coordinates[0]),
+              ]);
+            } else if (
+              addr === "세종특별자치시" ||
+              addr === "세종" ||
+              addr === "세종시"
+            ) {
+              area["세종특별자치시"].push([
+                Number(store.location.coordinates[1]),
+                Number(store.location.coordinates[0]),
+              ]);
+            } else if (addr === "광주광역시" || addr === "광주") {
+              area["광주광역시"].push([
+                Number(store.location.coordinates[1]),
+                Number(store.location.coordinates[0]),
+              ]);
+            } else if (addr === "대구광역시" || addr === "대구") {
+              area["대구광역시"].push([
+                Number(store.location.coordinates[1]),
+                Number(store.location.coordinates[0]),
+              ]);
+            } else if (addr === "경상북도" || addr === "경북") {
+              area["경상북도"].push([
+                Number(store.location.coordinates[1]),
+                Number(store.location.coordinates[0]),
+              ]);
+            } else if (addr === "경상남도" || addr === "경남") {
+              area["경상남도"].push([
+                Number(store.location.coordinates[1]),
+                Number(store.location.coordinates[0]),
+              ]);
+            } else if (addr === "부산광역시" || addr === "부산") {
+              area["부산광역시"].push([
+                Number(store.location.coordinates[1]),
+                Number(store.location.coordinates[0]),
+              ]);
+            } else if (addr === "울산광역시" || addr === "울산") {
+              area["울산광역시"].push([
                 Number(store.location.coordinates[1]),
                 Number(store.location.coordinates[0]),
               ]);
@@ -769,6 +870,8 @@ const ListStore = memo(
         });
 
         Object.keys(area).map((key: string) => {
+          if (area[key].length === 0) return;
+
           const pos = area[key].length > 1 ? pathAvg(area[key]) : area[key][0];
 
           const marker = new naver.maps.Marker({
@@ -788,6 +891,100 @@ const ListStore = memo(
         markerRef.current = markerLi;
       } else {
         reset();
+        resetObj();
+        if (storeShow) {
+          storeList.map((li) => {
+            if (!li?.location?.coordinates) {
+              return;
+            } else {
+              const { _id, storeName } = li;
+              const lat = li.location?.coordinates[1];
+              const lng = li.location?.coordinates[0];
+
+              if (
+                bounds._max.x > lng &&
+                bounds._min.x < lng &&
+                bounds._max.y > lat &&
+                bounds._min.y < lat
+              ) {
+                const marker = new naver.maps.Marker({
+                  map: state.map,
+                  position: [lng, lat],
+                  icon: {
+                    url: markerStore,
+                  },
+                });
+                const eventArr: any = [];
+                const clickEvent = naver.maps.Event.addListener(
+                  marker,
+                  "click",
+                  () => {
+                    const element = document.getElementById(
+                      `storeListItem-${_id}`
+                    );
+
+                    if (element) {
+                      element.scrollIntoView({
+                        behavior: "smooth",
+                      });
+                    }
+                  }
+                );
+                const overEvent = naver.maps.Event.addListener(
+                  marker,
+                  "mouseover",
+                  () => {
+                    onHover(true);
+                    setCursorPo([lng, lat]);
+                    setName(storeName);
+                    const element = document.getElementById(
+                      `storeListItem-${_id}`
+                    );
+
+                    if (element) {
+                      element.style.background =
+                        "linear-gradient(90deg, rgba(255, 236, 61, 0) 0%, #FFEC3D 36.2%, rgba(255, 236, 61, 0) 92.66%)";
+                    }
+                  }
+                );
+                const outEvent = naver.maps.Event.addListener(
+                  marker,
+                  "mouseout",
+                  () => {
+                    onHover(false);
+                    setCursorPo(null);
+                    setName(null);
+                    const element = document.getElementById(
+                      `storeListItem-${_id}`
+                    );
+
+                    if (element) {
+                      // @ts-ignore
+                      element.style.background = null;
+                    }
+                  }
+                );
+                eventArr.push(clickEvent);
+                eventArr.push(overEvent);
+                eventArr.push(outEvent);
+
+                if (!eventRef.current) {
+                  eventRef.current = [];
+                  eventRef.current.push(eventArr);
+                } else {
+                  eventRef.current.push(eventArr);
+                }
+
+                if (!storeRef.current) {
+                  storeRef.current = [];
+                  storeRef.current.push(marker);
+                } else {
+                  storeRef.current.push(marker);
+                }
+              }
+            }
+          });
+        }
       }
 
       let timer: any;
@@ -797,7 +994,7 @@ const ListStore = memo(
         (e) => {
           if (timer) clearTimeout(timer);
           timer = setTimeout(function () {
-            if (10 < e && e < 13) {
+            if (10 < e && e < 13 && storeShow) {
               reset();
 
               const markerLi: any[] = [];
@@ -805,7 +1002,7 @@ const ListStore = memo(
 
               storeList.map((store) => {
                 if (store.location.coordinates) {
-                  const addr = store.addr.split(" ")[1];
+                  const addr = store?.addr?.split(" ")[1];
 
                   if (area[addr]) {
                     area[addr].push([
@@ -841,32 +1038,127 @@ const ListStore = memo(
               });
 
               markerRef.current = markerLi;
-            } else if (e <= 10) {
+            } else if (e <= 10 && storeShow) {
               reset();
 
               const markerLi: any[] = [];
-              const area: { [x: string]: any } = {};
+              const area: { [x: string]: any } = {
+                서울특별시: [],
+                인천광역시: [],
+                경기도: [],
+                강원도: [],
+                충청북도: [],
+                충청남도: [],
+                전라북도: [],
+                전라남도: [],
+                세종특별자치시: [],
+                대전광역시: [],
+                광주광역시: [],
+                대구광역시: [],
+                경상북도: [],
+                경상남도: [],
+                울산광역시: [],
+                부산광역시: [],
+              };
 
               storeList.map((store) => {
                 if (store.location.coordinates) {
-                  const addr = store.addr.split(" ")[0];
-                  if (area[addr]) {
-                    area[addr].push([
+                  const addr = store?.addr?.split(" ")[0];
+
+                  if (
+                    addr === "서울특별시" ||
+                    addr === "서울시" ||
+                    addr === "서울"
+                  ) {
+                    area["서울특별시"].push([
                       Number(store.location.coordinates[1]),
                       Number(store.location.coordinates[0]),
                     ]);
-                  } else {
-                    area[addr] = [];
-                    area[addr].push([
+                  } else if (addr === "인천" || addr === "인천광역시") {
+                    area["인천광역시"].push([
+                      Number(store.location.coordinates[1]),
+                      Number(store.location.coordinates[0]),
+                    ]);
+                  } else if (addr === "경기도" || addr === "경기") {
+                    area["경기도"].push([
+                      Number(store.location.coordinates[1]),
+                      Number(store.location.coordinates[0]),
+                    ]);
+                  } else if (addr === "강원도" || addr === "강원") {
+                    area["경기도"].push([
+                      Number(store.location.coordinates[1]),
+                      Number(store.location.coordinates[0]),
+                    ]);
+                  } else if (addr === "충청북도" || addr === "충북") {
+                    area["충청북도"].push([
+                      Number(store.location.coordinates[1]),
+                      Number(store.location.coordinates[0]),
+                    ]);
+                  } else if (addr === "충청남도" || addr === "충남") {
+                    area["충청남도"].push([
+                      Number(store.location.coordinates[1]),
+                      Number(store.location.coordinates[0]),
+                    ]);
+                  } else if (addr === "전라북도" || addr === "전북") {
+                    area["전라북도"].push([
+                      Number(store.location.coordinates[1]),
+                      Number(store.location.coordinates[0]),
+                    ]);
+                  } else if (addr === "전라남도" || addr === "전남") {
+                    area["전라남도"].push([
+                      Number(store.location.coordinates[1]),
+                      Number(store.location.coordinates[0]),
+                    ]);
+                  } else if (addr === "대전광역시" || addr === "대전") {
+                    area["대전광역시"].push([
+                      Number(store.location.coordinates[1]),
+                      Number(store.location.coordinates[0]),
+                    ]);
+                  } else if (
+                    addr === "세종특별자치시" ||
+                    addr === "세종" ||
+                    addr === "세종시"
+                  ) {
+                    area["세종특별자치시"].push([
+                      Number(store.location.coordinates[1]),
+                      Number(store.location.coordinates[0]),
+                    ]);
+                  } else if (addr === "광주광역시" || addr === "광주") {
+                    area["광주광역시"].push([
+                      Number(store.location.coordinates[1]),
+                      Number(store.location.coordinates[0]),
+                    ]);
+                  } else if (addr === "대구광역시" || addr === "대구") {
+                    area["대구광역시"].push([
+                      Number(store.location.coordinates[1]),
+                      Number(store.location.coordinates[0]),
+                    ]);
+                  } else if (addr === "경상북도" || addr === "경북") {
+                    area["경상북도"].push([
+                      Number(store.location.coordinates[1]),
+                      Number(store.location.coordinates[0]),
+                    ]);
+                  } else if (addr === "경상남도" || addr === "경남") {
+                    area["경상남도"].push([
+                      Number(store.location.coordinates[1]),
+                      Number(store.location.coordinates[0]),
+                    ]);
+                  } else if (addr === "부산광역시" || addr === "부산") {
+                    area["부산광역시"].push([
+                      Number(store.location.coordinates[1]),
+                      Number(store.location.coordinates[0]),
+                    ]);
+                  } else if (addr === "울산광역시" || addr === "울산") {
+                    area["울산광역시"].push([
                       Number(store.location.coordinates[1]),
                       Number(store.location.coordinates[0]),
                     ]);
                   }
                 }
               });
-              console.log(area);
 
               Object.keys(area).map((key: string) => {
+                if (area[key].length === 0) return;
                 const pos =
                   area[key].length > 1 ? pathAvg(area[key]) : area[key][0];
 
@@ -891,332 +1183,325 @@ const ListStore = memo(
         }
       );
 
+      let boundTimer: any;
+      const boundsEvent = naver.maps.Event.addListener(
+        state.map,
+        "bounds_changed",
+        (e) => {
+          if (boundTimer) clearTimeout(boundTimer);
+          boundTimer = setTimeout(function () {
+            if (state.map && storeShow) {
+              let zoom = state.map.getZoom();
+              let bounds: any = state.map?.getBounds();
+
+              if (zoom < 13) {
+                resetObj();
+                return;
+              } else if (zoom >= 13) {
+                resetObj();
+                storeList.map((li) => {
+                  if (!li?.location?.coordinates) {
+                    return;
+                  } else {
+                    const { _id, storeName } = li;
+                    const lat = li.location?.coordinates[1];
+                    const lng = li.location?.coordinates[0];
+
+                    if (
+                      bounds._max.x > lng &&
+                      bounds._min.x < lng &&
+                      bounds._max.y > lat &&
+                      bounds._min.y < lat
+                    ) {
+                      const marker = new naver.maps.Marker({
+                        map: state.map,
+                        position: [lng, lat],
+                        icon: {
+                          url: markerStore,
+                        },
+                      });
+                      const eventArr: any = [];
+                      const clickEvent = naver.maps.Event.addListener(
+                        marker,
+                        "click",
+                        () => {
+                          const element = document.getElementById(
+                            `storeListItem-${_id}`
+                          );
+
+                          if (element) {
+                            element.scrollIntoView({
+                              behavior: "smooth",
+                            });
+                          }
+                        }
+                      );
+                      const overEvent = naver.maps.Event.addListener(
+                        marker,
+                        "mouseover",
+                        () => {
+                          onHover(true);
+                          setCursorPo([lng, lat]);
+                          setName(storeName);
+                          const element = document.getElementById(
+                            `storeListItem-${_id}`
+                          );
+
+                          if (element) {
+                            element.style.background =
+                              "linear-gradient(90deg, rgba(255, 236, 61, 0) 0%, #FFEC3D 36.2%, rgba(255, 236, 61, 0) 92.66%)";
+                          }
+                        }
+                      );
+                      const outEvent = naver.maps.Event.addListener(
+                        marker,
+                        "mouseout",
+                        () => {
+                          onHover(false);
+                          setCursorPo(null);
+                          setName(null);
+                          const element = document.getElementById(
+                            `storeListItem-${_id}`
+                          );
+
+                          if (element) {
+                            // @ts-ignore
+                            element.style.background = null;
+                          }
+                        }
+                      );
+                      eventArr.push(clickEvent);
+                      eventArr.push(overEvent);
+                      eventArr.push(outEvent);
+
+                      if (!eventRef.current) {
+                        eventRef.current = [];
+                        eventRef.current.push(eventArr);
+                      } else {
+                        eventRef.current.push(eventArr);
+                      }
+
+                      if (!storeRef.current) {
+                        storeRef.current = [];
+                        storeRef.current.push(marker);
+                      } else {
+                        storeRef.current.push(marker);
+                      }
+                    }
+                  }
+                });
+              }
+            } else {
+              resetObj();
+            }
+          }, 300);
+        }
+      );
+
       return () => {
         reset();
+        resetObj();
         naver.maps.Event.removeListener(zoomEvent);
+        naver.maps.Event.removeListener(boundsEvent);
       };
-    }, [state, storeList]);
-    console.log("list render");
-    return storeList ? (
-      <List display="flex" flexDirection="column">
-        {storeList.map(
-          ({ _id, storeName, storePhone, addr, location }, idx: number) =>
-            location.coordinates ? (
-              <ListItemStore
-                key={_id}
-                isShow={storeShow}
-                idx={idx}
-                _id={_id}
-                storeName={storeName}
-                addr={addr}
-                storePhone={storePhone}
-                lat={location.coordinates[1]}
-                lng={location.coordinates[0]}
-              />
-            ) : null
+    }, [state, storeList, storeShow]);
+
+    return (
+      <Fragment>
+        {storeList ? (
+          <List display="flex" flexDirection="column">
+            {storeList.map(
+              ({ _id, storeName, storePhone, addr, location }, idx: number) =>
+                location.coordinates ? (
+                  <ListItemStore
+                    key={_id}
+                    isShow={storeShow}
+                    idx={idx}
+                    _id={_id}
+                    storeName={storeName}
+                    addr={addr}
+                    storePhone={storePhone}
+                    lat={location.coordinates[1]}
+                    lng={location.coordinates[0]}
+                  />
+                ) : null
+            )}
+          </List>
+        ) : null}
+        {state?.map && storeShow && isHover && cursorPo && name && (
+          <OverlayView
+            id={`infoBox`}
+            position={new naver.maps.LatLng(cursorPo)}
+            pane="floatPane"
+            anchorPoint={{ x: 0, y: 10 }}
+          >
+            <Flex
+              as={motion.div}
+              animation={infoAnimation}
+              pos="relative"
+              top="-4.5rem"
+              left="-50%"
+              p="0.25rem 0.75rem"
+              w="auto"
+              justify="flex-start"
+              align="flex-start"
+              bgColor="#FFFFFFD9"
+              gap="0.5rem"
+              border="1px solid"
+              borderColor="neutral.gray6"
+              borderRadius="base"
+              whiteSpace="nowrap"
+            >
+              <Text
+                textStyle="base"
+                fontSize="sm"
+                fontWeight="strong"
+                lineHeight="normal"
+                transition="0.3s"
+                color="font.primary"
+                whiteSpace="nowrap"
+              >
+                {name || ""}
+              </Text>
+            </Flex>
+          </OverlayView>
         )}
-      </List>
-    ) : null;
+      </Fragment>
+    );
   }
 );
 
-const ListItemStore = ({
-  isShow,
-  _id,
-  storeName,
-  addr,
-  storePhone,
-  lat,
-  lng,
-}: any) => {
-  const { state } = useContext(NaverMapContext);
-  const setSv = useSetRecoilState(sementicViewState);
-  const [isHover, onHover] = useState<boolean>(false);
-  const [cursorPo, setCursorPo] = useState<[number, number] | null>(null);
-  const domRef = useRef<any>(null);
-  const markerRef = useRef<any>(null);
-  const eventRef = useRef<any>(null);
+const ListItemStore = memo(
+  ({ isShow, _id, storeName, addr, storePhone, lat, lng }: any) => {
+    const { state } = useContext(NaverMapContext);
+    const setSv = useSetRecoilState(sementicViewState);
+    const [isHover, onHover] = useState<boolean>(false);
+    const [cursorPo, setCursorPo] = useState<[number, number] | null>(null);
 
-  const resetObj = useCallback(() => {
-    if (markerRef.current) {
-      markerRef.current.setMap(null);
-      markerRef.current = null;
-    }
-    if (eventRef.current && eventRef.current.length > 0) {
-      eventRef.current.map((event: any) =>
-        naver.maps.Event.removeListener(event)
-      );
-    }
-    setCursorPo(null);
-  }, [markerRef.current, eventRef.current]);
-
-  useEffect(() => {
-    if (!state.map) return;
-    resetObj();
-    let zoom = state.map?.getZoom() || 0;
-    let bounds: any = state.map?.getBounds();
-    if (zoom >= 13) {
-      if (
-        bounds._max.x > lng &&
-        bounds._min.x < lng &&
-        bounds._max.y > lat &&
-        bounds._min.y < lat
-      ) {
-        if (!markerRef.current) {
-          const marker = new naver.maps.Marker({
-            map: state.map,
-            position: [lng, lat],
-            icon: {
-              url: markerStore,
-            },
-          });
-          const eventArr: any = [];
-          const clickEvent = naver.maps.Event.addListener(
-            marker,
-            "click",
-            () => {
-              domRef.current.scrollIntoView({ behavior: "smooth" });
-            }
-          );
-          const overEvent = naver.maps.Event.addListener(
-            marker,
-            "mouseover",
-            () => {
-              onHover(true);
-              setCursorPo([lng, lat]);
-            }
-          );
-          const outEvent = naver.maps.Event.addListener(
-            marker,
-            "mouseout",
-            () => {
-              onHover(false);
-              setCursorPo(null);
-            }
-          );
-
-          eventArr.push(clickEvent);
-          eventArr.push(overEvent);
-          eventArr.push(outEvent);
-
-          eventRef.current = eventArr;
-          markerRef.current = marker;
-        }
-      } else {
-        if (markerRef.current) markerRef.current.setMap(null);
-        if (eventRef.current && eventRef.current.length > 0)
-          eventRef.current.map((event: any) =>
-            naver.maps.Event.removeListener(event)
-          );
-      }
-    } else {
-      resetObj();
-    }
-
-    let timer: any;
-    const zoomEvent = naver.maps.Event.addListener(
-      state.map,
-      "bounds_changed",
-      (e) => {
-        if (timer) clearTimeout(timer);
-        timer = setTimeout(function () {
-          if (state.map) {
-            const zoom = state.map.getZoom();
-
-            if (zoom < 13) {
-              if (markerRef.current) {
-                markerRef.current.setMap(null);
-                markerRef.current = null;
-              }
-              if (eventRef.current && eventRef.current.length > 0) {
-                eventRef.current.map((event: any) =>
-                  naver.maps.Event.removeListener(event)
-                );
-              }
-            } else if (zoom >= 13) {
-              if (
-                e._max.x > lng &&
-                e._min.x < lng &&
-                e._max.y > lat &&
-                e._min.y < lat
-              ) {
-                if (!markerRef.current) {
-                  const marker = new naver.maps.Marker({
-                    map: state.map,
-                    position: [lng, lat],
-                    icon: {
-                      url: markerStore,
-                    },
-                  });
-                  const eventArr: any = [];
-                  const clickEvent = naver.maps.Event.addListener(
-                    marker,
-                    "click",
-                    () => {
-                      domRef.current.scrollIntoView({ behavior: "smooth" });
-                    }
-                  );
-                  const overEvent = naver.maps.Event.addListener(
-                    marker,
-                    "mouseover",
-                    () => {
-                      onHover(true);
-                      setCursorPo([lng, lat]);
-                    }
-                  );
-                  const outEvent = naver.maps.Event.addListener(
-                    marker,
-                    "mouseout",
-                    () => {
-                      onHover(false);
-                      setCursorPo(null);
-                    }
-                  );
-
-                  eventArr.push(clickEvent);
-                  eventArr.push(overEvent);
-                  eventArr.push(outEvent);
-
-                  eventRef.current = eventArr;
-                  markerRef.current = marker;
-                }
-              } else {
-                resetObj();
-              }
-            }
+    return (
+      <Fragment>
+        <ListItem
+          // ref={domRef}
+          id={`storeListItem-${_id}`}
+          key={`storeListItem-${_id}`}
+          p="1rem 0rem 0.75rem"
+          display="flex"
+          alignItems="center"
+          gap="1.25rem"
+          borderBottom="1px solid"
+          borderColor="neutral.gray8"
+          bg={
+            isHover
+              ? "linear-gradient(90deg, rgba(255, 236, 61, 0) 0%, #FFEC3D 36.2%, rgba(255, 236, 61, 0) 92.66%)"
+              : "transparent"
           }
-        }, 300);
-      }
-    );
+          _hover={{
+            fontWeight: "strong",
+            cursor: "pointer",
+          }}
+          onClick={() => {
+            if (state.map) {
+              const point = new naver.maps.LatLng(lat, lng);
 
-    return () => {
-      naver.maps.Event.removeListener(zoomEvent);
-      resetObj();
-    };
-  }, [state.map]);
+              state.map.setCenter(point);
+              state.map.setZoom(18);
+            }
 
-  return (
-    <Fragment>
-      <ListItem
-        ref={domRef}
-        key={`storeListItem-${_id}`}
-        p="1rem 0rem 0.75rem"
-        display="flex"
-        alignItems="center"
-        gap="1.25rem"
-        borderBottom="1px solid"
-        borderColor="neutral.gray8"
-        bg={
-          isHover
-            ? "linear-gradient(90deg, rgba(255, 236, 61, 0) 0%, #FFEC3D 36.2%, rgba(255, 236, 61, 0) 92.66%)"
-            : "transparent"
-        }
-        _hover={{
-          fontWeight: "strong",
-          cursor: "pointer",
-        }}
-        onClick={() => {
-          if (state.map) {
-            const point = new naver.maps.LatLng(lat, lng);
-
-            state.map.setCenter(point);
-            state.map.setZoom(18);
-          }
-
-          setSv({
-            viewId: "storeInfo",
-            props: {
-              id: _id,
-              name: storeName,
-            },
-          });
-        }}
-        onMouseEnter={() => {
-          onHover(true);
-          setCursorPo([lng, lat]);
-        }}
-        onMouseLeave={() => {
-          onHover(false);
-          setCursorPo(null);
-        }}
-      >
-        <Flex justify="center" align="center" flex="none">
-          <Image src={markerStore} w="auto" bg="transparent" border="0" />
-        </Flex>
-        <Flex direction="column">
-          <Text
-            textStyle="base"
-            fontSize="md"
-            fontWeight="strong"
-            lineHeight="1"
-            color="font.primary"
-          >
-            {storeName}
-          </Text>
-          <Text
-            mt="0.3rem"
-            textStyle="base"
-            fontSize="xs"
-            fontWeight="regular"
-            lineHeight="1"
-            color="font.primary"
-            noOfLines={1}
-          >
-            {addr}
-          </Text>
-          <Text
-            mt="0.3rem"
-            textStyle="base"
-            fontSize="xs"
-            fontWeight="regular"
-            lineHeight="1"
-            color="font.primary"
-          >
-            {storePhone}
-          </Text>
-        </Flex>
-      </ListItem>
-      {state?.map && isShow && isHover && cursorPo && (
-        <OverlayView
-          id={`infoBox`}
-          position={new naver.maps.LatLng(cursorPo)}
-          pane="floatPane"
-          anchorPoint={{ x: 0, y: 10 }}
+            setSv({
+              viewId: "storeInfo",
+              props: {
+                id: _id,
+                name: storeName,
+              },
+            });
+          }}
+          onMouseEnter={() => {
+            onHover(true);
+            setCursorPo([lng, lat]);
+          }}
+          onMouseLeave={() => {
+            onHover(false);
+            setCursorPo(null);
+          }}
         >
-          <Flex
-            as={motion.div}
-            animation={infoAnimation}
-            pos="relative"
-            top="-4.5rem"
-            left="-50%"
-            p="0.25rem 0.75rem"
-            w="auto"
-            justify="flex-start"
-            align="flex-start"
-            bgColor="#FFFFFFD9"
-            gap="0.5rem"
-            border="1px solid"
-            borderColor="neutral.gray6"
-            borderRadius="base"
-            whiteSpace="nowrap"
-          >
+          <Flex justify="center" align="center" flex="none">
+            <Image src={markerStore} w="auto" bg="transparent" border="0" />
+          </Flex>
+          <Flex direction="column">
             <Text
               textStyle="base"
-              fontSize="sm"
+              fontSize="md"
               fontWeight="strong"
-              lineHeight="normal"
-              transition="0.3s"
+              lineHeight="1"
               color="font.primary"
-              whiteSpace="nowrap"
             >
-              {storeName || ""}
+              {storeName}
+            </Text>
+            <Text
+              mt="0.3rem"
+              textStyle="base"
+              fontSize="xs"
+              fontWeight="regular"
+              lineHeight="1"
+              color="font.primary"
+              noOfLines={1}
+            >
+              {addr}
+            </Text>
+            <Text
+              mt="0.3rem"
+              textStyle="base"
+              fontSize="xs"
+              fontWeight="regular"
+              lineHeight="1"
+              color="font.primary"
+            >
+              {storePhone}
             </Text>
           </Flex>
-        </OverlayView>
-      )}
-    </Fragment>
-  );
-};
+        </ListItem>
+        {state?.map && isShow && isHover && cursorPo && (
+          <OverlayView
+            id={`infoBox`}
+            position={new naver.maps.LatLng(cursorPo)}
+            pane="floatPane"
+            anchorPoint={{ x: 0, y: 10 }}
+          >
+            <Flex
+              as={motion.div}
+              animation={infoAnimation}
+              pos="relative"
+              top="-4.5rem"
+              left="-50%"
+              p="0.25rem 0.75rem"
+              w="auto"
+              justify="flex-start"
+              align="flex-start"
+              bgColor="#FFFFFFD9"
+              gap="0.5rem"
+              border="1px solid"
+              borderColor="neutral.gray6"
+              borderRadius="base"
+              whiteSpace="nowrap"
+            >
+              <Text
+                textStyle="base"
+                fontSize="sm"
+                fontWeight="strong"
+                lineHeight="normal"
+                transition="0.3s"
+                color="font.primary"
+                whiteSpace="nowrap"
+              >
+                {storeName || ""}
+              </Text>
+            </Flex>
+          </OverlayView>
+        )}
+      </Fragment>
+    );
+  }
+);
 
 const ListBsDis = memo(
   ({
@@ -1270,6 +1555,9 @@ const ListItemBsDis = ({
   bsDisName,
   bsDisCode,
   bsDisType,
+  polygonType,
+  geometry,
+  range,
   center,
 }: BsDisList) => {
   const { state } = useContext(NaverMapContext);
@@ -1327,6 +1615,10 @@ const ListItemBsDis = ({
               id: _id,
               code: bsDisCode,
               name: bsDisName,
+              polygonType: polygonType,
+              geometry: geometry,
+              range: range,
+              center: center,
             },
           });
         }}
@@ -1409,25 +1701,41 @@ const ListItemBsDis = ({
 const ListRent = memo(({ rentShow, rentList }: any) => {
   return rentList ? (
     <List display="flex" flexDirection="column">
-      {rentList.map(({ _id, name, addr, location }: RentList, idx: number) =>
-        location.coordinates ? (
-          <ListItemRent
-            key={_id}
-            isShow={rentShow}
-            idx={idx}
-            _id={_id}
-            rentName={name}
-            addr={addr}
-            lat={location.coordinates[1]}
-            lng={location.coordinates[0]}
-          />
-        ) : null
+      {rentList.map(
+        (
+          { id, rentName, addrNew, addrOld, addrDetail, location }: RentList,
+          idx: number
+        ) =>
+          location.coordinates ? (
+            <ListItemRent
+              key={id}
+              isShow={rentShow}
+              idx={idx}
+              id={id}
+              rentName={rentName}
+              addrNew={addrNew}
+              addrOld={addrOld}
+              addrDetail={addrDetail}
+              lat={location.coordinates[1]}
+              lng={location.coordinates[0]}
+            />
+          ) : null
       )}
     </List>
   ) : null;
 });
 
-const ListItemRent = ({ isShow, idx, _id, rentName, addr, lat, lng }: any) => {
+const ListItemRent = ({
+  isShow,
+  idx,
+  id,
+  rentName,
+  addrNew,
+  addrOld,
+  addrDetail,
+  lat,
+  lng,
+}: any) => {
   const { state } = useContext(NaverMapContext);
   const setSv = useSetRecoilState(sementicViewState);
   const [isHover, onHover] = useState<boolean>(false);
@@ -1454,7 +1762,7 @@ const ListItemRent = ({ isShow, idx, _id, rentName, addr, lat, lng }: any) => {
     resetObj();
     let zoom = state.map?.getZoom() || 0;
     let bounds: any = state.map?.getBounds();
-    if (zoom >= 13) {
+    if (zoom >= 13 && isShow) {
       if (
         bounds._max.x > lng &&
         bounds._min.x < lng &&
@@ -1519,7 +1827,7 @@ const ListItemRent = ({ isShow, idx, _id, rentName, addr, lat, lng }: any) => {
       (e) => {
         if (timer) clearTimeout(timer);
         timer = setTimeout(function () {
-          if (state.map) {
+          if (state.map && isShow) {
             const zoom = state.map.getZoom();
 
             if (zoom < 13) {
@@ -1583,6 +1891,8 @@ const ListItemRent = ({ isShow, idx, _id, rentName, addr, lat, lng }: any) => {
                 resetObj();
               }
             }
+          } else {
+            resetObj();
           }
         }, 300);
       }
@@ -1592,13 +1902,13 @@ const ListItemRent = ({ isShow, idx, _id, rentName, addr, lat, lng }: any) => {
       naver.maps.Event.removeListener(zoomEvent);
       resetObj();
     };
-  }, [state.map]);
+  }, [state.map, isShow]);
 
   return (
     <Fragment>
       <ListItem
         ref={domRef}
-        key={`rentListItem-${_id}`}
+        key={`rentListItem-${id}`}
         p="1rem 0rem 0.75rem"
         display="flex"
         alignItems="center"
@@ -1625,7 +1935,7 @@ const ListItemRent = ({ isShow, idx, _id, rentName, addr, lat, lng }: any) => {
           setSv({
             viewId: "rentInfo",
             props: {
-              id: _id,
+              id: id,
               name: rentName,
             },
           });
@@ -1660,7 +1970,7 @@ const ListItemRent = ({ isShow, idx, _id, rentName, addr, lat, lng }: any) => {
             color="font.primary"
             noOfLines={1}
           >
-            {addr}
+            {`${addrNew || addrOld}${addrDetail || ""}`}
           </Text>
         </Flex>
       </ListItem>

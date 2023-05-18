@@ -425,6 +425,7 @@ const DrawPolygon = (props: Props) => {
                           range: undefined,
                           center: center,
                           pathType: "polygon",
+                          enterPath: "custom",
                         });
                         onConClose();
                         resetAllElement();
