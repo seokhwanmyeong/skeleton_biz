@@ -146,7 +146,9 @@ const ModalRentDetail = ({ id, name, isOpen, onClose }: Props) => {
                   )}
                 </TabPanel>
                 <TabPanel w="738px">
-                  {tabIdx === 1 && <ElementHistory id={id} title={name} />}
+                  {tabIdx === 1 && (
+                    <ElementHistory id={id} title={name} category="unsold" />
+                  )}
                 </TabPanel>
               </TabPanels>
             </Tabs>

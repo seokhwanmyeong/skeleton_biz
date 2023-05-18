@@ -171,7 +171,9 @@ const ModalStoreDetail = ({ id, name, isOpen, onClose }: Props) => {
                 </TabPanel>
                 <TabPanel w="738px">{tabIdx === 1 && <StoreSale />}</TabPanel>
                 <TabPanel w="738px">
-                  {tabIdx === 2 && <ElementHistory id={id} title={name} />}
+                  {tabIdx === 2 && (
+                    <ElementHistory id={id} title={name} category="store" />
+                  )}
                 </TabPanel>
               </TabPanels>
             </Tabs>

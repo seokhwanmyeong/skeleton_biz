@@ -435,6 +435,69 @@ type TypeCreateRent = {
   };
 };
 
+type TypeHistory = {
+  id: string;
+  historyType: "log" | "write";
+  title: string;
+  writer: string;
+  createAt: Date;
+  hasImg?: string[];
+};
+
+type TypeHistoryList = {
+  req: {
+    brandCode: string;
+    category: "store" | "unsold" | "customer";
+    categoryId: string;
+    historyType: "total" | "log" | "write";
+    searchType: "title" | "writer";
+    text: string;
+    pageNo: number;
+    perPage: number;
+  };
+  res: {
+    data: TypeHistory[];
+  };
+};
+
+type TypeHistoryDetail = {
+  req: {
+    id: string;
+  };
+  res: {
+    _id: string;
+    writer: string;
+    title: string;
+    content: string;
+    curAddr: string;
+    createAt: Date;
+    img?: string[];
+  };
+};
+
+type TypeHistoryCreate = {
+  req: {
+    brandCode: string;
+    id: string;
+    writer: string;
+    title: string;
+    content: string;
+    curAddr: string;
+    img?: string[];
+  };
+  res: any;
+};
+
+type TypeHistoryUpdate = {
+  req: any;
+  res: any;
+};
+
+type TypeHistoryDelete = {
+  req: any;
+  res: any;
+};
+
 export type {
   BixApiInstance,
   TypeMapSido,
@@ -466,4 +529,9 @@ export type {
   TypeSearchLinkBsDis,
   TypeCreateStore,
   TypeCreateRent,
+  TypeHistoryList,
+  TypeHistoryDetail,
+  TypeHistoryCreate,
+  TypeHistoryUpdate,
+  TypeHistoryDelete,
 };

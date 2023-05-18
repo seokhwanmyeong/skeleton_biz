@@ -61,3 +61,10 @@ export const ERP_RENT_DELETE = "/v1/Franchise_Unsoldshop/create";
 export const ERP_CODE_CHECKER = "/v1/Franchise_Branch/duplicateCheck";
 export const ERP_LINK_STORE_GET = "/v1/Franchise_Branch/connectedBranches";
 export const ERP_LINK_BSDIS_GET = "/v1/Franchise_Branch/connectedBis";
+
+//  HISTORY
+export const ERP_HISTORY_GET_LIST = "/v1/Franchise_Histroy/searchall";
+export const ERP_HISTORY_GET_DETAIL = "/v1/Franchise_Histroy/search";
+export const ERP_HISTORY_CREATE = "/v1/Franchise_Histroy/create";
+export const ERP_HISTORY_UPDATE = "/v1/Franchise_Histroy/edit";
+export const ERP_HISTORY_DELETE = "/v1/Franchise_Histroy/delete";

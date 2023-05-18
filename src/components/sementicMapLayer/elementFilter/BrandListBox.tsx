@@ -89,8 +89,18 @@ const BrandListBox = memo(
     const [bsList, setBsList] = useState<any[] | null>(null);
     const [cursorPo, setCursorPo] = useState<any>(null);
     const [name, setName] = useState<any>(null);
+    const [tabList, setTabList] = useState<any[]>([]);
+    const [tabIdx, setTabIdx] = useState<number>(0);
     const polygonRef = useRef<any[] | null>([]);
 
+    useEffect(() => {
+      let count = [];
+      if (store.length > 0) count.push("store");
+      if (bsDis.length > 0) count.push("bsDis");
+      if (rent.length > 0) count.push("rent");
+
+      setTabList(count);
+    }, [store, bsDis, rent]);
     useEffect(() => {
       if (!state?.map) return;
       let zoom = state.map.getZoom();
@@ -442,7 +452,11 @@ const BrandListBox = memo(
           </Heading>
         </Flex>
         <Deco01 margin="0.75rem 0 0.5rem" width="100%" height="auto" />
-        <Tabs variant="depthListBox">
+        <Tabs
+          variant="depthListBox"
+          index={tabIdx}
+          onChange={(idx) => setTabIdx(idx)}
+        >
           <TabList border="none">
             {store && store.length > 0 && <Tab>매장</Tab>}
             {bsDis && bsDis.length > 0 && <Tab>상권</Tab>}
@@ -458,7 +472,12 @@ const BrandListBox = memo(
           >
             {store && store.length > 0 && (
               <TabPanel>
-                <ListStore storeShow={storeShow} storeList={store} />
+                <ListStore
+                  storeShow={storeShow}
+                  storeList={store}
+                  tabList={tabList}
+                  setTabIdx={setTabIdx}
+                />
               </TabPanel>
             )}
             {bsDisShow && bsDis && bsDis.length > 0 && (
@@ -490,12 +509,14 @@ const BrandListBox = memo(
                 key={`bsDisArea-${li._id}`}
                 onClick={() => {
                   const element = document.getElementById(li._id);
-
+                  const index = tabList.indexOf("bsDis");
                   if (element) {
                     element.scrollIntoView({
                       behavior: "smooth",
                     });
                   }
+
+                  setTabIdx(index);
                 }}
                 onMouseOver={(e: any) => {
                   const bounds = e.overlay.getBounds();
@@ -536,12 +557,14 @@ const BrandListBox = memo(
                 id={`bsDisArea-${li._id}`}
                 onClick={() => {
                   const element = document.getElementById(li._id);
-
+                  const index = tabList.indexOf("bsDis");
                   if (element) {
                     element.scrollIntoView({
                       behavior: "smooth",
                     });
                   }
+
+                  setTabIdx(index);
                 }}
                 onMouseOver={(e: any) => {
                   const bounds = e.overlay.getBounds();
@@ -669,9 +692,13 @@ const BrandListBox = memo(
 
 const ListStore = memo(
   ({
+    tabList,
+    setTabIdx,
     storeShow,
     storeList,
   }: {
+    tabList: any[];
+    setTabIdx: any;
     storeShow: boolean;
     storeList: StoreList[];
   }) => {
@@ -919,6 +946,7 @@ const ListStore = memo(
                   marker,
                   "click",
                   () => {
+                    const index = tabList.indexOf("store");
                     const element = document.getElementById(
                       `storeListItem-${_id}`
                     );
@@ -928,6 +956,8 @@ const ListStore = memo(
                         behavior: "smooth",
                       });
                     }
+
+                    setTabIdx(index);
                   }
                 );
                 const overEvent = naver.maps.Event.addListener(
@@ -1225,6 +1255,8 @@ const ListStore = memo(
                         marker,
                         "click",
                         () => {
+                          console.log(tabList);
+                          const index = tabList?.indexOf("store");
                           const element = document.getElementById(
                             `storeListItem-${_id}`
                           );
@@ -1234,6 +1266,8 @@ const ListStore = memo(
                               behavior: "smooth",
                             });
                           }
+
+                          setTabIdx(index);
                         }
                       );
                       const overEvent = naver.maps.Event.addListener(
@@ -1304,7 +1338,7 @@ const ListStore = memo(
         naver.maps.Event.removeListener(zoomEvent);
         naver.maps.Event.removeListener(boundsEvent);
       };
-    }, [state, storeList, storeShow]);
+    }, [state, storeList, storeShow, tabList]);
 
     return (
       <Fragment>

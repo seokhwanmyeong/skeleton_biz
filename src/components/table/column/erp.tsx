@@ -1,5 +1,5 @@
 //  Lib
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { createColumnHelper } from "@tanstack/react-table";
 import {
@@ -15,6 +15,8 @@ import {
 } from "@chakra-ui/react";
 //  Component
 import FormHistoryEditor from "@components/form/erp/FormHistoryEditor";
+import FormHistory from "@components/form/map/FormHistory";
+import ModalHistoryEditor from "@components/modal/map/ModalHistoryEditor";
 import {
   IcoBtnBsns,
   IcoBtnDownload,
@@ -26,7 +28,6 @@ import { csvStoreSale } from "@util/data/fileCSV";
 import { exportFormCsv } from "@util/file/manageFile";
 //  Icon
 import { IcoCheckCircle, IcoCloseCircle, IcoUpdate } from "@assets/icons/icon";
-import FormHistory from "@src/components/form/map/FormHistory";
 
 const columnHelper = createColumnHelper();
 
@@ -567,87 +568,89 @@ const columnHistoryModal = [
     header: "상세보기",
     cell: (info: any) => {
       const { isOpen, onClose, onOpen } = useDisclosure();
-      const [fixmode, setFixMode] = useState(false);
-      const test = (val: any) => {
-        console.log(val);
-      };
 
       return (
-        <>
+        <Fragment>
           <IcoBtnDetail data-text={"상세보기"} onClick={onOpen} />
           {isOpen && (
-            <Drawer isOpen={isOpen} onClose={onClose} placement="right">
-              <DrawerOverlay
-                top="auto"
-                bottom="0"
-                h="calc(100vh - 2.875rem - 1px)"
-                zIndex={999}
-                onClick={() => {
-                  onClose();
-                }}
-              />
-              <DrawerContent
-                maxW="fit-content"
-                w="100%"
-                sx={{
-                  top: "auto!important",
-                  bottom: "0!important",
-                  h: "calc(100% - 2.875rem - 2px)",
-                }}
-                zIndex={9999}
-                pointerEvents={"all"}
-              >
-                <DrawerBody pos="relative" p="1rem 1.5rem" width="fit-content">
-                  <FormHistory
-                    fixMode={fixmode}
-                    initVal={info.row.original}
-                    setValues={test}
-                  />
-                </DrawerBody>
-                <DrawerFooter
-                  justifyContent={fixmode ? "center" : "flex-end"}
-                  alignItems="center"
-                >
-                  {info?.row?.original.type !== "로그" && !fixmode && (
-                    <Button
-                      variant="editor"
-                      onClick={() => {
-                        setFixMode(true);
-                      }}
-                    >
-                      <IcoUpdate w="0.875rem" h="0.875rem" />
-                      수정
-                    </Button>
-                  )}
-                  {fixmode && (
-                    <Flex w="100%" justify="space-around">
-                      <Button
-                        variant="editor"
-                        onClick={() => {
-                          setFixMode(false);
-                        }}
-                      >
-                        <IcoCloseCircle w="0.875rem" h="0.875rem" />
-                        취소
-                      </Button>
-                      <Button
-                        variant="editor"
-                        onClick={() => {
-                          console.log("submit");
-                          setFixMode(false);
-                          onClose();
-                        }}
-                      >
-                        <IcoCheckCircle w="0.875rem" h="0.875rem" />
-                        완료
-                      </Button>
-                    </Flex>
-                  )}
-                </DrawerFooter>
-              </DrawerContent>
-            </Drawer>
+            <ModalHistoryEditor
+              id={info.row.original.id}
+              isOpen={isOpen}
+              onOpen={onOpen}
+              onClose={onClose}
+            />
+            // <Drawer isOpen={isOpen} onClose={onClose} placement="right">
+            //   <DrawerOverlay
+            //     top="auto"
+            //     bottom="0"
+            //     h="calc(100vh - 2.875rem - 1px)"
+            //     zIndex={999}
+            //     onClick={() => {
+            //       onClose();
+            //     }}
+            //   />
+            //   <DrawerContent
+            //     maxW="fit-content"
+            //     w="100%"
+            //     sx={{
+            //       top: "auto!important",
+            //       bottom: "0!important",
+            //       h: "calc(100% - 2.875rem - 2px)",
+            //     }}
+            //     zIndex={9999}
+            //     pointerEvents={"all"}
+            //   >
+            //     <DrawerBody pos="relative" p="1rem 1.5rem" width="fit-content">
+            //       <FormHistory
+            //         fixMode={fixmode}
+            //         initVal={info.row.original}
+            //         setValues={test}
+            //       />
+            //     </DrawerBody>
+            //     <DrawerFooter
+            //       justifyContent={fixmode ? "center" : "flex-end"}
+            //       alignItems="center"
+            //     >
+            //       {info?.row?.original.type !== "로그" && !fixmode && (
+            //         <Button
+            //           variant="editor"
+            //           onClick={() => {
+            //             setFixMode(true);
+            //           }}
+            //         >
+            //           <IcoUpdate w="0.875rem" h="0.875rem" />
+            //           수정
+            //         </Button>
+            //       )}
+            //       {fixmode && (
+            //         <Flex w="100%" justify="space-around">
+            //           <Button
+            //             variant="editor"
+            //             onClick={() => {
+            //               setFixMode(false);
+            //             }}
+            //           >
+            //             <IcoCloseCircle w="0.875rem" h="0.875rem" />
+            //             취소
+            //           </Button>
+            //           <Button
+            //             variant="editor"
+            //             onClick={() => {
+            //               console.log("submit");
+            //               setFixMode(false);
+            //               onClose();
+            //             }}
+            //           >
+            //             <IcoCheckCircle w="0.875rem" h="0.875rem" />
+            //             완료
+            //           </Button>
+            //         </Flex>
+            //       )}
+            //     </DrawerFooter>
+            //   </DrawerContent>
+            // </Drawer>
           )}
-        </>
+        </Fragment>
       );
     },
     enableResizing: false,

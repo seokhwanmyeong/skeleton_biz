@@ -50,9 +50,10 @@ import { DecoCardBg } from "@components/sementicMapLayer/elementDeco/Deco";
 
 type Props = {
   areaCode: string;
+  isOpen: boolean;
 };
 
-const NiceFilter = ({ areaCode }: Props) => {
+const NiceFilter = ({ areaCode, isOpen }: Props) => {
   const { getSigunguRank } = apiMapNice;
   const divRef = useRef<HTMLDivElement | null>(null);
   const [openIdx, setOpenIdx] = useState(0);
@@ -264,7 +265,8 @@ const NiceFilter = ({ areaCode }: Props) => {
     <Flex
       ref={divRef}
       pos="absolute"
-      bottom="5.25rem"
+      opacity={isOpen ? 1 : 0}
+      bottom={isOpen ? "5.25rem" : "-10rem"}
       left="50%"
       zIndex={999}
       transform="translateX(-50%)"

@@ -46,7 +46,9 @@ const FlowSigungu = () => {
   const setDongLi = useSetRecoilState(atomDongLi);
   const resetDongLi = useResetRecoilState(atomDongLi);
   const reset = useResetRecoilState(resetNice);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure({
+    isOpen: true,
+  });
   const [left, setLeft] = useState([]);
   const [right, setRight] = useState([]);
 
@@ -267,8 +269,8 @@ const FlowSigungu = () => {
         <DecoFilterDivider />
         <BtnReset />
       </DecoBotHightBox>
-      {isOpen && sigungu?.slctCode && (
-        <NiceFilter areaCode={sigungu.slctCode} />
+      {sigungu?.slctCode && (
+        <NiceFilter areaCode={sigungu.slctCode} isOpen={isOpen} />
       )}
     </Fragment>
   );

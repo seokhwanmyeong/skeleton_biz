@@ -409,9 +409,9 @@ const DepthListBox = memo(
         brandList &&
         brandList.length > 0
       ) {
-        setTabLen(2);
-      } else {
         setTabLen(1);
+      } else {
+        setTabLen(0);
       }
     }, [buildList, brandList]);
 
@@ -469,12 +469,22 @@ const DepthListBox = memo(
           >
             {brandShow && brandList && brandList.length > 0 && (
               <TabPanel p="0" h="max-content">
-                <ListBrand brandShow={brandShow} brandList={brandList} />
+                <ListBrand
+                  brandShow={brandShow}
+                  brandList={brandList}
+                  tabLen={tabLen}
+                  setTabIdx={setTabIdx}
+                />
               </TabPanel>
             )}
             {buildShow && buildList && buildList.length > 0 && (
               <TabPanel p="0" h="max-content">
-                <ListBuilding buildShow={buildShow} buildList={buildList} />
+                <ListBuilding
+                  buildShow={buildShow}
+                  buildList={buildList}
+                  tabLen={tabLen}
+                  setTabIdx={setTabIdx}
+                />
               </TabPanel>
             )}
           </TabPanels>
@@ -486,9 +496,13 @@ const DepthListBox = memo(
 
 const ListBrand = memo(
   ({
+    tabLen,
+    setTabIdx,
     brandShow,
     brandList,
   }: {
+    tabLen: number;
+    setTabIdx: any;
     brandShow: boolean;
     brandList: {
       storeNm: string;
@@ -496,6 +510,10 @@ const ListBrand = memo(
       yAxis: number;
     }[];
   }) => {
+    const tabHandler = () => {
+      setTabIdx(tabLen === 2 ? 1 : 0);
+    };
+
     return brandList ? (
       <List display="flex" flexDirection="column">
         {brandList.map(
@@ -518,6 +536,7 @@ const ListBrand = memo(
               storeNm={storeNm}
               lat={yAxis}
               lng={xAxis}
+              tabHandler={tabHandler}
             />
           )
         )}
@@ -532,17 +551,28 @@ const ListItemBrand = ({
   storeNm,
   lat,
   lng,
+  tabHandler,
 }: {
   isShow: boolean;
   idx: number;
   storeNm: string;
   lat: number;
   lng: number;
+  tabHandler: any;
 }) => {
   const { state } = useContext(NaverMapContext);
   const [isHover, onHover] = useState<boolean>(false);
   const [cursorPo, setCursorPo] = useState<[number, number] | null>(null);
+  const domRef = useRef<any>(null);
   const markerRef = useRef<any>(null);
+  const clickRef = useRef<any>(null);
+
+  const resetHandler = useCallback(() => {
+    if (markerRef.current) markerRef.current.setMap(null);
+    markerRef.current = null;
+    if (clickRef.current) naver.maps.Event.removeListener(clickRef.current);
+    clickRef.current = null;
+  }, [markerRef.current, clickRef.current]);
 
   useEffect(() => {
     if (isHover && markerRef.current) {
@@ -580,6 +610,24 @@ const ListItemBrand = ({
               zIndex: 103,
             });
 
+            const clickEvent = naver.maps.Event.addListener(
+              marker,
+              "click",
+              () => {
+                console.log("click");
+                const element = domRef.current;
+
+                if (element) {
+                  tabHandler();
+                  setTimeout(() => {
+                    element.scrollIntoView({
+                      behavior: "smooth",
+                    });
+                  }, 10);
+                }
+              }
+            );
+
             marker.addListener("mouseover", () => {
               onHover(true);
             });
@@ -588,16 +636,15 @@ const ListItemBrand = ({
               onHover(false);
             });
 
+            clickRef.current = clickEvent;
             markerRef.current = marker;
           }
         } else {
-          if (markerRef.current) markerRef.current.setMap(null);
-          markerRef.current = null;
+          resetHandler();
         }
         circle.setMap(null);
       } else {
-        if (markerRef.current) markerRef.current.setMap(null);
-        markerRef.current = null;
+        resetHandler();
       }
     }
 
@@ -612,8 +659,7 @@ const ListItemBrand = ({
             let zoom = state.map?.getZoom() || 0;
 
             if (zoom < 16 && markerRef.current) {
-              markerRef.current.setMap(null);
-              markerRef.current = null;
+              resetHandler();
 
               return;
             } else if (zoom >= 16) {
@@ -639,6 +685,24 @@ const ListItemBrand = ({
                     zIndex: 103,
                   });
 
+                  const clickEvent = naver.maps.Event.addListener(
+                    marker,
+                    "click",
+                    () => {
+                      console.log("click");
+                      const element = domRef.current;
+
+                      if (element) {
+                        tabHandler();
+                        setTimeout(() => {
+                          element.scrollIntoView({
+                            behavior: "smooth",
+                          });
+                        }, 10);
+                      }
+                    }
+                  );
+
                   marker.addListener("mouseover", () => {
                     onHover(true);
                   });
@@ -647,18 +711,17 @@ const ListItemBrand = ({
                     onHover(false);
                   });
 
+                  clickRef.current = clickEvent;
                   markerRef.current = marker;
                 }
               } else {
-                if (markerRef.current) markerRef.current.setMap(null);
-                markerRef.current = null;
+                resetHandler();
               }
 
               circle.setMap(null);
             }
           } else {
-            if (markerRef.current) markerRef.current.setMap(null);
-            markerRef.current = null;
+            resetHandler();
           }
         }, 500);
       }
@@ -674,6 +737,7 @@ const ListItemBrand = ({
   return (
     <Fragment>
       <ListItem
+        ref={domRef}
         key={`brandList-${idx}`}
         p="1rem 0rem 0.75rem"
         display="flex"
@@ -754,7 +818,17 @@ const ListItemBrand = ({
 };
 
 const ListBuilding = memo(
-  ({ buildShow, buildList }: { buildShow: boolean; buildList: any[] }) => {
+  ({
+    tabLen,
+    setTabIdx,
+    buildShow,
+    buildList,
+  }: {
+    tabLen: number;
+    setTabIdx: any;
+    buildShow: boolean;
+    buildList: any[];
+  }) => {
     return buildList ? (
       <List
         key={"ul-building"}

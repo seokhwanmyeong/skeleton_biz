@@ -5,38 +5,43 @@ import {
   DrawerBody,
   DrawerContent,
   Button,
-  Flex,
-  Heading,
-  IconButton,
-  DrawerHeader,
   DrawerFooter,
   useDisclosure,
 } from "@chakra-ui/react";
 //  Component
 import FormHistory from "@components/form/map/FormHistory";
 import { DialogAlertCreateStore } from "@components/dialog/DialogAlertModal";
+//  Api
+import { erpHistoryApi } from "@api/bizSub/config";
+//  Icon
+import { IcoLeft, IcoPlusCircle } from "@assets/icons/icon";
+//  Deco
+import { Deco01 } from "@assets/deco/DecoSvg";
 //  Type
 import type { FormikValues } from "formik";
-import type { StoreInfo } from "@page/erp/store/ErpStoreCreate";
-import { IcoLeft, IcoPlusCircle } from "@src/assets/icons/icon";
-import { Deco01 } from "@src/assets/deco/DecoSvg";
+import type { TypeHistoryCreate } from "@api/bizSub/type";
 
 type Props = {
+  id: string | number;
   isOpen: boolean;
   fixMode?: boolean;
   values?: any;
   onOpen: (props?: any) => any;
   onClose: (props?: any) => any;
+  refresh?: (props?: any) => any;
   setOpenIdx?: (props?: any) => any;
 };
 const ModalHistoryEditor = ({
+  id,
   isOpen,
   fixMode = false,
   values,
   onOpen,
   onClose,
+  refresh,
   setOpenIdx,
 }: Props) => {
+  const { createHistory, getHistoryDetail } = erpHistoryApi;
   const submitRef = useRef<FormikValues>(null);
   const {
     isOpen: isAlertOpen,
@@ -44,7 +49,7 @@ const ModalHistoryEditor = ({
     onClose: onAlertClose,
   } = useDisclosure();
   const [initData, setInitData] = useState({
-    id: "",
+    id: id,
     writer: "김양일",
     title: "",
     content: "",
@@ -56,21 +61,29 @@ const ModalHistoryEditor = ({
     console.log("submit start");
     console.log(submitRef.current);
     if (submitRef?.current) {
-      const { errors, touched } = submitRef.current;
-      if (Object.keys(touched).length > 0 || !errors) {
+      const { errors } = submitRef.current;
+
+      if (Object.keys(errors).length === 0) {
         submitRef?.current && submitRef.current.handleSubmit();
       } else {
-        submitRef?.current && submitRef.current.handleSubmit();
         !isAlertOpen && onAlertOpen();
       }
     }
   }, [submitRef.current]);
 
-  const createHistory = (val?: StoreInfo) => {
+  const createHistoryHandler = (val: TypeHistoryCreate["req"]) => {
     console.log("create start");
     console.log(val);
-    onClose();
-    setOpenIdx && setOpenIdx(-1);
+    createHistory(val).then((res) => {
+      if (res) {
+        onClose();
+        setOpenIdx && setOpenIdx(-1);
+        refresh && refresh();
+      } else {
+        onClose();
+        setOpenIdx && setOpenIdx(-1);
+      }
+    });
   };
 
   const handleSuccess = (pos: GeolocationPosition) => {
@@ -94,17 +107,27 @@ const ModalHistoryEditor = ({
   };
 
   useEffect(() => {
-    const { geolocation } = navigator;
-    if (values) {
-      setInitData(values);
-    }
+    if (fixMode) {
+      const { geolocation } = navigator;
+      if (values) {
+        setInitData(values);
+      }
 
-    if (!geolocation) {
-      return;
-    }
+      if (!geolocation) {
+        return;
+      }
 
-    geolocation.getCurrentPosition(handleSuccess);
-  }, [isOpen]);
+      geolocation.getCurrentPosition(handleSuccess);
+    } else {
+      getHistoryDetail({ id: String(id) }).then((res) => {
+        if (res.data) {
+          setInitData(res.data);
+        } else {
+          onClose();
+        }
+      });
+    }
+  }, [isOpen, fixMode]);
 
   return (
     <Fragment>
@@ -113,22 +136,24 @@ const ModalHistoryEditor = ({
           <DrawerBody pos="relative" p="0" width="100%">
             <FormHistory
               initVal={initData}
-              setValues={createHistory}
+              setValues={createHistoryHandler}
               ref={submitRef}
               fixMode={fixMode}
               onClose={onClose}
             />
           </DrawerBody>
           <DrawerFooter justifyContent="center">
-            <Button
-              variant="modalSubmit"
-              w="80%"
-              zIndex={1}
-              onClick={submitHandler}
-            >
-              <IcoPlusCircle />
-              히스토리 추가하기
-            </Button>
+            {fixMode && (
+              <Button
+                variant="modalSubmit"
+                w="80%"
+                zIndex={1}
+                onClick={submitHandler}
+              >
+                <IcoPlusCircle />
+                히스토리 추가하기
+              </Button>
+            )}
             <Button onClick={onClose}>취소</Button>
           </DrawerFooter>
         </DrawerContent>

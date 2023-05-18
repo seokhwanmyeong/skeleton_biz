@@ -37,6 +37,11 @@ import {
   ERP_RENT_CREATE,
   ERP_RENT_UPDATE,
   ERP_RENT_DELETE,
+  ERP_HISTORY_GET_LIST,
+  ERP_HISTORY_GET_DETAIL,
+  ERP_HISTORY_CREATE,
+  ERP_HISTORY_UPDATE,
+  ERP_HISTORY_DELETE,
 } from "@api/bizSub/url";
 //  Type
 import type {
@@ -63,6 +68,11 @@ import type {
   TypeSearchLinkBsDis,
   TypeCreateStore,
   TypeCreateRent,
+  TypeHistoryList,
+  TypeHistoryDetail,
+  TypeHistoryCreate,
+  TypeHistoryUpdate,
+  TypeHistoryDelete,
 } from "@api/bizSub/type";
 
 let localStorage = window.localStorage;
@@ -240,6 +250,34 @@ const apiErpRent = {
     instance.post<TypeChkCode["req"], TypeChkCode["res"]>(ERP_RENT_DELETE, req),
 };
 
+const erpHistoryApi = {
+  getHistoryList: (req: TypeHistoryList["req"]) =>
+    instance.post<TypeHistoryList["req"], TypeHistoryList["res"]>(
+      ERP_HISTORY_GET_LIST,
+      req
+    ),
+  getHistoryDetail: (req: TypeHistoryDetail["req"]) =>
+    instance.post<TypeHistoryDetail["req"], TypeHistoryDetail["res"]>(
+      ERP_HISTORY_GET_DETAIL,
+      req
+    ),
+  createHistory: (req: TypeHistoryCreate["req"]) =>
+    instance.post<TypeHistoryCreate["req"], TypeHistoryCreate["res"]>(
+      ERP_HISTORY_CREATE,
+      req
+    ),
+  updateHistory: (req: TypeHistoryUpdate["req"]) =>
+    instance.post<TypeHistoryUpdate["req"], TypeHistoryUpdate["res"]>(
+      ERP_HISTORY_UPDATE,
+      req
+    ),
+  deleteHistory: (req: TypeHistoryDelete["req"]) =>
+    instance.post<TypeHistoryDelete["req"], TypeHistoryDelete["res"]>(
+      ERP_HISTORY_DELETE,
+      req
+    ),
+};
+
 export {
   apiMapArea,
   apiMapNice,
@@ -251,4 +289,5 @@ export {
   apiErpStore,
   apiErpRent,
   apiCommon,
+  erpHistoryApi,
 };
