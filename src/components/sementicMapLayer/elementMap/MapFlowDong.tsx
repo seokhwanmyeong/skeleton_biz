@@ -9,7 +9,7 @@ import { sementicViewState } from "@states/sementicMap/stateView";
 //  Api
 import { apiMapNice } from "@api/bizSub/config";
 //  Util
-import { flowColor, lvHandler } from "@util/define/map";
+import { flowColor, lvHandler, flowSize } from "@util/define/map";
 import { searchRange } from "@util/define/map";
 //  Type
 import type { TypeNiceFlowData } from "@api/bizSub/type";
@@ -112,7 +112,13 @@ const MapFlowDong = () => {
                     map: state.map,
                     position: new naver.maps.LatLng(yAxis, xAxis),
                     icon: {
-                      content: `<div style="width: 6px; height: 6px; border-radius: 50%; background-color: ${flowColor[lv]}"/>`,
+                      content: `<div style="width: ${
+                        flowSize[zoom] || flowSize[19]
+                      }px; height: ${
+                        flowSize[zoom] || flowSize[19]
+                      }px; border-radius: 50%; background-color: ${
+                        flowColor[lv]
+                      }"/>`,
                       size: new naver.maps.Size(6, 6),
                       anchor: new naver.maps.Point(3, 3),
                     },
@@ -250,7 +256,13 @@ const MapFlowDong = () => {
                           map: state.map,
                           position: new naver.maps.LatLng(yAxis, xAxis),
                           icon: {
-                            content: `<div style="width: 6px; height: 6px; border-radius: 50%; background-color: ${flowColor[lv]}"/>`,
+                            content: `<div style="width: ${
+                              flowSize[zoom] || flowSize[19]
+                            }px; height: ${
+                              flowSize[zoom] || flowSize[19]
+                            }px; border-radius: 50%; background-color: ${
+                              flowColor[lv]
+                            }"/>`,
                             size: new naver.maps.Size(6, 6),
                             anchor: new naver.maps.Point(3, 3),
                           },
