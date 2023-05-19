@@ -12,6 +12,8 @@ const ReportSummary = ({
   resiRank,
   jobRank,
   houseRank,
+  cost,
+  upjongName,
 }: any) => {
   const [block, setBlock] = useState<any[]>([]);
   const [label, setLabel] = useState<any[]>([]);
@@ -185,7 +187,7 @@ const ReportSummary = ({
                 lineHeight="1.375rem"
                 color="neutral.gray10"
               >
-                {Math.round(data.avgSalesAmt) || "-"}
+                {Math.round(data.avgSalesAmt).toLocaleString("ko-KR") || "-"}
               </Text>
               <Text
                 textStyle="base"
@@ -213,7 +215,7 @@ const ReportSummary = ({
                 lineHeight="1.375rem"
                 color="neutral.gray10"
               >
-                {data.inflowCustCnt || "-"}
+                {data.inflowCustCnt.toLocaleString("ko-KR") || "-"}
               </Text>
               <Text
                 textStyle="base"
@@ -229,7 +231,10 @@ const ReportSummary = ({
         </Flex>
         <Flex w="100%" gap="0.5rem">
           <ElementCardBox width={width[0]}>
-            <ElementCardTitle title="동종 업종수" subTitle="사무가구 점포수" />
+            <ElementCardTitle
+              title="동종 업종수"
+              subTitle={`${upjongName} 점포수`}
+            />
             <Flex align="flex-end">
               <Text
                 textStyle="base"
@@ -238,7 +243,7 @@ const ReportSummary = ({
                 lineHeight="1.375rem"
                 color="neutral.gray10"
               >
-                {data.storeCnt || "-"}
+                {data.storeCnt.toLocaleString("ko-KR") || "-"}
               </Text>
               <Text
                 textStyle="base"
@@ -266,13 +271,13 @@ const ReportSummary = ({
                 lineHeight="1.375rem"
                 color="neutral.gray10"
               >
-                {data.housCustCnt || "-"}
+                {data.housCustCnt.toLocaleString("ko-KR") || "-"}
               </Text>
               <Text
                 textStyle="base"
                 fontSize="sm"
                 fontWeight="regular"
-                lineHeight="1.375rem"
+                lineHeight="1.2"
                 color="font.primary"
               >
                 명
@@ -294,7 +299,7 @@ const ReportSummary = ({
                 lineHeight="1.375rem"
                 color="neutral.gray10"
               >
-                {data.hous || "-"}
+                {data.hous.toLocaleString("ko-KR") || "-"}
               </Text>
               <Text
                 textStyle="base"
@@ -322,7 +327,7 @@ const ReportSummary = ({
                 lineHeight="1.375rem"
                 color="neutral.gray10"
               >
-                {data.jobCustCnt || "-"}
+                {data.jobCustCnt.toLocaleString("ko-KR") || "-"}
               </Text>
               <Text
                 textStyle="base"
@@ -350,7 +355,7 @@ const ReportSummary = ({
                   lineHeight="1.375rem"
                   color="neutral.gray10"
                 >
-                  {data.schoolCnt || "-"}
+                  {data.schoolCnt.toLocaleString("ko-KR") || "-"}
                 </Text>
                 <Text
                   textStyle="base"
@@ -370,7 +375,7 @@ const ReportSummary = ({
                   lineHeight="1.375rem"
                   color="neutral.gray10"
                 >
-                  {data.companyCnt || "-"}
+                  {data.companyCnt.toLocaleString("ko-KR") || "-"}
                 </Text>
                 <Text
                   textStyle="base"
@@ -392,7 +397,7 @@ const ReportSummary = ({
                   lineHeight="1.375rem"
                   color="neutral.gray10"
                 >
-                  {data.subwayCnt || "-"}
+                  {data.subwayCnt.toLocaleString("ko-KR") || "-"}
                 </Text>
                 <Text
                   textStyle="base"
@@ -412,7 +417,7 @@ const ReportSummary = ({
                   lineHeight="1.375rem"
                   color="neutral.gray10"
                 >
-                  {data.busstopCnt || "-"}
+                  {data.busstopCnt.toLocaleString("ko-KR") || "-"}
                 </Text>
                 <Text
                   textStyle="base"
@@ -437,13 +442,13 @@ const ReportSummary = ({
               lineHeight="1.375rem"
               color="neutral.gray10"
             >
-              28,828
+              {cost.toLocaleString("ko-KR")}
             </Text>
             <Text
               textStyle="base"
               fontSize="sm"
               fontWeight="regular"
-              lineHeight="1.375rem"
+              lineHeight="1.2"
               color="font.primary"
             >
               원

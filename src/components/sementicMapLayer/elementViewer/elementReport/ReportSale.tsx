@@ -208,13 +208,25 @@ const ReportSale = ({ data }: any) => {
                 query={
                   textArr?.avgSalesAmt && textArr?.salesAmtTop20
                     ? [
-                        `${textArr.avgSalesAmt.toFixed(0)}`,
-                        `${textArr.salesAmtTop20.toFixed(0)}`,
+                        `${Number(
+                          textArr.avgSalesAmt.toFixed(0)
+                        ).toLocaleString("ko-KR")}`,
+                        `${Number(
+                          textArr.salesAmtTop20.toFixed(0)
+                        ).toLocaleString("ko-KR")}`,
                       ]
                     : textArr?.avgSalesAmt
-                    ? [`${textArr.avgSalesAmt.toFixed(0)}`]
+                    ? [
+                        `${Number(
+                          textArr.avgSalesAmt.toFixed(0)
+                        ).toLocaleString("ko-KR")}`,
+                      ]
                     : textArr?.salesAmtTop20
-                    ? [`${textArr.salesAmtTop20.toFixed(0)}`]
+                    ? [
+                        `${Number(
+                          textArr.salesAmtTop20.toFixed(0)
+                        ).toLocaleString("ko-KR")}`,
+                      ]
                     : []
                 }
                 styles={{
@@ -224,20 +236,25 @@ const ReportSale = ({ data }: any) => {
                   fontWeight: "strong",
                   lineHeight: "1.75rem",
                   color: "primary.type10",
-                  textDecoration: "underline",
+                  borderBottom: "1px solid",
+                  borderColor: "primary.type9",
                 }}
               >
                 {textArr?.avgSalesAmt && textArr?.salesAmtTop20
-                  ? `선택 영역의 평균 매출은 ${textArr.avgSalesAmt.toFixed(
-                      0
-                    )}만원 입니다.
-                상위 20% 매출 - ${textArr.salesAmtTop20.toFixed(0)}만원,`
+                  ? `선택 영역의 평균 매출은 ${Number(
+                      textArr.avgSalesAmt.toFixed(0)
+                    ).toLocaleString("ko-KR")}만원 입니다.
+                상위 20% 매출 ${Number(
+                  textArr.salesAmtTop20.toFixed(0)
+                ).toLocaleString("ko-KR")}만원,`
                   : textArr?.avgSalesAmt
-                  ? `선택 영역의 평균 매출은 ${textArr.avgSalesAmt.toFixed(
-                      0
-                    )}만원 입니다.`
+                  ? `선택 영역의 평균 매출은 ${Number(
+                      textArr.avgSalesAmt.toFixed(0)
+                    ).toLocaleString("ko-KR")}만원 입니다.`
                   : textArr?.salesAmtTop20
-                  ? `상위 20% 매출 - ${textArr.salesAmtTop20.toFixed(0)}만원,`
+                  ? `상위 20% 매출 ${Number(
+                      textArr.salesAmtTop20.toFixed(0)
+                    ).toLocaleString("ko-KR")}만원,`
                   : ""}
               </Highlight>
             </Text>
@@ -254,13 +271,25 @@ const ReportSale = ({ data }: any) => {
                 query={
                   textArr?.salesAmtBottom20 && textArr?.medianSalesAmt
                     ? [
-                        `${textArr.salesAmtBottom20.toFixed(0)}`,
-                        `${textArr.medianSalesAmt.toFixed(0)}`,
+                        `${Number(
+                          textArr.salesAmtBottom20.toFixed(0)
+                        ).toLocaleString("ko-KR")}`,
+                        `${Number(
+                          textArr.medianSalesAmt.toFixed(0)
+                        ).toLocaleString("ko-KR")}`,
                       ]
                     : textArr?.salesAmtBottom20
-                    ? [`${textArr.salesAmtBottom20.toFixed(0)}`]
+                    ? [
+                        `${Number(
+                          textArr.salesAmtBottom20.toFixed(0)
+                        ).toLocaleString("ko-KR")}`,
+                      ]
                     : textArr?.medianSalesAmt
-                    ? [`${textArr.medianSalesAmt.toFixed(0)}`]
+                    ? [
+                        `${Number(
+                          textArr.medianSalesAmt.toFixed(0)
+                        ).toLocaleString("ko-KR")}`,
+                      ]
                     : []
                 }
                 styles={{
@@ -270,20 +299,25 @@ const ReportSale = ({ data }: any) => {
                   fontWeight: "strong",
                   lineHeight: "1.75rem",
                   color: "primary.type10",
-                  textDecoration: "underline",
+                  borderBottom: "1px solid",
+                  borderColor: "primary.type9",
                 }}
               >
                 {textArr?.salesAmtBottom20 && textArr?.medianSalesAmt
-                  ? `하위 20% 매출 - ${textArr.salesAmtBottom20.toFixed(
-                      0
-                    )}만원 , 
-                  중간값  - ${textArr.medianSalesAmt.toFixed(0)}만원 입니다.`
+                  ? `하위 20% 매출 ${Number(
+                      textArr.salesAmtBottom20.toFixed(0)
+                    ).toLocaleString("ko-KR")}만원 , 
+                  중간값 ${Number(
+                    textArr.medianSalesAmt.toFixed(0)
+                  ).toLocaleString("ko-KR")}만원 입니다.`
                   : textArr?.salesAmtBottom20
-                  ? `하위 20% 매출 - ${textArr.salesAmtBottom20.toFixed(
-                      0
-                    )}만원 입니다.`
+                  ? `하위 20% 매출 ${Number(
+                      textArr.salesAmtBottom20.toFixed(0)
+                    ).toLocaleString("ko-KR")}만원 입니다.`
                   : textArr?.medianSalesAmt
-                  ? `중간값 - ${textArr.medianSalesAmt.toFixed(0)}만원 입니다.`
+                  ? `중간값 ${Number(
+                      textArr.medianSalesAmt.toFixed(0)
+                    ).toLocaleString("ko-KR")}만원 입니다.`
                   : ""}
               </Highlight>
             </Text>
@@ -298,9 +332,9 @@ const ReportSale = ({ data }: any) => {
             >
               <Highlight
                 query={[
-                  `${textArr?.gender}`,
-                  `${textArr?.age}`,
-                  `${textArr?.day}`,
+                  `${textArr?.gender}, `,
+                  `${textArr?.age}, `,
+                  `${textArr?.day}, `,
                   `${textArr?.time}`,
                 ]}
                 styles={{
@@ -310,7 +344,8 @@ const ReportSale = ({ data }: any) => {
                   fontWeight: "strong",
                   lineHeight: "1.75rem",
                   color: "primary.type10",
-                  textDecoration: "underline",
+                  borderBottom: "1px solid",
+                  borderColor: "primary.type9",
                 }}
               >
                 {`주요 매출 구성은 ${

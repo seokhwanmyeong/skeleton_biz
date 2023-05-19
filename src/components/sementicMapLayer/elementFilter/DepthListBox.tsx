@@ -170,6 +170,7 @@ const DepthListBox = memo(
                           }
                         }, 50);
                       } else {
+                        setTabIdx(0);
                         if (element) {
                           element.scrollIntoView({ behavior: "smooth" });
                         }
@@ -328,6 +329,7 @@ const DepthListBox = memo(
                                   }
                                 }, 50);
                               } else {
+                                setTabIdx(0);
                                 if (element) {
                                   element.scrollIntoView({
                                     behavior: "smooth",
@@ -400,7 +402,7 @@ const DepthListBox = memo(
         naver.maps.Event.removeListener(zoomEvent);
         resetRef();
       };
-    }, [state.map, buildShow, buildList]);
+    }, [state.map, buildShow, buildList, tabLen]);
 
     useEffect(() => {
       if (
@@ -409,7 +411,7 @@ const DepthListBox = memo(
         brandList &&
         brandList.length > 0
       ) {
-        setTabLen(1);
+        setTabLen(2);
       } else {
         setTabLen(0);
       }
@@ -511,7 +513,7 @@ const ListBrand = memo(
     }[];
   }) => {
     const tabHandler = () => {
-      setTabIdx(tabLen === 2 ? 1 : 0);
+      setTabIdx(0);
     };
 
     return brandList ? (

@@ -155,7 +155,7 @@ const ReportPop = ({ data }: Props) => {
                 lineHeight="1.75rem"
               >
                 <Highlight
-                  query={[`${data?.inflowCustCnt}명`]}
+                  query={[`${data?.inflowCustCnt.toLocaleString("ko-KR")}명`]}
                   styles={{
                     w: "100%",
                     textStyle: "base",
@@ -163,10 +163,13 @@ const ReportPop = ({ data }: Props) => {
                     fontWeight: "strong",
                     lineHeight: "1.75rem",
                     color: "primary.type10",
-                    textDecoration: "underline",
+                    borderBottom: "1px solid",
+                    borderColor: "primary.type9",
                   }}
                 >
-                  {`선택 영역의 일 평균 유동인구수는 ${data.inflowCustCnt}명
+                  {`선택 영역의 일 평균 유동인구수는 ${data.inflowCustCnt.toLocaleString(
+                    "ko-KR"
+                  )}명
                   입니다.`}
                 </Highlight>
               </Text>
@@ -182,7 +185,7 @@ const ReportPop = ({ data }: Props) => {
                 lineHeight="1.75rem"
               >
                 <Highlight
-                  query={[`${max.sex}`, `${max.age}`]}
+                  query={[`${max.sex}, ${max.age}`]}
                   styles={{
                     w: "100%",
                     textStyle: "base",
@@ -190,7 +193,8 @@ const ReportPop = ({ data }: Props) => {
                     fontWeight: "strong",
                     lineHeight: "1.75rem",
                     color: "primary.type10",
-                    textDecoration: "underline",
+                    borderBottom: "1px solid",
+                    borderColor: "primary.type9",
                   }}
                 >
                   {max.day || max.time
@@ -210,7 +214,7 @@ const ReportPop = ({ data }: Props) => {
                 lineHeight="1.75rem"
               >
                 <Highlight
-                  query={[`${max.day}`, `${max.time}`]}
+                  query={[`${max.day}, ${max.time}`]}
                   styles={{
                     w: "100%",
                     textStyle: "base",
@@ -218,7 +222,8 @@ const ReportPop = ({ data }: Props) => {
                     fontWeight: "strong",
                     lineHeight: "1.75rem",
                     color: "primary.type10",
-                    textDecoration: "underline",
+                    borderBottom: "1px solid",
+                    borderColor: "primary.type9",
                   }}
                 >
                   {`요일/시간대별 유동인구수는 ${max.day}, ${max.time}시 입니다.`}

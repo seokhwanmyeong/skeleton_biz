@@ -43,6 +43,7 @@ type PropsTable = {
   children?: any;
   flowHeight?: boolean;
   height?: any;
+  trH?: any;
   tdH?: any;
 };
 
@@ -65,6 +66,7 @@ const Table = ({
   children,
   flowHeight = true,
   height,
+  trH,
   tdH,
 }: PropsTable) => {
   const pagenation = useMemo(() => {
@@ -233,7 +235,7 @@ const Table = ({
             ) : (
               getRowModel().rows.map((row, rowIdx, rows) => {
                 return (
-                  <Tr key={row.id}>
+                  <Tr key={row.id} h={trH || "auto"}>
                     {activeCheck && (
                       <Td
                         key={`table-td-chk-${rowIdx + 1}`}
@@ -271,12 +273,14 @@ const Table = ({
                   (v, i) => i + 1
                 ).map((i) => {
                   return (
-                    <Tr>
+                    <Tr h={trH || "auto"}>
                       {Array.from(
                         { length: columns.length },
                         (v, i) => i + 1
                       ).map((j) => {
-                        return <Td></Td>;
+                        return (
+                          <Td h={tdH || "auto"} minH={tdH || "2.5rem"}></Td>
+                        );
                       })}
                     </Tr>
                   );

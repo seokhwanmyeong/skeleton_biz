@@ -17,7 +17,11 @@ type Props = {};
 const ReportUpjong = ({ data }: any) => {
   const [label, setLabel] = useState<any[]>([]);
   const [chartData, setChartData] = useState<any[]>([]);
-  const [textArr, setTextArr] = useState({
+  const [textArr, setTextArr] = useState<{
+    storeCnt: number | null;
+    avgStoreOprYear: any;
+    growthSalesUpjong: any;
+  }>({
     storeCnt: null,
     avgStoreOprYear: null,
     growthSalesUpjong: null,
@@ -25,7 +29,7 @@ const ReportUpjong = ({ data }: any) => {
 
   useEffect(() => {
     for (let i = 0; i < data.length; i++) {
-      const list = data[i];
+      const list = data[data.length - 1 - i];
       if (list.storeCnt && list.avgStoreOprYear && list.growthSalesUpjong) {
         setTextArr({
           storeCnt: list.storeCnt,
@@ -88,7 +92,9 @@ const ReportUpjong = ({ data }: any) => {
                 lineHeight="1.75rem"
               >
                 <Highlight
-                  query={[`${textArr?.storeCnt || 0}개`]}
+                  query={[
+                    `${(textArr?.storeCnt || 0).toLocaleString("ko-KR")}개`,
+                  ]}
                   styles={{
                     w: "100%",
                     textStyle: "base",
@@ -96,10 +102,13 @@ const ReportUpjong = ({ data }: any) => {
                     fontWeight: "strong",
                     lineHeight: "1.75rem",
                     color: "primary.type10",
-                    textDecoration: "underline",
+                    borderBottom: "1px solid",
+                    borderColor: "primary.type9",
                   }}
                 >
-                  {`선택 영역의 업종수는 ${textArr?.storeCnt || 0}개 입니다.`}
+                  {`선택 영역의 업종수는 ${(
+                    textArr?.storeCnt || 0
+                  ).toLocaleString("ko-KR")}개 입니다.`}
                 </Highlight>
               </Text>
             </ListItem>
@@ -122,7 +131,8 @@ const ReportUpjong = ({ data }: any) => {
                     fontWeight: "strong",
                     lineHeight: "1.75rem",
                     color: "primary.type10",
-                    textDecoration: "underline",
+                    borderBottom: "1px solid",
+                    borderColor: "primary.type9",
                   }}
                 >
                   {`평균 운영 연수는 ${
@@ -150,7 +160,8 @@ const ReportUpjong = ({ data }: any) => {
                     fontWeight: "strong",
                     lineHeight: "1.75rem",
                     color: "primary.type10",
-                    textDecoration: "underline",
+                    borderBottom: "1px solid",
+                    borderColor: "primary.type9",
                   }}
                 >
                   {`매출 성장 업종은 ${textArr?.growthSalesUpjong} 입니다.`}

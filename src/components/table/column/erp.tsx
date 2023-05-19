@@ -1,5 +1,5 @@
 //  Lib
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { createColumnHelper } from "@tanstack/react-table";
 import {
@@ -546,10 +546,10 @@ const columnHistory = [
 ];
 
 const columnHistoryModal = [
-  columnHelper.accessor((row: any) => row["type"], {
-    id: "type",
+  columnHelper.accessor((row: any) => row["historyType"], {
+    id: "historyType",
     header: "구분",
-    cell: (info) => <Text noOfLines={2}>{info.getValue()}</Text>,
+    cell: (info) => <Text noOfLines={2}>{info.getValue() || "작성"}</Text>,
     size: 60,
   }),
   columnHelper.accessor((row: any) => row["title"], {
@@ -558,10 +558,10 @@ const columnHistoryModal = [
     cell: (info) => info.getValue(),
     minSize: 120,
   }),
-  columnHelper.accessor((row: any) => row["createdAt"], {
-    id: "createdAt",
+  columnHelper.accessor((row: any) => row["created_at"], {
+    id: "created_at",
     header: "작성일",
-    cell: (info) => info.getValue(),
+    cell: (info) => new Date(info.getValue()).toLocaleDateString(),
     size: 100,
   }),
   columnHelper.display({
@@ -575,9 +575,11 @@ const columnHistoryModal = [
           {isOpen && (
             <ModalHistoryEditor
               id={info.row.original.id}
+              category={info.row.original.category}
               isOpen={isOpen}
               onOpen={onOpen}
               onClose={onClose}
+              mode="view"
             />
             // <Drawer isOpen={isOpen} onClose={onClose} placement="right">
             //   <DrawerOverlay

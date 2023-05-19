@@ -110,7 +110,7 @@ const ReportJob = ({ data }: Props) => {
                 lineHeight="1.75rem"
               >
                 <Highlight
-                  query={[`${data?.jobCustCnt}명`]}
+                  query={[`${data?.jobCustCnt.toLocaleString("ko-KR")}명`]}
                   styles={{
                     w: "100%",
                     textStyle: "base",
@@ -118,12 +118,17 @@ const ReportJob = ({ data }: Props) => {
                     fontWeight: "strong",
                     lineHeight: "1.75rem",
                     color: "primary.type10",
-                    textDecoration: "underline",
+                    borderBottom: "1px solid",
+                    borderColor: "primary.type9",
                   }}
                 >
                   {max
-                    ? `선택 영역의 일 평균 직장인구수는 ${data?.jobCustCnt}명 이며`
-                    : `선택 영역의 일 평균 직장인구수는 ${data?.jobCustCnt}명 입니다`}
+                    ? `선택 영역의 일 평균 직장인구수는 ${data?.jobCustCnt.toLocaleString(
+                        "ko-KR"
+                      )}명 이며`
+                    : `선택 영역의 일 평균 직장인구수는 ${data?.jobCustCnt.toLocaleString(
+                        "ko-KR"
+                      )}명 입니다`}
                 </Highlight>
               </Text>
             </ListItem>
@@ -138,7 +143,7 @@ const ReportJob = ({ data }: Props) => {
                 lineHeight="1.75rem"
               >
                 <Highlight
-                  query={[`${max.sex}`, `${max.age}`]}
+                  query={[`${max.sex}, ${max.age}`]}
                   styles={{
                     w: "100%",
                     textStyle: "base",
@@ -146,7 +151,8 @@ const ReportJob = ({ data }: Props) => {
                     fontWeight: "strong",
                     lineHeight: "1.75rem",
                     color: "primary.type10",
-                    textDecoration: "underline",
+                    borderBottom: "1px solid",
+                    borderColor: "primary.type9",
                   }}
                 >
                   {`성별/연령별 유동인구수는 ${max.sex}, ${max.age} 입니다`}

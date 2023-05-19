@@ -25,12 +25,12 @@ import {
 import { motion } from "framer-motion";
 import OverlayView from "@src/lib/src/components/Overlay/OverlayView";
 import Circle from "@src/lib/src/components/Overlay/Circle";
-import { Marker, NaverMapContext, Polygon } from "@src/lib/src";
+import { NaverMapContext, Polygon } from "@src/lib/src";
 //  State
 import { sementicViewState } from "@states/sementicMap/stateView";
 //  Util
 import { bsDisColor } from "@util/define/map";
-import { getCenter, pathAvg } from "@util/map/distance";
+import { pathAvg } from "@util/map/distance";
 //  Icon
 import markerStore from "@assets/icons/marker_store.png";
 import markerRent from "@assets/icons/marker_rent.png";
@@ -40,13 +40,7 @@ import markerCluster from "@assets/icons/marker_cluster.png";
 import { Deco01 } from "@assets/deco/DecoSvg";
 //  Ani
 import { infoAnimation } from "@styles/animation/keyFremes";
-import {
-  RentList,
-  StoreList,
-  TypeMapRentSearch,
-  TypeMapStoreSearch,
-} from "@src/api/bizSub/type";
-import { BaseSpinner } from "@src/components/common/Spinner";
+import { RentList, StoreList } from "@src/api/bizSub/type";
 
 type Props = {
   storeShow: boolean;
@@ -85,7 +79,7 @@ type BsDisList = {
 
 const BrandListBox = memo(
   ({ storeShow, bsDisShow, rentShow, store, rent, bsDis }: Props) => {
-    const { state } = useContext(NaverMapContext);
+    const { state, dispatch } = useContext(NaverMapContext);
     const [bsList, setBsList] = useState<any[] | null>(null);
     const [cursorPo, setCursorPo] = useState<any>(null);
     const [name, setName] = useState<any>(null);
@@ -101,6 +95,7 @@ const BrandListBox = memo(
 
       setTabList(count);
     }, [store, bsDis, rent]);
+
     useEffect(() => {
       if (!state?.map) return;
       let zoom = state.map.getZoom();
@@ -161,66 +156,33 @@ const BrandListBox = memo(
               const maxLat = mapBounds._max._lat;
               const maxLng = mapBounds._max._lng;
 
-              if (!polygonRef.current) {
-                const list: any = [];
+              const list: any = [];
 
-                if (bsDis && bsDis.length > 0) {
-                  console.log(bsDis);
-                  bsDis.map((li) => {
-                    if (li.polygonType === "single") {
-                      if (
-                        li.center[1] >= minLat &&
-                        li.center[1] <= maxLat &&
-                        li.center[0] >= minLng &&
-                        li.center[0] <= maxLng
-                      ) {
-                        list.push(li);
-                      }
-                    } else if (li.polygonType === "circle") {
-                      if (
-                        li.center[1] >= minLat &&
-                        li.center[1] <= maxLat &&
-                        li.center[0] >= minLng &&
-                        li.center[0] <= maxLng
-                      ) {
-                        list.push(li);
-                      }
+              if (bsDis && bsDis.length > 0) {
+                bsDis.map((li) => {
+                  if (li.polygonType === "single") {
+                    if (
+                      li.center[1] >= minLat &&
+                      li.center[1] <= maxLat &&
+                      li.center[0] >= minLng &&
+                      li.center[0] <= maxLng
+                    ) {
+                      list.push(li);
                     }
-                  });
-                } else {
-                  return;
-                }
-
-                setBsList(list);
-              } else {
-                const list: any = [];
-
-                if (bsDis && bsDis.length > 0) {
-                  bsDis.map((li) => {
-                    if (li.polygonType === "single") {
-                      if (
-                        li.center[1] >= minLat &&
-                        li.center[1] <= maxLat &&
-                        li.center[0] >= minLng &&
-                        li.center[0] <= maxLng
-                      ) {
-                        list.push(li);
-                      }
-                    } else if (li.polygonType === "circle") {
-                      if (
-                        li.center[1] >= minLat &&
-                        li.center[1] <= maxLat &&
-                        li.center[0] >= minLng &&
-                        li.center[0] <= maxLng
-                      ) {
-                        list.push(li);
-                      }
+                  } else if (li.polygonType === "circle") {
+                    if (
+                      li.center[1] >= minLat &&
+                      li.center[1] <= maxLat &&
+                      li.center[0] >= minLng &&
+                      li.center[0] <= maxLng
+                    ) {
+                      list.push(li);
                     }
-                  });
-                }
-
-                setBsList(list);
+                  }
+                });
               }
+
+              setBsList(list);
             } else {
               setBsList([]);
             }
@@ -233,7 +195,6 @@ const BrandListBox = memo(
         naver.maps.Event.removeListener(panningEventHandelr);
       };
     }, [state, bsDis, bsDisShow]);
-    console.log("box");
     // useEffect(() => {
     //   if (!state?.map) return;
     //   let zoom = state.map.getZoom();
@@ -419,7 +380,7 @@ const BrandListBox = memo(
     //     naver.maps.Event.removeListener(panningEventHandelr);
     //   };
     // }, [state, bsDis]);
-
+    console.log(state.map);
     return (
       <Flex
         m="0.1875rem 0"
@@ -473,10 +434,10 @@ const BrandListBox = memo(
             {store && store.length > 0 && (
               <TabPanel>
                 <ListStore
-                  storeShow={storeShow}
-                  storeList={store}
                   tabList={tabList}
                   setTabIdx={setTabIdx}
+                  storeShow={storeShow}
+                  storeList={store}
                 />
               </TabPanel>
             )}
@@ -487,7 +448,12 @@ const BrandListBox = memo(
             )}
             {rent && rent.length > 0 && (
               <TabPanel>
-                <ListRent rentShow={rentShow} rentList={rent} />
+                <ListRent
+                  tabList={tabList}
+                  setTabIdx={setTabIdx}
+                  rentShow={rentShow}
+                  rentList={rent}
+                />
               </TabPanel>
             )}
           </TabPanels>
@@ -510,15 +476,18 @@ const BrandListBox = memo(
                 onClick={() => {
                   const element = document.getElementById(li._id);
                   const index = tabList.indexOf("bsDis");
-                  if (element) {
-                    element.scrollIntoView({
-                      behavior: "smooth",
-                    });
-                  }
 
-                  setTabIdx(index);
+                  if (element) {
+                    setTabIdx(index);
+                    setTimeout(() => {
+                      element.scrollIntoView({
+                        behavior: "smooth",
+                      });
+                    }, 10);
+                  }
                 }}
                 onMouseOver={(e: any) => {
+                  console.log(li, "over");
                   const bounds = e.overlay.getBounds();
                   const center = bounds.getCenter();
                   const element = document.getElementById(li._id);
@@ -532,6 +501,7 @@ const BrandListBox = memo(
                   }
                 }}
                 onMouseOut={(e: any) => {
+                  console.log("out");
                   const element = document.getElementById(li._id);
                   setCursorPo(null);
                   setName(null);
@@ -558,15 +528,18 @@ const BrandListBox = memo(
                 onClick={() => {
                   const element = document.getElementById(li._id);
                   const index = tabList.indexOf("bsDis");
-                  if (element) {
-                    element.scrollIntoView({
-                      behavior: "smooth",
-                    });
-                  }
 
-                  setTabIdx(index);
+                  if (element) {
+                    setTabIdx(index);
+                    setTimeout(() => {
+                      element.scrollIntoView({
+                        behavior: "smooth",
+                      });
+                    }, 10);
+                  }
                 }}
                 onMouseOver={(e: any) => {
+                  console.log(li, "over");
                   const bounds = e.overlay.getBounds();
                   const center = bounds.getCenter();
                   const element = document.getElementById(li._id);
@@ -580,6 +553,7 @@ const BrandListBox = memo(
                   }
                 }}
                 onMouseOut={(e: any) => {
+                  console.log("out");
                   const element = document.getElementById(li._id);
 
                   setCursorPo(null);
@@ -605,7 +579,7 @@ const BrandListBox = memo(
                 id={`bsDisArea-${li._id}`}
                 onClick={() => {
                   const element = document.getElementById(li._id);
-
+                  console.log(li, "over");
                   if (element) {
                     element.scrollIntoView({
                       behavior: "smooth",
@@ -627,7 +601,7 @@ const BrandListBox = memo(
                 }}
                 onMouseOut={(e: any) => {
                   const element = document.getElementById(li._id);
-
+                  console.log("out");
                   setCursorPo(null);
                   setName(null);
 
@@ -656,6 +630,8 @@ const BrandListBox = memo(
             pointerevent={false}
           >
             <Flex
+              as={motion.div}
+              animation={infoAnimation}
               pos="relative"
               top="-4.5rem"
               left="-50%"
@@ -952,12 +928,13 @@ const ListStore = memo(
                     );
 
                     if (element) {
-                      element.scrollIntoView({
-                        behavior: "smooth",
-                      });
+                      setTabIdx(index);
+                      setTimeout(() => {
+                        element.scrollIntoView({
+                          behavior: "smooth",
+                        });
+                      }, 10);
                     }
-
-                    setTabIdx(index);
                   }
                 );
                 const overEvent = naver.maps.Event.addListener(
@@ -1262,12 +1239,13 @@ const ListStore = memo(
                           );
 
                           if (element) {
-                            element.scrollIntoView({
-                              behavior: "smooth",
-                            });
+                            setTabIdx(index);
+                            setTimeout(() => {
+                              element.scrollIntoView({
+                                behavior: "smooth",
+                              });
+                            }, 10);
                           }
-
-                          setTabIdx(index);
                         }
                       );
                       const overEvent = naver.maps.Event.addListener(
@@ -1732,283 +1710,588 @@ const ListItemBsDis = ({
   );
 };
 
-const ListRent = memo(({ rentShow, rentList }: any) => {
-  return rentList ? (
-    <List display="flex" flexDirection="column">
-      {rentList.map(
-        (
-          { id, rentName, addrNew, addrOld, addrDetail, location }: RentList,
-          idx: number
-        ) =>
-          location.coordinates ? (
-            <ListItemRent
-              key={id}
-              isShow={rentShow}
-              idx={idx}
-              id={id}
-              rentName={rentName}
-              addrNew={addrNew}
-              addrOld={addrOld}
-              addrDetail={addrDetail}
-              lat={location.coordinates[1]}
-              lng={location.coordinates[0]}
-            />
-          ) : null
-      )}
-    </List>
-  ) : null;
-});
+const ListRent = memo(
+  ({
+    tabList,
+    setTabIdx,
+    rentShow,
+    rentList,
+  }: {
+    tabList: any[];
+    setTabIdx: any;
+    rentShow: boolean;
+    rentList: RentList[];
+  }) => {
+    const { state } = useContext(NaverMapContext);
+    const [isHover, onHover] = useState<boolean>(false);
+    const [name, setName] = useState<string | null>("");
+    const [cursorPo, setCursorPo] = useState<[number, number] | null>(null);
+    const rentRef = useRef<any[] | null>([]);
+    const eventRef = useRef<any[] | null>([]);
 
-const ListItemRent = ({
-  isShow,
-  idx,
-  id,
-  rentName,
-  addrNew,
-  addrOld,
-  addrDetail,
-  lat,
-  lng,
-}: any) => {
-  const { state } = useContext(NaverMapContext);
-  const setSv = useSetRecoilState(sementicViewState);
-  const [isHover, onHover] = useState<boolean>(false);
-  const [cursorPo, setCursorPo] = useState<[number, number] | null>(null);
-  const domRef = useRef<any>(null);
-  const markerRef = useRef<any>(null);
-  const eventRef = useRef<any>(null);
-
-  const resetObj = useCallback(() => {
-    if (markerRef.current) {
-      markerRef.current.setMap(null);
-      markerRef.current = null;
-    }
-    if (eventRef.current && eventRef.current.length > 0) {
-      eventRef.current.map((event: any) =>
-        naver.maps.Event.removeListener(event)
-      );
-    }
-    setCursorPo(null);
-  }, [markerRef.current, eventRef.current]);
-
-  useEffect(() => {
-    if (!state.map) return;
-    resetObj();
-    let zoom = state.map?.getZoom() || 0;
-    let bounds: any = state.map?.getBounds();
-    if (zoom >= 13 && isShow) {
-      if (
-        bounds._max.x > lng &&
-        bounds._min.x < lng &&
-        bounds._max.y > lat &&
-        bounds._min.y < lat
-      ) {
-        if (!markerRef.current) {
-          const marker = new naver.maps.Marker({
-            map: state.map,
-            position: [lng, lat],
-            icon: {
-              url: markerRent,
-            },
-          });
-          const eventArr: any = [];
-          const clickEvent = naver.maps.Event.addListener(
-            marker,
-            "click",
-            () => {
-              domRef.current.scrollIntoView({ behavior: "smooth" });
-            }
-          );
-          const overEvent = naver.maps.Event.addListener(
-            marker,
-            "mouseover",
-            () => {
-              onHover(true);
-              setCursorPo([lng, lat]);
-            }
-          );
-          const outEvent = naver.maps.Event.addListener(
-            marker,
-            "mouseout",
-            () => {
-              onHover(false);
-              setCursorPo(null);
-            }
-          );
-
-          eventArr.push(clickEvent);
-          eventArr.push(overEvent);
-          eventArr.push(outEvent);
-
-          eventRef.current = eventArr;
-          markerRef.current = marker;
-        }
-      } else {
-        if (markerRef.current) markerRef.current.setMap(null);
-        if (eventRef.current && eventRef.current.length > 0)
-          eventRef.current.map((event: any) =>
-            naver.maps.Event.removeListener(event)
-          );
+    const resetObj = useCallback(() => {
+      if (rentRef.current && rentRef.current.length > 0) {
+        rentRef.current.map((li) => li.setMap(null));
+        rentRef.current = null;
       }
-    } else {
+      if (eventRef.current && eventRef.current.length > 0) {
+        eventRef.current.map((event: any) =>
+          naver.maps.Event.removeListener(event)
+        );
+        eventRef.current = null;
+      }
+      setCursorPo(null);
+      onHover(false);
+    }, [rentRef.current, eventRef.current]);
+
+    useEffect(() => {
+      if (!state.map) return;
+      let zoom = state.map.getZoom();
+      let bounds: any = state.map?.getBounds();
+
       resetObj();
-    }
-
-    let timer: any;
-    const zoomEvent = naver.maps.Event.addListener(
-      state.map,
-      "bounds_changed",
-      (e) => {
-        if (timer) clearTimeout(timer);
-        timer = setTimeout(function () {
-          if (state.map && isShow) {
-            const zoom = state.map.getZoom();
-
-            if (zoom < 13) {
-              if (markerRef.current) {
-                markerRef.current.setMap(null);
-                markerRef.current = null;
-              }
-              if (eventRef.current && eventRef.current.length > 0) {
-                eventRef.current.map((event: any) =>
-                  naver.maps.Event.removeListener(event)
-                );
-              }
-            } else if (zoom >= 13) {
-              if (
-                e._max.x > lng &&
-                e._min.x < lng &&
-                e._max.y > lat &&
-                e._min.y < lat
-              ) {
-                if (!markerRef.current) {
-                  const marker = new naver.maps.Marker({
-                    map: state.map,
-                    position: [lng, lat],
-                    icon: {
-                      url: markerRent,
-                    },
-                  });
-                  const eventArr: any = [];
-                  const clickEvent = naver.maps.Event.addListener(
-                    marker,
-                    "click",
-                    () => {
-                      domRef.current.scrollIntoView({ behavior: "smooth" });
-                    }
-                  );
-                  const overEvent = naver.maps.Event.addListener(
-                    marker,
-                    "mouseover",
-                    () => {
-                      onHover(true);
-                      setCursorPo([lng, lat]);
-                    }
-                  );
-                  const outEvent = naver.maps.Event.addListener(
-                    marker,
-                    "mouseout",
-                    () => {
-                      onHover(false);
-                      setCursorPo(null);
-                    }
-                  );
-
-                  eventArr.push(clickEvent);
-                  eventArr.push(overEvent);
-                  eventArr.push(outEvent);
-
-                  eventRef.current = eventArr;
-                  markerRef.current = marker;
-                }
-              } else {
-                resetObj();
-              }
-            }
+      if (rentShow && zoom >= 13) {
+        rentList.map((li) => {
+          if (!li?.location?.coordinates) {
+            return;
           } else {
-            resetObj();
+            const { id, rentName } = li;
+            const lat = li.location?.coordinates[1];
+            const lng = li.location?.coordinates[0];
+
+            if (
+              bounds._max.x > lng &&
+              bounds._min.x < lng &&
+              bounds._max.y > lat &&
+              bounds._min.y < lat
+            ) {
+              const marker = new naver.maps.Marker({
+                map: state.map,
+                position: [lng, lat],
+                icon: {
+                  url: markerRent,
+                },
+              });
+              const eventArr: any = [];
+              const clickEvent = naver.maps.Event.addListener(
+                marker,
+                "click",
+                () => {
+                  const index = tabList.indexOf("rent");
+                  const element = document.getElementById(`rentListItem-${id}`);
+
+                  if (element) {
+                    setTabIdx(index);
+                    setTimeout(() => {
+                      element.scrollIntoView({
+                        behavior: "smooth",
+                      });
+                    }, 10);
+                  }
+                }
+              );
+              const overEvent = naver.maps.Event.addListener(
+                marker,
+                "mouseover",
+                () => {
+                  onHover(true);
+                  setCursorPo([lng, lat]);
+                  setName(rentName);
+                  const element = document.getElementById(`rentListItem-${id}`);
+
+                  if (element) {
+                    element.style.background =
+                      "linear-gradient(90deg, rgba(255, 236, 61, 0) 0%, #FFEC3D 36.2%, rgba(255, 236, 61, 0) 92.66%)";
+                  }
+                }
+              );
+              const outEvent = naver.maps.Event.addListener(
+                marker,
+                "mouseout",
+                () => {
+                  onHover(false);
+                  setCursorPo(null);
+                  setName(null);
+                  const element = document.getElementById(`rentListItem-${id}`);
+
+                  if (element) {
+                    // @ts-ignore
+                    element.style.background = null;
+                  }
+                }
+              );
+              eventArr.push(clickEvent);
+              eventArr.push(overEvent);
+              eventArr.push(outEvent);
+
+              if (!eventRef.current) {
+                eventRef.current = [];
+                eventRef.current.push(eventArr);
+              } else {
+                eventRef.current.push(eventArr);
+              }
+
+              if (!rentRef.current) {
+                rentRef.current = [];
+                rentRef.current.push(marker);
+              } else {
+                rentRef.current.push(marker);
+              }
+            }
           }
-        }, 300);
+        });
+      } else {
+        resetObj();
       }
-    );
 
-    return () => {
-      naver.maps.Event.removeListener(zoomEvent);
-      resetObj();
-    };
-  }, [state.map, isShow]);
+      let boundTimer: any;
+      const boundsEvent = naver.maps.Event.addListener(
+        state.map,
+        "bounds_changed",
+        (e) => {
+          if (boundTimer) clearTimeout(boundTimer);
+          boundTimer = setTimeout(function () {
+            if (state.map && rentShow) {
+              let zoom = state.map.getZoom();
+              let bounds: any = state.map?.getBounds();
 
-  return (
-    <Fragment>
-      <ListItem
-        ref={domRef}
-        key={`rentListItem-${id}`}
-        p="1rem 0rem 0.75rem"
-        display="flex"
-        alignItems="center"
-        gap="0.75rem"
-        borderBottom="1px solid"
-        borderColor="neutral.gray8"
-        bg={
-          isHover
-            ? "linear-gradient(90deg, rgba(255, 236, 61, 0) 0%, #FFEC3D 36.2%, rgba(255, 236, 61, 0) 92.66%)"
-            : "transparent"
+              if (zoom < 13) {
+                resetObj();
+                return;
+              } else if (zoom >= 13) {
+                resetObj();
+                rentList.map((li) => {
+                  if (!li?.location?.coordinates) {
+                    return;
+                  } else {
+                    const { id, rentName } = li;
+                    const lat = li.location?.coordinates[1];
+                    const lng = li.location?.coordinates[0];
+
+                    if (
+                      bounds._max.x > lng &&
+                      bounds._min.x < lng &&
+                      bounds._max.y > lat &&
+                      bounds._min.y < lat
+                    ) {
+                      const marker = new naver.maps.Marker({
+                        map: state.map,
+                        position: [lng, lat],
+                        icon: {
+                          url: markerRent,
+                        },
+                      });
+                      const eventArr: any = [];
+                      const clickEvent = naver.maps.Event.addListener(
+                        marker,
+                        "click",
+                        () => {
+                          console.log(tabList);
+                          const index = tabList?.indexOf("rent");
+                          const element = document.getElementById(
+                            `rentListItem-${id}`
+                          );
+
+                          if (element) {
+                            setTabIdx(index);
+                            setTimeout(() => {
+                              element.scrollIntoView({
+                                behavior: "smooth",
+                              });
+                            }, 10);
+                          }
+                        }
+                      );
+                      const overEvent = naver.maps.Event.addListener(
+                        marker,
+                        "mouseover",
+                        () => {
+                          onHover(true);
+                          setCursorPo([lng, lat]);
+                          setName(rentName);
+                          const element = document.getElementById(
+                            `rentListItem-${id}`
+                          );
+
+                          if (element) {
+                            element.style.background =
+                              "linear-gradient(90deg, rgba(255, 236, 61, 0) 0%, #FFEC3D 36.2%, rgba(255, 236, 61, 0) 92.66%)";
+                          }
+                        }
+                      );
+                      const outEvent = naver.maps.Event.addListener(
+                        marker,
+                        "mouseout",
+                        () => {
+                          onHover(false);
+                          setCursorPo(null);
+                          setName(null);
+                          const element = document.getElementById(
+                            `rentListItem-${id}`
+                          );
+
+                          if (element) {
+                            // @ts-ignore
+                            element.style.background = null;
+                          }
+                        }
+                      );
+                      eventArr.push(clickEvent);
+                      eventArr.push(overEvent);
+                      eventArr.push(outEvent);
+
+                      if (!eventRef.current) {
+                        eventRef.current = [];
+                        eventRef.current.push(eventArr);
+                      } else {
+                        eventRef.current.push(eventArr);
+                      }
+
+                      if (!rentRef.current) {
+                        rentRef.current = [];
+                        rentRef.current.push(marker);
+                      } else {
+                        rentRef.current.push(marker);
+                      }
+                    }
+                  }
+                });
+              }
+            } else {
+              resetObj();
+            }
+          }, 300);
         }
-        _hover={{
-          fontWeight: "strong",
-          cursor: "pointer",
-        }}
-        onClick={() => {
-          if (state.map) {
-            const point = new naver.maps.LatLng(lat, lng);
+      );
 
-            state.map.setCenter(point);
-            state.map.setZoom(18);
+      return () => {
+        resetObj();
+        naver.maps.Event.removeListener(boundsEvent);
+      };
+    }, [state, rentList, rentShow, tabList]);
+
+    return rentList ? (
+      <Fragment>
+        <List display="flex" flexDirection="column">
+          {rentList.map(
+            ({
+              id,
+              rentName,
+              addrNew,
+              addrOld,
+              addrDetail,
+              location,
+            }: RentList) =>
+              location.coordinates ? (
+                <ListItemRent
+                  key={id}
+                  isShow={rentShow}
+                  id={id}
+                  rentName={rentName}
+                  addrNew={addrNew}
+                  addrOld={addrOld}
+                  addrDetail={addrDetail}
+                  lat={location.coordinates[1]}
+                  lng={location.coordinates[0]}
+                />
+              ) : null
+          )}
+        </List>
+        {state?.map && rentShow && isHover && cursorPo && name && (
+          <OverlayView
+            id={`infoBox`}
+            position={new naver.maps.LatLng(cursorPo)}
+            pane="floatPane"
+            anchorPoint={{ x: 0, y: 10 }}
+          >
+            <Flex
+              as={motion.div}
+              animation={infoAnimation}
+              pos="relative"
+              top="-4.5rem"
+              left="-50%"
+              p="0.25rem 0.75rem"
+              w="auto"
+              justify="flex-start"
+              align="flex-start"
+              bgColor="#FFFFFFD9"
+              gap="0.5rem"
+              border="1px solid"
+              borderColor="neutral.gray6"
+              borderRadius="base"
+              whiteSpace="nowrap"
+            >
+              <Text
+                textStyle="base"
+                fontSize="sm"
+                fontWeight="strong"
+                lineHeight="normal"
+                transition="0.3s"
+                color="font.primary"
+                whiteSpace="nowrap"
+              >
+                {name || ""}
+              </Text>
+            </Flex>
+          </OverlayView>
+        )}
+      </Fragment>
+    ) : null;
+  }
+);
+
+const ListItemRent = memo(
+  ({ id, rentName, addrNew, addrOld, addrDetail, lat, lng }: any) => {
+    const { state } = useContext(NaverMapContext);
+    const setSv = useSetRecoilState(sementicViewState);
+    const [isHover, onHover] = useState<boolean>(false);
+    const [cursorPo, setCursorPo] = useState<[number, number] | null>(null);
+    const domRef = useRef<any>(null);
+    const markerRef = useRef<any>(null);
+    const eventRef = useRef<any>(null);
+
+    // const resetObj = useCallback(() => {
+    //   if (markerRef.current) {
+    //     markerRef.current.setMap(null);
+    //     markerRef.current = null;
+    //   }
+    //   if (eventRef.current && eventRef.current.length > 0) {
+    //     eventRef.current.map((event: any) =>
+    //       naver.maps.Event.removeListener(event)
+    //     );
+    //   }
+    //   setCursorPo(null);
+    // }, [markerRef.current, eventRef.current]);
+
+    // useEffect(() => {
+    //   if (!state.map) return;
+    //   resetObj();
+    //   let zoom = state.map?.getZoom() || 0;
+    //   let bounds: any = state.map?.getBounds();
+    //   if (zoom >= 13 && isShow) {
+    //     if (
+    //       bounds._max.x > lng &&
+    //       bounds._min.x < lng &&
+    //       bounds._max.y > lat &&
+    //       bounds._min.y < lat
+    //     ) {
+    //       if (!markerRef.current) {
+    //         const marker = new naver.maps.Marker({
+    //           map: state.map,
+    //           position: [lng, lat],
+    //           icon: {
+    //             url: markerRent,
+    //           },
+    //         });
+    //         const eventArr: any = [];
+    //         const clickEvent = naver.maps.Event.addListener(
+    //           marker,
+    //           "click",
+    //           () => {
+    //             if (domRef.current) {
+    //               tabHandler();
+    //               setTimeout(() => {
+    //                 domRef.current.scrollIntoView({ behavior: "smooth" });
+    //               }, 10);
+    //             }
+    //           }
+    //         );
+    //         const overEvent = naver.maps.Event.addListener(
+    //           marker,
+    //           "mouseover",
+    //           () => {
+    //             onHover(true);
+    //             setCursorPo([lng, lat]);
+    //           }
+    //         );
+    //         const outEvent = naver.maps.Event.addListener(
+    //           marker,
+    //           "mouseout",
+    //           () => {
+    //             onHover(false);
+    //             setCursorPo(null);
+    //           }
+    //         );
+
+    //         eventArr.push(clickEvent);
+    //         eventArr.push(overEvent);
+    //         eventArr.push(outEvent);
+
+    //         eventRef.current = eventArr;
+    //         markerRef.current = marker;
+    //       }
+    //     } else {
+    //       if (markerRef.current) markerRef.current.setMap(null);
+    //       if (eventRef.current && eventRef.current.length > 0)
+    //         eventRef.current.map((event: any) =>
+    //           naver.maps.Event.removeListener(event)
+    //         );
+    //     }
+    //   } else {
+    //     resetObj();
+    //   }
+
+    //   let timer: any;
+    //   const zoomEvent = naver.maps.Event.addListener(
+    //     state.map,
+    //     "bounds_changed",
+    //     (e) => {
+    //       if (timer) clearTimeout(timer);
+    //       timer = setTimeout(function () {
+    //         if (state.map && isShow) {
+    //           const zoom = state.map.getZoom();
+
+    //           if (zoom < 13) {
+    //             if (markerRef.current) {
+    //               markerRef.current.setMap(null);
+    //               markerRef.current = null;
+    //             }
+    //             if (eventRef.current && eventRef.current.length > 0) {
+    //               eventRef.current.map((event: any) =>
+    //                 naver.maps.Event.removeListener(event)
+    //               );
+    //             }
+    //           } else if (zoom >= 13) {
+    //             if (
+    //               e._max.x > lng &&
+    //               e._min.x < lng &&
+    //               e._max.y > lat &&
+    //               e._min.y < lat
+    //             ) {
+    //               if (!markerRef.current) {
+    //                 const marker = new naver.maps.Marker({
+    //                   map: state.map,
+    //                   position: [lng, lat],
+    //                   icon: {
+    //                     url: markerRent,
+    //                   },
+    //                 });
+    //                 const eventArr: any = [];
+    //                 const clickEvent = naver.maps.Event.addListener(
+    //                   marker,
+    //                   "click",
+    //                   () => {
+    //                     if (domRef.current) {
+    //                       tabHandler(domRef.current);
+    //                       setTimeout(() => {
+    //                         domRef.current.scrollIntoView({ behavior: "smooth" });
+    //                       }, 10);
+    //                     }
+    //                   }
+    //                 );
+    //                 const overEvent = naver.maps.Event.addListener(
+    //                   marker,
+    //                   "mouseover",
+    //                   () => {
+    //                     onHover(true);
+    //                     setCursorPo([lng, lat]);
+    //                   }
+    //                 );
+    //                 const outEvent = naver.maps.Event.addListener(
+    //                   marker,
+    //                   "mouseout",
+    //                   () => {
+    //                     onHover(false);
+    //                     setCursorPo(null);
+    //                   }
+    //                 );
+
+    //                 eventArr.push(clickEvent);
+    //                 eventArr.push(overEvent);
+    //                 eventArr.push(outEvent);
+
+    //                 eventRef.current = eventArr;
+    //                 markerRef.current = marker;
+    //               }
+    //             } else {
+    //               resetObj();
+    //             }
+    //           }
+    //         } else {
+    //           resetObj();
+    //         }
+    //       }, 300);
+    //     }
+    //   );
+
+    //   return () => {
+    //     naver.maps.Event.removeListener(zoomEvent);
+    //     resetObj();
+    //   };
+    // }, [state.map, isShow]);
+
+    return (
+      <Fragment>
+        <ListItem
+          // ref={domRef}
+          id={`rentListItem-${id}`}
+          key={`rentListItem-${id}`}
+          p="1rem 0rem 0.75rem"
+          display="flex"
+          alignItems="center"
+          gap="0.75rem"
+          borderBottom="1px solid"
+          borderColor="neutral.gray8"
+          bg={
+            isHover
+              ? "linear-gradient(90deg, rgba(255, 236, 61, 0) 0%, #FFEC3D 36.2%, rgba(255, 236, 61, 0) 92.66%)"
+              : "transparent"
           }
+          _hover={{
+            fontWeight: "strong",
+            cursor: "pointer",
+          }}
+          onClick={() => {
+            if (state.map) {
+              const point = new naver.maps.LatLng(lat, lng);
 
-          setSv({
-            viewId: "rentInfo",
-            props: {
-              id: id,
-              name: rentName,
-            },
-          });
-        }}
-        onMouseEnter={() => {
-          onHover(true);
-          setCursorPo([lng, lat]);
-        }}
-        onMouseLeave={() => {
-          onHover(false);
-          setCursorPo(null);
-        }}
-      >
-        <Flex justify="center" align="center" flex="none">
-          <Image src={IcoListRent} w="auto" bg="transparent" border="0" />
-        </Flex>
-        <Flex direction="column" gap="0.5rem">
-          <Text
-            textStyle="base"
-            fontSize="md"
-            fontWeight="strong"
-            lineHeight="1"
-            color="font.primary"
-          >
-            {rentName}
-          </Text>
-          <Text
-            textStyle="base"
-            fontSize="xs"
-            fontWeight="regular"
-            lineHeight="1"
-            color="font.primary"
-            noOfLines={1}
-          >
-            {`${addrNew || addrOld}${addrDetail || ""}`}
-          </Text>
-        </Flex>
-      </ListItem>
-      {/* {state?.map && isShow && isHover && cursorPo && (
+              state.map.setCenter(point);
+              state.map.setZoom(18);
+            }
+
+            setSv({
+              viewId: "rentInfo",
+              props: {
+                id: id,
+                name: rentName,
+              },
+            });
+          }}
+          onMouseEnter={() => {
+            onHover(true);
+            setCursorPo([lng, lat]);
+          }}
+          onMouseLeave={() => {
+            onHover(false);
+            setCursorPo(null);
+          }}
+        >
+          <Flex justify="center" align="center" flex="none">
+            <Image src={IcoListRent} w="auto" bg="transparent" border="0" />
+          </Flex>
+          <Flex direction="column" gap="0.5rem">
+            <Text
+              textStyle="base"
+              fontSize="md"
+              fontWeight="strong"
+              lineHeight="1"
+              color="font.primary"
+            >
+              {rentName}
+            </Text>
+            <Text
+              textStyle="base"
+              fontSize="xs"
+              fontWeight="regular"
+              lineHeight="1"
+              color="font.primary"
+              noOfLines={1}
+            >
+              {`${addrNew || addrOld}${addrDetail || ""}`}
+            </Text>
+          </Flex>
+        </ListItem>
+        {/* {state?.map && isShow && isHover && cursorPo && (
         <Marker
           key={`markerRent-${idx}`}
           id={`markerRent-${idx}`}
@@ -2024,7 +2307,7 @@ const ListItemRent = ({
           onMouseOut={() => onHover(false)}
         />
       )} */}
-      {state?.map && isShow && isHover && cursorPo && (
+        {/* {state?.map && isShow && isHover && cursorPo && (
         <OverlayView
           id={`infoBox`}
           position={new naver.maps.LatLng(cursorPo)}
@@ -2061,9 +2344,10 @@ const ListItemRent = ({
             </Text>
           </Flex>
         </OverlayView>
-      )}
-    </Fragment>
-  );
-};
+      )} */}
+      </Fragment>
+    );
+  }
+);
 
 export default BrandListBox;

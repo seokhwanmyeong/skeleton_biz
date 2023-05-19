@@ -1,5 +1,12 @@
 //  Lib
-import { useContext, useEffect, useCallback, Fragment, useRef } from "react";
+import {
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  Fragment,
+  useRef,
+} from "react";
 import { useRecoilValue } from "recoil";
 import { NaverMapContext } from "@src/lib/src";
 import Circle from "@src/lib/src/components/Overlay/Circle";
@@ -14,6 +21,8 @@ import { infoComFlowDepth } from "@src/states/sementicMap/stateFilter";
 import { lvHandler, searchRange, flowColor, flowSize } from "@util/define/map";
 //  Type
 import type { TypeNiceFlowData } from "@api/bizSub/type";
+import { BaseSpinner } from "@src/components/common/Spinner";
+import { Portal } from "@chakra-ui/react";
 
 type TypePoint = { lv: number; point: [number, number] };
 
@@ -26,7 +35,9 @@ const MapFlowCustom = () => {
     active: flowActive,
     data: flowList,
   } = useRecoilValue(infoComFlowDepth);
+  const [isLoading, setLoading] = useState(false);
   const flowPoint = useRef<TypePoint[] | null>(null);
+
   const resetRef = useCallback(() => {
     if (state.map && flowPoint.current && flowPoint.current.length > 0) {
       flowPoint.current.map((point: any) => point.setMap(null));
@@ -41,6 +52,7 @@ const MapFlowCustom = () => {
     resetRef();
 
     if (zoom >= 16 && flowActive && flowShow) {
+      setLoading(true);
       const bounds: any = state.map.getBounds();
       const transBounds: any[] = [];
 
@@ -140,12 +152,16 @@ const MapFlowCustom = () => {
               });
 
               circle.setMap(null);
+              setLoading(false);
               resetRef();
               flowPoint.current = markerLi;
+            } else {
+              setLoading(false);
             }
           })
           .catch(() => {
             resetRef();
+            setLoading(false);
           });
       }
     }
@@ -300,6 +316,11 @@ const MapFlowCustom = () => {
 
   return (
     <Fragment>
+      {isLoading && (
+        <Portal appendToParentPortal={true}>
+          <BaseSpinner zIndex={999} />
+        </Portal>
+      )}
       {customArea.pathType === "circle" ? (
         <Circle
           id={"customArea"}

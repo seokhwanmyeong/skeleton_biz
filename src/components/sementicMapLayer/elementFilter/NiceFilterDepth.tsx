@@ -41,6 +41,7 @@ import {
 //  Deco
 import { DecoCardBg } from "@components/sementicMapLayer/elementDeco/Deco";
 import { Deco01 } from "@assets/deco/DecoSvg";
+import { BaseSpinner } from "@src/components/common/Spinner";
 
 const NiceFilterDepth = ({
   areaInfo,
@@ -50,12 +51,12 @@ const NiceFilterDepth = ({
     slctName: string;
     slctCode?: string;
     pathType?: string;
-    slctPath?: any[];
+    slctPath?: any[] | any;
     center?: any;
     range?: any;
   };
 }) => {
-  const { getBrandList, getFlowPop } = apiMapNice;
+  const { getBrandList } = apiMapNice;
   const { getBuildingList } = apiMapBuilding;
   const reset = useResetRecoilState(resetNiceDepth);
   const { bot } = useRecoilValue(atomUpjongState);
@@ -63,12 +64,10 @@ const NiceFilterDepth = ({
   const [brand, setBrand] = useRecoilState(infoComBrand);
   const [building, setBuilding] = useRecoilState(infoComBuilding);
   const [filterBuilding, setFilterBuilding] = useState(building.filter);
-  const divRef = useRef<HTMLDivElement | null>(null);
   const [openIdx, setOpenIdx] = useState(0);
-  const [alert, setAlert] = useState({
-    isOpen: false,
-    text: "",
-  });
+  const [alert, setAlert] = useState({ isOpen: false, text: "" });
+  const [isLoading, setLoading] = useState(false);
+  const divRef = useRef<HTMLDivElement | null>(null);
 
   //  세부 유동인구 필터 변화 및 액티브
   const searchPopHandler = () => {
@@ -123,6 +122,7 @@ const NiceFilterDepth = ({
   };
 
   const searchBrandHandler = () => {
+    setLoading(true);
     // if (!bot.code || !bot.name || !sigungu?.slctCode || !slctCode) return;
     if (!bot.code || !bot.name) return;
     if (areaInfo.areaType === "dong" && areaInfo.slctCode) {
@@ -131,10 +131,16 @@ const NiceFilterDepth = ({
         admiCd: areaInfo.slctCode,
         upjongCd: bot?.code || "Q13007",
         pageNo: 1,
-      }).then((res: any) => {
-        if (res.data && res.data.length > 0)
-          setBrand({ show: true, active: true, data: res.data || [] });
-      });
+      })
+        .then((res: any) => {
+          if (res.data && res.data.length > 0)
+            setBrand({ show: true, active: true, data: res.data || [] });
+
+          setLoading(false);
+        })
+        .catch(() => {
+          setLoading(false);
+        });
     } else if (areaInfo.areaType === "polygon" && areaInfo.slctPath) {
       const arr = areaInfo.slctPath.map((path: any): [number, number] => {
         return [path.x || path[0], path.y || path[1]];
@@ -144,10 +150,16 @@ const NiceFilterDepth = ({
         upjongCd: bot?.code || "Q13007",
         wkt: [[arr]],
         pageNo: 1,
-      }).then((res: any) => {
-        if (res.data && res.data.length > 0)
-          setBrand({ show: true, active: true, data: res.data || [] });
-      });
+      })
+        .then((res: any) => {
+          if (res.data && res.data.length > 0)
+            setBrand({ show: true, active: true, data: res.data || [] });
+
+          setLoading(false);
+        })
+        .catch(() => {
+          setLoading(false);
+        });
     } else if (
       areaInfo.areaType === "circle" &&
       areaInfo.center &&
@@ -159,40 +171,51 @@ const NiceFilterDepth = ({
         yAxis: areaInfo.center.y,
         range: Number(areaInfo.range),
         pageNo: 1,
-      }).then((res: any) => {
-        if (res.data && res.data.length > 0)
-          setBrand({ show: true, active: true, data: res.data || [] });
-      });
+      })
+        .then((res: any) => {
+          if (res.data && res.data.length > 0)
+            setBrand({ show: true, active: true, data: res.data || [] });
+
+          setLoading(false);
+        })
+        .catch(() => {
+          setLoading(false);
+        });
     }
 
     setOpenIdx(0);
   };
 
   const searchBuildingHandler = () => {
+    setLoading(true);
     console.log("filterBuilding", filterBuilding);
     if (filterBuilding.useStartDay && !filterBuilding.useEndDay) {
       setAlert({
         isOpen: true,
         text: "필터의 준공기간 종료날짜를 지정해주세요",
       });
+      setLoading(false);
       return;
     } else if (!filterBuilding.useStartDay && filterBuilding.useEndDay) {
       setAlert({
         isOpen: true,
         text: "필터의 준공기간 시작날짜를 지정해주세요",
       });
+      setLoading(false);
       return;
     } else if (!filterBuilding.startTotArea && filterBuilding.endTotArea) {
       setAlert({
         isOpen: true,
         text: "필터의 연면적 범위 최소를 지정해주세요",
       });
+      setLoading(false);
       return;
     } else if (filterBuilding.startTotArea && !filterBuilding.endTotArea) {
       setAlert({
         isOpen: true,
         text: "필터의 연면적 범위 최대를 지정해주세요",
       });
+      setLoading(false);
       return;
     }
     const req = { ...filterBuilding };
@@ -217,9 +240,11 @@ const NiceFilterDepth = ({
             });
           }
           setOpenIdx(0);
+          setLoading(false);
         })
         .catch(() => {
           setOpenIdx(0);
+          setLoading(false);
         });
     } else if (areaInfo.areaType === "polygon" && areaInfo.slctPath) {
       const arr = areaInfo.slctPath.map((path: any): [number, number] => {
@@ -240,9 +265,11 @@ const NiceFilterDepth = ({
             });
           }
           setOpenIdx(0);
+          setLoading(false);
         })
         .catch(() => {
           setOpenIdx(0);
+          setLoading(false);
         });
     } else if (
       areaInfo.areaType === "circle" &&
@@ -275,12 +302,15 @@ const NiceFilterDepth = ({
           }
 
           setOpenIdx(0);
+          setLoading(false);
         })
         .catch(() => {
           setOpenIdx(0);
+          setLoading(false);
         });
     } else {
       setOpenIdx(0);
+      setLoading(false);
     }
   };
 
@@ -292,6 +322,7 @@ const NiceFilterDepth = ({
 
   return (
     <Fragment>
+      {isLoading && <BaseSpinner zIndex={1000} />}
       <Flex
         ref={divRef}
         pos="absolute"

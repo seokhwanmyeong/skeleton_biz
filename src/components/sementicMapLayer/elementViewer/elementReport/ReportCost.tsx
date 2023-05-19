@@ -20,7 +20,10 @@ const ReportCost = ({ data }: any) => {
   const [chartCntData, setChartCntData] = useState<any[]>([]);
   const [labelAmt, setLabelAmt] = useState<any[]>([]);
   const [chartAmtData, setChartAmtData] = useState<any[]>([]);
-  const [textArr, setTextArr] = useState({
+  const [textArr, setTextArr] = useState<{
+    useCnt: number | null;
+    cost: number | null;
+  }>({
     useCnt: null,
     cost: null,
   });
@@ -110,7 +113,7 @@ const ReportCost = ({ data }: any) => {
                 lineHeight="1.75rem"
               >
                 <Highlight
-                  query={[`${textArr?.cost || 0}원`]}
+                  query={[`${(textArr?.cost || 0).toLocaleString("ko-KR")}원`]}
                   styles={{
                     w: "100%",
                     textStyle: "base",
@@ -118,10 +121,13 @@ const ReportCost = ({ data }: any) => {
                     fontWeight: "strong",
                     lineHeight: "1.75rem",
                     color: "primary.type10",
-                    textDecoration: "underline",
+                    borderBottom: "1px solid",
+                    borderColor: "primary.type9",
                   }}
                 >
-                  {`선택 영역의 결제 금액은 ${textArr?.cost || 0}원 입니다.`}
+                  {`선택 영역의 결제 금액은 ${(
+                    textArr?.cost || 0
+                  ).toLocaleString("ko-KR")}원 입니다.`}
                 </Highlight>
               </Text>
             </ListItem>
@@ -136,7 +142,9 @@ const ReportCost = ({ data }: any) => {
                 lineHeight="1.75rem"
               >
                 <Highlight
-                  query={[`${textArr?.useCnt || 0}건`]}
+                  query={[
+                    `${(textArr?.useCnt || 0).toLocaleString("ko-KR")}건`,
+                  ]}
                   styles={{
                     w: "100%",
                     textStyle: "base",
@@ -144,10 +152,13 @@ const ReportCost = ({ data }: any) => {
                     fontWeight: "strong",
                     lineHeight: "1.75rem",
                     color: "primary.type10",
-                    textDecoration: "underline",
+                    borderBottom: "1px solid",
+                    borderColor: "primary.type9",
                   }}
                 >
-                  {`결제 건수는 ${textArr?.useCnt || 0}건 입니다.`}
+                  {`결제 건수는 ${(textArr?.useCnt || 0).toLocaleString(
+                    "ko-KR"
+                  )}건 입니다.`}
                 </Highlight>
               </Text>
             </ListItem>

@@ -55,6 +55,7 @@ const ModalRentDetail = ({ id, name, isOpen, onClose }: Props) => {
         <DrawerBody pos="relative" p="1rem 1.5rem" width="fit-content">
           <Flex
             pos="relative"
+            h="100%"
             direction="column"
             justify="center"
             align="center"
@@ -139,7 +140,7 @@ const ModalRentDetail = ({ id, name, isOpen, onClose }: Props) => {
                   <Text>히스토리 데이터</Text>
                 </Tab>
               </TabList>
-              <TabPanels p="1rem">
+              <TabPanels>
                 <TabPanel w="324px">
                   {tabIdx === 0 && infoData !== null && (
                     <RentBasicInfo info={infoData} />

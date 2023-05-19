@@ -23,8 +23,10 @@ import type { TypeHistoryCreate } from "@api/bizSub/type";
 
 type Props = {
   id: string | number;
+  category: string;
   isOpen: boolean;
   fixMode?: boolean;
+  mode?: any;
   values?: any;
   onOpen: (props?: any) => any;
   onClose: (props?: any) => any;
@@ -33,8 +35,10 @@ type Props = {
 };
 const ModalHistoryEditor = ({
   id,
+  category,
   isOpen,
   fixMode = false,
+  mode,
   values,
   onOpen,
   onClose,
@@ -49,14 +53,17 @@ const ModalHistoryEditor = ({
     onClose: onAlertClose,
   } = useDisclosure();
   const [initData, setInitData] = useState({
-    id: id,
+    brandCode: "3",
+    category: category,
+    categoryId: id,
+    historyType: "write",
     writer: "김양일",
     title: "",
     content: "",
     curAddr: "",
     img: [],
   });
-
+  console.log(id);
   const submitHandler = useCallback(() => {
     console.log("submit start");
     console.log(submitRef.current);
@@ -107,27 +114,35 @@ const ModalHistoryEditor = ({
   };
 
   useEffect(() => {
+    if (mode === "view") return;
+
     if (fixMode) {
-      const { geolocation } = navigator;
       if (values) {
         setInitData(values);
       }
-
+    } else {
+      const { geolocation } = navigator;
       if (!geolocation) {
         return;
       }
 
       geolocation.getCurrentPosition(handleSuccess);
-    } else {
-      getHistoryDetail({ id: String(id) }).then((res) => {
+    }
+  }, [isOpen, fixMode]);
+
+  useEffect(() => {
+    if (mode === "view") {
+      getHistoryDetail({ id: String(id) }).then((res: any) => {
+        console.log(res.data);
         if (res.data) {
-          setInitData(res.data);
-        } else {
-          onClose();
+          setInitData({
+            ...res.data,
+            createAt: new Date(res.data.created_at).toLocaleDateString(),
+          });
         }
       });
     }
-  }, [isOpen, fixMode]);
+  }, [mode]);
 
   return (
     <Fragment>

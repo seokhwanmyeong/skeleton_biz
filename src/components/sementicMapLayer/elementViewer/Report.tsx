@@ -96,6 +96,7 @@ const Report = ({ props, isOpen, onClose }: any) => {
   const [houseRank, setHouseRank] = useState<
     "아파트" | "단독주택" | "복합주택" | "오피스텔" | null
   >(null);
+  const [cost, setCost] = useState<number>(0);
 
   const summaryHandler = () => {
     // setLoading(true);
@@ -421,6 +422,13 @@ const Report = ({ props, isOpen, onClose }: any) => {
           if (res.data && res.data.length > 0) {
             setUpjongSale(res.data);
             // setTabIdx(index);
+
+            for (let i = 0; i < res.data.length; i++) {
+              if (res.data[res.data.length - 1 - i].cost) {
+                setCost(res.data[res.data.length - 1 - i].cost);
+                break;
+              }
+            }
           }
           setLoading(false);
         })
@@ -437,7 +445,13 @@ const Report = ({ props, isOpen, onClose }: any) => {
         .then((res: any) => {
           if (res.data && res.data.length > 0) {
             setUpjongSale(res.data);
-            // setTabIdx(index);
+
+            for (let i = 0; i < res.data.length; i++) {
+              if (res.data[res.data.length - 1 - i].cost) {
+                setCost(res.data[res.data.length - 1 - i].cost);
+                break;
+              }
+            }
           }
           setLoading(false);
         })
@@ -457,7 +471,13 @@ const Report = ({ props, isOpen, onClose }: any) => {
           .then((res: any) => {
             if (res.data && res.data.length > 0) {
               setUpjongSale(res.data);
-              // setTabIdx(index);
+
+              for (let i = 0; i < res.data.length; i++) {
+                if (res.data[res.data.length - 1 - i].cost) {
+                  setCost(res.data[res.data.length - 1 - i].cost);
+                  break;
+                }
+              }
             }
             setLoading(false);
           })
@@ -991,6 +1011,8 @@ const Report = ({ props, isOpen, onClose }: any) => {
                       resiRank={resiRank}
                       jobRank={jobRank}
                       houseRank={houseRank}
+                      cost={cost}
+                      upjongName={bot.name}
                     />
                   )}
                 </TabPanel>

@@ -110,10 +110,12 @@ const FormHistory = forwardRef(
                     ) : (
                       <Heading
                         as={"h5"}
-                        fontSize="md"
-                        lineHeight="normal"
-                        color="font.primary"
+                        w="100%"
                         bg="none"
+                        fontSize="md"
+                        lineHeight="2rem"
+                        textAlign="center"
+                        color="font.primary"
                       >
                         {initVal?.title || " "}
                       </Heading>
@@ -224,7 +226,13 @@ const FormHistory = forwardRef(
                       {fixMode ? (
                         <Text>작성</Text>
                       ) : (
-                        <Text>{initVal.type}</Text>
+                        <Text>
+                          {initVal.historyType === "write"
+                            ? "작성"
+                            : initVal.historyType === "log"
+                            ? "로그"
+                            : "작성"}
+                        </Text>
                       )}
                     </FormControl>
                   </Flex>
@@ -239,7 +247,7 @@ const FormHistory = forwardRef(
                             .replace(/\s/g, "-")}
                         </Text>
                       ) : (
-                        <Text>{initVal.createdAt}</Text>
+                        <Text>{initVal.createAt}</Text>
                       )}
                     </FormControl>
                     <FormControl variant="create" alignItems="flex-start">
@@ -249,7 +257,12 @@ const FormHistory = forwardRef(
                       </Text>
                     </FormControl>
                   </Flex>
-                  <FormControl variant="modal" h="100%" flex={1}>
+                  <FormControl
+                    variant="modal"
+                    h="100%"
+                    flex={1}
+                    overflow="hidden"
+                  >
                     {fixMode ? (
                       <TextArea
                         variant={"base"}
@@ -271,6 +284,7 @@ const FormHistory = forwardRef(
                       />
                     ) : (
                       <Flex
+                        display="block"
                         p="5px 12px"
                         w="100%"
                         h="100%"
@@ -278,13 +292,14 @@ const FormHistory = forwardRef(
                         border="1px solid"
                         borderColor="neutral.gray5"
                         borderRadius="base"
+                        overflowY="scroll"
                       >
                         <Text
                           w="100%"
                           h="100%"
                           fontFamily="main"
-                          fontWeight="regular"
                           fontSize="md"
+                          fontWeight="regular"
                           lineHeight="1.375rem"
                         >
                           {initVal.content}

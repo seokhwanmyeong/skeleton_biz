@@ -87,7 +87,7 @@ const ReportFacility = ({ data }: Props) => {
                 lineHeight="1.75rem"
               >
                 <Highlight
-                  query={[`${data?.schoolCnt}개`]}
+                  query={[`${data?.schoolCnt.toLocaleString("ko-KR")}개`]}
                   styles={{
                     w: "100%",
                     textStyle: "base",
@@ -95,10 +95,13 @@ const ReportFacility = ({ data }: Props) => {
                     fontWeight: "strong",
                     lineHeight: "1.75rem",
                     color: "primary.type10",
-                    textDecoration: "underline",
+                    borderBottom: "1px solid",
+                    borderColor: "primary.type9",
                   }}
                 >
-                  {`선택 영역내 학교는 ${data?.schoolCnt}개 입니다.`}
+                  {`선택 영역내 학교는 ${data?.schoolCnt.toLocaleString(
+                    "ko-KR"
+                  )}개 입니다.`}
                 </Highlight>
               </Text>
             </ListItem>
@@ -113,7 +116,7 @@ const ReportFacility = ({ data }: Props) => {
                 lineHeight="1.75rem"
               >
                 <Highlight
-                  query={[`${data?.companyCnt}개`]}
+                  query={[`${data?.companyCnt.toLocaleString("ko-KR")}개`]}
                   styles={{
                     w: "100%",
                     textStyle: "base",
@@ -121,10 +124,13 @@ const ReportFacility = ({ data }: Props) => {
                     fontWeight: "strong",
                     lineHeight: "1.75rem",
                     color: "primary.type10",
-                    textDecoration: "underline",
+                    borderBottom: "1px solid",
+                    borderColor: "primary.type9",
                   }}
                 >
-                  {`선택 영역내 직장수는 ${data?.companyCnt}개 입니다.`}
+                  {`선택 영역내 직장수는 ${data?.companyCnt.toLocaleString(
+                    "ko-KR"
+                  )}개 입니다.`}
                 </Highlight>
               </Text>
             </ListItem>
@@ -140,8 +146,8 @@ const ReportFacility = ({ data }: Props) => {
               >
                 <Highlight
                   query={[
-                    `${data?.subwayList.length}개`,
-                    `${data?.busstopCnt}개`,
+                    `${data?.subwayList.length.toLocaleString("ko-KR")}개`,
+                    `${data?.busstopCnt.toLocaleString("ko-KR")}개`,
                   ]}
                   styles={{
                     w: "100%",
@@ -150,14 +156,23 @@ const ReportFacility = ({ data }: Props) => {
                     fontWeight: "strong",
                     lineHeight: "1.75rem",
                     color: "primary.type10",
-                    textDecoration: "underline",
+                    borderBottom: "1px solid",
+                    borderColor: "primary.type9",
                   }}
                 >
                   {data?.subwayList.length > 0 && data?.busstopCnt > 0
-                    ? `선택 영역내 지하철은 ${data?.subwayList.length}개, 버스정류장은 ${data?.busstopCnt}개 입니다.`
+                    ? `선택 영역내 지하철은 ${data?.subwayList.length.toLocaleString(
+                        "ko-KR"
+                      )}개, 버스정류장은 ${data?.busstopCnt.toLocaleString(
+                        "ko-KR"
+                      )}개 입니다.`
                     : data?.subwayList.length > 0
-                    ? `선택 영역내 지하철은 ${data?.subwayList.length}개 입니다.`
-                    : `선택 영역내 버스정류장은 ${data?.busstopCnt}개 입니다.`}
+                    ? `선택 영역내 지하철은 ${data?.subwayList.length.toLocaleString(
+                        "ko-KR"
+                      )}개 입니다.`
+                    : `선택 영역내 버스정류장은 ${data?.busstopCnt.toLocaleString(
+                        "ko-KR"
+                      )}개 입니다.`}
                 </Highlight>
               </Text>
             </ListItem>

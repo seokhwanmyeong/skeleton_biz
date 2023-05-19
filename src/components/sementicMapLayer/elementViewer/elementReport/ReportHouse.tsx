@@ -90,7 +90,7 @@ const ReportHouse = ({ data }: Props) => {
                 lineHeight="1.75rem"
               >
                 <Highlight
-                  query={[`${data?.hous}세대`]}
+                  query={[`${data?.hous.toLocaleString("ko-KR")}세대`]}
                   styles={{
                     w: "100%",
                     textStyle: "base",
@@ -98,10 +98,13 @@ const ReportHouse = ({ data }: Props) => {
                     fontWeight: "strong",
                     lineHeight: "1.75rem",
                     color: "primary.type10",
-                    textDecoration: "underline",
+                    borderBottom: "1px solid",
+                    borderColor: "primary.type9",
                   }}
                 >
-                  {`선택 영역의 세대수는 ${data?.hous}세대 입니다.`}
+                  {`선택 영역의 세대수는 ${data?.hous.toLocaleString(
+                    "ko-KR"
+                  )}세대 입니다.`}
                 </Highlight>
               </Text>
             </ListItem>
@@ -116,7 +119,7 @@ const ReportHouse = ({ data }: Props) => {
                 lineHeight="1.75rem"
               >
                 <Highlight
-                  query={["아파트", `${data?.apt}세대`]}
+                  query={[`아파트 ${data?.apt.toLocaleString("ko-KR")}세대`]}
                   styles={{
                     w: "100%",
                     textStyle: "base",
@@ -124,15 +127,18 @@ const ReportHouse = ({ data }: Props) => {
                     fontWeight: "strong",
                     lineHeight: "1.75rem",
                     color: "primary.type10",
-                    textDecoration: "underline",
+                    borderBottom: "1px solid",
+                    borderColor: "primary.type9",
                   }}
                 >
-                  {`세대수 유형은 아파트 - ${data?.apt}세대 입니다.`}
+                  {`세대수 유형은 아파트 ${data?.apt.toLocaleString(
+                    "ko-KR"
+                  )}세대 입니다.`}
                 </Highlight>
               </Text>
             </ListItem>
           )}
-          {data?.hous && (
+          {data?.hous && data?.apt && (
             <ListItem w="100%" display="flex" gap="4rem">
               <Text
                 w="100%"
@@ -142,7 +148,11 @@ const ReportHouse = ({ data }: Props) => {
                 lineHeight="1.75rem"
               >
                 <Highlight
-                  query={["비아파트", `${data?.hous - (data?.apt || 0)}세대`]}
+                  query={[
+                    `비아파트 ${(data?.hous - data?.apt).toLocaleString(
+                      "ko-KR"
+                    )}세대`,
+                  ]}
                   styles={{
                     w: "100%",
                     textStyle: "base",
@@ -150,12 +160,13 @@ const ReportHouse = ({ data }: Props) => {
                     fontWeight: "strong",
                     lineHeight: "1.75rem",
                     color: "primary.type10",
-                    textDecoration: "underline",
+                    borderBottom: "1px solid",
+                    borderColor: "primary.type9",
                   }}
                 >
-                  {`세대수 유형은 비아파트 - ${
-                    data?.hous - (data?.apt || 0)
-                  }세대 입니다.`}
+                  {`세대수 유형은 비아파트 ${(
+                    data?.hous - data?.apt
+                  ).toLocaleString("ko-KR")}세대 입니다.`}
                 </Highlight>
               </Text>
             </ListItem>

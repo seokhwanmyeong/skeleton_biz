@@ -25,6 +25,7 @@ const ModalHistoryEditor = ({
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [initData, setInitData] = useState({
+    brandCode: "3",
     title: "",
     img: [],
     writer: "홍길동",

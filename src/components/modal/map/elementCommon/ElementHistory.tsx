@@ -26,8 +26,9 @@ const ElementHistory = ({
   const [tableData, setTableData] = useState<any[]>([]);
   const [selectData, setSelectData] = useState<any>([]);
   const [totalPage, setTotalPage] = useState<number>(1);
-  const [curPage, setCurPage] = useState<number>(1);
+  const [curPage, setCurPage] = useState<number>(0);
   const [initVal, setInitVal] = useState<any>({
+    brandCode: "3",
     historyType: "total",
     searchType: "title",
     text: "",
@@ -47,12 +48,9 @@ const ElementHistory = ({
 
     getHistoryList(filter).then((res): any => {
       console.log(res);
-      return;
-      if (res.totalCount) {
-        setTotalPage(res.totalCount);
-      }
-      if (res.records && res.records.lenght > 0) {
-        setTableData([...res.records]);
+      if (res.data && res.data.length > 0) {
+        setTableData(res.data);
+        setTotalPage(res.data.length);
       }
     });
 
@@ -64,16 +62,13 @@ const ElementHistory = ({
       ...initVal,
       category: category,
       categoryId: id,
-      pageNo: 1,
+      pageNo: curPage,
       perPage: 10,
     }).then((res) => {
       console.log(res);
-      return;
-      if (res.totalCount) {
-        setTotalPage(res.totalCount);
-      }
-      if (res.records && res.records.lenght > 0) {
-        setTableData([...res.records]);
+      if (res.data && res.data.length > 0) {
+        setTableData(res.data);
+        setTotalPage(res.data.length);
       }
     });
   };
@@ -88,14 +83,9 @@ const ElementHistory = ({
     };
 
     getHistoryList(filter).then((res): any => {
-      console.log(res);
-      return;
-      if (res.totalCount) {
-        setTotalPage(res.totalCount);
-      }
-
-      if (res.records && res.records.lenght > 0) {
-        setTableData([...res.records]);
+      if (res.data && res.data.length > 0) {
+        setTableData(res.data);
+        setTotalPage(res.data.length);
       }
     });
   }, [curPage]);
@@ -106,17 +96,16 @@ const ElementHistory = ({
         ...initVal,
         category: category,
         categoryId: id,
-        pageNo: 1,
+        pageNo: curPage,
         perPage: 10,
       }).then((res): any => {
-        console.log(res);
-        return;
-        if (res.totalCount) {
-          setTotalPage(res.totalCount);
-        }
+        // if (res.totalCount) {
+        //   setTotalPage(res.totalCount);
+        // }
 
-        if (res.records && res.records.lenght > 0) {
-          setTableData([...res.records]);
+        if (res.data && res.data.length > 0) {
+          setTableData(res.data);
+          setTotalPage(res.data.length);
         }
       });
     }
@@ -147,13 +136,15 @@ const ElementHistory = ({
         registersPerPage={10}
         columns={column}
         totalPage={totalPage}
-        page={curPage}
+        page={curPage + 1}
         getPage={setCurPage}
         getSelectData={setSelectData}
-        tdH="1.5rem"
+        trH="10%"
+        tdH="10%"
       />
       <ModalHistoryEditor
         id={id}
+        category={category}
         isOpen={isOpen}
         onOpen={onOpen}
         onClose={onClose}
